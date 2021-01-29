@@ -86,6 +86,7 @@ export default {
                         {
                             __config: {
                                 componentId: '777',
+                                draggable: false,
                             },
                             componentName: 'Text',
                             text: '真的是文本啊',
@@ -208,7 +209,6 @@ export default {
     moveNode: ({sourceId, targetId, isBefore, isAfter, isChildren}, state) => {
         const {pageConfig} = state;
 
-        console.log(123);
         const [node] = deleteNodeById(pageConfig, sourceId);
 
         return modifyPageConfig({

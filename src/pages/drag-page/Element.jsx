@@ -29,7 +29,7 @@ function getDraggableEle(target) {
 
     if (typeof target.getAttribute !== 'function') return null;
 
-    const draggable = target.getAttribute('draggable');
+    const draggable = target.getAttribute('draggable') === 'true';
 
     if (draggable) return target;
 
@@ -112,6 +112,7 @@ export default function Element(props) {
             componentId,
             componentType,
             componentDesc,
+            draggable = true,
         },
         componentName,
         children,
@@ -136,6 +137,7 @@ export default function Element(props) {
 
     if (dragPage.selectedNodeId === componentId) clcs.push(styles.selected);
     if (dragPage.draggingNodeId === componentId) clcs.push(styles.dragging);
+    if (!draggable) clcs.push(styles.unDraggable);
 
     const component = getComponent(componentName, componentType);
 
@@ -165,8 +167,9 @@ export default function Element(props) {
 
         const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
         let componentConfig = e.dataTransfer.getData('componentConfig');
+        const targetComponentId = targetElement.getAttribute('data-componentId');
 
-        if (componentId === sourceComponentId) return;
+        if (targetComponentId === sourceComponentId) return;
 
         const position = getDropGuidePosition({
             event: e,
@@ -194,7 +197,7 @@ export default function Element(props) {
         if (sourceComponentId) {
             dragPageAction.moveNode({
                 sourceId: sourceComponentId,
-                targetId: componentId,
+                targetId: targetComponentId,
                 isBefore,
                 isAfter,
                 isChildren,
@@ -204,7 +207,7 @@ export default function Element(props) {
         if (componentConfig) {
             componentConfig = JSON.parse(componentConfig);
             dragPageAction.addNode({
-                targetId: componentId,
+                targetId: targetComponentId,
                 isBefore,
                 isAfter,
                 isChildren,
@@ -256,9 +259,10 @@ export default function Element(props) {
         hideDropGuide();
     }
 
+
     return createElement(component, {
         ...others,
-        draggable: !isRoot,
+        draggable: isRoot ? false : draggable,
         onDragStart,
         onDragEnter,
         onDragOver,
