@@ -5,48 +5,172 @@ import {
 } from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import {PageContent} from 'ra-lib';
-import styles from './style.less';
+
 import {v4 as uuid} from 'uuid';
+import {getDropGuidePosition} from '../util';
+
+import './style.less';
 
 const TreeNode = config({
     connect: state => {
         return {
             draggingNodeId: state.dragPage.draggingNodeId,
+            componentTreeExpendedKeys: state.dragPage.componentTreeExpendedKeys,
         };
     },
 })(function TreeNode(props) {
-    const {node, selectedKey, draggingNodeId, action: {dragPage: dragPageAction}} = props;
-    const {key, title} = node;
+    const {
+        node,
+        selectedKey,
+        draggingNodeId,
+        componentTreeExpendedKeys,
+        action: {dragPage: dragPageAction},
+    } = props;
+    const {key, title, isContainer} = node;
+
+    const hoverRef = useRef(0);
+    const nodeRef = useRef(null);
+    const [dragIn, setDragIn] = useState(false);
+    const [dropPosition, setDropPosition] = useState('');
 
     function handleDragStart(e) {
         e.stopPropagation();
 
-        console.log(key);
         dragPageAction.setDraggingNodeId(key);
 
         e.dataTransfer.setData('sourceComponentId', key);
     }
 
+    function handleDragEnter(e) {
+        if (draggingNodeId === key) return;
+        setDragIn(true);
+    }
+
+    function handleDragOver(e) {
+        if (draggingNodeId === key) return;
+
+        // 1s 后展开节点
+        if (!hoverRef.current) {
+            hoverRef.current = setTimeout(() => {
+                if (!componentTreeExpendedKeys.some(k => k === key)) {
+                    dragPageAction.setComponentTreeExpendedKeys([...componentTreeExpendedKeys, key]);
+                }
+            }, 500);
+        }
+        const options = getDropGuidePosition({
+            event: e,
+            targetElement: e.target,
+            isContainer,
+            isInFrame: false,
+            triggerSize: 10,
+        });
+        const {isTop, isBottom, isCenter} = options;
+
+        if (isTop) setDropPosition('top');
+        if (isBottom) setDropPosition('bottom');
+        if (isCenter) setDropPosition('center');
+    }
+
+    function handleDragLeave(e) {
+        setDragIn(false);
+
+        if (hoverRef.current) {
+            clearTimeout(hoverRef.current);
+            hoverRef.current = 0;
+        }
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
+        let componentConfig = e.dataTransfer.getData('componentConfig');
+
+        if (key === sourceComponentId) return;
+
+        const options = getDropGuidePosition({
+            event: e,
+            targetElement: e.target,
+            isContainer,
+            isInFrame: false,
+            triggerSize: 10,
+        });
+        const {isTop, isBottom, isCenter} = options;
+
+        if (sourceComponentId) {
+            dragPageAction.moveNode({
+                sourceId: sourceComponentId,
+                targetId: key,
+                isBefore: isTop,
+                isAfter: isBottom,
+                isChildren: isCenter,
+            });
+            dragPageAction.setSelectedNodeId(sourceComponentId);
+        }
+
+        if (componentConfig) {
+            componentConfig = JSON.parse(componentConfig);
+            dragPageAction.addNode({
+                targetId: key,
+                isBefore: isTop,
+                isAfter: isBottom,
+                isChildren: isCenter,
+                node: componentConfig,
+            });
+            dragPageAction.setSelectedNodeId(componentConfig.__config?.componentId);
+        }
+
+        handleDragLeave(e);
+        handleDragEnd(e);
+    }
+
     function handleDragEnd() {
+        if (hoverRef.current) {
+            clearTimeout(hoverRef.current);
+            hoverRef.current = 0;
+        }
         dragPageAction.setDraggingNodeId(null);
+        setDragIn(false);
     }
 
     const isSelected = selectedKey === key;
     const isDragging = draggingNodeId === key;
     const styleNames = ['treeNode'];
 
+
     if (isSelected) styleNames.push('selected');
     if (isDragging) styleNames.push('dragging');
+    if (dragIn && draggingNodeId) styleNames.push('dragIn');
 
+    styleNames.push(dropPosition);
+
+
+    // styleNames.push('dragIn');
+    // styleNames.push('top');
+
+    const positionMap = {
+        top: '前',
+        bottom: '后',
+        center: '内',
+    };
     return (
         <div
+            ref={nodeRef}
             key={key}
             styleName={styleNames.join(' ')}
             draggable
             onDragStart={handleDragStart}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
             onDragEnd={handleDragEnd}
         >
             {title}
+            <div styleName="dragGuide" style={{display: dragIn && draggingNodeId ? 'flex' : 'none'}}>
+                <span>{positionMap[dropPosition]}</span>
+            </div>
         </div>
     );
 });
@@ -56,12 +180,14 @@ export default config({
         return {
             pageConfig: state.dragPage.pageConfig,
             selectedNodeId: state.dragPage.selectedNodeId,
+            componentTreeExpendedKeys: state.dragPage.componentTreeExpendedKeys,
         };
     },
 })(function ComponentTree(props) {
     const {
         pageConfig,
         selectedNodeId,
+        componentTreeExpendedKeys,
         action: {dragPage: dragPageAction},
     } = props;
     const [treeData, setTreeData] = useState([{key: 1, title: 1}]);
@@ -70,14 +196,12 @@ export default config({
         if (!pageConfig) return;
 
         const treeData = {};
-
         const loop = (prev, next) => {
             const {__config = {}, componentName, children} = prev;
-            const {componentId, componentDesc} = __config;
+            const {componentId, componentDesc, isContainer} = __config;
             next.title = componentDesc || componentName;
-            next.title = (componentDesc || componentName) + componentId;
+            next.isContainer = isContainer;
             next.key = componentId;
-
 
             if (children && children.length) {
                 next.children = children.map(() => ({}));
@@ -94,65 +218,6 @@ export default config({
 
     }, [pageConfig]);
 
-    function handleDragStart({event, node}) {
-        event.dataTransfer.setData('sourceComponentId', node.key);
-    }
-
-    function handleDragEnter(info) {
-        console.log(info);
-    }
-
-    function handleDrop(info) {
-        // console.log(info);
-        const {event, node} = info;
-        const sourceId = event.dataTransfer.getData('sourceComponentId');
-        let componentConfig = event.dataTransfer.getData('componentConfig');
-
-        let targetId = info.node.key;
-        let isBefore;
-        let isAfter;
-        let isChildren;
-
-        const dropPos = info.node.pos.split('-');
-        const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]);
-
-        if (!info.dropToGap) {
-            // 放入节点内
-            // isChildren = true;
-            if (node.children?.length) {
-                targetId = node.children[0].key;
-                isBefore = true;
-            }
-
-        } else if (
-            (info.node.props.children || []).length > 0 && // Has children
-            info.node.props.expanded && // Is expanded
-            dropPosition === 1 // On the bottom gap
-        ) {
-            isBefore = true;
-        } else {
-            isAfter = true;
-        }
-        if (sourceId) {
-            dragPageAction.moveNode({
-                sourceId,
-                targetId,
-                isBefore,
-                isAfter,
-                isChildren,
-            });
-        }
-        if (componentConfig) {
-            dragPageAction.addNode({
-                node: JSON.parse(componentConfig),
-                targetId,
-                isBefore,
-                isAfter,
-                isChildren,
-            });
-        }
-    }
-
     function handleSelected([key]) {
         dragPageAction.setSelectedNodeId(key);
     }
@@ -160,6 +225,10 @@ export default config({
     function renderNode(nodeData) {
 
         return <TreeNode selectedKey={selectedNodeId} node={nodeData}/>;
+    }
+
+    function handleExpand(keys) {
+        dragPageAction.setComponentTreeExpendedKeys(keys);
     }
 
     return (
@@ -173,14 +242,11 @@ export default config({
             <main>
                 <Tree
                     className="draggable-tree"
-                    autoExpandParent
-                    // defaultExpandedKeys={this.state.expandedKeys}
-                    draggable
+                    expandedKeys={componentTreeExpendedKeys}
+                    onExpand={handleExpand}
                     blockNode
-                    onDragStart={handleDragStart}
-                    onDragEnter={handleDragEnter}
-                    onDrop={handleDrop}
 
+                    draggable
                     treeData={treeData}
                     titleRender={renderNode}
 
@@ -202,9 +268,18 @@ export default config({
                                 },
                                 componentName: 'div',
                                 style: {height: 50, background: 'grey', border: '1px solid #fff', padding: 16},
-                                children: [componentId],
+                                children: [
+                                    {
+                                        __config: {
+                                            componentId: uuid(),
+                                        },
+                                        componentName: 'Text',
+                                        text: componentId,
+                                    },
+                                ],
                             };
                             e.dataTransfer.setData('componentConfig', JSON.stringify(config));
+                            dragPageAction.setDraggingNodeId(componentId);
                         }
                     }
                 >

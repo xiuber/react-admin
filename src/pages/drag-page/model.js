@@ -20,6 +20,8 @@ export default {
         activeSideKey: 'componentTree',
         activeTabKey: 'attribute', // 右侧激活tab key
 
+        componentTreeExpendedKeys: [], // 组件树 展开节点
+
         pageConfig: {
             __config: {
                 isRoot: true,
@@ -131,6 +133,7 @@ export default {
 
         },
     },
+    setComponentTreeExpendedKeys: componentTreeExpendedKeys => ({componentTreeExpendedKeys}),
     setDraggingNodeId: draggingNodeId => ({draggingNodeId}),
     setActiveTabKey: activeTabKey => {
         return {activeTabKey};
@@ -162,11 +165,21 @@ export default {
         return {activeToolKey};
     },
     setSelectedNodeId: (selectedNodeId, state) => {
-        const {pageConfig} = state;
+        let {pageConfig, componentTreeExpendedKeys} = state;
 
         const selectedNode = findNodeById(pageConfig, selectedNodeId);
 
-        return {selectedNodeId, selectedNode};
+        const parentKeys = getParentIds([pageConfig], selectedNodeId);
+        if (parentKeys?.length) {
+            if (!componentTreeExpendedKeys) componentTreeExpendedKeys = [];
+            parentKeys.forEach(key => {
+                if (key && !componentTreeExpendedKeys.some(k => k === key)) {
+                    componentTreeExpendedKeys.push(key);
+                }
+            });
+        }
+
+        return {selectedNodeId, selectedNode, componentTreeExpendedKeys: [...componentTreeExpendedKeys]};
     },
     setPageConfig: pageConfig => ({pageConfig}),
     deleteSelectedNode: (_, state) => {
@@ -283,6 +296,29 @@ function deleteNodeById(root, id) {
             if (result?.length) return result;
         }
     }
+}
+
+function getParentIds(data, id) {
+    // 深度遍历查找
+    function dfs(data, id, parents) {
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            // 找到id则返回父级id
+            if (item.__config?.componentId === id) return parents;
+            // children不存在或为空则不递归
+            if (!item.children || !item.children.length) continue;
+            // 往下查找时将当前id入栈
+            parents.push(item.__config?.componentId);
+
+            if (dfs(item.children, id, parents).length) return parents;
+            // 深度遍历查找未找到时当前id 出栈
+            parents.pop();
+        }
+        // 未找到时返回空数组
+        return [];
+    }
+
+    return dfs(data, id, []);
 }
 
 function deleteNode(id, state) {
