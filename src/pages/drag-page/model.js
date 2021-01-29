@@ -119,8 +119,13 @@ export default {
     showCode: (showCode) => {
         return {showCode};
     },
+    saveSchema: () => {
+        // TODO
+        console.log('TODO saveSchema');
+    },
     save: () => {
         // TODO
+        console.log('TODO save');
     },
     prevStep: () => {
         // TODO
@@ -139,22 +144,11 @@ export default {
         return {selectedNodeId, selectedNode};
     },
     setPageConfig: pageConfig => ({pageConfig}),
+    deleteSelectedNode: (_, state) => {
+        return deleteNode(state.selectedNodeId, state);
+    },
     deleteNode: (id, state) => {
-        let {pageConfig, selectedNodeId, selectedNode} = state;
-
-        if (selectedNodeId === id) {
-            selectedNodeId = null;
-            selectedNode = null;
-        }
-
-        // 删除的是根节点
-        if (id === pageConfig.__config.componentId) {
-            return {pageConfig: {...holderNode}, selectedNodeId, selectedNode};
-        }
-
-        deleteNodeById(pageConfig, id);
-
-        return {pageConfig: {...pageConfig}, selectedNodeId, selectedNode};
+        return deleteNode(id, state);
     },
     addNode: ({node, targetId, isBefore, isAfter, isChildren}, state) => {
         const {pageConfig} = state;
@@ -263,4 +257,22 @@ function deleteNodeById(root, id) {
             if (result?.length) return result;
         }
     }
+}
+
+function deleteNode(id, state) {
+    let {pageConfig, selectedNodeId, selectedNode} = state;
+
+    if (selectedNodeId === id) {
+        selectedNodeId = null;
+        selectedNode = null;
+    }
+
+    // 删除的是根节点
+    if (id === pageConfig.__config.componentId) {
+        return {pageConfig: {...holderNode}, selectedNodeId, selectedNode};
+    }
+
+    deleteNodeById(pageConfig, id);
+
+    return {pageConfig: {...pageConfig}, selectedNodeId, selectedNode};
 }

@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom';
 import config from 'src/commons/config-hoc';
 import {PageContent} from 'ra-lib';
 import Element from './Element';
-import {v4 as uuid} from 'uuid';
 import Top from './top';
 import Left from './left';
 import Right from './right';
+import KeyMap from './KeyMap';
 import './style.less';
 
 
@@ -76,6 +76,7 @@ export default config({
 
     return (
         <PageContent fitHeight styleName="root">
+            <KeyMap iframe={iframeRef.current}/>
             <div styleName="top">
                 <Top/>
             </div>

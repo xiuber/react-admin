@@ -70,7 +70,7 @@ export default config({
             icon: <SaveOutlined/>,
             label: `删除(${isMac ? '⌘' : 'ctrl'}+d)`,
             disabled: !selectedNodeId,
-            onClick: () => dragPageAction.deleteNode(selectedNodeId),
+            onClick: () => dragPageAction.deleteSelectedNode(),
         },
     ];
     return (

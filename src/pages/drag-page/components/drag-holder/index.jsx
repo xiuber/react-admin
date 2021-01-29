@@ -1,7 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-const DragHolder = props => {
+export default function DragHolder(props) {
     const {style, ...others} = props;
     return (
         <div
@@ -19,6 +18,3 @@ const DragHolder = props => {
     );
 };
 
-DragHolder.propTypes = {};
-
-export default DragHolder;
