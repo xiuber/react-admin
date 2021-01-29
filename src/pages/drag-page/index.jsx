@@ -4,6 +4,9 @@ import config from 'src/commons/config-hoc';
 import {PageContent} from 'ra-lib';
 import Element from './Element';
 import {v4 as uuid} from 'uuid';
+import Top from './top';
+import Left from './left';
+import Right from './right';
 import './style.less';
 
 
@@ -73,44 +76,28 @@ export default config({
 
     return (
         <PageContent fitHeight styleName="root">
-            <div styleName="left">
-                <div
-                    style={{width: 100, height: 100, background: 'red'}}
-                    draggable
-                    onDragStart={
-                        function(e) {
-                            e.stopPropagation();
-                            const componentId = uuid();
-                            const config = {
-                                __config: {
-                                    componentId,
-                                    isContainer: true,
-                                },
-                                componentName: 'div',
-                                style: {height: 50, background: 'green', border: '1px solid #fff', padding: 16},
-                                children: [componentId],
-                            };
-                            e.dataTransfer.setData('componentConfig', JSON.stringify(config));
-                        }
-                    }
-                >
-                    啥的呢
+            <div styleName="top">
+                <Top/>
+            </div>
+            <div styleName="main">
+                <div styleName="left">
+                    <Left/>
                 </div>
-            </div>
-            <div styleName="center">
-                <iframe
-                    id="dnd-iframe"
-                    title="dnd-iframe"
-                    ref={iframeRef}
-                    style={{border: 0, width: '100%', height: '100%'}}
-                    srcDoc={iframeSrcDoc}
-                    onLoad={useCallback(() => {
-                        handleIframeLoad();
-                    }, [iframeRef.current])}
-                />
-            </div>
-            <div styleName="right">
-
+                <div styleName="center">
+                    <iframe
+                        id="dnd-iframe"
+                        title="dnd-iframe"
+                        ref={iframeRef}
+                        style={{border: 0, width: '100%', height: '100%'}}
+                        srcDoc={iframeSrcDoc}
+                        onLoad={useCallback(() => {
+                            handleIframeLoad();
+                        }, [iframeRef.current])}
+                    />
+                </div>
+                <div styleName="right">
+                    <Right/>
+                </div>
             </div>
         </PageContent>
     );

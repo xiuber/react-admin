@@ -2,6 +2,7 @@ import React, {createElement, useRef} from 'react';
 import styles from './style.less';
 import * as antdComponent from 'antd/es';
 import * as raLibComponent from 'ra-lib';
+import * as components from './components';
 
 const LINE_SIZE = 2;
 const TRIGGER_SIZE = 20;
@@ -13,6 +14,10 @@ function getComponent(componentName, componentType) {
 
         if (raCom) return raCom;
     }
+    const Com = components[componentName];
+
+    if (Com) return Com;
+
     const AntdCom = antdComponent[componentName];
 
     if (AntdCom) return AntdCom;
@@ -33,7 +38,6 @@ function getDraggableEle(target) {
 }
 
 function getDropGuidePosition(e, targetElement) {
-    // const targetComponentId = targetElement.getAttribute('data-componentId');
     const targetIsContainer = targetElement.getAttribute('data-isContainer');
 
     const targetRect = targetElement.getBoundingClientRect();
@@ -184,7 +188,6 @@ export default function Element(props) {
 
     if (!componentName) return null;
 
-
     componentDesc = componentDesc || componentName;
 
     const childrenEle = (children || []).map(item => (
@@ -223,8 +226,6 @@ export default function Element(props) {
     const onDrop = function(e) {
         e.preventDefault();
         e.stopPropagation();
-        hideDropGuide();
-        draggingRef.current && draggingRef.current.classList.remove(styles.dragging);
 
         const targetElement = getDraggableEle(e.target);
         if (!targetElement) return;
@@ -270,6 +271,7 @@ export default function Element(props) {
         }
 
         onDragLeave(e);
+        onDragEnd();
     };
 
     function onDragEnter(e) {
@@ -329,7 +331,7 @@ export default function Element(props) {
         'data-isContainer': isContainer,
         onClick: (e) => {
             e.stopPropagation();
-            dragPageAction.setFields({selectedNodeId: componentId});
+            dragPageAction.setSelectedNodeId(componentId);
         },
     });
 }

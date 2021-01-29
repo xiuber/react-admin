@@ -1,5 +1,22 @@
+const holderNode = {
+    __config: {
+        isRoot: true,
+        isContainer: true,
+        componentId: '1',
+    },
+    componentName: 'DragHolder',
+};
+
 export default {
     initialState: {
+        activeToolKey: 'layout',
+        selectedNodeId: null,
+        selectedNode: null,
+        showCode: false,
+        showSide: false,
+        activeSideKey: null,
+        activeTabKey: 'attribute',
+
         pageConfig: {
             __config: {
                 isRoot: true,
@@ -7,6 +24,7 @@ export default {
                 componentId: '1',
                 componentDesc: '我是最外层',
             },
+            // componentName: 'DragHolder',
             componentName: 'div',
             style: {margin: 6, padding: 16, background: 'green'},
             children: [
@@ -88,12 +106,63 @@ export default {
             ],
 
         },
-        selectedNodeId: null,
     },
-    setFields: fields => ({...fields}),
+    setActiveTabKey: activeTabKey => {
+        return {activeTabKey};
+    },
+    setActiveSideKey: (activeSideKey) => {
+        return {activeSideKey};
+    },
+    showSide: (showSide) => {
+        return {showSide};
+    },
+    showCode: (showCode) => {
+        return {showCode};
+    },
+    save: () => {
+        // TODO
+    },
+    prevStep: () => {
+        // TODO
+    },
+    nextStep: () => {
+        // TODO
+    },
+    setActiveTookKey: activeToolKey => {
+        return {activeToolKey};
+    },
+    setSelectedNodeId: (selectedNodeId, state) => {
+        const {pageConfig} = state;
+
+        const selectedNode = findNodeById(pageConfig, selectedNodeId);
+
+        return {selectedNodeId, selectedNode};
+    },
     setPageConfig: pageConfig => ({pageConfig}),
+    deleteNode: (id, state) => {
+        let {pageConfig, selectedNodeId, selectedNode} = state;
+
+        if (selectedNodeId === id) {
+            selectedNodeId = null;
+            selectedNode = null;
+        }
+
+        // 删除的是根节点
+        if (id === pageConfig.__config.componentId) {
+            return {pageConfig: {...holderNode}, selectedNodeId, selectedNode};
+        }
+
+        deleteNodeById(pageConfig, id);
+
+        return {pageConfig: {...pageConfig}, selectedNodeId, selectedNode};
+    },
     addNode: ({node, targetId, isBefore, isAfter, isChildren}, state) => {
         const {pageConfig} = state;
+
+        if (pageConfig.componentName === 'DragHolder') {
+            const {__config, ...others} = node;
+            return {pageConfig: {...others, __config: {...__config, isRoot: true}}};
+        }
 
         return modifyPageConfig({
             pageConfig,
