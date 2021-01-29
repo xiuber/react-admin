@@ -1,0 +1,50 @@
+@import '../../theme';
+
+.root {
+    display: flex;
+}
+
+.left {
+    flex: 0;
+}
+
+.center {
+    flex: 1;
+}
+
+.right {
+    flex: 0;
+}
+
+.dragEnter {
+    outline: 1px solid #14ee69;
+}
+
+.dragging {
+    filter: blur(2px);
+}
+
+.element {
+    position: relative;
+
+    &:hover {
+        outline: 1px dashed @primary-color;
+    }
+
+    &.selected {
+        outline: 1px solid @primary-color;
+
+        &::before {
+            content: attr(data-componentDesc);
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 0 4px;
+            background: @primary-color;
+            color: #fff;
+            word-break: keep-all;
+            z-index: 999;
+            //opacity: .5;
+        }
+    }
+}
