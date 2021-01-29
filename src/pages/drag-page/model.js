@@ -9,13 +9,16 @@ const holderNode = {
 
 export default {
     initialState: {
-        activeToolKey: 'layout',
+        activeToolKey: 'layout', // 头部激活 key
         selectedNodeId: null,
         selectedNode: null,
-        showCode: false,
-        showSide: false,
-        activeSideKey: null,
-        activeTabKey: 'attribute',
+        draggingNodeId: null, // 正在拖动的节点 key
+        showCode: false, // 显示代码
+        // showSide: false, // 左侧是否显示
+        showSide: true,
+        // activeSideKey: null, // 左侧激活key
+        activeSideKey: 'componentTree',
+        activeTabKey: 'attribute', // 右侧激活tab key
 
         pageConfig: {
             __config: {
@@ -50,7 +53,16 @@ export default {
                                 componentId: '1222',
                             },
                             componentName: 'span',
-                            children: ['啥玩意 兄弟 灰色 div'],
+                            // children: ['啥玩意 兄弟 灰色 div'],
+                            children: [
+                                {
+                                    __config: {
+                                        componentId: '666',
+                                    },
+                                    componentName: 'Text',
+                                    text: '文本啊啊',
+                                },
+                            ],
                         },
                         {
                             __config: {
@@ -69,7 +81,13 @@ export default {
                     componentName: 'Button',
                     type: 'primary',
                     children: [
-                        '好的啊',
+                        {
+                            __config: {
+                                componentId: '777',
+                            },
+                            componentName: 'Text',
+                            text: '真的是文本啊',
+                        },
                     ],
                 },
                 {
@@ -90,7 +108,13 @@ export default {
                     componentName: 'div',
                     style: {margin: 6, width: 500, background: 'yellow'},
                     children: [
-                        '啥玩意',
+                        {
+                            __config: {
+                                componentId: '888',
+                            },
+                            componentName: 'Text',
+                            text: '啥玩意',
+                        },
                         {
                             __config: {
                                 componentId: '7',
@@ -107,6 +131,7 @@ export default {
 
         },
     },
+    setDraggingNodeId: draggingNodeId => ({draggingNodeId}),
     setActiveTabKey: activeTabKey => {
         return {activeTabKey};
     },
@@ -170,6 +195,7 @@ export default {
     moveNode: ({sourceId, targetId, isBefore, isAfter, isChildren}, state) => {
         const {pageConfig} = state;
 
+        console.log(123);
         const [node] = deleteNodeById(pageConfig, sourceId);
 
         return modifyPageConfig({

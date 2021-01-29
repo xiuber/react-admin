@@ -111,6 +111,8 @@ function getDropGuidePosition(e, targetElement) {
 }
 
 function showDropGuideLine(e, targetElement) {
+    // const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
+    // console.log(sourceComponentId);
     const position = getDropGuidePosition(e, targetElement);
     const {isCenter, top, left, width, height} = position;
     const guidePosition = {
@@ -207,6 +209,8 @@ export default function Element(props) {
 
     const onDragStart = function(e) {
         e.stopPropagation();
+        dragPageAction.setDraggingNodeId(componentId);
+
         draggingRef.current = e.target;
         draggingRef.current.classList.add(styles.dragging);
 
@@ -219,9 +223,9 @@ export default function Element(props) {
 
         const targetElement = getDraggableEle(e.target);
         if (!targetElement) return;
-
-        showDropGuideLine(e, targetElement);
-
+        if (dragPage.draggingNodeId !== componentId) {
+            showDropGuideLine(e, targetElement);
+        }
     };
     const onDrop = function(e) {
         e.preventDefault();
@@ -310,6 +314,7 @@ export default function Element(props) {
     }
 
     function onDragEnd() {
+        dragPageAction.setDraggingNodeId(null);
         draggingRef.current && draggingRef.current.classList.remove(styles.dragging);
         hideDropGuide();
     }
