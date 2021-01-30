@@ -28,10 +28,14 @@ function getComponent(componentName, componentType) {
 
 function getDraggableEle(target) {
     if (!target) return target;
+    console.log(target);
 
     if (typeof target.getAttribute !== 'function') return null;
 
-    const draggable = target.getAttribute('draggable') === 'true';
+    const draggable =
+        target.getAttribute('draggable') === 'true'
+        || target.getAttribute('data-isRoot') === 'true'
+    ;
 
     if (draggable) return target;
 
@@ -180,6 +184,7 @@ export default function Element(props) {
         e.preventDefault();
 
         const targetElement = getDraggableEle(e.target);
+
         if (!targetElement) return;
 
         const targetComponentId = targetElement.getAttribute('data-componentId');
@@ -320,6 +325,7 @@ export default function Element(props) {
         'data-componentDesc': componentDesc,
         'data-componentId': componentId,
         'data-isContainer': isContainer,
+        'data-isRoot': isRoot,
         onClick: (e) => {
             e.stopPropagation();
             const ele = getDraggableEle(e.target);

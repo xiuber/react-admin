@@ -8,13 +8,14 @@ import Left from './left';
 import Right from './right';
 import KeyMap from './KeyMap';
 import './style.less';
+import {scrollElement} from 'src/pages/drag-page/util';
 
 
 const iframeSrcDoc = `
 <!DOCTYPE html>
 <html lang="en">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
-    <body>
+    <body style="scroll-behavior: smooth;">
         <div id="dnd-container"></div>
         <div id="drop-guide-line" style="display: none"><span>前</span></div>
     </body>
@@ -73,6 +74,21 @@ export default config({
     useEffect(() => {
         renderDesignPage();
     }, [pageConfig, selectedNodeId, draggingNode]);
+
+
+    useEffect(() => {
+        const containerEle = iframeRef.current.contentDocument.body;
+
+        if (!containerEle) return;
+
+        // 等待树展开
+        setTimeout(() => {
+            const element = containerEle.querySelector(`[data-componentid="${selectedNodeId}"]`);
+
+            scrollElement(containerEle, element);
+        }, 200);
+
+    }, [selectedNodeId, iframeRef.current]);
 
     return (
         <PageContent fitHeight styleName="root">

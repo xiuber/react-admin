@@ -5,6 +5,16 @@
     padding: 0;
     margin: 0;
 
+    :global {
+        .ant-tree-node-content-wrapper.draggable {
+            cursor: move;
+        }
+
+        .ant-tree-node-content-wrapper:not(.draggable) {
+            cursor: no-drop;
+        }
+    }
+
     header {
         flex: 0 0 45px;
         border-bottom: 1px solid #d8d8d8;
@@ -17,6 +27,7 @@
         flex: 1;
         overflow: auto;
         padding: 4px;
+        scroll-behavior: smooth;
     }
 }
 
@@ -25,6 +36,11 @@
     border-radius: 3px;
     padding: 0;
     transition: background-color, padding .3s;
+    user-select: none;
+
+    &[draggable='false'] {
+        cursor: no-drop;
+    }
 
     &.selected {
         &:hover {

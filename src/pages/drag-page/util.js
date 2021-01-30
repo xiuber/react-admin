@@ -3,6 +3,26 @@ export const TRIGGER_SIZE = 20;
 
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
+export function scrollElement(containerEle, element) {
+    if (!element) return;
+
+    const containerHeight = containerEle.clientHeight;
+    const containerScrollTop = containerEle.scrollTop;
+    const elementRect = element.getBoundingClientRect();
+    const containerRect = containerEle.getBoundingClientRect();
+    const {y, height: elementHeight} = elementRect;
+    const elementTop = y - containerRect.y + containerScrollTop;
+
+    // 非可见
+    if (elementTop < containerScrollTop || (elementTop + elementHeight) > (containerScrollTop + containerHeight)) {
+        // TODO 滚动动画？
+        // 滚动到中间
+        containerEle.scrollTop = elementTop - elementHeight - (containerHeight - elementHeight) / 2;
+        // 滚动到顶部
+        // containerEle.scrollTop = elementTop;
+    }
+}
+
 export function isDropAccept(options) {
     const {
         draggingNode,
