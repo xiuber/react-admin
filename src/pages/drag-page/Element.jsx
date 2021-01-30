@@ -1,4 +1,4 @@
-import React, {createElement} from 'react';
+import React, {createElement, useRef} from 'react';
 import styles from './style.less';
 import * as antdComponent from 'antd/es';
 import * as raLibComponent from 'ra-lib';
@@ -110,8 +110,9 @@ function hideDropGuide() {
     guideLineEle.classList.remove(styles.guideActive);
 }
 
-
 export default function Element(props) {
+    const prevSideKeyRef = useRef(null);
+
     const {
         config,
         dragPage,
@@ -162,6 +163,7 @@ export default function Element(props) {
         e.stopPropagation();
 
         dragPageAction.setDraggingNode(config);
+        prevSideKeyRef.current = dragPage.activeSideKey;
 
         dragPageAction.setActiveSideKey('componentTree');
 
@@ -325,6 +327,7 @@ export default function Element(props) {
 
     function onDragEnd() {
         dragPageAction.setDraggingNode(null);
+        if (prevSideKeyRef.current) dragPageAction.setActiveSideKey(prevSideKeyRef.current);
     }
 
     return createElement(component, {

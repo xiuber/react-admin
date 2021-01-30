@@ -73,6 +73,17 @@ export default {
                             },
                             componentName: 'div',
                             style: {width: 300, height: 200, background: 'grey'},
+                            children: [
+                                {
+                                    __config: {
+                                        componentId: '88ui',
+                                        isContainer: false,
+                                        draggable: false,
+                                    },
+                                    componentName: 'Text',
+                                    text: '不是容器',
+                                },
+                            ],
                         },
                     ],
                 },
@@ -203,7 +214,11 @@ export default {
             });
         }
 
-        return {selectedNodeId, selectedNode, componentTreeExpendedKeys: [...componentTreeExpendedKeys]};
+        return {
+            selectedNodeId,
+            selectedNode,
+            componentTreeExpendedKeys: [...componentTreeExpendedKeys],
+        };
     },
     setPageConfig: pageConfig => ({pageConfig}),
     deleteSelectedNode: (_, state) => {

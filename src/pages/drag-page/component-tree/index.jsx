@@ -1,11 +1,8 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {Tree} from 'antd';
-import {
-    AppstoreOutlined,
-} from '@ant-design/icons';
+import {AppstoreOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import {PageContent} from 'ra-lib';
-import {v4 as uuid} from 'uuid';
 import TreeNode from './TreeNode';
 import {scrollElement} from '../util';
 
@@ -102,37 +99,6 @@ export default config({
                 </span>
             </header>
             <main ref={mainRef}>
-                <div
-                    style={{width: 100, height: 100, background: 'red'}}
-                    draggable
-                    onDragStart={
-                        function(e) {
-                            e.stopPropagation();
-                            const componentId = uuid();
-                            const config = {
-                                __config: {
-                                    componentId,
-                                    isContainer: true,
-                                },
-                                componentName: 'div',
-                                style: {height: 50, background: 'grey', border: '1px solid #fff', padding: 16},
-                                children: [
-                                    {
-                                        __config: {
-                                            componentId: uuid(),
-                                        },
-                                        componentName: 'Text',
-                                        text: componentId,
-                                    },
-                                ],
-                            };
-                            e.dataTransfer.setData('componentConfig', JSON.stringify(config));
-                            dragPageAction.setDraggingNode(config);
-                        }
-                    }
-                >
-                    啥的呢
-                </div>
                 <Tree
                     expandedKeys={componentTreeExpendedKeys}
                     onExpand={handleExpand}

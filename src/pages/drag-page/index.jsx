@@ -29,12 +29,19 @@ export default config({
         return {
             pageConfig: state.dragPage.pageConfig,
             selectedNodeId: state.dragPage.selectedNodeId,
+            activeSideKey: state.dragPage.activeSideKey,
             draggingNode: state.dragPage.draggingNode,
             dragPage: state.dragPage,
         };
     },
 })(function DragPage(props) {
-    const {dragPage, pageConfig, selectedNodeId, draggingNode} = props;
+    const {
+        dragPage,
+        pageConfig,
+        selectedNodeId,
+        activeSideKey,
+        draggingNode,
+    } = props;
     const dragPageAction = props.action.dragPage;
 
     const iframeRef = useRef(null);
@@ -73,7 +80,7 @@ export default config({
 
     useEffect(() => {
         renderDesignPage();
-    }, [pageConfig, selectedNodeId, draggingNode]);
+    }, [pageConfig, selectedNodeId, activeSideKey, draggingNode]);
 
 
     useEffect(() => {

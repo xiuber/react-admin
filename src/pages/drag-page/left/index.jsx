@@ -99,9 +99,17 @@ export default config({
                 </div>
             </div>
             <div styleName="right">
-                {showSide ? (
-                    tools.find(item => item.key === activeSideKey)?.component
-                ) : null}
+                {tools.map(item => {
+                    const {key, component} = item;
+                    return (
+                        <div
+                            id={key}
+                            style={{display: showSide && key === activeSideKey ? 'block' : 'none'}}
+                        >
+                            {component}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

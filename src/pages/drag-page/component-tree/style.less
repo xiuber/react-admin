@@ -38,6 +38,19 @@
     transition: background-color, padding .3s;
     user-select: none;
 
+    & > span {
+        display: flex;
+        align-items: center;
+    }
+
+    :global {
+        .anticon {
+            margin-right: 4px;
+            color: #888;
+            font-size: 16px;
+        }
+    }
+
     &[draggable='false'] {
         cursor: no-drop;
     }
