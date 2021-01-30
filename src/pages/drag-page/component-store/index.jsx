@@ -1,6 +1,5 @@
 import React from 'react';
 import {v4 as uuid} from 'uuid';
-import {PageContent} from 'ra-lib';
 import {AppstoreOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';

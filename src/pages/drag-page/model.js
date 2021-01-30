@@ -18,7 +18,7 @@ export default {
         // showSide: false, // 左侧是否显示
         showSide: true,
         // activeSideKey: null, // 左侧激活key
-        activeSideKey: 'componentTree',
+        activeSideKey: 'componentStore',
         activeTabKey: 'attribute', // 右侧激活tab key
 
         componentTreeExpendedKeys: [], // 组件树 展开节点
@@ -31,7 +31,9 @@ export default {
             },
             // componentName: 'DragHolder',
             componentName: 'div',
-            style: {margin: 6, padding: 16, background: 'yellow'},
+            props: {
+                style: {margin: 6, padding: 16, background: 'yellow'},
+            },
             children: [
                 {
                     __config: {
@@ -39,7 +41,9 @@ export default {
                         dropAccept: ['Text'],
                     },
                     componentName: 'div',
-                    style: {background: 'blue', height: 200, color: '#fff'},
+                    props: {
+                        style: {background: 'blue', height: 200, color: '#fff'},
+                    },
                 },
                 {
                     __config: {
@@ -47,7 +51,9 @@ export default {
                         componentDesc: '黑色div',
                     },
                     componentName: 'div',
-                    style: {background: 'black', color: '#fff'},
+                    props: {
+                        style: {background: 'black', color: '#fff'},
+                    },
                     children: [
                         {
                             __config: {
@@ -62,7 +68,9 @@ export default {
                                         isContainer: false,
                                     },
                                     componentName: 'Text',
-                                    text: '文本啊啊',
+                                    props: {
+                                        text: '文本啊啊',
+                                    },
                                 },
                             ],
                         },
@@ -72,7 +80,9 @@ export default {
                                 componentId: '22',
                             },
                             componentName: 'div',
-                            style: {width: 300, height: 200, background: 'grey'},
+                            props: {
+                                style: {width: 300, height: 200, background: 'grey'},
+                            },
                             children: [
                                 {
                                     __config: {
@@ -81,7 +91,9 @@ export default {
                                         draggable: false,
                                     },
                                     componentName: 'Text',
-                                    text: '不是容器',
+                                    props: {
+                                        text: '不是容器',
+                                    },
                                 },
                             ],
                         },
@@ -93,7 +105,9 @@ export default {
                         isContainer: false,
                     },
                     componentName: 'Button',
-                    type: 'primary',
+                    props: {
+                        type: 'primary',
+                    },
                     children: [
                         {
                             __config: {
@@ -102,7 +116,9 @@ export default {
                                 isContainer: false,
                             },
                             componentName: 'Text',
-                            text: '真的是文本啊',
+                            props: {
+                                text: '真的是文本啊',
+                            },
                         },
                     ],
                 },
@@ -112,18 +128,22 @@ export default {
                         isContainer: false,
                     },
                     componentName: 'Select',
-                    style: {width: 100},
-                    options: [
-                        {value: 1, label: '哈哈'},
-                        {value: 2, label: '咿呀'},
-                    ],
+                    props: {
+                        style: {width: 100},
+                        options: [
+                            {value: 1, label: '哈哈'},
+                            {value: 2, label: '咿呀'},
+                        ],
+                    },
                 },
                 {
                     __config: {
                         componentId: '5',
                     },
                     componentName: 'div',
-                    style: {margin: 6, width: 500, background: 'yellow'},
+                    props: {
+                        style: {margin: 6, width: 500, background: 'yellow'},
+                    },
                     children: [
                         {
                             __config: {
@@ -131,7 +151,9 @@ export default {
                                 isContainer: false,
                             },
                             componentName: 'Text',
-                            text: '啥玩意',
+                            props: {
+                                text: '啥玩意',
+                            },
                         },
                         {
                             __config: {
@@ -147,7 +169,9 @@ export default {
                                         draggable: false,
                                     },
                                     componentName: 'Text',
-                                    text: '我是列',
+                                    props: {
+                                        text: '我是列',
+                                    },
                                 },
                             ],
                         },
@@ -158,9 +182,11 @@ export default {
                                 // isContainer: false,
                             },
                             componentName: 'Table',
-                            surplusSpace: false,
-                            columns: [{title: '姓名', dataIndex: 'name'}],
-                            dataSource: [{name: '张三'}, {name: '李四'}],
+                            props: {
+                                surplusSpace: false,
+                                columns: [{title: '姓名', dataIndex: 'name'}],
+                                dataSource: [{name: '张三'}, {name: '李四'}],
+                            },
                         },
                     ],
                 },

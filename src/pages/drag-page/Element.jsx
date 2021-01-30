@@ -134,9 +134,10 @@ export default function Element(props) {
         },
         componentName,
         children,
-        className,
-        ...others
+        props: componentProps,
     } = config;
+
+    const {className, ...others} = componentProps || {};
 
     if (!componentName) return null;
 

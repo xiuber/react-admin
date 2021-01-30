@@ -52,12 +52,14 @@ export default config({
             key: 'componentTree',
             icon: <ShareAltOutlined/>,
             component: <ComponentTree/>,
+            width: 250,
         },
         {
             title: '组件库',
             key: 'componentStore',
             icon: <AppstoreOutlined/>,
             component: <ComponentStore/>,
+            width: 250,
         },
         {
             title: '源码开发',
@@ -65,6 +67,7 @@ export default config({
             icon: <DesktopOutlined/>,
             component: <SchemaEditor/>,
             bottom: true,
+            width: 350,
         },
     ];
 
@@ -83,6 +86,8 @@ export default config({
         });
     }
 
+    const rightWidth = tools.find(item => item.key === activeSideKey)?.width;
+
     return (
         <div styleName="root">
             <div styleName="left">
@@ -98,12 +103,19 @@ export default config({
                     {renderTools(tools, true)}
                 </div>
             </div>
-            <div styleName="right">
+            <div
+                styleName="right"
+                style={showSide ? {
+                    flex: `0 0 ${rightWidth}px`,
+                    width: rightWidth,
+                } : {}}
+            >
                 {tools.map(item => {
                     const {key, component} = item;
                     return (
                         <div
                             id={key}
+                            styleName="rightPane"
                             style={{display: showSide && key === activeSideKey ? 'block' : 'none'}}
                         >
                             {component}
