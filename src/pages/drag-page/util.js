@@ -13,8 +13,14 @@ export function scrollElement(containerEle, element) {
     const {y, height: elementHeight} = elementRect;
     const elementTop = y - containerRect.y + containerScrollTop;
 
+    const elementBottom = elementTop + elementHeight;
+    const containerShownHeight = containerScrollTop + containerHeight;
+
     // 非可见
-    if (elementTop < containerScrollTop || (elementTop + elementHeight) > (containerScrollTop + containerHeight)) {
+    if (
+        elementTop > containerShownHeight
+        || elementBottom < containerScrollTop
+    ) {
         // TODO 滚动动画？
         // 滚动到中间
         containerEle.scrollTop = elementTop - elementHeight - (containerHeight - elementHeight) / 2;
