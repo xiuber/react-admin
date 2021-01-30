@@ -1,3 +1,4 @@
+import {findNodeById} from './util';
 const holderNode = {
     __config: {
         isRoot: true,
@@ -12,7 +13,7 @@ export default {
         activeToolKey: 'layout', // 头部激活 key
         selectedNodeId: null,
         selectedNode: null,
-        draggingNodeId: null, // 正在拖动的节点 key
+        draggingNode: null, // 正在拖动的节点 key
         showCode: false, // 显示代码
         // showSide: false, // 左侧是否显示
         showSide: true,
@@ -37,6 +38,7 @@ export default {
                     __config: {
                         componentId: '12',
                         isContainer: true,
+                        dropAccept: ['Text'],
                     },
                     componentName: 'div',
                     style: {background: 'blue', height: 200, color: '#fff'},
@@ -135,7 +137,7 @@ export default {
         },
     },
     setComponentTreeExpendedKeys: componentTreeExpendedKeys => ({componentTreeExpendedKeys}),
-    setDraggingNodeId: draggingNodeId => ({draggingNodeId}),
+    setDraggingNode: draggingNode => ({draggingNode}),
     setActiveTabKey: activeTabKey => {
         return {activeTabKey};
     },
@@ -274,16 +276,7 @@ function findChildrenCollection(root, id) {
     }
 }
 
-function findNodeById(root, id) {
-    if (root.__config?.componentId === id) return root;
 
-    if (!root.children) return null;
-
-    for (let node of root.children) {
-        const result = findNodeById(node, id);
-        if (result) return result;
-    }
-}
 
 function deleteNodeById(root, id) {
     if (!root.children) return [];

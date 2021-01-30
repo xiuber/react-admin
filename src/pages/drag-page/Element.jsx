@@ -3,7 +3,11 @@ import styles from './style.less';
 import * as antdComponent from 'antd/es';
 import * as raLibComponent from 'ra-lib';
 import * as components from './components';
-import {getDropGuidePosition, TRIGGER_SIZE} from './util';
+import {
+    getDropGuidePosition,
+    TRIGGER_SIZE,
+    isDropAccept,
+} from './util';
 
 function getComponent(componentName, componentType) {
     if (componentType === 'ra-lib') {
@@ -34,12 +38,7 @@ function getDraggableEle(target) {
     return getDraggableEle(target.parentNode);
 }
 
-
-function showDropGuideLine(e, targetElement) {
-    const position = getDropGuidePosition({
-        event: e,
-        targetElement,
-    });
+function showDropGuideLine(e, targetElement, position) {
     let {isCenter, isLeft, isRight, isTop, isBottom, top, left, width, height} = position;
 
     if (isLeft || isRight) {
@@ -136,7 +135,7 @@ export default function Element(props) {
     const clcs = [styles.element, className];
 
     if (dragPage.selectedNodeId === componentId) clcs.push(styles.selected);
-    if (dragPage.draggingNodeId === componentId) clcs.push(styles.dragging);
+    if (dragPage.draggingNode?.__config?.componentId === componentId) clcs.push(styles.dragging);
     if (!draggable) clcs.push(styles.unDraggable);
 
     const component = getComponent(componentName, componentType);
@@ -144,45 +143,18 @@ export default function Element(props) {
     const onDragStart = function(e) {
         e.stopPropagation();
 
-        dragPageAction.setDraggingNodeId(componentId);
+        dragPageAction.setDraggingNode(config);
 
         dragPageAction.setActiveSideKey('componentTree');
 
         e.dataTransfer.setData('sourceComponentId', componentId);
     };
 
-    const onDragOver = function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        const targetElement = getDraggableEle(e.target);
-        if (!targetElement) return;
-
-        const targetId = targetElement.getAttribute('data-componentId');
-
-        if (dragPage.draggingNodeId === targetId) return;
-
-        showDropGuideLine(e, targetElement);
-    };
-    const onDrop = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const targetElement = getDraggableEle(e.target);
-        if (!targetElement) return;
-
-        const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
-        let componentConfig = e.dataTransfer.getData('componentConfig');
-        const targetComponentId = targetElement.getAttribute('data-componentId');
-
-        if (targetComponentId === sourceComponentId) return;
-
-        const position = getDropGuidePosition({
-            event: e,
-            targetElement,
-        });
+    function getPosition(options) {
+        const position = getDropGuidePosition(options);
 
         if (!position) return;
+
         let {
             isTop,
             isLeft,
@@ -200,13 +172,77 @@ export default function Element(props) {
         const isBefore = isTop || isLeft;
         const isAfter = isBottom || isRight;
 
+        return {...position, isBefore, isAfter, isChildren};
+    }
+
+    const onDragOver = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        const targetElement = getDraggableEle(e.target);
+        if (!targetElement) return;
+
+        const targetComponentId = targetElement.getAttribute('data-componentId');
+
+        if (dragPage.draggingNode?.__config?.componentId === targetComponentId) return;
+
+        const position = getPosition({
+            event: e,
+            targetElement,
+        });
+
+        if (!position) return;
+
+        const accept = isDropAccept({
+            draggingNode: dragPage.draggingNode,
+            pageConfig: dragPage.pageConfig,
+            targetComponentId,
+            ...position,
+        });
+
+        if (!accept) return;
+
+        showDropGuideLine(e, targetElement, position);
+    };
+    const onDrop = function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const end = () => {
+            onDragLeave(e);
+            onDragEnd();
+        };
+
+        const targetElement = getDraggableEle(e.target);
+        if (!targetElement) return end();
+
+        const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
+        let componentConfig = e.dataTransfer.getData('componentConfig');
+        const targetComponentId = targetElement.getAttribute('data-componentId');
+
+        if (targetComponentId === sourceComponentId) return end();
+
+        const position = getPosition({
+            event: e,
+            targetElement,
+        });
+
+        if (!position) return end();
+
+        const accept = isDropAccept({
+            draggingNode: dragPage.draggingNode,
+            pageConfig: dragPage.pageConfig,
+            targetComponentId,
+            ...position,
+        });
+
+        if (!accept) return end();
+
         if (sourceComponentId) {
             dragPageAction.moveNode({
                 sourceId: sourceComponentId,
                 targetId: targetComponentId,
-                isBefore,
-                isAfter,
-                isChildren,
+                ...position,
             });
             dragPageAction.setSelectedNodeId(sourceComponentId);
         }
@@ -215,19 +251,18 @@ export default function Element(props) {
             componentConfig = JSON.parse(componentConfig);
             dragPageAction.addNode({
                 targetId: targetComponentId,
-                isBefore,
-                isAfter,
-                isChildren,
                 node: componentConfig,
+                ...position,
             });
             dragPageAction.setSelectedNodeId(componentConfig.__config?.componentId);
         }
-
-        onDragLeave(e);
-        onDragEnd();
+        end();
     };
 
     function onDragEnter(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
         const targetElement = getDraggableEle(e.target);
         if (!targetElement) return;
 
@@ -267,7 +302,7 @@ export default function Element(props) {
     }
 
     function onDragEnd() {
-        dragPageAction.setDraggingNodeId(null);
+        dragPageAction.setDraggingNode(null);
     }
 
     return createElement(component, {

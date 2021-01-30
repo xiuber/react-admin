@@ -28,12 +28,12 @@ export default config({
         return {
             pageConfig: state.dragPage.pageConfig,
             selectedNodeId: state.dragPage.selectedNodeId,
-            draggingNodeId: state.dragPage.draggingNodeId,
+            draggingNode: state.dragPage.draggingNode,
             dragPage: state.dragPage,
         };
     },
 })(function DragPage(props) {
-    const {dragPage, pageConfig, selectedNodeId, draggingNodeId} = props;
+    const {dragPage, pageConfig, selectedNodeId, draggingNode} = props;
     const dragPageAction = props.action.dragPage;
 
     const iframeRef = useRef(null);
@@ -48,7 +48,7 @@ export default config({
             <Element
                 config={pageConfig}
                 dragPage={dragPage}
-                draggingNodeId={draggingNodeId}
+                draggingNode={draggingNode}
                 dragPageAction={dragPageAction}
                 iframeDocument={iframeDocument}
             />,
@@ -72,7 +72,7 @@ export default config({
 
     useEffect(() => {
         renderDesignPage();
-    }, [pageConfig, selectedNodeId, draggingNodeId]);
+    }, [pageConfig, selectedNodeId, draggingNode]);
 
     return (
         <PageContent fitHeight styleName="root">

@@ -7,14 +7,15 @@ import config from 'src/commons/config-hoc';
 import {PageContent} from 'ra-lib';
 
 import {v4 as uuid} from 'uuid';
-import {getDropGuidePosition} from '../util';
+import {getDropGuidePosition, isDropAccept} from '../util';
 
 import './style.less';
 
 const TreeNode = config({
     connect: state => {
         return {
-            draggingNodeId: state.dragPage.draggingNodeId,
+            pageConfig: state.dragPage.pageConfig,
+            draggingNode: state.dragPage.draggingNode,
             componentTreeExpendedKeys: state.dragPage.componentTreeExpendedKeys,
         };
     },
@@ -22,11 +23,12 @@ const TreeNode = config({
     const {
         node,
         selectedKey,
-        draggingNodeId,
+        pageConfig,
+        draggingNode,
         componentTreeExpendedKeys,
         action: {dragPage: dragPageAction},
     } = props;
-    const {key, title, isContainer, draggable} = node;
+    const {key, title, isContainer, draggable, nodeData} = node;
 
     const hoverRef = useRef(0);
     const nodeRef = useRef(null);
@@ -36,18 +38,18 @@ const TreeNode = config({
     function handleDragStart(e) {
         e.stopPropagation();
 
-        dragPageAction.setDraggingNodeId(key);
+        dragPageAction.setDraggingNode(nodeData);
 
         e.dataTransfer.setData('sourceComponentId', key);
     }
 
     function handleDragEnter(e) {
-        if (draggingNodeId === key) return;
+        if (draggingNode?.__config?.componentId === key) return;
         setDragIn(true);
     }
 
     function handleDragOver(e) {
-        if (draggingNodeId === key) return;
+        if (draggingNode?.__config?.componentId === key) return;
 
         // 1s 后展开节点
         if (!hoverRef.current) {
@@ -66,6 +68,16 @@ const TreeNode = config({
         });
         const {isTop, isBottom, isCenter} = options;
 
+        const accept = isDropAccept({
+            draggingNode,
+            pageConfig,
+            targetComponentId: key,
+            isBefore: isTop,
+            isAfter: isBottom,
+            isChildren: isCenter,
+        });
+        if (!accept) return;
+
         if (isTop) setDropPosition('top');
         if (isBottom) setDropPosition('bottom');
         if (isCenter) setDropPosition('center');
@@ -83,11 +95,15 @@ const TreeNode = config({
     function handleDrop(e) {
         e.preventDefault();
         e.stopPropagation();
+        const end = () => {
+            handleDragLeave(e);
+            handleDragEnd();
+        };
 
         const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
         let componentConfig = e.dataTransfer.getData('componentConfig');
 
-        if (key === sourceComponentId) return;
+        if (key === sourceComponentId) return end();
 
         const options = getDropGuidePosition({
             event: e,
@@ -97,6 +113,18 @@ const TreeNode = config({
             triggerSize: 10,
         });
         const {isTop, isBottom, isCenter} = options;
+
+
+        const accept = isDropAccept({
+            draggingNode,
+            pageConfig,
+            targetComponentId: key,
+            isBefore: isTop,
+            isAfter: isBottom,
+            isChildren: isCenter,
+        });
+
+        if (!accept) return end();
 
         if (sourceComponentId) {
             dragPageAction.moveNode({
@@ -121,8 +149,7 @@ const TreeNode = config({
             dragPageAction.setSelectedNodeId(componentConfig.__config?.componentId);
         }
 
-        handleDragLeave(e);
-        handleDragEnd();
+        end();
     }
 
     function handleDragEnd() {
@@ -130,17 +157,17 @@ const TreeNode = config({
             clearTimeout(hoverRef.current);
             hoverRef.current = 0;
         }
-        dragPageAction.setDraggingNodeId(null);
+        dragPageAction.setDraggingNode(null);
     }
 
     const isSelected = selectedKey === key;
-    const isDragging = draggingNodeId === key;
+    const isDragging = draggingNode?.__config?.componentId === key;
     const styleNames = ['treeNode'];
 
 
     if (isSelected) styleNames.push('selected');
     if (isDragging) styleNames.push('dragging');
-    if (dragIn && draggingNodeId) styleNames.push('dragIn');
+    if (dragIn && draggingNode) styleNames.push('dragIn');
 
     styleNames.push(dropPosition);
 
@@ -167,7 +194,7 @@ const TreeNode = config({
             onDragEnd={handleDragEnd}
         >
             {title}
-            <div styleName="dragGuide" style={{display: dragIn && draggingNodeId ? 'flex' : 'none'}}>
+            <div styleName="dragGuide" style={{display: dragIn && draggingNode ? 'flex' : 'none'}}>
                 <span>{positionMap[dropPosition]}</span>
             </div>
         </div>
@@ -208,6 +235,8 @@ export default config({
             next.isContainer = isContainer;
             next.key = componentId;
             next.draggable = draggable;
+            next.nodeData = prev;
+
             if (isRoot) next.draggable = false;
 
             if (children && children.length) {
@@ -286,7 +315,7 @@ export default config({
                                 ],
                             };
                             e.dataTransfer.setData('componentConfig', JSON.stringify(config));
-                            dragPageAction.setDraggingNodeId(componentId);
+                            dragPageAction.setDraggingNode(config);
                         }
                     }
                 >

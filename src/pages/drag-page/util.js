@@ -3,6 +3,58 @@ export const TRIGGER_SIZE = 20;
 
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
+export function isDropAccept(options) {
+    const {
+        draggingNode,
+        pageConfig,
+        targetComponentId,
+        isBefore,
+        isAfter,
+        isChildren,
+    } = options;
+
+    let targetNode;
+    if (isChildren) targetNode = findNodeById(pageConfig, targetComponentId);
+    if (isBefore || isAfter) targetNode = findParentNodeById(pageConfig, targetComponentId);
+    if (!targetNode) return true;
+
+    const dropAccept = targetNode?.__config?.dropAccept;
+
+    if (dropAccept === undefined) return true;
+
+    if (!draggingNode) return true;
+
+    const {componentName} = draggingNode;
+
+    return dropAccept.some(name => name === componentName);
+}
+
+export function findNodeById(root, id) {
+    if (root.__config?.componentId === id) return root;
+
+    if (!root.children) return null;
+
+    for (let node of root.children) {
+        const result = findNodeById(node, id);
+        if (result) return result;
+    }
+}
+
+export function findParentNodeById(root, id) {
+    if (root.__config?.componentId === id) return null;
+
+    if (!root.children) return null;
+
+    if (root.children.some(item => item.__config?.componentId === id)) {
+        return root;
+    } else {
+        for (let node of root.children) {
+            const result = findParentNodeById(node, id);
+            if (result) return result;
+        }
+    }
+}
+
 export function getDropGuidePosition(options) {
 
     const {
