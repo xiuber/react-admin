@@ -76,7 +76,10 @@ export default config({
             isAfter: isBottom,
             isChildren: isCenter,
         });
-        if (!accept) return;
+        if (!accept) {
+            setDragIn(false);
+            return;
+        }
 
         if (isTop) setDropPosition('top');
         if (isBottom) setDropPosition('bottom');
