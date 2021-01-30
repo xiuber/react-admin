@@ -27,14 +27,18 @@ export default config({
                 isContainer: true,
             },
             componentName: 'div',
-            style: {height: 50, background: 'grey', border: '1px solid #fff', padding: 16},
+            props: {
+                style: {height: 50, background: 'grey', border: '1px solid #fff', padding: 16},
+            },
             children: [
                 {
                     __config: {
                         componentId: uuid(),
                     },
                     componentName: 'Text',
-                    text: componentId,
+                    props: {
+                        text: componentId,
+                    },
                 },
             ],
         };

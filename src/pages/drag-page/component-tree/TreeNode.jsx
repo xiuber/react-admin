@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import config from 'src/commons/config-hoc';
 import {
     DropboxOutlined,
@@ -163,6 +163,15 @@ export default config({
         dragPageAction.setDraggingNode(null);
     }
 
+    useEffect(() => {
+        if (!nodeRef.current) return;
+
+        nodeRef.current.addEventListener('click', function(e) {
+            console.log(document.activeElement);
+            
+        });
+    }, [nodeRef]);
+
     const isSelected = selectedKey === key;
     const isDragging = draggingNode?.__config?.componentId === key;
     const styleNames = ['treeNode'];
@@ -174,8 +183,8 @@ export default config({
     styleNames.push(dropPosition);
 
     const positionMap = {
-        top: '前',
-        bottom: '后',
+        top: '上',
+        bottom: '下',
         center: '内',
     };
     return (

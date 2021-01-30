@@ -1,30 +1,12 @@
 import React, {createElement, useRef} from 'react';
 import styles from './style.less';
-import * as antdComponent from 'antd/es';
-import * as raLibComponent from 'ra-lib';
-import * as components from './components';
 import {
     getDropGuidePosition,
     TRIGGER_SIZE,
     isDropAccept,
+    getComponent,
 } from './util';
 
-function getComponent(componentName, componentType) {
-    if (componentType === 'ra-lib') {
-        const raCom = raLibComponent[componentName];
-
-        if (raCom) return raCom;
-    }
-    const Com = components[componentName];
-
-    if (Com) return Com;
-
-    const AntdCom = antdComponent[componentName];
-
-    if (AntdCom) return AntdCom;
-
-    return componentName;
-}
 
 // 可投放元素
 function getDroppableEle(target) {
@@ -348,7 +330,7 @@ export default function Element(props) {
         'data-componentId': componentId,
         'data-isContainer': isContainer,
         onClick: (e) => {
-            e.stopPropagation();
+            e.stopPropagation && e.stopPropagation();
             const ele = getDroppableEle(e.target);
 
             if (!ele) return;

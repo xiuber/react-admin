@@ -1,3 +1,7 @@
+import * as raLibComponent from 'ra-lib';
+import * as components from './components';
+import * as antdComponent from 'antd/es';
+
 export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
 
@@ -96,7 +100,7 @@ export function getDropGuidePosition(options) {
         isInFrame = true,
     } = options;
 
-    const targetIsContainer = isContainer === undefined ? targetElement.getAttribute('data-isContainer') ==='true' : isContainer;
+    const targetIsContainer = isContainer === undefined ? targetElement.getAttribute('data-isContainer') === 'true' : isContainer;
 
     const targetRect = targetElement.getBoundingClientRect();
     const {
@@ -167,4 +171,21 @@ export function getDropGuidePosition(options) {
         isRight,
         ...guidePosition,
     };
+}
+
+export function getComponent(componentName, componentType) {
+    if (componentType === 'ra-lib') {
+        const raCom = raLibComponent[componentName];
+
+        if (raCom) return raCom;
+    }
+    const Com = components[componentName];
+
+    if (Com) return Com;
+
+    const AntdCom = antdComponent[componentName];
+
+    if (AntdCom) return AntdCom;
+
+    return componentName;
 }

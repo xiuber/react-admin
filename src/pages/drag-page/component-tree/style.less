@@ -1,5 +1,9 @@
 .root {
     :global {
+        .ant-tree-node-content-wrapper {
+            padding: 0;
+        }
+
         .ant-tree-node-content-wrapper.draggable {
             cursor: move;
         }
@@ -13,7 +17,7 @@
 .treeNode {
     position: relative;
     border-radius: 3px;
-    padding: 0;
+    padding: 0 4px;
     transition: background-color, padding .3s;
     user-select: none;
 
@@ -53,7 +57,8 @@
     //}
 
     &.dragIn {
-        padding: 10px 0;
+        padding-top: 10px;
+        padding-bottom: 10px;
         background: #d6e4ff;
 
         &.top,

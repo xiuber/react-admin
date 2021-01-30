@@ -1,4 +1,5 @@
 import {findNodeById} from './util';
+import {v4 as uuid} from 'uuid';
 
 const holderNode = {
     __config: {
@@ -37,8 +38,32 @@ export default {
             children: [
                 {
                     __config: {
+                        componentId: uuid(),
+                    },
+                    // componentName: 'Input', // TODO 报错
+                    // componentName: 'Switch',
+                    // componentName: 'InputNumber',
+                    componentName: 'Form',
+                    children: [
+                        {
+                            __config: {
+                                componentId: uuid(),
+                                componentType: 'ra-lib',
+                            },
+                            // componentName: 'FormElement', // TODO 报错
+                            componentName: 'PageContent',
+                            props: {
+                                type: 'select',
+                                field: 'aa',
+                            },
+                        },
+                    ],
+                },
+                {
+                    __config: {
                         componentId: '12',
                         dropAccept: ['Text'],
+                        componentDesc: '只接受Text',
                     },
                     componentName: 'div',
                     props: {
@@ -78,6 +103,7 @@ export default {
                             __config: {
                                 isContainer: false,
                                 componentId: '22',
+                                componentDesc: '不是容器',
                             },
                             componentName: 'div',
                             props: {
@@ -179,6 +205,7 @@ export default {
                             __config: {
                                 componentId: '7',
                                 dropAccept: ['Column'],
+                                componentDesc: '只接受Column',
                                 // isContainer: false,
                             },
                             componentName: 'Table',
