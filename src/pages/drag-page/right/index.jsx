@@ -1,6 +1,8 @@
 import React from 'react';
 import {Tabs} from 'antd';
 import config from 'src/commons/config-hoc';
+import ComponentStyle from '../component-style';
+import './style.less';
 
 const {TabPane} = Tabs;
 
@@ -19,14 +21,15 @@ export default config({
     }
 
     return (
-        <div style={{width: 300}}>
+        <div styleName="root">
             <Tabs
                 type="card"
+                tabBarStyle={{marginBottom: 0}}
                 activeKey={activeTabKey}
                 onChange={handleChange}
             >
                 <TabPane tab="属性" key="attribute">
-                    Content of Tab Pane 2
+                    <ComponentStyle/>
                 </TabPane>
                 <TabPane tab="样式" key="style">
                     Content of Tab Pane 1

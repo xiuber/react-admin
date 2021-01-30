@@ -76,14 +76,14 @@ export default config({
             isAfter: isBottom,
             isChildren: isCenter,
         });
-        if (!accept) {
-            setDragIn(false);
-            return;
-        }
+
+        setDropPosition('');
+
+        if (!accept) return;
 
         if (isTop) setDropPosition('top');
         if (isBottom) setDropPosition('bottom');
-        if (isCenter) setDropPosition('center');
+        if (accept && isCenter) setDropPosition('center');
     }
 
     function handleDragLeave(e) {

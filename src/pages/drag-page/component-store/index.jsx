@@ -1,10 +1,10 @@
 import React from 'react';
-import config from 'src/commons/config-hoc';
 import {v4 as uuid} from 'uuid';
-
-import './style.less';
 import {PageContent} from 'ra-lib';
 import {AppstoreOutlined} from '@ant-design/icons';
+import config from 'src/commons/config-hoc';
+import Pane from '../pane';
+import './style.less';
 
 export default config({
     connect: state => {
@@ -48,14 +48,15 @@ export default config({
     }
 
     return (
-        <PageContent fitHeight otherHeight={8} styleName="root">
-            <header>
-                <span>
+        <Pane
+            header={
+                <div>
                     <AppstoreOutlined style={{marginRight: 4}}/>
                     组件
-                </span>
-            </header>
-            <main>
+                </div>
+            }
+        >
+            <div styleName="root">
                 <div
                     style={{width: 100, height: 100, background: 'red'}}
                     draggable
@@ -64,7 +65,7 @@ export default config({
                 >
                     啥的呢
                 </div>
-            </main>
-        </PageContent>
+            </div>
+        </Pane>
     );
 });

@@ -2,9 +2,9 @@ import React, {useState, useEffect, useRef} from 'react';
 import {Tree} from 'antd';
 import {AppstoreOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
-import {PageContent} from 'ra-lib';
 import TreeNode from './TreeNode';
 import {scrollElement} from '../util';
+import Pane from '../pane';
 
 import './style.less';
 
@@ -91,14 +91,15 @@ export default config({
     }, [selectedNodeId]);
 
     return (
-        <PageContent fitHeight otherHeight={8} styleName="root">
-            <header>
-                <span>
+        <Pane
+            header={
+                <div>
                     <AppstoreOutlined style={{marginRight: 4}}/>
                     组件树
-                </span>
-            </header>
-            <main ref={mainRef}>
+                </div>
+            }
+        >
+            <div styleName="root" ref={mainRef}>
                 <Tree
                     expandedKeys={componentTreeExpendedKeys}
                     onExpand={handleExpand}
@@ -112,7 +113,7 @@ export default config({
                     selectedKeys={[selectedNodeId]}
                     onSelect={handleSelected}
                 />
-            </main>
-        </PageContent>
+            </div>
+        </Pane>
     );
 });
