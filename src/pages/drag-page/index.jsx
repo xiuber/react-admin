@@ -80,7 +80,12 @@ export default config({
 
     useEffect(() => {
         renderDesignPage();
-    }, [pageConfig, selectedNodeId, activeSideKey, draggingNode]);
+    }, [
+        pageConfig,
+        selectedNodeId,
+        activeSideKey,
+        draggingNode,
+    ]);
 
 
     useEffect(() => {
