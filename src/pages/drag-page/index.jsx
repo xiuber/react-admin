@@ -16,7 +16,7 @@ const iframeSrcDoc = `
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
     <body>
         <div id="dnd-container"></div>
-        <div id="drop-guide-line" style="position: fixed;background: red; pointer-events: none;"></div>
+        <div id="drop-guide-line" style="display: none"><span>前</span></div>
     </body>
 </html>
 `;

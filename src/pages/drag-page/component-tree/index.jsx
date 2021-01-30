@@ -26,7 +26,7 @@ const TreeNode = config({
         componentTreeExpendedKeys,
         action: {dragPage: dragPageAction},
     } = props;
-    const {key, title, isContainer} = node;
+    const {key, title, isContainer, draggable} = node;
 
     const hoverRef = useRef(0);
     const nodeRef = useRef(null);
@@ -122,7 +122,7 @@ const TreeNode = config({
         }
 
         handleDragLeave(e);
-        handleDragEnd(e);
+        handleDragEnd();
     }
 
     function handleDragEnd() {
@@ -131,7 +131,6 @@ const TreeNode = config({
             hoverRef.current = 0;
         }
         dragPageAction.setDraggingNodeId(null);
-        setDragIn(false);
     }
 
     const isSelected = selectedKey === key;
@@ -159,7 +158,7 @@ const TreeNode = config({
             ref={nodeRef}
             key={key}
             styleName={styleNames.join(' ')}
-            draggable
+            draggable={draggable}
             onDragStart={handleDragStart}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
@@ -198,10 +197,18 @@ export default config({
         const treeData = {};
         const loop = (prev, next) => {
             const {__config = {}, componentName, children} = prev;
-            const {componentId, componentDesc, isContainer} = __config;
+            const {
+                isRoot,
+                componentId,
+                componentDesc,
+                isContainer,
+                draggable = true,
+            } = __config;
             next.title = componentDesc || componentName;
             next.isContainer = isContainer;
             next.key = componentId;
+            next.draggable = draggable;
+            if (isRoot) next.draggable = false;
 
             if (children && children.length) {
                 next.children = children.map(() => ({}));

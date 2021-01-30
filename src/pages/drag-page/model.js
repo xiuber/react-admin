@@ -31,7 +31,7 @@ export default {
             },
             // componentName: 'DragHolder',
             componentName: 'div',
-            style: {margin: 6, padding: 16, background: 'green'},
+            style: {margin: 6, padding: 16, background: 'yellow'},
             children: [
                 {
                     __config: {

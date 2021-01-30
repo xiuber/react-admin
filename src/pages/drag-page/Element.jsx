@@ -5,8 +5,6 @@ import * as raLibComponent from 'ra-lib';
 import * as components from './components';
 import {getDropGuidePosition, TRIGGER_SIZE} from './util';
 
-const DROP_GUIDE_COLOR = '#14ee69';
-
 function getComponent(componentName, componentType) {
     if (componentType === 'ra-lib') {
         const raCom = raLibComponent[componentName];
@@ -38,15 +36,17 @@ function getDraggableEle(target) {
 
 
 function showDropGuideLine(e, targetElement) {
-    // const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
-    // console.log(sourceComponentId);
     const position = getDropGuidePosition({
         event: e,
         targetElement,
     });
-    let {isCenter, isLeft, isRight, top, left, width, height} = position;
+    let {isCenter, isLeft, isRight, isTop, isBottom, top, left, width, height} = position;
 
-    if (isLeft || isRight) isCenter = false;
+    if (isLeft || isRight) {
+        isCenter = false;
+        isTop = false;
+        isBottom = false;
+    }
 
     const guidePosition = {
         top,
@@ -57,25 +57,25 @@ function showDropGuideLine(e, targetElement) {
 
     const frameDocument = document.getElementById('dnd-iframe').contentDocument;
     const guideLineEle = frameDocument.getElementById('drop-guide-line');
-    const componentDesc = targetElement.getAttribute('data-componentDesc');
 
     if (!guideLineEle) return;
 
-    if (isCenter) {
-        guideLineEle.innerHTML = `<div style="
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background: ${DROP_GUIDE_COLOR};
-            padding: 0 4px;
-            ">${componentDesc} 内</div>`;
-    } else {
-        guideLineEle.innerHTML = '';
-    }
+    const guildTipEle = guideLineEle.querySelector('span');
 
-    guideLineEle.style.backgroundColor = DROP_GUIDE_COLOR;
-    guideLineEle.style.display = 'block';
+    guideLineEle.classList.add(styles.guideActive);
+    guideLineEle.classList.remove(styles.gLeft);
+    guideLineEle.classList.remove(styles.gRight);
+    if (isLeft) {
+        guildTipEle.innerHTML = '前';
+        guideLineEle.classList.add(styles.gLeft);
+    }
+    if (isRight) {
+        guildTipEle.innerHTML = '后';
+        guideLineEle.classList.add(styles.gRight);
+    }
+    if (isTop) guildTipEle.innerHTML = '上';
+    if (isBottom) guildTipEle.innerHTML = '下';
+    if (isCenter) guildTipEle.innerHTML = '内';
 
     Object.entries(guidePosition).forEach(([key, value]) => {
         guideLineEle.style[key] = `${value}px`;
@@ -89,7 +89,7 @@ function hideDropGuide() {
     const guideLineEle = frameDocument.getElementById('drop-guide-line');
     if (!guideLineEle) return;
 
-    guideLineEle.style.display = 'none';
+    guideLineEle.classList.remove(styles.guideActive);
 }
 
 
@@ -143,7 +143,10 @@ export default function Element(props) {
 
     const onDragStart = function(e) {
         e.stopPropagation();
+
         dragPageAction.setDraggingNodeId(componentId);
+
+        dragPageAction.setActiveSideKey('componentTree');
 
         e.dataTransfer.setData('sourceComponentId', componentId);
     };
@@ -154,9 +157,12 @@ export default function Element(props) {
 
         const targetElement = getDraggableEle(e.target);
         if (!targetElement) return;
-        if (dragPage.draggingNodeId !== componentId) {
-            showDropGuideLine(e, targetElement);
-        }
+
+        const targetId = targetElement.getAttribute('data-componentId');
+
+        if (dragPage.draggingNodeId === targetId) return;
+
+        showDropGuideLine(e, targetElement);
     };
     const onDrop = function(e) {
         e.preventDefault();
@@ -202,6 +208,7 @@ export default function Element(props) {
                 isAfter,
                 isChildren,
             });
+            dragPageAction.setSelectedNodeId(sourceComponentId);
         }
 
         if (componentConfig) {
@@ -213,6 +220,7 @@ export default function Element(props) {
                 isChildren,
                 node: componentConfig,
             });
+            dragPageAction.setSelectedNodeId(componentConfig.__config?.componentId);
         }
 
         onDragLeave(e);
@@ -222,6 +230,9 @@ export default function Element(props) {
     function onDragEnter(e) {
         const targetElement = getDraggableEle(e.target);
         if (!targetElement) return;
+
+        const targetId = targetElement.getAttribute('data-componentId');
+        dragPageAction.setSelectedNodeId(targetId);
 
         targetElement.classList.add(styles.dragEnter);
         const targetRect = targetElement.getBoundingClientRect();
@@ -239,6 +250,7 @@ export default function Element(props) {
     }
 
     function onDragLeave(e) {
+        hideDropGuide();
         const targetElement = getDraggableEle(e.target);
         if (!targetElement) return;
 
@@ -256,9 +268,7 @@ export default function Element(props) {
 
     function onDragEnd() {
         dragPageAction.setDraggingNodeId(null);
-        hideDropGuide();
     }
-
 
     return createElement(component, {
         ...others,
@@ -277,7 +287,12 @@ export default function Element(props) {
         'data-isContainer': isContainer,
         onClick: (e) => {
             e.stopPropagation();
-            dragPageAction.setSelectedNodeId(componentId);
+            const ele = getDraggableEle(e.target);
+
+            if (!ele) return;
+
+            const id = ele.getAttribute('data-componentId');
+            dragPageAction.setSelectedNodeId(id);
         },
     });
 }
