@@ -39,16 +39,22 @@ export function isDropAccept(options) {
         isChildren,
     } = options;
 
+    if (!draggingNode) return false;
+
     let targetNode;
     if (isChildren) targetNode = findNodeById(pageConfig, targetComponentId);
     if (isBefore || isAfter) targetNode = findParentNodeById(pageConfig, targetComponentId);
-    if (!targetNode) return true;
+
+    if (!targetNode) return false;
+
+    const config = targetNode.__config || {};
+    const {isContainer = true} = config;
+
+    if (!isContainer) return false;
 
     const dropAccept = targetNode?.__config?.dropAccept;
 
     if (dropAccept === undefined) return true;
-
-    if (!draggingNode) return true;
 
     const {componentName} = draggingNode;
 
@@ -82,7 +88,6 @@ export function findParentNodeById(root, id) {
 }
 
 export function getDropGuidePosition(options) {
-
     const {
         event,
         targetElement,
@@ -91,7 +96,7 @@ export function getDropGuidePosition(options) {
         isInFrame = true,
     } = options;
 
-    const targetIsContainer = isContainer === undefined ? targetElement.getAttribute('data-isContainer') : isContainer;
+    const targetIsContainer = isContainer === undefined ? targetElement.getAttribute('data-isContainer') ==='true' : isContainer;
 
     const targetRect = targetElement.getBoundingClientRect();
     const {

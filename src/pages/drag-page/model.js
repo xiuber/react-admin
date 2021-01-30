@@ -1,8 +1,8 @@
 import {findNodeById} from './util';
+
 const holderNode = {
     __config: {
-        isRoot: true,
-        isContainer: true,
+        draggable: false,
         componentId: '1',
     },
     componentName: 'DragHolder',
@@ -25,8 +25,7 @@ export default {
 
         pageConfig: {
             __config: {
-                isRoot: true,
-                isContainer: true,
+                draggable: false,
                 componentId: '1',
                 componentDesc: '我是最外层',
             },
@@ -37,7 +36,6 @@ export default {
                 {
                     __config: {
                         componentId: '12',
-                        isContainer: true,
                         dropAccept: ['Text'],
                     },
                     componentName: 'div',
@@ -47,7 +45,6 @@ export default {
                     __config: {
                         componentId: '2',
                         componentDesc: '黑色div',
-                        isContainer: true,
                     },
                     componentName: 'div',
                     style: {background: 'black', color: '#fff'},
@@ -62,6 +59,7 @@ export default {
                                 {
                                     __config: {
                                         componentId: '666',
+                                        isContainer: false,
                                     },
                                     componentName: 'Text',
                                     text: '文本啊啊',
@@ -70,7 +68,7 @@ export default {
                         },
                         {
                             __config: {
-                                isContainer: true,
+                                isContainer: false,
                                 componentId: '22',
                             },
                             componentName: 'div',
@@ -81,6 +79,7 @@ export default {
                 {
                     __config: {
                         componentId: '3',
+                        isContainer: false,
                     },
                     componentName: 'Button',
                     type: 'primary',
@@ -89,6 +88,7 @@ export default {
                             __config: {
                                 componentId: '777',
                                 draggable: false,
+                                isContainer: false,
                             },
                             componentName: 'Text',
                             text: '真的是文本啊',
@@ -98,6 +98,7 @@ export default {
                 {
                     __config: {
                         componentId: '4',
+                        isContainer: false,
                     },
                     componentName: 'Select',
                     style: {width: 100},
@@ -116,6 +117,7 @@ export default {
                         {
                             __config: {
                                 componentId: '888',
+                                isContainer: false,
                             },
                             componentName: 'Text',
                             text: '啥玩意',
@@ -123,7 +125,8 @@ export default {
                         {
                             __config: {
                                 componentId: '7',
-                                componentType: 'ra-lib',
+                                // dropAccept: ['Column'],
+                                isContainer: false,
                             },
                             componentName: 'Table',
                             surplusSpace: false,
@@ -196,7 +199,7 @@ export default {
 
         if (pageConfig.componentName === 'DragHolder') {
             const {__config, ...others} = node;
-            return {pageConfig: {...others, __config: {...__config, isRoot: true}}};
+            return {pageConfig: {...others, __config: {...__config}}};
         }
 
         return modifyPageConfig({
@@ -210,6 +213,8 @@ export default {
     },
     moveNode: ({sourceId, targetId, isBefore, isAfter, isChildren}, state) => {
         const {pageConfig} = state;
+
+        console.log(sourceId, pageConfig);
 
         const [node] = deleteNodeById(pageConfig, sourceId);
 
@@ -275,7 +280,6 @@ function findChildrenCollection(root, id) {
         }
     }
 }
-
 
 
 function deleteNodeById(root, id) {

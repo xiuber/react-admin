@@ -157,16 +157,11 @@ export default config({
     const isDragging = draggingNode?.__config?.componentId === key;
     const styleNames = ['treeNode'];
 
-
     if (isSelected) styleNames.push('selected');
     if (isDragging) styleNames.push('dragging');
     if (dragIn && draggingNode) styleNames.push('dragIn');
 
     styleNames.push(dropPosition);
-
-
-    // styleNames.push('dragIn');
-    // styleNames.push('top');
 
     const positionMap = {
         top: '前',

@@ -26,24 +26,37 @@ function getComponent(componentName, componentType) {
     return componentName;
 }
 
-function getDraggableEle(target) {
+// 可投放元素
+function getDroppableEle(target) {
     if (!target) return target;
-    console.log(target);
 
     if (typeof target.getAttribute !== 'function') return null;
 
-    const draggable =
-        target.getAttribute('draggable') === 'true'
-        || target.getAttribute('data-isRoot') === 'true'
-    ;
+    // 当前是容器
+    let draggable = target.getAttribute('data-isContainer') === 'true';
+
+    // 父级是容器
+    if (!draggable && target.parentNode?.getAttribute) {
+        draggable = target.parentNode.getAttribute('data-isContainer') === 'true';
+    }
 
     if (draggable) return target;
 
-    return getDraggableEle(target.parentNode);
+    return getDroppableEle(target.parentNode);
 }
 
 function showDropGuideLine(e, targetElement, position) {
-    let {isCenter, isLeft, isRight, isTop, isBottom, top, left, width, height} = position;
+    let {
+        isCenter,
+        isLeft,
+        isRight,
+        isTop,
+        isBottom,
+        top,
+        left,
+        width,
+        height,
+    } = position;
 
     if (isLeft || isRight) {
         isCenter = false;
@@ -110,8 +123,7 @@ export default function Element(props) {
 
     let {
         __config: {
-            isContainer,
-            isRoot,
+            isContainer = true,
             componentId,
             componentType,
             componentDesc,
@@ -183,7 +195,7 @@ export default function Element(props) {
         e.stopPropagation();
         e.preventDefault();
 
-        const targetElement = getDraggableEle(e.target);
+        const targetElement = getDroppableEle(e.target);
 
         if (!targetElement) return;
 
@@ -205,7 +217,10 @@ export default function Element(props) {
             ...position,
         });
 
-        if (!accept) return;
+        if (!accept) {
+            hideDropGuide();
+            return;
+        }
 
         showDropGuideLine(e, targetElement, position);
     };
@@ -218,7 +233,7 @@ export default function Element(props) {
             onDragEnd();
         };
 
-        const targetElement = getDraggableEle(e.target);
+        const targetElement = getDroppableEle(e.target);
         if (!targetElement) return end();
 
         const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
@@ -268,7 +283,7 @@ export default function Element(props) {
         e.stopPropagation();
         e.preventDefault();
 
-        const targetElement = getDraggableEle(e.target);
+        const targetElement = getDroppableEle(e.target);
         if (!targetElement) return;
 
         const targetId = targetElement.getAttribute('data-componentId');
@@ -277,7 +292,7 @@ export default function Element(props) {
         targetElement.classList.add(styles.dragEnter);
         const targetRect = targetElement.getBoundingClientRect();
         const {height} = targetRect;
-        const targetIsContainer = targetElement.getAttribute('data-isContainer');
+        const targetIsContainer = targetElement.getAttribute('data-isContainer') === 'true';
 
         if (targetIsContainer) {
             if (height < TRIGGER_SIZE * 3) {
@@ -291,12 +306,12 @@ export default function Element(props) {
 
     function onDragLeave(e) {
         hideDropGuide();
-        const targetElement = getDraggableEle(e.target);
+        const targetElement = getDroppableEle(e.target);
         if (!targetElement) return;
 
         targetElement.classList.remove(styles.dragEnter);
 
-        const targetIsContainer = targetElement.getAttribute('data-isContainer');
+        const targetIsContainer = targetElement.getAttribute('data-isContainer') === 'true';
         if (targetIsContainer) {
             const changePadding = targetElement.getAttribute('data-change-padding');
 
@@ -312,7 +327,7 @@ export default function Element(props) {
 
     return createElement(component, {
         ...others,
-        draggable: isRoot ? false : draggable,
+        draggable,
         onDragStart,
         onDragEnter,
         onDragOver,
@@ -325,10 +340,9 @@ export default function Element(props) {
         'data-componentDesc': componentDesc,
         'data-componentId': componentId,
         'data-isContainer': isContainer,
-        'data-isRoot': isRoot,
         onClick: (e) => {
             e.stopPropagation();
-            const ele = getDraggableEle(e.target);
+            const ele = getDroppableEle(e.target);
 
             if (!ele) return;
 

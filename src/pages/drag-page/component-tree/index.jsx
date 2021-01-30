@@ -36,10 +36,9 @@ export default config({
         const loop = (prev, next) => {
             const {__config = {}, componentName, children} = prev;
             const {
-                isRoot,
                 componentId,
                 componentDesc,
-                isContainer,
+                isContainer = true,
                 draggable = true,
             } = __config;
             next.title = componentDesc || componentName;
@@ -47,8 +46,6 @@ export default config({
             next.key = componentId;
             next.draggable = draggable;
             next.nodeData = prev;
-
-            if (isRoot) next.draggable = false;
 
             if (children && children.length) {
                 next.children = children.map(() => ({}));
