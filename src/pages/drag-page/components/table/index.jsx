@@ -3,6 +3,7 @@ import {Table} from 'ra-lib';
 
 export default function DragTable(props) {
     const {
+        dragClassName,
         draggable,
         onDragStart,
         onDragEnter,
@@ -18,6 +19,7 @@ export default function DragTable(props) {
     } = props;
 
     const wrapProps = {
+        className: dragClassName,
         draggable,
         onDragStart,
         onDragEnter,

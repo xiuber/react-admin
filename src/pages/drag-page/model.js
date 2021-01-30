@@ -124,9 +124,27 @@ export default {
                         },
                         {
                             __config: {
-                                componentId: '7',
-                                // dropAccept: ['Column'],
+                                componentId: 'col',
                                 isContainer: false,
+                            },
+                            componentName: 'Column',
+                            children: [
+                                {
+                                    __config: {
+                                        componentId: '88008',
+                                        isContainer: false,
+                                        draggable: false,
+                                    },
+                                    componentName: 'Text',
+                                    text: '我是列',
+                                },
+                            ],
+                        },
+                        {
+                            __config: {
+                                componentId: '7',
+                                dropAccept: ['Column'],
+                                // isContainer: false,
                             },
                             componentName: 'Table',
                             surplusSpace: false,
@@ -213,8 +231,6 @@ export default {
     },
     moveNode: ({sourceId, targetId, isBefore, isAfter, isChildren}, state) => {
         const {pageConfig} = state;
-
-        console.log(sourceId, pageConfig);
 
         const [node] = deleteNodeById(pageConfig, sourceId);
 

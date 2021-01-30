@@ -37,7 +37,9 @@ function getDroppableEle(target) {
 
     // 父级是容器
     if (!draggable && target.parentNode?.getAttribute) {
-        draggable = target.parentNode.getAttribute('data-isContainer') === 'true';
+        draggable =
+            target.parentNode.getAttribute('data-isContainer') === 'true'
+            && target.getAttribute('data-componentId');
     }
 
     if (draggable) return target;
@@ -335,6 +337,7 @@ export default function Element(props) {
         onDrop,
         onDragEnd,
         className: clcs.join(' '),
+        dragClassName: clcs.join(' '),
         children: childrenEle,
         getPopupContainer: () => iframeDocument.body,
         'data-componentDesc': componentDesc,
