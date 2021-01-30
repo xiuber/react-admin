@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Tooltip} from 'antd';
 import {
     MenuFoldOutlined,
@@ -86,7 +86,10 @@ export default config({
         });
     }
 
-    const rightWidth = tools.find(item => item.key === activeSideKey)?.width;
+    // 触发 window resize 事件 PageContent 会从新计算高度
+    useEffect(() => {
+        window.dispatchEvent(new Event('resize'));
+    }, [activeSideKey]);
 
     return (
         <div styleName="root">
@@ -103,20 +106,16 @@ export default config({
                     {renderTools(tools, true)}
                 </div>
             </div>
-            <div
-                styleName="right"
-                style={showSide ? {
-                    flex: `0 0 ${rightWidth}px`,
-                    width: rightWidth,
-                } : {}}
-            >
+            <div styleName="right">
                 {tools.map(item => {
-                    const {key, component} = item;
+                    const {key, component, width} = item;
                     return (
                         <div
                             id={key}
-                            styleName="rightPane"
-                            style={{display: showSide && key === activeSideKey ? 'block' : 'none'}}
+                            style={{
+                                display: showSide && key === activeSideKey ? 'block' : 'none',
+                                width,
+                            }}
                         >
                             {component}
                         </div>

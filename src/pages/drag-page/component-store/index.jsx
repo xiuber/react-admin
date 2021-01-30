@@ -61,7 +61,7 @@ export default config({
         >
             <div styleName="root">
                 <div
-                    style={{width: 100, height: 100, background: 'red'}}
+                    style={{width: 100, height: 1000, background: 'red'}}
                     draggable
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}

@@ -2,6 +2,7 @@ import React from 'react';
 import {Tabs} from 'antd';
 import config from 'src/commons/config-hoc';
 import ComponentStyle from '../component-style';
+import ComponentProps from '../component-props';
 import './style.less';
 
 const {TabPane} = Tabs;
@@ -29,10 +30,10 @@ export default config({
                 onChange={handleChange}
             >
                 <TabPane tab="属性" key="attribute">
-                    <ComponentStyle/>
+                    <ComponentProps/>
                 </TabPane>
                 <TabPane tab="样式" key="style">
-                    Content of Tab Pane 1
+                    <ComponentStyle/>
                 </TabPane>
                 <TabPane tab="事件" key="action">
                     Content of Tab Pane 3
