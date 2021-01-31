@@ -1,10 +1,11 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Input, Select} from 'antd';
 import {AppstoreOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
 import {getComponents, getStores} from './dataSource';
 import DraggableComponent from './DraggableComponent';
+import {scrollElement, usePrevious} from '../util';
 import './style.less';
 
 export default config({
@@ -15,6 +16,7 @@ export default config({
             categories: state.componentStore.categories,
             category: state.componentStore.category,
             components: state.componentStore.components,
+            activeSideKey: state.dragPage.activeSideKey,
         };
     },
 })(function ComponentStore(props) {
@@ -24,11 +26,15 @@ export default config({
         categories,
         category,
         components,
+        activeSideKey,
         action: {
             dragPage: dragPageAction,
             componentStore: storeAction,
         },
     } = props;
+
+    const categoryRef = useRef(null);
+    const componentRef = useRef(null);
 
     useEffect(() => {
         (async () => {
@@ -74,39 +80,62 @@ export default config({
                     />
                 </header>
                 <main>
-                    <div styleName="category">
+                    <div styleName="category" ref={categoryRef}>
                         {components.map(baseCategory => {
-                            const {id, title, components = []} = baseCategory;
+                            const {id: baseCategoryId, title, components = []} = baseCategory;
 
                             return (
-                                <div key={id} id={`baseCategory_${id}`}>
+                                <div key={baseCategoryId} id={`baseCategory_${baseCategoryId}`}>
                                     <div styleName='baseCategory'>{title}</div>
-                                    {components.map(category => {
+                                    {components.map(item => {
+                                        const {id: subCategoryId} = item;
+                                        const isActive = subCategoryId === category;
+
                                         return (
                                             <div
-                                                key={category.id}
-                                                id={`componentCategory_${id}`}
-                                                styleName="subCategory"
+                                                key={subCategoryId}
+                                                id={`subCategory_${subCategoryId}`}
+                                                styleName={`subCategory ${isActive ? 'active' : ''}`}
+                                                onClick={() => {
+                                                    const element = document.getElementById(`componentCategory_${subCategoryId}`);
+                                                    scrollElement(componentRef.current, element, true);
+                                                    storeAction.setCategory(subCategoryId);
+                                                }}
                                             >
-                                                {category.title}
+                                                {item.title}
                                             </div>
                                         );
                                     })}
                                 </div>
                             );
                         })}
-
-                        <div style={{height: 1000, background: 'red'}}></div>
                     </div>
-                    <div styleName="components">
+                    <div styleName="components" ref={componentRef}>
                         {components.map(baseCategory => {
-                            const {id: bId, components = []} = baseCategory;
+                            const {id: baseCategoryId, components = []} = baseCategory;
                             return components.map(category => {
-                                const {id, subTitle, components = []} = category;
+                                const {id: subCategoryId, subTitle, components = []} = category;
                                 return (
-                                    <div key={`${bId}_${id}`}>
-                                        <div styleName="componentCategory">{subTitle}</div>
-                                        {components.map(item => <DraggableComponent key={item.id} data={item}/>)}
+                                    <div key={`${baseCategoryId}_${subCategoryId}`}>
+                                        <div
+                                            id={`componentCategory_${subCategoryId}`}
+                                            styleName="componentCategory"
+                                        >
+                                            {subTitle}
+                                        </div>
+                                        {components.map(item => {
+                                            return (
+                                                <div
+                                                    onClick={() => {
+                                                        const element = document.getElementById(`subCategory_${subCategoryId}`);
+                                                        scrollElement(categoryRef.current, element);
+                                                        storeAction.setCategory(subCategoryId);
+                                                    }}
+                                                >
+                                                    <DraggableComponent key={item.id} data={item}/>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 );
                             });

@@ -59,7 +59,7 @@ export default config({
             <div styleName="title">
                 {data.title}
             </div>
-            <img styleName="img" src={data.image} alt="组件预览图"/>
+            <img draggable={false} styleName="img" src={data.image} alt="组件预览图"/>
         </div>
     );
 });

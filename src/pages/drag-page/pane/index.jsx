@@ -3,9 +3,9 @@ import {PageContent} from 'ra-lib';
 import './style.less';
 
 export default function Pane(props) {
-    const {header, children} = props;
+    const {header, fitHeight, children} = props;
     return (
-        <PageContent fitHeight otherHeight={8} styleName="root">
+        <PageContent fitHeight={fitHeight} otherHeight={8} styleName="root">
             <header>
                 {header}
             </header>

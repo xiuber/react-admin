@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useRef} from 'react';
 import {Tooltip} from 'antd';
 import {
     MenuFoldOutlined,
@@ -7,6 +7,7 @@ import {
     DesktopOutlined,
     MenuUnfoldOutlined,
 } from '@ant-design/icons';
+import {useHeight} from 'ra-lib';
 import config from 'src/commons/config-hoc';
 import ComponentTree from '../component-tree';
 import ComponentStore from '../component-store';
@@ -26,6 +27,8 @@ export default config({
         activeSideKey,
         action: {dragPage: dragPageAction},
     } = props;
+    const rightRef = useRef(null);
+    const [height] = useHeight(rightRef);
 
     function handleToolClick(key) {
         if (key === activeSideKey) {
@@ -86,11 +89,6 @@ export default config({
         });
     }
 
-    // 触发 window resize 事件 PageContent 会从新计算高度
-    useEffect(() => {
-        window.dispatchEvent(new Event('resize'));
-    }, [activeSideKey]);
-
     return (
         <div styleName="root">
             <div styleName="left">
@@ -106,14 +104,15 @@ export default config({
                     {renderTools(tools, true)}
                 </div>
             </div>
-            <div styleName="right">
+            <div styleName="right" ref={rightRef} style={{height}}>
                 {tools.map(item => {
                     const {key, component, width} = item;
                     return (
                         <div
                             id={key}
                             style={{
-                                display: showSide && key === activeSideKey ? 'block' : 'none',
+                                display: showSide && key === activeSideKey ? 'flex' : 'none',
+                                height: '100%',
                                 width,
                             }}
                         >

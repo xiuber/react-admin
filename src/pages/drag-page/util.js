@@ -1,3 +1,5 @@
+import {useRef, useEffect} from 'react';
+
 import * as raLibComponent from 'ra-lib';
 import * as components from './components';
 import * as antdComponent from 'antd/es';
@@ -7,7 +9,15 @@ export const TRIGGER_SIZE = 20;
 
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
-export function scrollElement(containerEle, element) {
+export function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+}
+
+export function scrollElement(containerEle, element, toTop) {
     if (!element) return;
 
     const containerHeight = containerEle.clientHeight;
@@ -25,11 +35,13 @@ export function scrollElement(containerEle, element) {
         elementTop > containerShownHeight
         || elementBottom < containerScrollTop
     ) {
-        // TODO 滚动动画？
-        // 滚动到中间
-        containerEle.scrollTop = elementTop - elementHeight - (containerHeight - elementHeight) / 2;
-        // 滚动到顶部
-        // containerEle.scrollTop = elementTop;
+        if (toTop) {
+            // 滚动到顶部
+            containerEle.scrollTop = elementTop;
+        } else {
+            // 滚动到中间
+            containerEle.scrollTop = elementTop - elementHeight - (containerHeight - elementHeight) / 2;
+        }
     }
 }
 

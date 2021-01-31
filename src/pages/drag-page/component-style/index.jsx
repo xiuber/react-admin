@@ -7,6 +7,7 @@ import './style.less';
 export default config({})(function ComponentStyle(props) {
     return (
         <Pane
+            fitHeight
             header={(
                 <div>
                     当前选中

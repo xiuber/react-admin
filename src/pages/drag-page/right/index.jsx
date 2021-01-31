@@ -14,7 +14,6 @@ export default config({
         };
     },
 })(function Right(props) {
-
     const {activeTabKey, action: {dragPage: dragPageAction}} = props;
 
     function handleChange(key) {
