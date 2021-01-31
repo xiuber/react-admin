@@ -113,19 +113,19 @@ export default function Element(props) {
             componentType,
             componentDesc,
             draggable = true,
+            withWrapper,
+            wrapperStyle,
         },
         componentName,
         children,
-        props: componentProps,
+        props: componentProps = {},
     } = config;
-
-    const {className, ...others} = componentProps || {};
 
     if (!componentName) return null;
 
     componentDesc = componentDesc || componentName;
 
-    const childrenEle = (children || []).map(item => (
+    let childrenEle = (children || []).map(item => (
         <Element
             config={item}
             dragPage={dragPage}
@@ -134,11 +134,13 @@ export default function Element(props) {
         />
     ));
 
-    const clcs = [styles.element, className];
+    if (!childrenEle?.length) childrenEle = undefined;
 
-    if (dragPage.selectedNodeId === componentId) clcs.push(styles.selected);
-    if (dragPage.draggingNode?.__config?.componentId === componentId) clcs.push(styles.dragging);
-    if (!draggable) clcs.push(styles.unDraggable);
+    const dragClassName = [styles.element];
+
+    if (dragPage.selectedNodeId === componentId) dragClassName.push(styles.selected);
+    if (dragPage.draggingNode?.__config?.componentId === componentId) dragClassName.push(styles.dragging);
+    if (!draggable) dragClassName.push(styles.unDraggable);
 
     const component = getComponent(componentName, componentType);
 
@@ -313,8 +315,7 @@ export default function Element(props) {
         if (prevSideKeyRef.current) dragPageAction.setActiveSideKey(prevSideKeyRef.current);
     }
 
-    return createElement(component, {
-        ...others,
+    const dragProps = {
         draggable,
         onDragStart,
         onDragEnter,
@@ -322,10 +323,7 @@ export default function Element(props) {
         onDragLeave,
         onDrop,
         onDragEnd,
-        className: clcs.join(' '),
-        dragClassName: clcs.join(' '),
-        children: childrenEle,
-        getPopupContainer: () => iframeDocument.body,
+        className: dragClassName.join(' '),
         'data-componentDesc': componentDesc,
         'data-componentId': componentId,
         'data-isContainer': isContainer,
@@ -338,6 +336,27 @@ export default function Element(props) {
             const id = ele.getAttribute('data-componentId');
             dragPageAction.setSelectedNodeId(id);
         },
+    };
+
+    if (withWrapper) {
+        return createElement('div', {
+            ...dragProps,
+            style: wrapperStyle,
+            children: [
+                createElement(component, {
+                    ...componentProps,
+                    getPopupContainer: () => iframeDocument.body,
+                    children: childrenEle,
+                }),
+            ],
+        });
+    }
+
+    return createElement(component, {
+        ...componentProps,
+        ...dragProps,
+        getPopupContainer: () => iframeDocument.body,
+        children: childrenEle,
     });
 }
 

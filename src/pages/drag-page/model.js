@@ -39,6 +39,16 @@ export default {
                 {
                     __config: {
                         componentId: uuid(),
+                        isContainer: false,
+                    },
+                    componentName: 'Input', // TODO 报错
+                    props: {
+                        placeholder: 'aaaa',
+                    },
+                },
+                {
+                    __config: {
+                        componentId: uuid(),
                     },
                     // componentName: 'Input', // TODO 报错
                     // componentName: 'Switch',
@@ -49,12 +59,15 @@ export default {
                             __config: {
                                 componentId: uuid(),
                                 componentType: 'ra-lib',
+                                isContainer: false,
+                                withWrapper: true,
                             },
-                            // componentName: 'FormElement', // TODO 报错
-                            componentName: 'PageContent',
+                            componentName: 'FormElement', // TODO 报错
+                            // componentName: 'PageContent',
                             props: {
                                 type: 'select',
                                 field: 'aa',
+                                label: '职位',
                             },
                         },
                     ],
@@ -207,6 +220,9 @@ export default {
                                 dropAccept: ['Column'],
                                 componentDesc: '只接受Column',
                                 // isContainer: false,
+                                componentType: 'ra-lib',
+                                withWrapper: true,
+                                wrapperStyle: {display: 'block'},
                             },
                             componentName: 'Table',
                             props: {
