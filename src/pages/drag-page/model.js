@@ -1,5 +1,6 @@
 import {findNodeById} from './util';
 import {v4 as uuid} from 'uuid';
+import {cloneDeep} from 'lodash';
 
 const holderNode = {
     __config: {
@@ -9,242 +10,245 @@ const holderNode = {
     componentName: 'DragHolder',
 };
 
-export default {
-    initialState: {
-        activeToolKey: 'layout', // 头部激活 key
-        selectedNodeId: null,
-        selectedNode: null,
-        draggingNode: null, // 正在拖动的节点 key
-        showCode: false, // 显示代码
-        // showSide: false, // 左侧是否显示
-        showSide: true,
-        // activeSideKey: null, // 左侧激活key
-        activeSideKey: 'componentStore',
-        activeTabKey: 'attribute', // 右侧激活tab key
+const initialState = {
+    activeToolKey: 'layout', // 头部激活 key
+    selectedNodeId: null,
+    selectedNode: null,
+    draggingNode: null, // 正在拖动的节点 key
+    showCode: false, // 显示代码
+    // showSide: false, // 左侧是否显示
+    showSide: true,
+    // activeSideKey: null, // 左侧激活key
+    activeSideKey: 'componentStore',
+    activeTabKey: 'attribute', // 右侧激活tab key
 
-        componentTreeExpendedKeys: [], // 组件树 展开节点
+    componentTreeExpendedKeys: [], // 组件树 展开节点
 
-        pageConfig: {
-            __config: {
-                draggable: false,
-                componentId: '1',
-                componentDesc: '我是最外层',
+    pageConfig: {
+        __config: {
+            draggable: false,
+            componentId: '1',
+            componentDesc: '我是最外层',
+        },
+        // componentName: 'DragHolder',
+        componentName: 'div',
+        props: {
+            style: {margin: 6, padding: 16, background: 'yellow'},
+        },
+        children: [
+            {
+                __config: {
+                    componentId: uuid(),
+                    isContainer: false,
+                    withWrapper: true,
+                    wrapperStyle: {
+                        display: 'inline-block',
+                        width: '100%',
+                    },
+                },
+                componentName: 'Input.Search',
+                props: {
+                    placeholder: '请搜索',
+                    style: {
+                        width: 100,
+                    },
+                },
             },
-            // componentName: 'DragHolder',
-            componentName: 'div',
-            props: {
-                style: {margin: 6, padding: 16, background: 'yellow'},
+            {
+                __config: {
+                    componentId: uuid(),
+                },
+                // componentName: 'Input', // TODO 报错
+                // componentName: 'Switch',
+                // componentName: 'InputNumber',
+                componentName: 'Form',
+                children: [
+                    {
+                        __config: {
+                            componentId: uuid(),
+                            componentType: 'ra-lib',
+                            isContainer: false,
+                            withWrapper: true,
+                        },
+                        componentName: 'FormElement', // TODO 报错
+                        // componentName: 'PageContent',
+                        props: {
+                            type: 'select',
+                            field: 'aa',
+                            label: '职位',
+                        },
+                    },
+                ],
             },
-            children: [
-                {
-                    __config: {
-                        componentId: uuid(),
-                        isContainer: false,
-                        withWrapper: true,
-                        wrapperStyle: {
-                            display: 'inline-block',
-                            width: '100%',
-                        },
-                    },
-                    componentName: 'Input.Search',
-                    props: {
-                        placeholder: '请搜索',
-                        style: {
-                            width: 100,
-                        },
-                    },
+            {
+                __config: {
+                    componentId: '12',
+                    dropAccept: ['Text'],
+                    componentDesc: '只接受Text',
                 },
-                {
-                    __config: {
-                        componentId: uuid(),
-                    },
-                    // componentName: 'Input', // TODO 报错
-                    // componentName: 'Switch',
-                    // componentName: 'InputNumber',
-                    componentName: 'Form',
-                    children: [
-                        {
-                            __config: {
-                                componentId: uuid(),
-                                componentType: 'ra-lib',
-                                isContainer: false,
-                                withWrapper: true,
-                            },
-                            componentName: 'FormElement', // TODO 报错
-                            // componentName: 'PageContent',
-                            props: {
-                                type: 'select',
-                                field: 'aa',
-                                label: '职位',
-                            },
+                componentName: 'div',
+                props: {
+                    style: {background: 'blue', height: 200, color: '#fff'},
+                },
+            },
+            {
+                __config: {
+                    componentId: '2',
+                    componentDesc: '黑色div',
+                },
+                componentName: 'div',
+                props: {
+                    style: {background: 'black', color: '#fff'},
+                },
+                children: [
+                    {
+                        __config: {
+                            componentId: '1222',
                         },
-                    ],
-                },
-                {
-                    __config: {
-                        componentId: '12',
-                        dropAccept: ['Text'],
-                        componentDesc: '只接受Text',
-                    },
-                    componentName: 'div',
-                    props: {
-                        style: {background: 'blue', height: 200, color: '#fff'},
-                    },
-                },
-                {
-                    __config: {
-                        componentId: '2',
-                        componentDesc: '黑色div',
-                    },
-                    componentName: 'div',
-                    props: {
-                        style: {background: 'black', color: '#fff'},
-                    },
-                    children: [
-                        {
-                            __config: {
-                                componentId: '1222',
-                            },
-                            componentName: 'span',
-                            // children: ['啥玩意 兄弟 灰色 div'],
-                            children: [
-                                {
-                                    __config: {
-                                        componentId: '666',
-                                        isContainer: false,
-                                    },
-                                    componentName: 'Text',
-                                    props: {
-                                        text: '文本啊啊',
-                                    },
+                        componentName: 'span',
+                        // children: ['啥玩意 兄弟 灰色 div'],
+                        children: [
+                            {
+                                __config: {
+                                    componentId: '666',
+                                    isContainer: false,
                                 },
-                            ],
-                        },
-                        {
-                            __config: {
-                                isContainer: false,
-                                componentId: '22',
-                                componentDesc: '不是容器',
-                            },
-                            componentName: 'div',
-                            props: {
-                                style: {width: 300, height: 200, background: 'grey'},
-                            },
-                            children: [
-                                {
-                                    __config: {
-                                        componentId: '88ui',
-                                        isContainer: false,
-                                        draggable: false,
-                                    },
-                                    componentName: 'Text',
-                                    props: {
-                                        text: '不是容器',
-                                    },
+                                componentName: 'Text',
+                                props: {
+                                    text: '文本啊啊',
                                 },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    __config: {
-                        componentId: '3',
-                        isContainer: false,
-                    },
-                    componentName: 'Button',
-                    props: {
-                        type: 'primary',
-                    },
-                    children: [
-                        {
-                            __config: {
-                                componentId: '777',
-                                draggable: false,
-                                isContainer: false,
                             },
-                            componentName: 'Text',
-                            props: {
-                                text: '真的是文本啊',
-                            },
-                        },
-                    ],
-                },
-                {
-                    __config: {
-                        componentId: '4',
-                        isContainer: false,
-                    },
-                    componentName: 'Select',
-                    props: {
-                        style: {width: 100},
-                        options: [
-                            {value: 1, label: '哈哈'},
-                            {value: 2, label: '咿呀'},
                         ],
                     },
-                },
-                {
-                    __config: {
-                        componentId: '5',
-                    },
-                    componentName: 'div',
-                    props: {
-                        style: {margin: 6, width: 500, background: 'yellow'},
-                    },
-                    children: [
-                        {
-                            __config: {
-                                componentId: '888',
-                                isContainer: false,
-                            },
-                            componentName: 'Text',
-                            props: {
-                                text: '啥玩意',
-                            },
+                    {
+                        __config: {
+                            isContainer: false,
+                            componentId: '22',
+                            componentDesc: '不是容器',
                         },
-                        {
-                            __config: {
-                                componentId: 'col',
-                                isContainer: false,
-                            },
-                            componentName: 'Column',
-                            children: [
-                                {
-                                    __config: {
-                                        componentId: '88008',
-                                        isContainer: false,
-                                        draggable: false,
-                                    },
-                                    componentName: 'Text',
-                                    props: {
-                                        text: '我是列',
-                                    },
+                        componentName: 'div',
+                        props: {
+                            style: {width: 300, height: 200, background: 'grey'},
+                        },
+                        children: [
+                            {
+                                __config: {
+                                    componentId: '88ui',
+                                    isContainer: false,
+                                    draggable: false,
                                 },
-                            ],
-                        },
-                        {
-                            __config: {
-                                componentId: '7',
-                                dropAccept: ['Column'],
-                                componentDesc: '只接受Column',
-                                // isContainer: false,
-                                componentType: 'ra-lib',
-                                withWrapper: true,
-                                wrapperStyle: {display: 'block'},
+                                componentName: 'Text',
+                                props: {
+                                    text: '不是容器',
+                                },
                             },
-                            componentName: 'Table',
-                            props: {
-                                surplusSpace: false,
-                                columns: [{title: '姓名', dataIndex: 'name'}],
-                                dataSource: [{name: '张三'}, {name: '李四'}],
-                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                __config: {
+                    componentId: '3',
+                    isContainer: false,
+                },
+                componentName: 'Button',
+                props: {
+                    type: 'primary',
+                },
+                children: [
+                    {
+                        __config: {
+                            componentId: '777',
+                            draggable: false,
+                            isContainer: false,
                         },
+                        componentName: 'Text',
+                        props: {
+                            text: '真的是文本啊',
+                        },
+                    },
+                ],
+            },
+            {
+                __config: {
+                    componentId: '4',
+                    isContainer: false,
+                },
+                componentName: 'Select',
+                props: {
+                    style: {width: 100},
+                    options: [
+                        {value: 1, label: '哈哈'},
+                        {value: 2, label: '咿呀'},
                     ],
                 },
-            ],
+            },
+            {
+                __config: {
+                    componentId: '5',
+                },
+                componentName: 'div',
+                props: {
+                    style: {margin: 6, width: 500, background: 'yellow'},
+                },
+                children: [
+                    {
+                        __config: {
+                            componentId: '888',
+                            isContainer: false,
+                        },
+                        componentName: 'Text',
+                        props: {
+                            text: '啥玩意',
+                        },
+                    },
+                    {
+                        __config: {
+                            componentId: 'col',
+                            isContainer: false,
+                        },
+                        componentName: 'Column',
+                        children: [
+                            {
+                                __config: {
+                                    componentId: '88008',
+                                    isContainer: false,
+                                    draggable: false,
+                                },
+                                componentName: 'Text',
+                                props: {
+                                    text: '我是列',
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        __config: {
+                            componentId: '7',
+                            dropAccept: ['Column'],
+                            componentDesc: '只接受Column',
+                            // isContainer: false,
+                            componentType: 'ra-lib',
+                            withWrapper: true,
+                            wrapperStyle: {display: 'block'},
+                        },
+                        componentName: 'Table',
+                        props: {
+                            surplusSpace: false,
+                            columns: [{title: '姓名', dataIndex: 'name'}],
+                            dataSource: [{name: '张三'}, {name: '李四'}],
+                        },
+                    },
+                ],
+            },
+        ],
 
-        },
     },
+};
+
+export default {
+    initialState,
+    init: () => cloneDeep(initialState),
     setComponentTreeExpendedKeys: componentTreeExpendedKeys => ({componentTreeExpendedKeys}),
     setDraggingNode: draggingNode => ({draggingNode}),
     setActiveTabKey: activeTabKey => {
