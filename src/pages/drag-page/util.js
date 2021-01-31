@@ -9,6 +9,22 @@ export const TRIGGER_SIZE = 20;
 
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
+export function filterTree(array, filter) {
+    const getNodes = (result, node) => {
+        if (filter(node)) {
+            result.push(node);
+            return result;
+        }
+        if (Array.isArray(node.children)) {
+            const children = node.children.reduce(getNodes, []);
+            if (children.length) result.push({...node, children});
+        }
+        return result;
+    };
+
+    return array.reduce(getNodes, []);
+}
+
 export function usePrevious(value) {
     const ref = useRef();
     useEffect(() => {
@@ -17,8 +33,8 @@ export function usePrevious(value) {
     return ref.current;
 }
 
-export function scrollElement(containerEle, element, toTop) {
-    if (!element) return;
+export function elementIsVisible(containerEle, element) {
+    if (!element) return {};
 
     const containerHeight = containerEle.clientHeight;
     const containerScrollTop = containerEle.scrollTop;
@@ -30,17 +46,38 @@ export function scrollElement(containerEle, element, toTop) {
     const elementBottom = elementTop + elementHeight;
     const containerShownHeight = containerScrollTop + containerHeight;
 
+    // 可见
+    const visible = !(elementTop > containerShownHeight
+        || elementBottom < containerScrollTop);
+
+    return {
+        visible,
+        elementTop,
+        elementBottom,
+        containerHeight,
+        containerScrollTop,
+        containerShownHeight,
+    };
+
+}
+
+export function scrollElement(containerEle, element, toTop) {
+    if (!element) return;
+
+    const {
+        visible,
+        elementTop,
+        containerHeight,
+    } = elementIsVisible(containerEle, element);
+
     // 非可见
-    if (
-        elementTop > containerShownHeight
-        || elementBottom < containerScrollTop
-    ) {
+    if (!visible) {
         if (toTop) {
             // 滚动到顶部
             containerEle.scrollTop = elementTop;
         } else {
             // 滚动到中间
-            containerEle.scrollTop = elementTop - elementHeight - (containerHeight - elementHeight) / 2;
+            containerEle.scrollTop = elementTop - containerHeight / 2;
         }
     }
 }
@@ -186,18 +223,25 @@ export function getDropGuidePosition(options) {
 }
 
 export function getComponent(componentName, componentType) {
+    const [name, subName] = componentName.split('.');
+    const com = Com => {
+        if (subName) return Com[subName];
+
+        return Com;
+    };
+
     if (componentType === 'ra-lib') {
-        const raCom = raLibComponent[componentName];
+        const raCom = raLibComponent[name];
 
-        if (raCom) return raCom;
+        if (raCom) return com(raCom);
     }
-    const Com = components[componentName];
+    const Com = components[name];
 
-    if (Com) return Com;
+    if (Com) return com(Com);
 
-    const AntdCom = antdComponent[componentName];
+    const AntdCom = antdComponent[name];
 
-    if (AntdCom) return AntdCom;
+    if (AntdCom) return com(AntdCom);
 
-    return componentName;
+    return name;
 }

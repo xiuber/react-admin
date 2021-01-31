@@ -28,6 +28,7 @@ export default config({
     connect: state => {
         return {
             pageConfig: state.dragPage.pageConfig,
+            activeToolKey: state.dragPage.activeToolKey,
             selectedNodeId: state.dragPage.selectedNodeId,
             activeSideKey: state.dragPage.activeSideKey,
             draggingNode: state.dragPage.draggingNode,
@@ -38,6 +39,7 @@ export default config({
     const {
         dragPage,
         pageConfig,
+        activeToolKey,
         selectedNodeId,
         activeSideKey,
         draggingNode,
@@ -82,6 +84,7 @@ export default config({
         renderDesignPage();
     }, [
         pageConfig,
+        activeToolKey,
         selectedNodeId,
         activeSideKey,
         draggingNode,

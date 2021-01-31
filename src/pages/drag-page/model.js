@@ -40,10 +40,18 @@ export default {
                     __config: {
                         componentId: uuid(),
                         isContainer: false,
+                        withWrapper: true,
+                        wrapperStyle: {
+                            display: 'inline-block',
+                            width: '100%',
+                        },
                     },
-                    componentName: 'Input', // TODO 报错
+                    componentName: 'Input.Search',
                     props: {
-                        placeholder: 'aaaa',
+                        placeholder: '请搜索',
+                        style: {
+                            width: 100,
+                        },
                     },
                 },
                 {

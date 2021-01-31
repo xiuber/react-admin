@@ -338,10 +338,29 @@ export default function Element(props) {
         },
     };
 
+    if(dragPage.activeToolKey === 'preview') {
+        return createElement(component, {
+            ...componentProps,
+            getPopupContainer: () => iframeDocument.body,
+            children: childrenEle,
+        });
+    }
+
     if (withWrapper) {
+        const {style = {}} = componentProps;
+        const {
+            display,
+            width,
+            height,
+        } = style;
         return createElement('div', {
             ...dragProps,
-            style: wrapperStyle,
+            style: {
+                ...wrapperStyle,
+                display,
+                width,
+                height,
+            },
             children: [
                 createElement(component, {
                     ...componentProps,

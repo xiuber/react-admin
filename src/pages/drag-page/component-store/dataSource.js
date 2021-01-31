@@ -5,12 +5,12 @@ export async function getComponents(category) {
         {
             id: uuid(),
             title: '表单',
-            components: [
+            children: [
                 {
                     id: uuid(),
                     title: '输入框输入框输入框输入框',
                     subTitle: '输入框 Input',
-                    components: [
+                    children: [
                         {
                             id: uuid(),
                             title: '输入框',
@@ -20,6 +20,28 @@ export async function getComponents(category) {
                                     isContainer: false,
                                 },
                                 componentName: 'Input',
+                                props: {
+                                    placeholder: '请输入',
+                                },
+                            },
+                        },
+                        {
+                            id: uuid(),
+                            title: '搜索框',
+                            image: 'https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg',
+                            config: {
+                                __config: {
+                                    isContainer: false,
+                                    withWrapper: true,
+                                    wrapperStyle: {
+                                        display: 'inline-block',
+                                        width: '100%',
+                                    },
+                                },
+                                componentName: 'Input.Search',
+                                props: {
+                                    placeholder: '请搜索',
+                                },
                             },
                         },
                         {
@@ -30,7 +52,10 @@ export async function getComponents(category) {
                                 __config: {
                                     isContainer: false,
                                 },
-                                componentName: 'Input',
+                                componentName: 'Input.TextArea',
+                                props: {
+                                    placeholder: '请输入',
+                                },
                             },
                         },
                     ],
@@ -39,7 +64,7 @@ export async function getComponents(category) {
                     id: uuid(),
                     title: '下拉框',
                     subTitle: '下拉框 Select',
-                    components: [
+                    children: [
                         {
                             id: uuid(),
                             title: '下拉框' + category,
@@ -51,15 +76,17 @@ export async function getComponents(category) {
                                 componentName: 'Select',
                                 props: {
                                     style: {width: '100%'},
+                                    placeholder: '请选择',
                                     options: [
-                                        {value: 1, label: '下拉项'},
+                                        {value: '1', label: '下拉项1'},
+                                        {value: '2', label: '下拉项2'},
                                     ],
                                 },
                             },
                         },
                     ],
                 },
-            ]
+            ],
         },
     ];
 }
