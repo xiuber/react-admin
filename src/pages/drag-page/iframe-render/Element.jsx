@@ -7,98 +7,17 @@ import {
     getComponent,
 } from '../util';
 
-
-// 可投放元素
-function getDroppableEle(target) {
-    if (!target) return target;
-
-    if (typeof target.getAttribute !== 'function') return null;
-
-    // 当前是容器
-    let draggable = target.getAttribute('data-isContainer') === 'true';
-
-    // 父级是容器
-    if (!draggable && target.parentNode?.getAttribute) {
-        draggable =
-            target.parentNode.getAttribute('data-isContainer') === 'true'
-            && target.getAttribute('data-componentId');
-    }
-
-    if (draggable) return target;
-
-    return getDroppableEle(target.parentNode);
-}
-
-function showDropGuideLine(e, targetElement, position) {
-    let {
-        isCenter,
-        isLeft,
-        isRight,
-        isTop,
-        isBottom,
-        top,
-        left,
-        width,
-        height,
-    } = position;
-
-    if (isLeft || isRight) {
-        isCenter = false;
-        isTop = false;
-        isBottom = false;
-    }
-
-    const guidePosition = {
-        top,
-        width,
-        height,
-        left,
-    };
-
-    const frameDocument = document.getElementById('dnd-iframe').contentDocument;
-    const guideLineEle = frameDocument.getElementById('drop-guide-line');
-
-    if (!guideLineEle) return;
-
-    const guildTipEle = guideLineEle.querySelector('span');
-
-    guideLineEle.classList.add(styles.guideActive);
-    guideLineEle.classList.remove(styles.gLeft);
-    guideLineEle.classList.remove(styles.gRight);
-    if (isLeft) {
-        guildTipEle.innerHTML = '前';
-        guideLineEle.classList.add(styles.gLeft);
-    }
-    if (isRight) {
-        guildTipEle.innerHTML = '后';
-        guideLineEle.classList.add(styles.gRight);
-    }
-    if (isTop) guildTipEle.innerHTML = '上';
-    if (isBottom) guildTipEle.innerHTML = '下';
-    if (isCenter) guildTipEle.innerHTML = '内';
-
-    Object.entries(guidePosition).forEach(([key, value]) => {
-        guideLineEle.style[key] = `${value}px`;
-    });
-}
-
-
-function hideDropGuide() {
-    const frameDocument = document.getElementById('dnd-iframe').contentDocument;
-
-    const guideLineEle = frameDocument.getElementById('drop-guide-line');
-    if (!guideLineEle) return;
-
-    guideLineEle.classList.remove(styles.guideActive);
-}
-
 export default function Element(props) {
     const prevSideKeyRef = useRef(null);
 
     const {
         config,
-        dragPage,
+        activeToolKey,
+        pageConfig,
+        selectedNodeId,
+        draggingNode,
         dragPageAction,
+        activeSideKey,
         iframeDocument,
     } = props;
 
@@ -128,8 +47,12 @@ export default function Element(props) {
     let childrenEle = (children || []).map(item => (
         <Element
             config={item}
-            dragPage={dragPage}
+            activeToolKey={activeToolKey}
+            pageConfig={pageConfig}
+            draggingNode={draggingNode}
+            selectedNodeId={selectedNodeId}
             dragPageAction={dragPageAction}
+            activeSideKey={activeSideKey}
             iframeDocument={iframeDocument}
         />
     ));
@@ -138,8 +61,8 @@ export default function Element(props) {
 
     const dragClassName = [styles.element];
 
-    if (dragPage.selectedNodeId === componentId) dragClassName.push(styles.selected);
-    if (dragPage.draggingNode?.__config?.componentId === componentId) dragClassName.push(styles.dragging);
+    if (selectedNodeId === componentId) dragClassName.push(styles.selected);
+    if (draggingNode?.__config?.componentId === componentId) dragClassName.push(styles.dragging);
     if (!draggable) dragClassName.push(styles.unDraggable);
 
     const component = getComponent(componentName, componentType);
@@ -148,7 +71,7 @@ export default function Element(props) {
         e.stopPropagation();
 
         dragPageAction.setDraggingNode(config);
-        prevSideKeyRef.current = dragPage.activeSideKey;
+        prevSideKeyRef.current = activeSideKey;
 
         dragPageAction.setActiveSideKey('componentTree');
 
@@ -190,7 +113,7 @@ export default function Element(props) {
 
         const targetComponentId = targetElement.getAttribute('data-componentId');
 
-        if (dragPage.draggingNode?.__config?.componentId === targetComponentId) return;
+        if (draggingNode?.__config?.componentId === targetComponentId) return;
 
         const position = getPosition({
             event: e,
@@ -200,8 +123,8 @@ export default function Element(props) {
         if (!position) return;
 
         const accept = isDropAccept({
-            draggingNode: dragPage.draggingNode,
-            pageConfig: dragPage.pageConfig,
+            draggingNode,
+            pageConfig,
             targetComponentId,
             ...position,
         });
@@ -239,8 +162,8 @@ export default function Element(props) {
         if (!position) return end();
 
         const accept = isDropAccept({
-            draggingNode: dragPage.draggingNode,
-            pageConfig: dragPage.pageConfig,
+            draggingNode,
+            pageConfig,
             targetComponentId,
             ...position,
         });
@@ -339,7 +262,7 @@ export default function Element(props) {
         },
     };
 
-    if(dragPage.activeToolKey === 'preview') {
+    if (activeToolKey === 'preview') {
         return createElement(component, {
             ...componentProps,
             getPopupContainer: () => iframeDocument.body,
@@ -380,3 +303,87 @@ export default function Element(props) {
     });
 }
 
+
+// 可投放元素
+function getDroppableEle(target) {
+    if (!target) return target;
+
+    if (typeof target.getAttribute !== 'function') return null;
+
+    // 当前是容器
+    let draggable = target.getAttribute('data-isContainer') === 'true';
+
+    // 父级是容器
+    if (!draggable && target.parentNode?.getAttribute) {
+        draggable =
+            target.parentNode.getAttribute('data-isContainer') === 'true'
+            && target.getAttribute('data-componentId');
+    }
+
+    if (draggable) return target;
+
+    return getDroppableEle(target.parentNode);
+}
+
+function showDropGuideLine(e, targetElement, position) {
+    let {
+        isCenter,
+        isLeft,
+        isRight,
+        isTop,
+        isBottom,
+        top,
+        left,
+        width,
+        height,
+    } = position;
+
+    if (isLeft || isRight) {
+        isCenter = false;
+        isTop = false;
+        isBottom = false;
+    }
+
+    const guidePosition = {
+        top,
+        width,
+        height,
+        left,
+    };
+
+    const frameDocument = document.getElementById('dnd-iframe').contentDocument;
+    const guideLineEle = frameDocument.getElementById('drop-guide-line');
+
+    if (!guideLineEle) return;
+
+    const guildTipEle = guideLineEle.querySelector('span');
+
+    guideLineEle.classList.add(styles.guideActive);
+    guideLineEle.classList.remove(styles.gLeft);
+    guideLineEle.classList.remove(styles.gRight);
+    if (isLeft) {
+        guildTipEle.innerHTML = '前';
+        guideLineEle.classList.add(styles.gLeft);
+    }
+    if (isRight) {
+        guildTipEle.innerHTML = '后';
+        guideLineEle.classList.add(styles.gRight);
+    }
+    if (isTop) guildTipEle.innerHTML = '上';
+    if (isBottom) guildTipEle.innerHTML = '下';
+    if (isCenter) guildTipEle.innerHTML = '内';
+
+    Object.entries(guidePosition).forEach(([key, value]) => {
+        guideLineEle.style[key] = `${value}px`;
+    });
+}
+
+
+function hideDropGuide() {
+    const frameDocument = document.getElementById('dnd-iframe').contentDocument;
+
+    const guideLineEle = frameDocument.getElementById('drop-guide-line');
+    if (!guideLineEle) return;
+
+    guideLineEle.classList.remove(styles.guideActive);
+}

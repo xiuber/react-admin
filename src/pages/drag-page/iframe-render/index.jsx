@@ -25,12 +25,10 @@ export default config({
             selectedNodeId: state.dragPage.selectedNodeId,
             activeSideKey: state.dragPage.activeSideKey,
             draggingNode: state.dragPage.draggingNode,
-            dragPage: state.dragPage,
         };
     },
 })(function IframeRender(props) {
     const {
-        dragPage,
         pageConfig,
         activeToolKey,
         selectedNodeId,
@@ -51,7 +49,11 @@ export default config({
         ReactDOM.render(
             <Element
                 config={pageConfig}
-                dragPage={dragPage}
+                pageConfig={pageConfig}
+                selectedNodeId={selectedNodeId}
+                draggingNode={draggingNode}
+                activeSideKey={activeSideKey}
+                activeToolKey={activeToolKey}
                 dragPageAction={dragPageAction}
                 iframeDocument={iframeDocument}
             />,
@@ -84,6 +86,7 @@ export default config({
         selectedNodeId,
         activeSideKey,
         draggingNode,
+        iframeRef.current,
     ]);
 
 
