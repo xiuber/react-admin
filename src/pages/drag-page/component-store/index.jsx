@@ -1,53 +1,54 @@
-import React from 'react';
-import {v4 as uuid} from 'uuid';
+import React, {useEffect} from 'react';
+import {Input, Select} from 'antd';
 import {AppstoreOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
+import {getComponents, getStores} from './dataSource';
+import DraggableComponent from './DraggableComponent';
 import './style.less';
 
 export default config({
     connect: state => {
-        return {};
+        return {
+            stores: state.componentStore.stores,
+            store: state.componentStore.store,
+            categories: state.componentStore.categories,
+            category: state.componentStore.category,
+            components: state.componentStore.components,
+        };
     },
 })(function ComponentStore(props) {
     const {
-        action: {dragPage: dragPageAction},
+        stores,
+        store,
+        categories,
+        category,
+        components,
+        action: {
+            dragPage: dragPageAction,
+            componentStore: storeAction,
+        },
     } = props;
 
-    function handleDragStart(e) {
-        e.stopPropagation();
+    useEffect(() => {
+        (async () => {
+            const stores = await getStores();
+            storeAction.setStores(stores);
 
-        setTimeout(() => {
-            dragPageAction.setActiveSideKey('componentTree');
-        });
-        const componentId = uuid();
-        const config = {
-            __config: {
-                componentId,
-                isContainer: true,
-            },
-            componentName: 'div',
-            props: {
-                style: {height: 50, background: 'grey', border: '1px solid #fff', padding: 16},
-            },
-            children: [
-                {
-                    __config: {
-                        componentId: uuid(),
-                    },
-                    componentName: 'Text',
-                    props: {
-                        text: componentId,
-                    },
-                },
-            ],
-        };
-        e.dataTransfer.setData('componentConfig', JSON.stringify(config));
-        dragPageAction.setDraggingNode(config);
+            if (stores?.length) {
+                await handleStoreChange(stores[0].value);
+            }
+        })();
+    }, []);
+
+    async function fetchComponents(category) {
+        const components = await getComponents(category);
+        storeAction.setComponents(components);
     }
 
-    function handleDragEnd() {
-        dragPageAction.setActiveSideKey('componentStore');
+    async function handleStoreChange(value) {
+        storeAction.setStore(value);
+        await fetchComponents(value);
     }
 
     return (
@@ -60,14 +61,58 @@ export default config({
             }
         >
             <div styleName="root">
-                <div
-                    style={{width: 100, height: 1000, background: 'red'}}
-                    draggable
-                    onDragStart={handleDragStart}
-                    onDragEnd={handleDragEnd}
-                >
-                    啥的呢
-                </div>
+                <header>
+                    <Select
+                        style={{width: '100%', marginBottom: 4}}
+                        placeholder="选择组件分类"
+                        value={store}
+                        onChange={handleStoreChange}
+                        options={stores}
+                    />
+                    <Input
+                        placeholder="请输入关键词搜索组件"
+                    />
+                </header>
+                <main>
+                    <div styleName="category">
+                        {components.map(baseCategory => {
+                            const {id, title, components = []} = baseCategory;
+
+                            return (
+                                <div key={id} id={`baseCategory_${id}`}>
+                                    <div styleName='baseCategory'>{title}</div>
+                                    {components.map(category => {
+                                        return (
+                                            <div
+                                                key={category.id}
+                                                id={`componentCategory_${id}`}
+                                                styleName="subCategory"
+                                            >
+                                                {category.title}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            );
+                        })}
+
+                        <div style={{height: 1000, background: 'red'}}></div>
+                    </div>
+                    <div styleName="components">
+                        {components.map(baseCategory => {
+                            const {id: bId, components = []} = baseCategory;
+                            return components.map(category => {
+                                const {id, subTitle, components = []} = category;
+                                return (
+                                    <div key={`${bId}_${id}`}>
+                                        <div styleName="componentCategory">{subTitle}</div>
+                                        {components.map(item => <DraggableComponent key={item.id} data={item}/>)}
+                                    </div>
+                                );
+                            });
+                        })}
+                    </div>
+                </main>
             </div>
         </Pane>
     );
