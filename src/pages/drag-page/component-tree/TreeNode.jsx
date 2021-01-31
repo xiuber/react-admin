@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import {
     DropboxOutlined,
@@ -162,15 +162,6 @@ export default config({
         }
         dragPageAction.setDraggingNode(null);
     }
-
-    useEffect(() => {
-        if (!nodeRef.current) return;
-
-        nodeRef.current.addEventListener('click', function(e) {
-            console.log(document.activeElement);
-            
-        });
-    }, [nodeRef]);
 
     const isSelected = selectedKey === key;
     const isDragging = draggingNode?.__config?.componentId === key;
