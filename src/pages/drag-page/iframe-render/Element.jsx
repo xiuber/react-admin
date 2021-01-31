@@ -5,7 +5,7 @@ import {
     TRIGGER_SIZE,
     isDropAccept,
     getComponent,
-} from './util';
+} from '../util';
 
 
 // 可投放元素
@@ -277,6 +277,7 @@ export default function Element(props) {
 
         const targetId = targetElement.getAttribute('data-componentId');
         dragPageAction.setSelectedNodeId(targetId);
+
 
         targetElement.classList.add(styles.dragEnter);
         const targetRect = targetElement.getBoundingClientRect();

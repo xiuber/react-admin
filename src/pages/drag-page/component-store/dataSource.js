@@ -1,6 +1,7 @@
 import {v4 as uuid} from 'uuid';
 
 // __config 说明
+// eslint-disable-next-line
 const __config = {
     componentId: '', // 渲染时组件id
     componentDesc: '', // 组件描述
