@@ -2,3 +2,4 @@
 1. [ ] 组件、页面、模块编辑器
    源码编辑 + iframe render 预览 + 保存自动截图iframe
    错误提示
+1. [ ] 编辑器，自定义提示，比如 componentName 等

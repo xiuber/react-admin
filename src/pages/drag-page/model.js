@@ -19,7 +19,8 @@ const initialState = {
     // showSide: false, // 左侧是否显示
     showSide: true,
     // activeSideKey: null, // 左侧激活key
-    activeSideKey: 'componentStore',
+    // activeSideKey: 'componentStore',
+    activeSideKey: 'schemaEditor',
     activeTabKey: 'attribute', // 右侧激活tab key
 
     componentTreeExpendedKeys: [], // 组件树 展开节点

@@ -1,0 +1,19 @@
+.root {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    & > main {
+        flex: 1;
+    }
+
+    & > footer {
+        flex: 0 0 auto;
+        border-top: 1px solid #d8d8d8;
+        height: 45px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+}

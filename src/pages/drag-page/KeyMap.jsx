@@ -31,7 +31,7 @@ export default config({
             console.log(showSide, activeSideKey);
             (() => {
                 if (showSide && activeSideKey === 'schemaEditor') {
-                    dragPageAction.saveSchema();
+                    // dragPageAction.saveSchema();
                     return;
                 }
 

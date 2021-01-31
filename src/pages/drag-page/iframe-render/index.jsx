@@ -59,7 +59,6 @@ export default config({
             />,
             iframeRootEle,
         );
-
     }
 
     // iframe 加载完成后一些初始化工作
