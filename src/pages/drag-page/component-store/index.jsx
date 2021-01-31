@@ -172,7 +172,7 @@ export default config({
                                                     styleName={`subCategory ${isActive ? 'active' : ''}`}
                                                     onClick={() => {
                                                         const element = document.getElementById(`componentCategory_${subCategoryId}`);
-                                                        scrollElement(componentRef.current, element, true);
+                                                        scrollElement(componentRef.current, element, true, true);
 
                                                         // 等待组件滚动完，否则 三角标志会跳动
                                                         setTimeout(() => {

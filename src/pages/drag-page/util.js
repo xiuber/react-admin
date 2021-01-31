@@ -61,7 +61,7 @@ export function elementIsVisible(containerEle, element) {
 
 }
 
-export function scrollElement(containerEle, element, toTop) {
+export function scrollElement(containerEle, element, toTop, force) {
     if (!element) return;
 
     const {
@@ -70,8 +70,7 @@ export function scrollElement(containerEle, element, toTop) {
         containerHeight,
     } = elementIsVisible(containerEle, element);
 
-    // 非可见
-    if (!visible) {
+    const scroll = () => {
         if (toTop) {
             // 滚动到顶部
             containerEle.scrollTop = elementTop;
@@ -79,6 +78,15 @@ export function scrollElement(containerEle, element, toTop) {
             // 滚动到中间
             containerEle.scrollTop = elementTop - containerHeight / 2;
         }
+    };
+
+    if (force) {
+        scroll();
+        return;
+    }
+    // 非可见
+    if (!visible) {
+        scroll();
     }
 }
 
