@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {Input, Select} from 'antd';
+import {Input, Select, Empty} from 'antd';
 import {AppstoreOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
@@ -94,16 +94,25 @@ export default config({
     async function handleStoreChange(value) {
         storeAction.setStore(value);
         setSearchValue('');
-        categoryRef.current.scrollTop = 0;
-        componentRef.current.scrollTop = 0;
+        if (categoryRef.current) categoryRef.current.scrollTop = 0;
+        if (componentRef.current) componentRef.current.scrollTop = 0;
+        handleComponentScroll();
         await fetchComponents(value);
     }
 
     const handleSearch = debounce((value) => {
         const result = filterTree(
             allComponents,
-            node => node.title?.includes(value)
-                || node.subTitle?.includes(value),
+            node => {
+                let {title = '', subTitle = ''} = node;
+
+                title = title.toLowerCase();
+                subTitle = subTitle.toLowerCase();
+                const val = value ? value.toLowerCase() : '';
+
+                return title.includes(val)
+                    || subTitle.includes(val);
+            },
         );
 
         storeAction.setComponents(result);
@@ -139,79 +148,85 @@ export default config({
                         }}
                     />
                 </header>
-                <main>
-                    <div styleName="category" ref={categoryRef}>
-                        {components.map(baseCategory => {
-                            const {id: baseCategoryId, title, children = []} = baseCategory;
+                {!components?.length ? (
+                    <main style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <Empty description="暂无组件"/>
+                    </main>
+                ) : (
+                    <main>
+                        <div styleName="category" ref={categoryRef}>
+                            {components.map(baseCategory => {
+                                const {id: baseCategoryId, title, children = []} = baseCategory;
 
-                            return (
-                                <div key={baseCategoryId} id={`baseCategory_${baseCategoryId}`}>
-                                    <div styleName='baseCategory'>{title}</div>
-                                    {children.map(item => {
-                                        const {id: subCategoryId} = item;
-                                        const isActive = subCategoryId === category;
-
-                                        return (
-                                            <div
-                                                key={subCategoryId}
-                                                id={`subCategory_${subCategoryId}`}
-                                                styleName={`subCategory ${isActive ? 'active' : ''}`}
-                                                onClick={() => {
-                                                    const element = document.getElementById(`componentCategory_${subCategoryId}`);
-                                                    scrollElement(componentRef.current, element, true);
-
-                                                    // 等待组件滚动完，否则 三角标志会跳动
-                                                    setTimeout(() => {
-                                                        storeAction.setCategory(subCategoryId);
-                                                    }, 300);
-                                                }}
-                                            >
-                                                {item.title}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            );
-                        })}
-                    </div>
-                    <div styleName="components" ref={componentRef} onScroll={handleComponentScroll}>
-                        {components.map(baseCategory => {
-                            const {id: baseCategoryId, children = []} = baseCategory;
-                            return children.map(category => {
-                                const {id: subCategoryId, subTitle, children = []} = category;
                                 return (
-                                    <div
-                                        className="componentCategory"
-                                        key={`${baseCategoryId}_${subCategoryId}`}
-                                        data-subCategoryId={subCategoryId}
-                                    >
-                                        <div
-                                            id={`componentCategory_${subCategoryId}`}
-                                            styleName="componentCategory"
-                                        >
-                                            {subTitle}
-                                        </div>
+                                    <div key={baseCategoryId} id={`baseCategory_${baseCategoryId}`}>
+                                        <div styleName='baseCategory'>{title}</div>
                                         {children.map(item => {
+                                            const {id: subCategoryId} = item;
+                                            const isActive = subCategoryId === category;
+
                                             return (
                                                 <div
-                                                    id={`component_${item.id}`}
+                                                    key={subCategoryId}
+                                                    id={`subCategory_${subCategoryId}`}
+                                                    styleName={`subCategory ${isActive ? 'active' : ''}`}
                                                     onClick={() => {
-                                                        const element = document.getElementById(`subCategory_${subCategoryId}`);
-                                                        scrollElement(categoryRef.current, element);
-                                                        storeAction.setCategory(subCategoryId);
+                                                        const element = document.getElementById(`componentCategory_${subCategoryId}`);
+                                                        scrollElement(componentRef.current, element, true);
+
+                                                        // 等待组件滚动完，否则 三角标志会跳动
+                                                        setTimeout(() => {
+                                                            storeAction.setCategory(subCategoryId);
+                                                        }, 300);
                                                     }}
                                                 >
-                                                    <DraggableComponent key={item.id} data={item}/>
+                                                    {item.title}
                                                 </div>
                                             );
                                         })}
                                     </div>
                                 );
-                            });
-                        })}
-                        <div ref={componentSpaceRef}/>
-                    </div>
-                </main>
+                            })}
+                        </div>
+                        <div styleName="components" ref={componentRef} onScroll={handleComponentScroll}>
+                            {components.map(baseCategory => {
+                                const {id: baseCategoryId, children = []} = baseCategory;
+                                return children.map(category => {
+                                    const {id: subCategoryId, subTitle, children = []} = category;
+                                    return (
+                                        <div
+                                            className="componentCategory"
+                                            key={`${baseCategoryId}_${subCategoryId}`}
+                                            data-subCategoryId={subCategoryId}
+                                        >
+                                            <div
+                                                id={`componentCategory_${subCategoryId}`}
+                                                styleName="componentCategory"
+                                            >
+                                                {subTitle}
+                                            </div>
+                                            {children.map(item => {
+                                                return (
+                                                    <div
+                                                        id={`component_${item.id}`}
+                                                        onClick={() => {
+                                                            const element = document.getElementById(`subCategory_${subCategoryId}`);
+                                                            scrollElement(categoryRef.current, element);
+                                                            storeAction.setCategory(subCategoryId);
+                                                        }}
+                                                    >
+                                                        <DraggableComponent key={item.id} data={item}/>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    );
+                                });
+                            })}
+                            <div ref={componentSpaceRef}/>
+                        </div>
+                    </main>
+                )}
             </div>
         </Pane>
     );

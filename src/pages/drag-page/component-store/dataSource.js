@@ -93,8 +93,10 @@ export async function getComponents(category) {
 
 export async function getStores() {
     return [
-        {value: '1', label: '分类1'},
-        {value: '2', label: '分类2'},
-        {value: '3', label: '分类3'},
+        {value: 'base', label: '基础组件'},
+        {value: 'page', label: '基础页面'},
+        {value: 'model', label: '基础模块'},
+        {value: '1', label: '自定义分类1'},
+        {value: '2', label: '自定义分类2'},
     ];
 }

@@ -6,6 +6,8 @@ import {
     SwapRightOutlined,
     CodeOutlined,
     SaveOutlined,
+    DeleteOutlined,
+    CloudServerOutlined,
 } from '@ant-design/icons';
 
 import config from 'src/commons/config-hoc';
@@ -67,10 +69,19 @@ export default config({
         },
         {
             key: 'delete',
-            icon: <SaveOutlined/>,
+            icon: <DeleteOutlined/>,
             label: `删除(${isMac ? '⌘' : 'ctrl'}+d)`,
             disabled: !selectedNodeId,
             onClick: () => dragPageAction.deleteSelectedNode(),
+        },
+        {
+            key: 'saveAs',
+            icon: <CloudServerOutlined/>,
+            label: '另存为',
+            disabled: !selectedNodeId,
+            onClick: () => {
+                // TODO
+            },
         },
     ];
     return (
