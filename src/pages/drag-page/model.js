@@ -5,9 +5,18 @@ import {cloneDeep} from 'lodash';
 const holderNode = {
     __config: {
         draggable: false,
-        componentId: '1',
+        componentId: uuid(),
     },
-    componentName: 'DragHolder',
+    componentName: 'div',
+    children: [
+        {
+            __config: {
+                draggable: false,
+                componentId: uuid(),
+            },
+            componentName: 'DragHolder',
+        },
+    ],
 };
 
 const initialState = {
@@ -19,8 +28,8 @@ const initialState = {
     // showSide: false, // 左侧是否显示
     showSide: true,
     // activeSideKey: null, // 左侧激活key
-    // activeSideKey: 'componentStore',
-    activeSideKey: 'schemaEditor',
+    activeSideKey: 'componentStore',
+    // activeSideKey: 'schemaEditor',
     activeTabKey: 'attribute', // 右侧激活tab key
 
     componentTreeExpendedKeys: [], // 组件树 展开节点
@@ -302,7 +311,13 @@ export default {
             componentTreeExpendedKeys: [...componentTreeExpendedKeys],
         };
     },
-    setPageConfig: pageConfig => ({pageConfig}),
+    setPageConfig: pageConfig => {
+        if (!pageConfig) {
+            return {pageConfig: {...holderNode}};
+        }
+
+        return {pageConfig};
+    },
     deleteSelectedNode: (_, state) => {
         return deleteNode(state.selectedNodeId, state);
     },
@@ -358,8 +373,15 @@ function modifyPageConfig(options) {
     const targetNode = findNodeById(pageConfig, targetId);
 
     if (isChildren) {
-        if (!targetNode.children) targetNode.children = [];
-        targetNode.children.push(node);
+        if (targetNode.componentName === 'DragHolder') {
+            targetCollection.push(node);
+            const index = targetCollection.findIndex(item => item.__config.componentId === targetNode.__config.componentId);
+            targetCollection.splice(index, 1);
+        } else {
+            if (!targetNode.children) targetNode.children = [];
+
+            targetNode.children.push(node);
+        }
 
         return {pageConfig: {...pageConfig}};
     }

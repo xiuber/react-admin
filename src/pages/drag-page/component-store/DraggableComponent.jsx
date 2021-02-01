@@ -57,9 +57,16 @@ export default config({
             onDragEnd={handleDragEnd}
         >
             <div styleName="title">
-                {data.title}
+                {data.icon} {data.title}
             </div>
-            <img draggable={false} styleName="img" src={data.image} alt="组件预览图"/>
+            {data.image ? (
+                <img
+                    draggable={false}
+                    styleName="img"
+                    src={data.image}
+                    alt="组件预览图"
+                />
+            ) : null}
         </div>
     );
 });

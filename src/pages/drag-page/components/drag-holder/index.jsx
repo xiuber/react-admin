@@ -10,6 +10,7 @@ export default function DragHolder(props) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: 1,
+                ...style,
             }}
             {...others}
         >

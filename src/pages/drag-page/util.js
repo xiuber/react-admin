@@ -6,7 +6,6 @@ import * as antdComponent from 'antd/es';
 
 export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
-
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
 export function filterTree(array, filter) {
@@ -158,21 +157,38 @@ export function getDropGuidePosition(options) {
     } = options;
 
     const targetIsContainer = isContainer === undefined ? targetElement.getAttribute('data-isContainer') === 'true' : isContainer;
-
     const targetRect = targetElement.getBoundingClientRect();
-    const {
+
+    const _document = isInFrame ? document.getElementById('dnd-iframe').contentDocument : document;
+    const documentElement = _document.documentElement || _document.body;
+    const windowHeight = documentElement.clientHeight;
+    const windowWidth = documentElement.clientWidth;
+
+    const scrollX = documentElement.scrollLeft;
+    const scrollY = documentElement.scrollTop;
+
+    const x = event.pageX || event.clientX + scrollX;
+    const y = event.pageY || event.clientY + scrollY;
+
+    let {
         left: targetX,
         top: targetY,
         width: targetWidth,
         height: targetHeight,
     } = targetRect;
 
-    const _document = isInFrame ? document.getElementById('dnd-iframe').contentDocument : document;
+    // 获取可视范围
+    if (targetY < 0) {
+        targetHeight = targetHeight + targetY;
+        targetY = 0;
+    }
+    if (targetHeight + targetY > windowHeight) targetHeight = windowHeight - targetY;
 
-    const scrollX = _document.documentElement.scrollLeft || _document.body.scrollLeft;
-    const scrollY = _document.documentElement.scrollTop || _document.body.scrollTop;
-    const x = event.pageX || event.clientX + scrollX;
-    const y = event.pageY || event.clientY + scrollY;
+    if (targetX < 0) {
+        targetWidth = targetWidth + targetX;
+        targetX = 0;
+    }
+    if (targetWidth + targetX > windowWidth) targetWidth = windowWidth - targetX;
 
 
     const halfY = targetY + targetHeight / 2;

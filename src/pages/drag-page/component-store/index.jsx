@@ -3,7 +3,7 @@ import {Input, Select, Empty} from 'antd';
 import {AppstoreOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
-import {getComponents, getStores} from './dataSource';
+import {getComponents, getStores} from '../dataSource';
 import DraggableComponent from './DraggableComponent';
 import {scrollElement, elementIsVisible, filterTree} from '../util';
 import {debounce} from 'lodash';
