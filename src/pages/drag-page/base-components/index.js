@@ -92,6 +92,8 @@ export function setComponentDefaultOptions(componentNode) {
     };
 
     loop(dataSource);
+
+    return componentNode;
 }
 
 export function setDefaultOptions(nodes) {

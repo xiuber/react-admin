@@ -62,7 +62,7 @@ export default config({
 
     const code = `export default ${JSON5.stringify(removeComponentConfig(pageConfig), null, 4)}`;
     return (
-        <div styleName="root">
+        <div styleName="root" id="schemaEditor">
             <CodeEditor
                 title="Schema 源码开发"
                 value={code}

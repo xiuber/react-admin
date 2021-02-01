@@ -156,13 +156,15 @@ export default config({
                     <main>
                         <div styleName="category" ref={categoryRef}>
                             {components.map(baseCategory => {
-                                const {id: baseCategoryId, title, children = []} = baseCategory;
+                                const {id: baseCategoryId, title, children = [], hiddenInStore} = baseCategory;
+                                if (hiddenInStore) return null;
 
                                 return (
                                     <div key={baseCategoryId} id={`baseCategory_${baseCategoryId}`}>
                                         <div styleName='baseCategory'>{title}</div>
                                         {children.map(item => {
-                                            const {id: subCategoryId} = item;
+                                            const {id: subCategoryId, hiddenInStore} = item;
+                                            if (hiddenInStore) return null;
                                             const isActive = subCategoryId === category;
 
                                             return (
@@ -190,9 +192,11 @@ export default config({
                         </div>
                         <div styleName="components" ref={componentRef} onScroll={handleComponentScroll}>
                             {components.map(baseCategory => {
-                                const {id: baseCategoryId, children = []} = baseCategory;
+                                const {id: baseCategoryId, children = [], hiddenInStore} = baseCategory;
+                                if (hiddenInStore) return null;
                                 return children.map(category => {
-                                    const {id: subCategoryId, subTitle, children = []} = category;
+                                    const {id: subCategoryId, subTitle, children = [], hiddenInStore} = category;
+                                    if (hiddenInStore) return null;
                                     return (
                                         <div
                                             className="componentCategory"
@@ -206,6 +210,7 @@ export default config({
                                                 {subTitle}
                                             </div>
                                             {children.map(item => {
+                                                if (item.hiddenInStore) return null;
                                                 return (
                                                     <div
                                                         id={`component_${item.id}`}

@@ -40,7 +40,7 @@ function CodeEditor(props) {
             onSave(code);
         });
         editorRef.current.addCommand(monaco.KeyCode.Escape, function() {
-            handleEsc();
+            handleClose();
         });
     }, [code, monacoRef.current, fullScreen]);
 
@@ -48,8 +48,8 @@ function CodeEditor(props) {
         editorRef.current.getAction(['editor.action.formatDocument'])._run();
     }
 
-    function handleEsc() {
-        if (fullScreen) return setFullScreen(false);
+    function handleClose() {
+        if (fullScreen) return handleFullScreen();
 
         onClose();
     }
@@ -128,6 +128,7 @@ function CodeEditor(props) {
                             </Button>
                         ) : (
                             <Button
+                                className="codeEditorSave"
                                 type="primary"
                                 onClick={() => onSave(code)}
                             >
@@ -136,7 +137,8 @@ function CodeEditor(props) {
                         )}
 
                         <Button
-                            onClick={() => onClose()}
+                            className="codeEditorClose"
+                            onClick={handleClose}
                             style={{marginLeft: 8}}
                         >
                             {fullScreen ? '退出全屏' : '关闭'} (Esc)
