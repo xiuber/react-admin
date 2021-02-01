@@ -1,7 +1,7 @@
-import {useEffect, useRef} from 'react';
+import {useEffect} from 'react';
 import config from 'src/commons/config-hoc';
-import {cloneDeep} from 'lodash';
 import {v4 as uuid} from 'uuid';
+import {copyTextToClipboard, getTextFromClipboard} from './util';
 
 export default config({
     connect: state => {
@@ -24,8 +24,6 @@ export default config({
     const isSchemaEditor = showSide && activeSideKey === 'schemaEditor';
     const isDesignPage = !isSchemaEditor;
 
-    const cloneNode = useRef(null);
-
     // 触发元素的click事件
     function triggerClick(selector) {
         const ele = document.querySelector(selector);
@@ -37,13 +35,12 @@ export default config({
 
     function handleCtrlOrCommandS(e) {
         e.preventDefault();
-        (() => {
-            //  Schema 源码编辑器保存事件
-            if (isSchemaEditor) return triggerClick('#schemaEditor .codeEditorSave');
+        //  Schema 源码编辑器保存事件
+        if (isSchemaEditor) return triggerClick('#schemaEditor .codeEditorSave');
 
-            // 编辑页面保存事件
-            dragPageAction.save();
-        })();
+        // 编辑页面保存事件
+        if (isDesignPage) return dragPageAction.save();
+
     }
 
     function handleEscape(e) {
@@ -54,8 +51,6 @@ export default config({
     }
 
     function handleCtrlOrCommandC(e) {
-        cloneNode.current = '';
-
         // 如果当前不是编辑页面，直接返回
         if (!isDesignPage) return;
 
@@ -68,42 +63,50 @@ export default config({
         if (!selectedNode) return;
 
         // 将当前选中节点，保存到剪切板中
-        cloneNode.current = selectedNode;
-
+        const nodeText = JSON.stringify(selectedNode);
+        copyTextToClipboard(nodeText);
     }
 
-    function handleCtrlOrCommandV(e) {
+    async function handleCtrlOrCommandV(e) {
         // 如果当前不是编辑页面，直接返回
         if (!isDesignPage) return;
 
         if (!selectedNode) return;
 
-        if (!cloneNode.current) return;
+        try {
+            const text = await getTextFromClipboard();
+            const cloneNode = JSON.parse(text);
 
-        const targetId = cloneNode.current.__config?.componentId;
-        const node = cloneDeep(cloneNode.current);
+            // 不是节点
+            if (!cloneNode.componentName) return;
 
-        const loopId = (node) => {
-            if (!node.__config) node.__config = {};
-            node.__config.componentId = uuid();
-            if (node.children?.length) {
-                node.children.forEach(item => loopId(item));
-            }
-        };
+            const targetId = cloneNode.__config?.componentId;
 
-        loopId(node);
+            const loopId = (node) => {
+                if (!node.__config) node.__config = {};
+                node.__config.componentId = uuid();
+                if (node.children?.length) {
+                    node.children.forEach(item => loopId(item));
+                }
+            };
 
-        const options = {
-            node,
-            targetId,
-            isAfter: true,
-        };
+            loopId(cloneNode);
 
-        dragPageAction.addNode(options);
+            const options = {
+                node: cloneNode,
+                targetId,
+                isAfter: true,
+            };
+
+            dragPageAction.addNode(options);
+
+        } catch (e) {
+
+        }
     }
 
 
-    function handleKeyDown(e) {
+    async function handleKeyDown(e) {
         const {key, metaKey, ctrlKey} = e;
         const mc = metaKey || ctrlKey;
 
@@ -113,7 +116,7 @@ export default config({
         }
         if (mc && key === 's') handleCtrlOrCommandS(e);
         if (mc && key === 'c') handleCtrlOrCommandC(e);
-        if (mc && key === 'v') handleCtrlOrCommandV(e);
+        if (mc && key === 'v') await handleCtrlOrCommandV(e);
 
         if (key === 'Escape') handleEscape(e);
     }
