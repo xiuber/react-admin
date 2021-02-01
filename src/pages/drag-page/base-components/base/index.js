@@ -8,6 +8,30 @@ import {
 
 export default [
     {
+        title: '页面容器',
+        subTitle: '页面容器 PageContent',
+        children: [
+            {
+                title: '页面容器',
+                icon: <PicCenterOutlined/>,
+                config: {
+                    __config: {
+                        componentType: 'ra-lib',
+                    },
+                    componentName: 'PageContent',
+                    children: [
+                        {
+                            componentName: 'DragHolder',
+                            props: {
+                                style: {height: 100},
+                            },
+                        },
+                    ],
+                },
+            },
+        ],
+    },
+    {
         title: '层标签',
         subTitle: '层标签 div',
         children: [

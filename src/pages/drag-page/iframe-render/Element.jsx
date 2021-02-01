@@ -1,4 +1,4 @@
-import React, {createElement, useRef} from 'react';
+import React, {createElement, useRef, useEffect} from 'react';
 import styles from './style.less';
 import {
     getDropGuidePosition,
@@ -20,6 +20,16 @@ export default function Element(props) {
         activeSideKey,
         iframeDocument,
     } = props;
+
+    const isPreview = activeToolKey === 'preview';
+
+    // 预览时，不显示 DragHolder
+    useEffect(() => {
+        const holders = iframeDocument.querySelectorAll('.DragHolder');
+        Array.from(holders).forEach(ele => {
+            ele.style.display = isPreview ? 'none' : 'flex';
+        });
+    }, [isPreview, iframeDocument]);
 
     if (!config) return null;
 
@@ -262,7 +272,7 @@ export default function Element(props) {
         },
     };
 
-    if (activeToolKey === 'preview') {
+    if (isPreview) {
         return createElement(component, {
             ...componentProps,
             getPopupContainer: () => iframeDocument.body,

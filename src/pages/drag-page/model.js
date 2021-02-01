@@ -14,6 +14,12 @@ const holderNode = {
                 componentId: uuid(),
             },
             componentName: 'DragHolder',
+            props: {
+                style: {
+                    height: 'calc(100vh - 2px)',
+                    fontSize: 18,
+                },
+            },
         },
     ],
 };
@@ -77,7 +83,7 @@ export default {
 
         const selectedNode = findNodeById(pageConfig, selectedNodeId);
 
-        const parentKeys = getParentIds([pageConfig], selectedNodeId);
+        const parentKeys = getParentIds(pageConfig, selectedNodeId);
         if (parentKeys?.length) {
             if (!componentTreeExpendedKeys) componentTreeExpendedKeys = [];
             parentKeys.forEach(key => {
@@ -175,6 +181,12 @@ function modifyPageConfig(options) {
     return {pageConfig: {...pageConfig}};
 }
 
+/**
+ * 获取id节点所在集合
+ * @param root
+ * @param id
+ * @returns {*|null}
+ */
 function findChildrenCollection(root, id) {
     if (root.__config?.componentId === id) return null;
 
@@ -190,21 +202,45 @@ function findChildrenCollection(root, id) {
     }
 }
 
-
+/**
+ * 根据id 删除 root 中节点，并返回删除节点
+ * @param root
+ * @param id
+ * @returns {any} 被删除的节点
+ */
 function deleteNodeById(root, id) {
-    if (!root.children) return [];
-    const index = root.children.findIndex(item => item.__config?.componentId === id);
-    if (index > -1) {
-        return root.children.splice(index, 1);
-    } else {
-        for (let item of root.children) {
-            const result = deleteNodeById(item, id);
-            if (result?.length) return result;
+    const dataSource = Array.isArray(root) ? root : [root];
+
+    let deletedNode = undefined;
+    const loop = nodes => {
+        for (const node of nodes) {
+            if (node?.__config?.componentId === id) {
+                const index = nodes.findIndex(item => item?.__config?.componentId === id);
+                deletedNode = nodes.splice(index, 1);
+                return;
+            } else {
+                if (node?.children?.length) {
+                    loop(node.children);
+                }
+            }
         }
-    }
+    };
+
+    loop(dataSource);
+
+    return deletedNode;
 }
 
-function getParentIds(data, id) {
+
+/**
+ * 获取 id 对应的所有祖先节点
+ * @param root
+ * @param id
+ * @returns {*|[]}
+ */
+function getParentIds(root, id) {
+    const data = Array.isArray(root) ? root : [root];
+
     // 深度遍历查找
     function dfs(data, id, parents) {
         for (var i = 0; i < data.length; i++) {
