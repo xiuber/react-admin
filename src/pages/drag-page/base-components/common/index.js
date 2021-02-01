@@ -15,6 +15,9 @@ export default [
                 return {
                     title,
                     config: {
+                        __config: {
+                            isContainer: false,
+                        },
                         componentName: 'Button',
                         props: {
                             type,
