@@ -1,10 +1,7 @@
 import React, {useState, useRef} from 'react';
 import config from 'src/commons/config-hoc';
-import {
-    DropboxOutlined,
-    MacCommandOutlined,
-} from '@ant-design/icons';
 import {getDropGuidePosition, isDropAccept} from 'src/pages/drag-page/util';
+import {getComponentIcon} from '../base-components';
 
 import './style.less';
 
@@ -28,7 +25,9 @@ export default config({
 
     let {key, title, isContainer, draggable, nodeData} = node;
 
-    title = <span>{isContainer ? <DropboxOutlined/> : <MacCommandOutlined/>}{title}</span>;
+    let icon = getComponentIcon(nodeData?.componentName, isContainer);
+
+    title = <span>{icon}{title}</span>;
 
     const hoverRef = useRef(0);
     const nodeRef = useRef(null);

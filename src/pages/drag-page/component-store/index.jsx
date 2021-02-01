@@ -24,12 +24,12 @@ export default config({
     const {
         stores,
         store,
-        categories,
+        // categories,
         category,
         components,
-        activeSideKey,
+        // activeSideKey,
         action: {
-            dragPage: dragPageAction,
+            // dragPage: dragPageAction,
             componentStore: storeAction,
         },
     } = props;

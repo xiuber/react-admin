@@ -4,7 +4,7 @@ import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
 import {usePrevious} from '../util';
-import {removeComponentConfig, setComponentDefaultOptions} from '../base-components/util';
+import {removeComponentConfig, setComponentDefaultOptions} from '../base-components';
 import './style.less';
 
 export default config({
@@ -26,8 +26,8 @@ export default config({
     const prevActiveSideKey = usePrevious(activeSideKey);
     useEffect(() => {
         const key = 'schemaEditor';
-        const visible = !prevActiveSideKey && activeSideKey === key
-            || prevActiveSideKey !== key && activeSideKey === key;
+        const visible = (!prevActiveSideKey && activeSideKey === key)
+            || (prevActiveSideKey !== key && activeSideKey === key);
 
         setVisible(visible);
     }, [activeSideKey]);
@@ -48,12 +48,14 @@ export default config({
                 return message.error('格式错误');
             }
         }
-        console.log(pageConfig);
 
         dragPageAction.setPageConfig(pageConfig);
 
-
         dragPageAction.setSelectedNodeId(null);
+    }
+
+    function handleClose() {
+        dragPageAction.setActiveSideKey(null);
     }
 
     if (!visible) return null;
@@ -65,6 +67,7 @@ export default config({
                 title="Schema 源码开发"
                 value={code}
                 onSave={handleSave}
+                onClose={handleClose}
             />
         </div>
     );

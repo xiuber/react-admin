@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import {Button} from 'antd';
 import MonacoEditor from 'react-monaco-editor';
 import './style.less';
-import {DesktopOutlined} from '@ant-design/icons';
+import {
+    DesktopOutlined,
+    FullscreenExitOutlined,
+    FullscreenOutlined,
+} from '@ant-design/icons';
 import Pane from 'src/pages/drag-page/pane';
 import {useHeight} from 'ra-lib';
 import {isMac} from '../util';
@@ -24,6 +28,7 @@ function CodeEditor(props) {
     const [height] = useHeight(mainRef, 53);
     const [errors, setErrors] = useState([]);
     const [code, setCode] = useState('');
+    const [fullScreen, setFullScreen] = useState(false);
 
     useEffect(() => {
         setCode(value);
@@ -34,11 +39,19 @@ function CodeEditor(props) {
         editorRef.current.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, function() {
             onSave(code);
         });
-    }, [code, monacoRef.current]);
+        editorRef.current.addCommand(monaco.KeyCode.Escape, function() {
+            handleEsc();
+        });
+    }, [code, monacoRef.current, fullScreen]);
 
     function handleFormat() {
         editorRef.current.getAction(['editor.action.formatDocument'])._run();
+    }
 
+    function handleEsc() {
+        if (fullScreen) return setFullScreen(false);
+
+        onClose();
     }
 
     function handleChange(code) {
@@ -58,16 +71,32 @@ function CodeEditor(props) {
         editor.focus();
     }
 
+    function handleFullScreen() {
+        const nextFullScreen = !fullScreen;
+
+        setFullScreen(nextFullScreen);
+
+        setTimeout(() => window.dispatchEvent(new Event('resize')));
+        setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
+    }
+
     const options = {
         selectOnLineNumbers: true,
     };
+
     return (
-        <div styleName="root">
+        <div styleName={fullScreen ? 'fullScreen' : ''}>
             <Pane
                 header={
-                    <div>
-                        <DesktopOutlined style={{marginRight: 4}}/>
-                        {title}
+                    <div styleName="header">
+                        <div>
+                            <DesktopOutlined style={{marginRight: 4}}/> {title}
+                        </div>
+                        <div styleName="tool">
+                            <span onClick={handleFullScreen}>
+                                {fullScreen ? <FullscreenExitOutlined/> : <FullscreenOutlined/>}
+                            </span>
+                        </div>
                     </div>
                 }
             >
@@ -110,7 +139,7 @@ function CodeEditor(props) {
                             onClick={() => onClose()}
                             style={{marginLeft: 8}}
                         >
-                            关闭(Esc)
+                            {fullScreen ? '退出全屏' : '关闭'} (Esc)
                         </Button>
                     </footer>
                 </div>

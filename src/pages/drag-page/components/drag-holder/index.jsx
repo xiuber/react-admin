@@ -10,6 +10,7 @@ export default function DragHolder(props) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: 1,
+                pointerEvents: 'none', // 忽略鼠标事件，拖拽元素不会放入其中，也不会拖动了
                 ...style,
             }}
             {...others}

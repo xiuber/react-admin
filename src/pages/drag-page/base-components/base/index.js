@@ -5,9 +5,8 @@ import {
     LinkOutlined,
     FileImageOutlined,
 } from '@ant-design/icons';
-import {setDefaultOptions} from '../util';
 
-export default setDefaultOptions([
+export default [
     {
         title: '层标签',
         subTitle: '层标签 div',
@@ -19,9 +18,6 @@ export default setDefaultOptions([
                     componentName: 'div',
                     children: [
                         {
-                            __config: {
-                                draggable: false,
-                            },
                             componentName: 'DragHolder',
                             props: {
                                 style: {height: 100},
@@ -57,7 +53,7 @@ export default setDefaultOptions([
         children: [
             {
                 title: '超链接',
-                icon: <LinkOutlined />,
+                icon: <LinkOutlined/>,
                 config: {
                     componentName: 'a',
                     children: [
@@ -78,7 +74,7 @@ export default setDefaultOptions([
         children: [
             {
                 title: '图片',
-                icon: <FileImageOutlined />,
+                icon: <FileImageOutlined/>,
                 config: {
                     __config: {
                         isContainer: false,
@@ -91,4 +87,26 @@ export default setDefaultOptions([
             },
         ],
     },
-]);
+    {
+        title: 'iframe',
+        subTitle: 'iframe',
+        children: [
+            {
+                title: 'iframe',
+                config: {
+                    __config: {
+                        isContainer: false,
+                    },
+                    componentName: 'iframe',
+                    props: {
+                        src: 'https://www.baidu.com',
+                        style: {
+                            width: '100%',
+                            border: 'none',
+                        },
+                    },
+                },
+            },
+        ],
+    },
+];
