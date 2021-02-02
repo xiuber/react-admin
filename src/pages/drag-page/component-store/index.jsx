@@ -185,8 +185,10 @@ export default config({
                                                         // }, 300);
                                                     }}
                                                 >
-                                                    <Draggable data={data} style={{padding: '0 4px', cursor: 'move'}}>
-                                                        {item.title}
+                                                    <Draggable data={data}>
+                                                        <div styleName="title">
+                                                            {item.title}
+                                                        </div>
                                                     </Draggable>
                                                 </div>
                                             );

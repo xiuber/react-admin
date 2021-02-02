@@ -13,6 +13,7 @@ export default config({
             dragPage: dragPageAction,
         },
         children,
+        style = {},
         ...others
     } = props;
 
@@ -48,10 +49,15 @@ export default config({
         dragPageAction.setActiveSideKey('componentStore');
     }
 
+    const draggable = !!data;
+
+    if (!draggable) return children;
+
     return (
         <div
             {...others}
-            draggable
+            style={{cursor: 'move', ...style}}
+            draggable={draggable}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
         >

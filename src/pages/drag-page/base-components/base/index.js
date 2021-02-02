@@ -8,7 +8,7 @@ import {
 
 export default [
     {
-        title: '页面容器',
+        title: '页面容器 页面容器 页面容器',
         subTitle: '页面容器 PageContent',
         children: [
             {

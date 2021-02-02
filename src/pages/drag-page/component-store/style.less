@@ -50,10 +50,16 @@
     .subCategory {
         position: relative;
         padding: 4px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
         cursor: pointer;
+
+        .title {
+            width: 100%;
+            padding: 0 4px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
 
         &.active {
             color: @primary-color;
