@@ -1,9 +1,9 @@
 import React from 'react';
 import config from 'src/commons/config-hoc';
-import { v4 as uuid } from 'uuid';
+import {v4 as uuid} from 'uuid';
 import './DraggableComponent.less';
 import Element from '../iframe-render/Element';
-import {setComponentDefaultOptions} from '../base-components'
+import {cloneDeep} from 'lodash';
 
 export default config({
     connect: state => {
@@ -27,7 +27,7 @@ export default config({
         setTimeout(() => {
             dragPageAction.setActiveSideKey('componentTree');
         });
-        const { config } = data;
+        const {config} = data;
 
         // 设置 componentId
         const loop = (node) => {
@@ -40,7 +40,7 @@ export default config({
             }
         };
 
-        loop(config);
+        loop(cloneDeep(config));
 
         e.dataTransfer.setData('componentConfig', JSON.stringify(config));
         dragPageAction.setDraggingNode(config);
@@ -71,10 +71,12 @@ export default config({
             ) : null}
             {data.renderPreview ? (
                 <div styleName="preview">
-                    <Element
-                        config={data.renderPreview === true ? data.config : setComponentDefaultOptions(data.renderPreview)}
-                        activeToolKey="preview"
-                    />
+                    {data.renderPreview === true ? (
+                        <Element
+                            config={data.config}
+                            activeToolKey="preview"
+                        />
+                    ) : data.renderPreview}
                 </div>
             ) : null}
         </div>

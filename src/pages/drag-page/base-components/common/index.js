@@ -1,3 +1,4 @@
+import React from 'react';
 import theme from '../../../../theme.less';
 
 export default [
@@ -52,20 +53,12 @@ export default [
             {
                 title: '一行两列',
                 // 预览渲染组件配置
-                renderPreview: {
-                    componentName: 'div',
-                    props: {
-                        style: { flex: 1, display: 'flex' },
-                    },
-                    children: [
-                        ...[1, 1].map(() => ({
-                            componentName: 'div',
-                            props: {
-                                style: { flex: 1, margin: 4, height: 10, background: theme.primaryColor },
-                            },
-                        })),
-                    ],
-                },
+                renderPreview: (
+                    <div style={{flex: 1, display: 'flex'}}>
+                        <div style={{ flex: 1, margin: 4, height: 10, background: theme.primaryColor }}/>
+                        <div style={{ flex: 1, margin: 4, height: 10, background: theme.primaryColor }}/>
+                    </div>
+                ),
                 config: {
                     componentName: 'Row',
                     children: [
@@ -85,20 +78,13 @@ export default [
             },
             {
                 title: '一行三列',
-                renderPreview: {
-                    componentName: 'div',
-                    props: {
-                        style: { flex: 1, display: 'flex' },
-                    },
-                    children: [
-                        ...[1, 1, 1].map(() => ({
-                            componentName: 'div',
-                            props: {
-                                style: { flex: 1, margin: 4, height: 10, background: theme.primaryColor },
-                            },
-                        })),
-                    ],
-                },
+                renderPreview: (
+                    <div style={{flex: 1, display: 'flex'}}>
+                        <div style={{ flex: 1, margin: 4, height: 10, background: theme.primaryColor }}/>
+                        <div style={{ flex: 1, margin: 4, height: 10, background: theme.primaryColor }}/>
+                        <div style={{ flex: 1, margin: 4, height: 10, background: theme.primaryColor }}/>
+                    </div>
+                ),
                 config: {
                     componentName: 'Row',
                     children: [
