@@ -27,7 +27,8 @@ export default config({
         setTimeout(() => {
             dragPageAction.setActiveSideKey('componentTree');
         });
-        const {config} = data;
+
+        const config = cloneDeep(data.config);
 
         // 设置 componentId
         const loop = (node) => {
@@ -40,7 +41,7 @@ export default config({
             }
         };
 
-        loop(cloneDeep(config));
+        loop(config);
 
         e.dataTransfer.setData('componentConfig', JSON.stringify(config));
         dragPageAction.setDraggingNode(config);
@@ -49,6 +50,36 @@ export default config({
     function handleDragEnd() {
         // 从新打开组件库
         dragPageAction.setActiveSideKey('componentStore');
+    }
+
+    function renderPreview() {
+        const {renderPreview, previewZoom, previewStyle, config} = data;
+
+        if (!renderPreview) return null;
+
+        const componentConfig = cloneDeep(config);
+        if (previewStyle) {
+            if (!componentConfig.props) componentConfig.props = {};
+            if (!componentConfig.props.style) componentConfig.props.style = {};
+
+            componentConfig.props.style = {
+                ...componentConfig.props.style,
+                ...previewStyle,
+            };
+        }
+
+        return (
+            <div styleName="preview">
+                <div styleName="previewZoom" style={{zoom: previewZoom || 1}}>
+                    {renderPreview === true ? (
+                        <Element
+                            config={componentConfig}
+                            activeToolKey="preview"
+                        />
+                    ) : renderPreview}
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -69,16 +100,7 @@ export default config({
                     alt="组件预览图"
                 />
             ) : null}
-            {data.renderPreview ? (
-                <div styleName="preview">
-                    {data.renderPreview === true ? (
-                        <Element
-                            config={data.config}
-                            activeToolKey="preview"
-                        />
-                    ) : data.renderPreview}
-                </div>
-            ) : null}
+            {renderPreview()}
         </div>
     );
 });

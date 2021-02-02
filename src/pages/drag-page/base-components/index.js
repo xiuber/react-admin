@@ -4,10 +4,12 @@ import {v4 as uuid} from 'uuid';
 import {cloneDeep} from 'lodash';
 import base from './base';
 import common from './common';
+import dataInput from './data-input';
 
 let baseComponents = [
     {title: '默认', children: base},
     {title: '通用', children: common},
+    {title: '数据输入', children: dataInput},
 ];
 
 // __config 说明
