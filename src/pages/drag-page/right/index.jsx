@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Tabs} from 'antd';
 import config from 'src/commons/config-hoc';
 import ComponentStyle from '../component-style';
@@ -11,17 +11,31 @@ export default config({
     connect: state => {
         return {
             activeTabKey: state.dragPage.activeTabKey,
+            selectedNode: state.dragPage.selectedNode,
+            draggingNode: state.dragPage.draggingNode,
         };
     },
 })(function Right(props) {
-    const {activeTabKey, action: {dragPage: dragPageAction}} = props;
+    const {
+        activeTabKey,
+        selectedNode,
+        draggingNode,
+        action: {dragPage: dragPageAction},
+    } = props;
+    const [key, setKey] = useState(null);
 
     function handleChange(key) {
         dragPageAction.setActiveTabKey(key);
     }
 
+    // 当前选中组件改变之后，设置key，使组件重新创建
+    useEffect(() => {
+        if (draggingNode) return;
+        setKey(selectedNode?.__config?.componentId);
+    }, [selectedNode, draggingNode]);
+
     return (
-        <div styleName="root">
+        <div key={key} styleName="root">
             <Tabs
                 type="card"
                 tabBarStyle={{marginBottom: 0}}
