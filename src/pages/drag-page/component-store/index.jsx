@@ -7,6 +7,7 @@ import {getComponents, getStores} from '../dataSource';
 import DraggableComponent from './DraggableComponent';
 import {scrollElement, elementIsVisible, filterTree} from '../util';
 import {debounce} from 'lodash';
+import Draggable from './Draggable';
 import './style.less';
 
 export default config({
@@ -163,9 +164,11 @@ export default config({
                                     <div key={baseCategoryId} id={`baseCategory_${baseCategoryId}`}>
                                         <div styleName='baseCategory'>{title}</div>
                                         {children.map(item => {
-                                            const {id: subCategoryId, hiddenInStore} = item;
+                                            const {id: subCategoryId, hiddenInStore, children = []} = item;
                                             if (hiddenInStore) return null;
                                             const isActive = subCategoryId === category;
+
+                                            const data = children[0];
 
                                             return (
                                                 <div
@@ -182,7 +185,9 @@ export default config({
                                                         // }, 300);
                                                     }}
                                                 >
-                                                    {item.title}
+                                                    <Draggable data={data} style={{padding: '0 4px', cursor: 'move'}}>
+                                                        {item.title}
+                                                    </Draggable>
                                                 </div>
                                             );
                                         })}
