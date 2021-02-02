@@ -3,6 +3,7 @@ import {Collapse} from 'antd';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
 import Layout from './layout';
+import Font from './font';
 import './style.less';
 
 
@@ -43,13 +44,14 @@ export default config({
             )}
         >
             <Collapse
+                style={{border: 'none'}}
                 defaultActiveKey={['layout', 'text', 'position', 'background', 'border']}
             >
                 <Panel header="布局" key="layout">
                     <Layout/>
                 </Panel>
                 <Panel header="文字" key="text">
-                    文字
+                    <Font/>
                 </Panel>
                 <Panel header="定位" key="position">
                     定位

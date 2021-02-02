@@ -1,5 +1,9 @@
 .root {
     :global {
+        .ant-form-item {
+            margin-bottom: 8px;
+        }
+
         .ant-radio-group {
             display: inline-flex;
             width: 100%;
@@ -42,6 +46,7 @@
 
         .paddingTop:after {
             content: 'padding';
+            color: #666;
             position: absolute;
             left: 5px;
             top: -@size;
@@ -49,6 +54,7 @@
 
         .marginTop:after {
             content: 'margin';
+            color: #666;
             position: absolute;
             left: 5px;
             top: -@size;
@@ -100,6 +106,7 @@
             input {
                 left: -@size * 2;
                 text-align: right;
+                padding-right: 3px;
                 height: 100%;
                 width: @size * 2;
             }
@@ -118,6 +125,7 @@
 
             input {
                 right: -@size * 2;
+                padding-left: 3px;
                 text-align: left;
                 height: 100%;
                 width: @size * 2;
@@ -147,6 +155,7 @@
             input {
                 left: -@size;
                 text-align: left;
+                padding-left: 3px;
             }
         }
 
@@ -157,6 +166,7 @@
             input {
                 right: -@size;
                 text-align: right;
+                padding-right: 3px;
             }
         }
 

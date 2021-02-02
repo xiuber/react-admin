@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import {
     Form,
     Input,
-    InputNumber,
 } from 'antd';
 import {
     PicCenterOutlined,
@@ -44,21 +43,36 @@ const flexWrapOptions = [
     {value: 'wrap', label: '正换行'},
     {value: 'wrap-reserve', label: '逆换行'},
 ];
+const paddingMarginFields = [
+    'paddingTop',
+    'paddingRight',
+    'paddingBottom',
+    'paddingLeft',
+    'marginTop',
+    'marginRight',
+    'marginBottom',
+    'marginLeft',
+];
 
 export default function Layout(props) {
     const {value, onChange = () => undefined} = props;
     const [form] = Form.useForm();
 
     function handleChange(changedValues, allValues) {
-        // 过滤空值
-        const values = Object.entries(allValues).reduce((prev, curr) => {
-            const [key, value] = curr;
-            if (value !== '' && value !== undefined) prev[key] = value;
-
-            return prev;
-        }, {});
-        console.log('values', values);
-        onChange(values);
+        // 过滤空值 让父级统一过滤
+        // const values = Object.entries(allValues).reduce((prev, curr) => {
+        //     const [key, value] = curr;
+        //     if (value !== '' && value !== undefined) prev[key] = value;
+        //
+        //     return prev;
+        // }, {});
+        console.log('values', allValues);
+        // TODO paddingTop 等 去空格 、'100' => 100 纯数字，转数字
+        // 父级统一处理
+        // 如果是数字开头
+        //      纯数字符串 转 数字
+        //      （其他）带单位的 去空格
+        onChange(allValues);
     }
 
     useEffect(() => {
@@ -140,16 +154,7 @@ export default function Layout(props) {
                 </Form.Item>
                 <div style={{padding: '0 5px'}}>
                     <div styleName="contentBox">
-                        {[
-                            'paddingTop',
-                            'paddingRight',
-                            'paddingBottom',
-                            'paddingLeft',
-                            'marginTop',
-                            'marginRight',
-                            'marginBottom',
-                            'marginLeft',
-                        ].map(item => (
+                        {paddingMarginFields.map(item => (
                             <div styleName={`paddingMargin ${item}`}>
                                 <Form.Item
                                     name={item}
@@ -167,14 +172,14 @@ export default function Layout(props) {
                                 name="width"
                                 colon={false}
                             >
-                                <InputNumber style={{width: 70, marginRight: 8}} min={0} step={1}/>
+                                <Input style={{width: 70, marginRight: 8}}/>
                             </Form.Item>
                             <Form.Item
                                 label="高"
                                 name="height"
                                 colon={false}
                             >
-                                <InputNumber style={{width: 70}} min={0} step={1}/>
+                                <Input style={{width: 70}}/>
                             </Form.Item>
                         </div>
                     </div>
