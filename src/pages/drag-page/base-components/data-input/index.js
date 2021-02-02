@@ -7,7 +7,37 @@ export default [
                 title: '自动完成',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                        actions: {
+                            onSearch: value => args => {
+                                const {
+                                    // pageConfig,
+                                    dragPageAction,
+                                    node,
+                                } = args;
+                                if (!node.props) node.props = {};
+
+                                node.props.options = [
+                                    {value: `${value}@qq.com`},
+                                    {value: `${value}@163.com`},
+                                    {value: `${value}@qiye.com`},
+                                ];
+
+                                dragPageAction.render();
+                            },
+                        },
+                    },
                     componentName: 'AutoComplete',
+                    props: {
+                        style: {width: '100%'},
+                        placeholder: '请输入',
+                        options: [
+                            {value: '@qq.com'},
+                            {value: '@163.com'},
+                            {value: '@qiye.com'},
+                        ],
+                    },
                 },
             },
         ],
@@ -20,6 +50,9 @@ export default [
                 title: '级联选择',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'Cascader',
                 },
             },
@@ -33,6 +66,9 @@ export default [
                 title: '多选框',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'Checkbox',
                 },
             },
@@ -46,6 +82,9 @@ export default [
                 title: '日期选择框',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'DatePicker',
                 },
             },
@@ -59,6 +98,9 @@ export default [
                 title: '表单',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'Form',
                 },
             },
@@ -72,6 +114,9 @@ export default [
                 title: '输入框',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'Input',
                 },
             },
@@ -85,6 +130,9 @@ export default [
                 title: '数字输入框',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'InputNumber',
                 },
             },
@@ -98,6 +146,9 @@ export default [
                 title: '提及',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'Mentions',
                 },
             },
@@ -111,6 +162,9 @@ export default [
                 title: '单选框',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'Radio',
                 },
             },
@@ -125,6 +179,9 @@ export default [
                 renderPreview: true,
                 previewZoom: .7,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'Rate',
                 },
             },
@@ -139,6 +196,9 @@ export default [
                 renderPreview: true,
                 // previewStyle: {width: '100%'},
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'Select',
                     props: {
                         style: {width: '100%'},
@@ -155,6 +215,9 @@ export default [
                 title: '滑动输入条',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'Slider',
                 },
             },
@@ -168,6 +231,9 @@ export default [
                 title: '开关',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'Switch',
                 },
             },
@@ -181,6 +247,11 @@ export default [
                 title: '时间选择框',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                        withWrapper: true,
+                        wrapperStyle: {display: 'inline-block'},
+                    },
                     componentName: 'TimePicker',
                 },
             },
@@ -195,6 +266,9 @@ export default [
                 renderPreview: true,
                 previewZoom: .3,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'Transfer',
                 },
             },
@@ -208,6 +282,9 @@ export default [
                 title: '树选择',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'TreeSelect',
                 },
             },
@@ -221,6 +298,9 @@ export default [
                 title: '上传',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        isContainer: false,
+                    },
                     componentName: 'Upload',
                 },
             },

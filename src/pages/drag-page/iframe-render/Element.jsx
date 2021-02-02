@@ -45,6 +45,7 @@ export default function Element(props) {
             draggable = true,
             withWrapper,
             wrapperStyle,
+            actions = {},
         },
         componentName,
         children,
@@ -250,6 +251,7 @@ export default function Element(props) {
         if (prevSideKeyRef.current) dragPageAction.setActiveSideKey(prevSideKeyRef.current);
     }
 
+
     const dragProps = {
         draggable,
         onDragStart,
@@ -263,6 +265,7 @@ export default function Element(props) {
         'data-componentId': componentId,
         'data-isContainer': isContainer,
         onClick: (e) => {
+            // 竟然没有被 componentActions中的oClick覆盖 ？？？？
             e.stopPropagation && e.stopPropagation();
             const ele = getDroppableEle(e.target);
 
@@ -273,44 +276,60 @@ export default function Element(props) {
         },
     };
 
+    const componentActions = Object.entries(actions)
+        .reduce((prev, curr) => {
+            const [key, value] = curr;
+            prev[key] = (...args) => value(...args)({
+                pageConfig,
+                dragPageAction,
+                node: config,
+            });
+            return prev;
+        }, {});
+
+    const commonProps = {
+        getPopupContainer: () => iframeDocument.body,
+        children: childrenEle,
+        ...componentActions,
+    };
+
     if (isPreview) {
         return createElement(component, {
+            ...commonProps,
             ...componentProps,
-            getPopupContainer: () => iframeDocument.body,
-            children: childrenEle,
         });
     }
 
     if (withWrapper) {
         const {style = {}} = componentProps;
-        const {
-            display,
-            width,
-            height,
-        } = style;
+        const wStyle = {...wrapperStyle};
+
+        [
+            'display',
+            'width',
+            'height',
+        ].forEach(key => {
+            if (!(key in style)) return;
+
+            wStyle[key] = style[key];
+        });
+
         return createElement('div', {
             ...dragProps,
-            style: {
-                ...wrapperStyle,
-                display,
-                width,
-                height,
-            },
+            style: wStyle,
             children: [
                 createElement(component, {
+                    ...commonProps,
                     ...componentProps,
-                    getPopupContainer: () => iframeDocument.body,
-                    children: childrenEle,
                 }),
             ],
         });
     }
 
     return createElement(component, {
-        ...componentProps,
         ...dragProps,
-        getPopupContainer: () => iframeDocument.body,
-        children: childrenEle,
+        ...commonProps,
+        ...componentProps,
     });
 }
 

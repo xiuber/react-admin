@@ -177,9 +177,9 @@ export default config({
                                                         scrollElement(componentRef.current, element, true, true);
 
                                                         // 等待组件滚动完，否则 三角标志会跳动
-                                                        setTimeout(() => {
-                                                            storeAction.setCategory(subCategoryId);
-                                                        }, 300);
+                                                        // setTimeout(() => {
+                                                        storeAction.setCategory(subCategoryId);
+                                                        // }, 300);
                                                     }}
                                                 >
                                                     {item.title}

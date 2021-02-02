@@ -1,6 +1,7 @@
 import {findNodeById} from './util';
 import {v4 as uuid} from 'uuid';
 import {cloneDeep} from 'lodash';
+import {getComponentConfig} from './base-components';
 
 const holderNode = {
     __config: {
@@ -99,6 +100,11 @@ export default {
             componentTreeExpendedKeys: [...componentTreeExpendedKeys],
         };
     },
+    render: (_, state) => {
+        const {pageConfig} = state;
+
+        return {pageConfig: {...pageConfig}};
+    },
     setPageConfig: pageConfig => {
         if (!pageConfig) {
             return {pageConfig: {...holderNode}};
@@ -114,6 +120,11 @@ export default {
     },
     addNode: ({node, targetId, isBefore, isAfter, isChildren}, state) => {
         const {pageConfig} = state;
+
+
+        // 拖拽节点 进行了 JSON.stringify, 会导致 actions 函数丢失
+        const defaultConfig = getComponentConfig(node.componentName);
+        node.__config.actions = defaultConfig.actions;
 
         return modifyPageConfig({
             pageConfig,

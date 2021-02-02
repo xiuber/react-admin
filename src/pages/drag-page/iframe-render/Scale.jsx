@@ -33,15 +33,12 @@ export default function Scale(props) {
 
     useEffect(() => {
         if (!element) return;
-        element.style.transformOrigin = 'left top';
-    }, [element]);
+        let origin = 'left top';
+        if (scale < init) origin = 'top';
 
-    useEffect(() => {
-        if (!element) return;
-
+        element.style.transformOrigin = origin;
         element.style.transform = `scale(${scale / 100})`;
-    }, [scale]);
-
+    }, [element, scale]);
 
     return (
         <div styleName="root">
