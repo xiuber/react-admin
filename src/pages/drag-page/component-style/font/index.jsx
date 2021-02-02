@@ -13,6 +13,7 @@ import {
 import RadioGroup from '../radio-group';
 import SliderInput from '../slider-input';
 import './style.less';
+import { getNoSpaceValueFromEvent } from '../../util';
 
 const textAlignOptions = [
     {value: 'left', label: '左对齐', icon: <PicCenterOutlined/>},
@@ -85,6 +86,7 @@ export default function Font(props) {
                         <Form.Item
                             name="lineHeight"
                             colon={false}
+                            getValueFromEvent={getNoSpaceValueFromEvent}
                         >
                             <Input placeholder="行距"/>
                         </Form.Item>

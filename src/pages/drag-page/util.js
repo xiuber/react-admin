@@ -1,4 +1,4 @@
-import {useRef, useEffect} from 'react';
+import { useRef, useEffect } from 'react';
 
 import * as raLibComponent from 'ra-lib';
 import * as components from './components';
@@ -8,6 +8,35 @@ export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
+// 表单值转换，纯数字字符串，转换为数字 并不允许输入空格
+export function getNumberValueFromEvent(e) {
+    let { value } = e.target;
+    if (!value) return value;
+
+    // 不允许输入空格
+    value = value.replace(/\s/g, '');
+
+    if (value.endsWith('.')) return value;
+
+    // 为纯数字 直接转换为数字
+    if (!window.isNaN(value)) {
+        return window.parseFloat(value);
+    }
+
+    return value;
+}
+
+// 表单值转换，不允许输入空格
+export function getNoSpaceValueFromEvent(e) {
+    let { value } = e.target;
+    if (!value) return value;
+
+    // 不允许输入空格
+    value = value.replace(/\s/g, '');
+
+    return value;
+}
+
 export function filterTree(array, filter) {
     const getNodes = (result, node) => {
         if (filter(node)) {
@@ -16,7 +45,7 @@ export function filterTree(array, filter) {
         }
         if (Array.isArray(node.children)) {
             const children = node.children.reduce(getNodes, []);
-            if (children.length) result.push({...node, children});
+            if (children.length) result.push({ ...node, children });
         }
         return result;
     };
@@ -39,7 +68,7 @@ export function elementIsVisible(containerEle, element) {
     const containerScrollTop = containerEle.scrollTop;
     const elementRect = element.getBoundingClientRect();
     const containerRect = containerEle.getBoundingClientRect();
-    const {y, height: elementHeight} = elementRect;
+    const { y, height: elementHeight } = elementRect;
     const elementTop = y - containerRect.y + containerScrollTop;
 
     const elementBottom = elementTop + elementHeight;
@@ -108,7 +137,7 @@ export function isDropAccept(options) {
     if (!targetNode) return false;
 
     const config = targetNode.__config || {};
-    const {isContainer = true} = config;
+    const { isContainer = true } = config;
 
     if (!isContainer) return false;
 
@@ -116,7 +145,7 @@ export function isDropAccept(options) {
 
     if (dropAccept === undefined) return true;
 
-    const {componentName} = draggingNode;
+    const { componentName } = draggingNode;
 
     return dropAccept.some(name => name === componentName);
 }
@@ -271,13 +300,13 @@ export function getComponent(componentName, componentType) {
 }
 
 function fallbackCopyTextToClipboard(text) {
-    var textArea = document.createElement("textarea");
+    var textArea = document.createElement('textarea');
     textArea.value = text;
 
     // Avoid scrolling to bottom
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.position = "fixed";
+    textArea.style.top = '0';
+    textArea.style.left = '0';
+    textArea.style.position = 'fixed';
 
     document.body.appendChild(textArea);
     textArea.focus();
@@ -301,6 +330,6 @@ export function copyTextToClipboard(text) {
     navigator.clipboard.writeText(text);
 }
 
-export function getTextFromClipboard(){
+export function getTextFromClipboard() {
     return navigator.clipboard.readText();
 }

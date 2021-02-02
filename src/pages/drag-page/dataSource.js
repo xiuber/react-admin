@@ -15,7 +15,6 @@ const __config = {
 };
 
 export async function getComponents(category) {
-    console.log(baseComponents);
     if (category === 'base') return baseComponents;
 
     return [
