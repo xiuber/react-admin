@@ -1,7 +1,9 @@
 import React from 'react';
 import config from 'src/commons/config-hoc';
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 import './DraggableComponent.less';
+import Element from '../iframe-render/Element';
+import {setComponentDefaultOptions} from '../base-components'
 
 export default config({
     connect: state => {
@@ -25,7 +27,7 @@ export default config({
         setTimeout(() => {
             dragPageAction.setActiveSideKey('componentTree');
         });
-        const {config} = data;
+        const { config } = data;
 
         // 设置 componentId
         const loop = (node) => {
@@ -66,6 +68,14 @@ export default config({
                     src={data.image}
                     alt="组件预览图"
                 />
+            ) : null}
+            {data.renderPreview ? (
+                <div styleName="preview">
+                    <Element
+                        config={data.renderPreview === true ? data.config : setComponentDefaultOptions(data.renderPreview)}
+                        activeToolKey="preview"
+                    />
+                </div>
             ) : null}
         </div>
     );

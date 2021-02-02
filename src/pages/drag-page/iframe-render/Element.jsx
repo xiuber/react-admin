@@ -25,6 +25,7 @@ export default function Element(props) {
 
     // 预览时，不显示 DragHolder
     useEffect(() => {
+        if (!iframeDocument) return;
         const holders = iframeDocument.querySelectorAll('.DragHolder');
         Array.from(holders).forEach(ele => {
             ele.style.display = isPreview ? 'none' : 'flex';

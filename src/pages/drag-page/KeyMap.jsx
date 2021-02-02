@@ -134,6 +134,7 @@ export default config({
                 iframeDocument.removeEventListener('keydown', handleKeyDown);
             }
         };
-    }, [iframe, activeSideKey, showSide]);
+    });
+
     return null;
 });
