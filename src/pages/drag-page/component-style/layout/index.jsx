@@ -2,12 +2,12 @@ import React, {useEffect} from 'react';
 import {
     Form,
     Input,
-    Radio,
-    Tooltip,
+    InputNumber,
 } from 'antd';
 import {
     PicCenterOutlined,
 } from '@ant-design/icons';
+import RadioGroup from '../radio-group';
 import './style.less';
 
 const displayOptions = [
@@ -45,59 +45,31 @@ const flexWrapOptions = [
     {value: 'wrap-reserve', label: '逆换行'},
 ];
 
-function renderOptions(options) {
-    return options.map((item, index) => {
-        const {
-            value,
-            label,
-            icon,
-            tip,
-        } = item;
-
-        const isLast = index === options.length - 1;
-
-        let title = tip || label;
-        const la = icon || label;
-
-        let labelNode = (
-            <Tooltip placement={isLast ? 'topRight' : 'top'} title={`${title} ${value}`}>
-                <div styleName="radioIcon">
-                    {la}
-                </div>
-            </Tooltip>
-        );
-
-        return {
-            value,
-            label: labelNode,
-        };
-    });
-}
-
-const layout = {
-    labelCol: {span: 8},
-    wrapperCol: {span: 16},
-};
-
 export default function Layout(props) {
+    const {value, onChange = () => undefined} = props;
     const [form] = Form.useForm();
 
     function handleChange(changedValues, allValues) {
-        console.log(changedValues, allValues);
+        // 过滤空值
+        const values = Object.entries(allValues).reduce((prev, curr) => {
+            const [key, value] = curr;
+            if (value !== '' && value !== undefined) prev[key] = value;
+
+            return prev;
+        }, {});
+        console.log('values', values);
+        onChange(values);
     }
 
     useEffect(() => {
-        console.log('layout mount');
-        return () => {
-            console.log('layout unmount');
-        };
-    }, []);
+        form.setFieldsValue(value);
+    }, [value]);
     return (
         <div styleName="root">
             <Form
                 form={form}
-                name="layout"
                 onValuesChange={handleChange}
+                name="layout"
             >
 
                 <Form.Item
@@ -105,10 +77,10 @@ export default function Layout(props) {
                     name="display"
                     colon={false}
                 >
-                    <Radio.Group
-                        options={renderOptions(displayOptions)}
-                        optionType="button"
-                        buttonStyle="solid"
+                    <RadioGroup
+                        options={displayOptions}
+                        form={form}
+                        handleChange={handleChange}
                     />
                 </Form.Item>
                 <Form.Item shouldUpdate noStyle>
@@ -123,10 +95,10 @@ export default function Layout(props) {
                                     name="flexDirection"
                                     colon={false}
                                 >
-                                    <Radio.Group
-                                        options={renderOptions(flexDirectionOptions)}
-                                        optionType="button"
-                                        buttonStyle="solid"
+                                    <RadioGroup
+                                        options={flexDirectionOptions}
+                                        form={form}
+                                        handleChange={handleChange}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -134,10 +106,10 @@ export default function Layout(props) {
                                     name="justifyContent"
                                     colon={false}
                                 >
-                                    <Radio.Group
-                                        options={renderOptions(justifyContentOptions)}
-                                        optionType="button"
-                                        buttonStyle="solid"
+                                    <RadioGroup
+                                        options={justifyContentOptions}
+                                        form={form}
+                                        handleChange={handleChange}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -145,10 +117,10 @@ export default function Layout(props) {
                                     name="alignItems"
                                     colon={false}
                                 >
-                                    <Radio.Group
-                                        options={renderOptions(alignItemsOptions)}
-                                        optionType="button"
-                                        buttonStyle="solid"
+                                    <RadioGroup
+                                        options={alignItemsOptions}
+                                        form={form}
+                                        handleChange={handleChange}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -156,23 +128,57 @@ export default function Layout(props) {
                                     name="flexWrap"
                                     colon={false}
                                 >
-                                    <Radio.Group
-                                        options={renderOptions(flexWrapOptions)}
-                                        optionType="button"
-                                        buttonStyle="solid"
+                                    <RadioGroup
+                                        options={flexWrapOptions}
+                                        form={form}
+                                        handleChange={handleChange}
                                     />
                                 </Form.Item>
                             </>
                         );
                     }}
                 </Form.Item>
-                <Form.Item
-                    label="Username"
-                    name="username"
-                    rules={[{required: true, message: 'Please input your username!'}]}
-                >
-                    <Input/>
-                </Form.Item>
+                <div style={{padding: '0 5px'}}>
+                    <div styleName="contentBox">
+                        {[
+                            'paddingTop',
+                            'paddingRight',
+                            'paddingBottom',
+                            'paddingLeft',
+                            'marginTop',
+                            'marginRight',
+                            'marginBottom',
+                            'marginLeft',
+                        ].map(item => (
+                            <div styleName={`paddingMargin ${item}`}>
+                                <Form.Item
+                                    name={item}
+                                    noStyle
+                                    colon={false}
+                                >
+                                    <Input autocomplete="off" step={1}/>
+                                </Form.Item>
+                            </div>
+                        ))}
+
+                        <div styleName="widthHeight">
+                            <Form.Item
+                                label="宽"
+                                name="width"
+                                colon={false}
+                            >
+                                <InputNumber style={{width: 70, marginRight: 8}} min={0} step={1}/>
+                            </Form.Item>
+                            <Form.Item
+                                label="高"
+                                name="height"
+                                colon={false}
+                            >
+                                <InputNumber style={{width: 70}} min={0} step={1}/>
+                            </Form.Item>
+                        </div>
+                    </div>
+                </div>
             </Form>
         </div>
     );

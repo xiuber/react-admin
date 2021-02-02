@@ -1,7 +1,4 @@
 .root {
-    .radioIcon {
-    }
-
     :global {
         .ant-radio-group {
             display: inline-flex;
@@ -12,6 +9,176 @@
             flex: 1;
             padding: 0;
             text-align: center;
+        }
+    }
+
+    .contentBox {
+        position: relative;
+        width: 100%;
+        height: 170px;
+
+        @size: 20px;
+        @color: #d6e4ff;
+        @hoverColor: #bfd4fb;
+
+        .paddingMargin {
+            position: absolute;
+            border: @size solid transparent;
+            transition: border-color 300ms;
+
+            input {
+                position: absolute;
+                border: none;
+                background: none;
+                text-align: center;
+                padding: 0;
+                color: #666;
+
+                &:focus {
+                    box-shadow: none;
+                }
+            }
+        }
+
+        .paddingTop:after {
+            content: 'padding';
+            position: absolute;
+            left: 5px;
+            top: -@size;
+        }
+
+        .marginTop:after {
+            content: 'margin';
+            position: absolute;
+            left: 5px;
+            top: -@size;
+        }
+
+        .marginTop,
+        .paddingTop {
+            width: 100%;
+            top: 0;
+            border-top: @size solid @color;
+
+            &:hover {
+                border-top-color: @hoverColor;
+            }
+
+            input {
+                top: -@size;
+                height: @size;
+            }
+        }
+
+        .marginBottom,
+        .paddingBottom {
+            width: 100%;
+            bottom: 0;
+            border-bottom: @size solid @color;
+
+            &:hover {
+                border-bottom-color: @hoverColor;
+            }
+
+            input {
+                bottom: -@size;
+                height: @size;
+            }
+        }
+
+        .marginLeft,
+        .paddingLeft {
+            top: 5px;
+            bottom: 5px;
+            left: 0;
+            border-left: @size solid @color;
+
+            &:hover {
+                border-left-color: @hoverColor;
+            }
+
+            input {
+                left: -@size * 2;
+                text-align: right;
+                height: 100%;
+                width: @size * 2;
+            }
+        }
+
+        .marginRight,
+        .paddingRight {
+            top: 5px;
+            bottom: 5px;
+            right: 0;
+            border-right: @size solid @color;
+
+            &:hover {
+                border-right-color: @hoverColor;
+            }
+
+            input {
+                right: -@size * 2;
+                text-align: left;
+                height: 100%;
+                width: @size * 2;
+            }
+        }
+
+
+        .marginTop,
+        .marginBottom {
+            width: auto;
+            top: @size + 5px;
+            left: @size + 5px;
+            right: @size + 5px;
+        }
+
+        .marginBottom {
+            top: auto;
+            bottom: @size + 5px;
+        }
+
+        .marginRight,
+        .marginLeft {
+            left: @size + 5px;
+            top: @size + 10px;
+            bottom: @size + 10px;
+
+            input {
+                left: -@size;
+                text-align: left;
+            }
+        }
+
+        .marginRight {
+            left: auto;
+            right: @size  + 5px;
+
+            input {
+                right: -@size;
+                text-align: right;
+            }
+        }
+
+        .widthHeight {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            :global {
+                .ant-row.ant-form-item {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    margin-top: -15px;
+
+                    input {
+                        text-align: center;
+                    }
+                }
+            }
         }
     }
 }
