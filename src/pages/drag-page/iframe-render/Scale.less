@@ -1,0 +1,27 @@
+.root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    color: #999;
+
+    & > * {
+        margin: 4px;
+    }
+
+    :global {
+        .anticon {
+            font-size: 18px;
+            cursor: pointer;
+
+            &:active {
+                opacity: .5;
+            }
+
+            &[disabled] {
+                cursor: not-allowed;
+                opacity: .5;
+            }
+        }
+    }
+}

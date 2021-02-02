@@ -1,9 +1,10 @@
-import React, {useCallback, useRef, useEffect} from 'react';
+import React, {useCallback, useRef, useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 import config from 'src/commons/config-hoc';
 import Element from './Element';
 import {scrollElement} from 'src/pages/drag-page/util';
 import KeyMap from 'src/pages/drag-page/KeyMap';
+import Scale from './Scale';
 
 const iframeSrcDoc = `
 <!DOCTYPE html>
@@ -39,7 +40,7 @@ export default config({
 
     const iframeRef = useRef(null);
     const iframeRootRef = useRef(null);
-
+    const [scaleElement, setScaleElement] = useState(null);
     // 渲染设计页面
     function renderDesignPage() {
         const iframeDocument = iframeRef.current.contentDocument;
@@ -71,6 +72,8 @@ export default config({
         iframeDocument.body.style.overflow = 'auto';
 
         iframeRootRef.current = iframeDocument.getElementById('dnd-container');
+
+        setScaleElement(iframeRootRef.current);
 
         renderDesignPage();
 
@@ -105,16 +108,32 @@ export default config({
     }, [selectedNodeId, iframeRef.current]);
 
     return (
-        <>
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+        }}>
             <KeyMap iframe={iframeRef.current}/>
             <iframe
                 id="dnd-iframe"
                 title="dnd-iframe"
                 ref={iframeRef}
-                style={{border: 0, width: '100%', height: '100%'}}
                 srcDoc={iframeSrcDoc}
                 onLoad={() => handleIframeLoad()}
+                style={{
+                    border: 0,
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                }}
             />
-        </>
+            <div style={{
+                position: 'absolute',
+                left: 10,
+                bottom: 10,
+            }}>
+                <Scale element={scaleElement}/>
+            </div>
+        </div>
     );
 });
