@@ -7,3 +7,4 @@
 1. [ ] onDragHover 优化
 1. [ ] icon 优化，选择更加适合的图标
 1. [ ] ctrl + c ctrl + v 复制赞贴组件 
+1. [x] 部分组件无法拖拽，可以添加 withWrapper: true 配置

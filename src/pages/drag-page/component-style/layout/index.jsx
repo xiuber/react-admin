@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
 import {
     Form,
-    Input,
     InputNumber,
 } from 'antd';
 import {
     PicCenterOutlined,
 } from '@ant-design/icons';
 import RadioGroup from '../radio-group';
-import { getNumberValueFromEvent, getNoSpaceValueFromEvent } from '../../util';
+import UnitInputItem from '../unit-input-item';
 import './style.less';
 
 const displayOptions = [
@@ -166,14 +165,13 @@ export default function Layout(props) {
                                 >
                                     <InputNumber style={{ width: '100%' }} placeholder="请输入" min={0} step={1} />
                                 </Form.Item>
-                                <Form.Item
+                                <UnitInputItem
                                     label="基础空间"
                                     name="flexBasis"
                                     colon={false}
-                                    getValueFromEvent={getNumberValueFromEvent}
-                                >
-                                    <Input placeholder="请输入" allowClear autocomplete="off" />
-                                </Form.Item>
+                                    form={form}
+                                    handleChange={handleChange}
+                                />
                             </>
                         );
                     }}
@@ -182,34 +180,36 @@ export default function Layout(props) {
                     <div styleName="contentBox">
                         {paddingMarginFields.map(item => (
                             <div styleName={`paddingMargin ${item}`}>
-                                <Form.Item
+                                <UnitInputItem
                                     name={item}
                                     noStyle
                                     colon={false}
-                                    getValueFromEvent={getNumberValueFromEvent}
-                                >
-                                    <Input autocomplete="off" />
-                                </Form.Item>
+                                    allowClear={false}
+                                    placeholder={''}
+                                    form={form}
+                                    handleChange={handleChange}
+                                />
                             </div>
                         ))}
 
                         <div styleName="widthHeight">
-                            <Form.Item
+                            <UnitInputItem
                                 label="宽"
                                 name="width"
                                 colon={false}
-                                getValueFromEvent={getNumberValueFromEvent}
-                            >
-                                <Input style={{ width: 80, marginRight: 8 }} allowClear autocomplete="off" />
-                            </Form.Item>
-                            <Form.Item
+                                form={form}
+                                handleChange={handleChange}
+                                style={{ width: 80, marginRight: 8 }}
+                            />
+
+                            <UnitInputItem
                                 label="高"
                                 name="height"
                                 colon={false}
-                                getValueFromEvent={getNumberValueFromEvent}
-                            >
-                                <Input style={{ width: 80 }} allowClear autocomplete="off" />
-                            </Form.Item>
+                                form={form}
+                                handleChange={handleChange}
+                                style={{ width: 80 }}
+                            />
                         </div>
                     </div>
                 </div>

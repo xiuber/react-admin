@@ -268,6 +268,7 @@ export default [
                 config: {
                     __config: {
                         isContainer: false,
+                        withWrapper: true,
                     },
                     componentName: 'Transfer',
                 },
