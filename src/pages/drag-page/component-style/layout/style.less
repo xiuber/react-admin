@@ -133,21 +133,21 @@
         }
 
 
-        .marginTop,
-        .marginBottom {
+        .paddingTop,
+        .paddingBottom {
             width: auto;
             top: @size + 5px;
             left: @size + 5px;
             right: @size + 5px;
         }
 
-        .marginBottom {
+        .paddingBottom {
             top: auto;
             bottom: @size + 5px;
         }
 
-        .marginRight,
-        .marginLeft {
+        .paddingRight,
+        .paddingLeft {
             left: @size + 5px;
             top: @size + 10px;
             bottom: @size + 10px;
@@ -159,7 +159,7 @@
             }
         }
 
-        .marginRight {
+        .paddingRight {
             left: auto;
             right: @size  + 5px;
 
@@ -177,12 +177,16 @@
             align-items: center;
 
             :global {
+                .ant-input-affix-wrapper {
+                    padding-left: 0;
+                }
+
                 .ant-row.ant-form-item {
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
-                    margin-top: -15px;
+                    margin-top: -20px;
 
                     input {
                         text-align: center;

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {
     Form,
     Input,
+    InputNumber,
 } from 'antd';
 import {
     PicCenterOutlined,
@@ -45,14 +46,14 @@ const flexWrapOptions = [
     { value: 'wrap-reserve', label: '逆换行' },
 ];
 const paddingMarginFields = [
-    'paddingTop',
-    'paddingRight',
-    'paddingBottom',
-    'paddingLeft',
     'marginTop',
     'marginRight',
     'marginBottom',
     'marginLeft',
+    'paddingTop',
+    'paddingRight',
+    'paddingBottom',
+    'paddingLeft',
 ];
 
 export default function Layout(props) {
@@ -77,6 +78,8 @@ export default function Layout(props) {
     }
 
     useEffect(() => {
+        // 先重置，否则会有字段不清空情况
+        form.resetFields();
         form.setFieldsValue(value);
     }, [value]);
     return (
@@ -149,6 +152,28 @@ export default function Layout(props) {
                                         handleChange={handleChange}
                                     />
                                 </Form.Item>
+                                <Form.Item
+                                    label="放大比例"
+                                    name="flexGrow"
+                                    colon={false}
+                                >
+                                    <InputNumber style={{ width: '100%' }} placeholder="请输入" min={0} step={1} />
+                                </Form.Item>
+                                <Form.Item
+                                    label="缩小比例"
+                                    name="flexShrink"
+                                    colon={false}
+                                >
+                                    <InputNumber style={{ width: '100%' }} placeholder="请输入" min={0} step={1} />
+                                </Form.Item>
+                                <Form.Item
+                                    label="基础空间"
+                                    name="flexBasis"
+                                    colon={false}
+                                    getValueFromEvent={getNumberValueFromEvent}
+                                >
+                                    <Input placeholder="请输入" allowClear autocomplete="off" />
+                                </Form.Item>
                             </>
                         );
                     }}
@@ -163,7 +188,7 @@ export default function Layout(props) {
                                     colon={false}
                                     getValueFromEvent={getNumberValueFromEvent}
                                 >
-                                    <Input autocomplete="off" step={1} />
+                                    <Input autocomplete="off" />
                                 </Form.Item>
                             </div>
                         ))}
@@ -173,17 +198,17 @@ export default function Layout(props) {
                                 label="宽"
                                 name="width"
                                 colon={false}
-                                getValueFromEvent={getNoSpaceValueFromEvent}
+                                getValueFromEvent={getNumberValueFromEvent}
                             >
-                                <Input style={{ width: 70, marginRight: 8 }} />
+                                <Input style={{ width: 80, marginRight: 8 }} allowClear autocomplete="off" />
                             </Form.Item>
                             <Form.Item
                                 label="高"
                                 name="height"
                                 colon={false}
-                                getValueFromEvent={getNoSpaceValueFromEvent}
+                                getValueFromEvent={getNumberValueFromEvent}
                             >
-                                <Input style={{ width: 70 }} />
+                                <Input style={{ width: 80 }} allowClear autocomplete="off" />
                             </Form.Item>
                         </div>
                     </div>

@@ -113,6 +113,8 @@ export default {
 
         return {pageConfig};
     },
+
+    // TODO 删除后，选中下一个？？
     deleteSelectedNode: (_, state) => {
         return deleteNode(state.selectedNodeId, state);
     },
