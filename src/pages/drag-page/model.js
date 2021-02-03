@@ -1,18 +1,21 @@
-import {findNodeById} from './util';
-import {v4 as uuid} from 'uuid';
-import {cloneDeep} from 'lodash';
-import {getComponentConfig} from './base-components';
+import { findNodeById } from './util';
+import { v4 as uuid } from 'uuid';
+import { cloneDeep } from 'lodash';
+import { getComponentConfig } from './base-components';
 
 const holderNode = {
     __config: {
         draggable: false,
         componentId: uuid(),
+        isRootHolder: true,
     },
     componentName: 'div',
     children: [
         {
             __config: {
                 componentId: uuid(),
+                isContainer: false,
+                isRootHolder: true,
             },
             componentName: 'DragHolder',
             props: {
@@ -41,27 +44,27 @@ const initialState = {
 
     componentTreeExpendedKeys: [], // 组件树 展开节点
 
-    pageConfig: {...holderNode},
+    pageConfig: { ...holderNode },
 };
 
 export default {
     initialState,
     init: () => cloneDeep(initialState),
-    setComponentTreeExpendedKeys: componentTreeExpendedKeys => ({componentTreeExpendedKeys}),
-    setDraggingNode: draggingNode => ({draggingNode}),
+    setComponentTreeExpendedKeys: componentTreeExpendedKeys => ({ componentTreeExpendedKeys }),
+    setDraggingNode: draggingNode => ({ draggingNode }),
     setActiveTabKey: activeTabKey => {
-        return {activeTabKey};
+        return { activeTabKey };
     },
     setActiveSideKey: (activeSideKey) => {
-        if (!activeSideKey) return {activeSideKey, showSide: false};
+        if (!activeSideKey) return { activeSideKey, showSide: false };
 
-        return {activeSideKey};
+        return { activeSideKey };
     },
     showSide: (showSide) => {
-        return {showSide};
+        return { showSide };
     },
     showCode: (showCode) => {
-        return {showCode};
+        return { showCode };
     },
     saveSchema: () => {
         // TODO
@@ -78,10 +81,10 @@ export default {
         // TODO
     },
     setActiveTookKey: activeToolKey => {
-        return {activeToolKey};
+        return { activeToolKey };
     },
     setSelectedNodeId: (selectedNodeId, state) => {
-        let {pageConfig, componentTreeExpendedKeys} = state;
+        let { pageConfig, componentTreeExpendedKeys } = state;
 
         const selectedNode = findNodeById(pageConfig, selectedNodeId);
 
@@ -102,16 +105,16 @@ export default {
         };
     },
     render: (_, state) => {
-        const {pageConfig} = state;
+        const { pageConfig } = state;
 
-        return {pageConfig: {...pageConfig}};
+        return { pageConfig: { ...pageConfig } };
     },
     setPageConfig: pageConfig => {
         if (!pageConfig) {
-            return {pageConfig: {...holderNode}};
+            return { pageConfig: { ...holderNode } };
         }
 
-        return {pageConfig};
+        return { pageConfig };
     },
 
     // TODO 删除后，选中下一个？？
@@ -121,8 +124,8 @@ export default {
     deleteNode: (id, state) => {
         return deleteNode(id, state);
     },
-    addNode: ({node, targetId, isBefore, isAfter, isChildren}, state) => {
-        const {pageConfig} = state;
+    addNode: ({ node, targetId, isBefore, isAfter, isChildren }, state) => {
+        const { pageConfig } = state;
 
 
         // 拖拽节点 进行了 JSON.stringify, 会导致 actions 函数丢失
@@ -138,8 +141,8 @@ export default {
             node,
         });
     },
-    moveNode: ({sourceId, targetId, isBefore, isAfter, isChildren}, state) => {
-        const {pageConfig} = state;
+    moveNode: ({ sourceId, targetId, isBefore, isAfter, isChildren }, state) => {
+        const { pageConfig } = state;
 
         const [node] = deleteNodeById(pageConfig, sourceId);
 
@@ -169,7 +172,13 @@ function modifyPageConfig(options) {
 
     const targetNode = findNodeById(pageConfig, targetId);
 
+    // 目标节点为 根占位
+    if (targetNode?.__config?.isRootHolder) {
+        return { pageConfig: { ...node } };
+    }
+
     if (isChildren) {
+        // 目标节点为空
         if (
             !targetNode.children
             || (targetNode.children?.length === 1 && targetNode.children[0].componentName === 'DragHolder')
@@ -177,7 +186,7 @@ function modifyPageConfig(options) {
 
         targetNode.children.push(node);
 
-        return {pageConfig: {...pageConfig}};
+        return { pageConfig: { ...pageConfig } };
     }
 
     if (!targetCollection) return;
@@ -192,7 +201,7 @@ function modifyPageConfig(options) {
         targetCollection.splice(index + 1, 0, node);
     }
 
-    return {pageConfig: {...pageConfig}};
+    return { pageConfig: { ...pageConfig } };
 }
 
 /**
@@ -278,7 +287,7 @@ function getParentIds(root, id) {
 }
 
 function deleteNode(id, state) {
-    let {pageConfig, selectedNodeId, selectedNode} = state;
+    let { pageConfig, selectedNodeId, selectedNode } = state;
 
     if (selectedNodeId === id) {
         selectedNodeId = null;
@@ -287,10 +296,10 @@ function deleteNode(id, state) {
 
     // 删除的是根节点
     if (id === pageConfig.__config.componentId) {
-        return {pageConfig: {...holderNode}, selectedNodeId, selectedNode};
+        return { pageConfig: { ...holderNode }, selectedNodeId, selectedNode };
     }
 
     deleteNodeById(pageConfig, id);
 
-    return {pageConfig: {...pageConfig}, selectedNodeId, selectedNode};
+    return { pageConfig: { ...pageConfig }, selectedNodeId, selectedNode };
 }

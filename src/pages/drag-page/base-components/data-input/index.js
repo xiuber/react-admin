@@ -1,3 +1,6 @@
+import React from 'react';
+import { Select } from 'antd';
+
 export default [
     {
         title: '自动完成',
@@ -19,9 +22,9 @@ export default [
                                 if (!node.props) node.props = {};
 
                                 node.props.options = [
-                                    {value: `${value}@qq.com`},
-                                    {value: `${value}@163.com`},
-                                    {value: `${value}@qiye.com`},
+                                    { value: `${value}@qq.com` },
+                                    { value: `${value}@163.com` },
+                                    { value: `${value}@qiye.com` },
                                 ];
 
                                 dragPageAction.render();
@@ -30,12 +33,12 @@ export default [
                     },
                     componentName: 'AutoComplete',
                     props: {
-                        style: {width: '100%'},
+                        style: { width: '100%' },
                         placeholder: '请输入',
                         options: [
-                            {value: '@qq.com'},
-                            {value: '@163.com'},
-                            {value: '@qiye.com'},
+                            { value: '@qq.com' },
+                            { value: '@163.com' },
+                            { value: '@qiye.com' },
                         ],
                     },
                 },
@@ -193,7 +196,17 @@ export default [
         children: [
             {
                 title: '选择器',
-                renderPreview: true,
+                renderPreview: node => {
+                    return (
+                        <div style={{ position: 'relative', height: 100, width: '100%' }}>
+                            <Select
+                                {...node.props}
+                                getPopupContainer={() => document.getElementById('storeComponents')}
+                                open
+                            />
+                        </div>
+                    );
+                },
                 // previewStyle: {width: '100%'},
                 config: {
                     __config: {
@@ -201,7 +214,12 @@ export default [
                     },
                     componentName: 'Select',
                     props: {
-                        style: {width: '100%'},
+                        placeholder: '请选择',
+                        options: [
+                            { value: '1', label: '下拉项1' },
+                            { value: '2', label: '下拉项2' },
+                        ],
+                        style: { width: '100%' },
                     },
                 },
             },
@@ -250,7 +268,7 @@ export default [
                     __config: {
                         isContainer: false,
                         withWrapper: true,
-                        wrapperStyle: {display: 'inline-block'},
+                        wrapperStyle: { display: 'inline-block' },
                     },
                     componentName: 'TimePicker',
                 },
@@ -264,7 +282,7 @@ export default [
             {
                 title: '穿梭框',
                 renderPreview: true,
-                previewZoom: .3,
+                previewZoom: .28,
                 config: {
                     __config: {
                         isContainer: false,

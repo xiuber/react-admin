@@ -83,6 +83,7 @@
     }
 
     .components {
+        position: relative;
         padding: 4px 4px 0 4px;
         flex: 1;
         overflow-y: scroll;
@@ -90,6 +91,12 @@
 
         &::-webkit-scrollbar {
             width: 0 !important;
+        }
+
+        :global {
+            .ant-select-dropdown {
+                pointer-events: none;
+            }
         }
     }
 }

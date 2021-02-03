@@ -1,8 +1,8 @@
-import React, {useCallback, useRef, useEffect, useState} from 'react';
+import React, { useCallback, useRef, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import config from 'src/commons/config-hoc';
 import Element from './Element';
-import {scrollElement} from 'src/pages/drag-page/util';
+import { scrollElement } from 'src/pages/drag-page/util';
 import KeyMap from 'src/pages/drag-page/KeyMap';
 import Scale from './Scale';
 
@@ -11,7 +11,7 @@ const iframeSrcDoc = `
 <html lang="en">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
     <body style="scroll-behavior: smooth;">
-        <div id="dnd-container"></div>
+        <div id="dnd-container" style="display: flex; flex-direction: column; min-height: 100vh"></div>
         <div id="drop-guide-line" style="display: none"><span>前</span></div>
     </body>
 </html>
@@ -41,6 +41,7 @@ export default config({
     const iframeRef = useRef(null);
     const iframeRootRef = useRef(null);
     const [scaleElement, setScaleElement] = useState(null);
+
     // 渲染设计页面
     function renderDesignPage() {
         const iframeDocument = iframeRef.current.contentDocument;
@@ -113,7 +114,7 @@ export default config({
             width: '100%',
             height: '100%',
         }}>
-            <KeyMap iframe={iframeRef.current}/>
+            <KeyMap iframe={iframeRef.current} />
             <iframe
                 id="dnd-iframe"
                 title="dnd-iframe"
@@ -132,7 +133,7 @@ export default config({
                 left: 10,
                 bottom: 10,
             }}>
-                <Scale element={scaleElement}/>
+                <Scale element={scaleElement} />
             </div>
         </div>
     );

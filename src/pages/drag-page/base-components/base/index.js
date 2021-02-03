@@ -8,12 +8,29 @@ import {
 
 export default [
     {
-        title: '页面容器 页面容器 页面容器',
+        hiddenInStore: true,
+        title: '拖拽占位',
+        subTitle: '拖拽占位 DragHolder',
+        children: [
+            {
+                title: '拖拽占位',
+                icon: <PicCenterOutlined />,
+                config: {
+                    __config: {
+                        isContainer: false,
+                    },
+                    componentName: 'DragHolder',
+                },
+            },
+        ],
+    },
+    {
+        title: '页面容器',
         subTitle: '页面容器 PageContent',
         children: [
             {
                 title: '页面容器',
-                icon: <PicCenterOutlined/>,
+                icon: <PicCenterOutlined />,
                 config: {
                     __config: {
                         componentType: 'ra-lib',
@@ -23,7 +40,7 @@ export default [
                         {
                             componentName: 'DragHolder',
                             props: {
-                                style: {height: 100},
+                                style: { flex: 1 },
                             },
                         },
                     ],
@@ -37,14 +54,14 @@ export default [
         children: [
             {
                 title: 'div 容器',
-                icon: <PicCenterOutlined/>,
+                icon: <PicCenterOutlined />,
                 config: {
                     componentName: 'div',
                     children: [
                         {
                             componentName: 'DragHolder',
                             props: {
-                                style: {height: 100},
+                                style: { height: 100 },
                             },
                         },
                     ],
@@ -58,7 +75,7 @@ export default [
         children: [
             {
                 title: '文本',
-                icon: <FontSizeOutlined/>,
+                icon: <FontSizeOutlined />,
                 config: {
                     __config: {
                         isContainer: false,
@@ -77,7 +94,7 @@ export default [
         children: [
             {
                 title: '超链接',
-                icon: <LinkOutlined/>,
+                icon: <LinkOutlined />,
                 config: {
                     componentName: 'a',
                     children: [
@@ -98,7 +115,7 @@ export default [
         children: [
             {
                 title: '图片',
-                icon: <FileImageOutlined/>,
+                icon: <FileImageOutlined />,
                 config: {
                     __config: {
                         isContainer: false,

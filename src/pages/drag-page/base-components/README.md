@@ -2,6 +2,7 @@
 
 ```js
 export default {
+    hiddenInStore: true, // 在组件库中不显示，各级都支持此属性
     title: '选择器',
     subTitle: '选择器 Select',
     children: [

@@ -2,14 +2,14 @@ import React from 'react';
 import config from 'src/commons/config-hoc';
 import './DraggableComponent.less';
 import Element from '../iframe-render/Element';
-import {cloneDeep} from 'lodash';
+import { cloneDeep } from 'lodash';
 import Draggable from './Draggable';
 
 export default config({})(function DraggableComponent(props) {
-    const {data} = props;
+    const { data } = props;
 
-    function renderPreview() {
-        const {renderPreview, previewZoom, previewStyle, config} = data;
+    function _renderPreview() {
+        const { renderPreview, previewZoom, previewStyle, config } = data;
 
         if (!renderPreview) return null;
 
@@ -24,15 +24,21 @@ export default config({})(function DraggableComponent(props) {
             };
         }
 
+        let preview = renderPreview === true ? (
+            <Element
+                config={componentConfig}
+                activeToolKey="preview"
+            />
+        ) : renderPreview;
+
+        if (typeof preview === 'function') {
+            preview = preview(config);
+        }
+
         return (
             <div styleName="preview">
-                <div styleName="previewZoom" style={{zoom: previewZoom || 1}}>
-                    {renderPreview === true ? (
-                        <Element
-                            config={componentConfig}
-                            activeToolKey="preview"
-                        />
-                    ) : renderPreview}
+                <div styleName="previewZoom" style={{ zoom: previewZoom || 1 }}>
+                    {preview}
                 </div>
             </div>
         );
@@ -52,7 +58,7 @@ export default config({})(function DraggableComponent(props) {
                         alt="组件预览图"
                     />
                 ) : null}
-                {renderPreview()}
+                {_renderPreview()}
             </div>
         </Draggable>
     );
