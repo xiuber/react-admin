@@ -301,17 +301,38 @@ export default function Element(props) {
     }
 
     if (withWrapper) {
-        const {style = {}} = componentProps;
+        let {style = {}} = componentProps;
         const wStyle = {...wrapperStyle};
 
-        [
+        style = {...style}; // 浅拷贝一份 有可能会修改
+
+        // 同步到 wrapper 的样式
+        const syncTopWStyle = [
             'display',
             'width',
             'height',
-        ].forEach(key => {
+        ];
+        // 移动到 wrapper 的样式
+
+        const removeTopWStyle = [
+            'marginTop',
+            'marginRight',
+            'marginBottom',
+            'marginLeft',
+
+        ];
+
+        syncTopWStyle.forEach(key => {
             if (!(key in style)) return;
 
             wStyle[key] = style[key];
+        });
+
+        removeTopWStyle.forEach(key => {
+            if (!(key in style)) return;
+
+            wStyle[key] = style[key];
+            style[key] = undefined;
         });
 
         return createElement('div', {
@@ -321,6 +342,7 @@ export default function Element(props) {
                 createElement(component, {
                     ...commonProps,
                     ...componentProps,
+                    style,
                 }),
             ],
         });
