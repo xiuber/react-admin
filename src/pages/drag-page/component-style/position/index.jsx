@@ -109,7 +109,7 @@ export default function Position(props) {
             <Form
                 form={form}
                 onValuesChange={handleChange}
-                name="font"
+                name="position"
             >
                 <Form.Item
                     label="定位类型"

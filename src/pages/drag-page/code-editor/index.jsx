@@ -1,6 +1,6 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import {Button} from 'antd';
+import { Button } from 'antd';
 import MonacoEditor from 'react-monaco-editor';
 import './style.less';
 import {
@@ -9,8 +9,8 @@ import {
     FullscreenOutlined,
 } from '@ant-design/icons';
 import Pane from 'src/pages/drag-page/pane';
-import {useHeight} from 'ra-lib';
-import {isMac} from '../util';
+import { useHeight } from 'ra-lib';
+import { isMac } from '../util';
 
 function CodeEditor(props) {
     const {
@@ -42,6 +42,7 @@ function CodeEditor(props) {
         editorRef.current.addCommand(monaco.KeyCode.Escape, function() {
             handleClose();
         });
+
     }, [code, monacoRef.current, fullScreen]);
 
     function handleFormat() {
@@ -90,11 +91,11 @@ function CodeEditor(props) {
                 header={
                     <div styleName="header">
                         <div>
-                            <DesktopOutlined style={{marginRight: 4}}/> {title}
+                            <DesktopOutlined style={{ marginRight: 4 }} /> {title}
                         </div>
                         <div styleName="tool">
                             <span onClick={handleFullScreen}>
-                                {fullScreen ? <FullscreenExitOutlined/> : <FullscreenOutlined/>}
+                                {fullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
                             </span>
                         </div>
                     </div>
@@ -115,7 +116,7 @@ function CodeEditor(props) {
                     </main>
                     <footer>
                         <Button
-                            style={{marginRight: 8}}
+                            style={{ marginRight: 8 }}
                             onClick={handleFormat}
                         >
                             格式化
@@ -123,14 +124,14 @@ function CodeEditor(props) {
                         {onSave ? (
                             errors?.length ? (
                                 <Button
-                                    style={{marginRight: 8}}
+                                    style={{ marginRight: 8 }}
                                     type="danger"
                                 >
                                     有语法错误
                                 </Button>
                             ) : (
                                 <Button
-                                    style={{marginRight: 8}}
+                                    style={{ marginRight: 8 }}
                                     className="codeEditorSave"
                                     type="primary"
                                     onClick={() => onSave(code)}

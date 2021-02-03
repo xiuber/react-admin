@@ -47,6 +47,7 @@ export default config({
     function handleDragEnd() {
         // 从新打开组件库
         dragPageAction.setActiveSideKey('componentStore');
+        dragPageAction.setDraggingNode(null);
     }
 
     const draggable = !!data;

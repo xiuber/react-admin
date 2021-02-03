@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
 import './style.less';
-import {message} from 'antd';
 
 export default config({
     connect: state => {
         return {
             pageConfig: state.dragPage.pageConfig,
+            draggingNode: state.dragPage.draggingNode,
             activeSideKey: state.dragPage.activeSideKey,
         };
     },
@@ -18,6 +18,7 @@ export default config({
         value,
         onChange,
         onCancel,
+        draggingNode,
     } = props;
 
     function handleChange(value) {
@@ -53,8 +54,8 @@ export default config({
     return (
         <div styleName="root">
             <CodeEditor
-                title="Schema 源码开发"
-                value={code}
+                title="样式源码开发"
+                value={draggingNode ? "'拖拽中...'" : code}
                 onChange={handleChange}
                 onClose={onCancel}
             />

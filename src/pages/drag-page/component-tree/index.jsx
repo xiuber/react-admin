@@ -1,9 +1,9 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {Tree} from 'antd';
-import {AppstoreOutlined} from '@ant-design/icons';
+import React, { useState, useEffect, useRef } from 'react';
+import { Tree } from 'antd';
+import { AppstoreOutlined } from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import TreeNode from './TreeNode';
-import {scrollElement} from '../util';
+import { scrollElement } from '../util';
 import Pane from '../pane';
 
 import './style.less';
@@ -21,17 +21,21 @@ export default config({
         pageConfig,
         selectedNodeId,
         componentTreeExpendedKeys,
-        action: {dragPage: dragPageAction},
+        action: { dragPage: dragPageAction },
     } = props;
-    const [treeData, setTreeData] = useState([{key: 1, title: 1}]);
+    const [treeData, setTreeData] = useState([]);
+    const [nodeCount, setNodeCount] = useState(0);
+    const [allKeys, setAllKeys] = useState([]);
     const mainRef = useRef(null);
 
     useEffect(() => {
         if (!pageConfig) return;
 
         const treeData = {};
+        let nodeCount = 0;
+        const allKeys = [];
         const loop = (prev, next) => {
-            const {__config = {}, componentName, children} = prev;
+            const { __config = {}, componentName, children } = prev;
             const {
                 componentId,
                 componentDesc,
@@ -43,6 +47,9 @@ export default config({
             next.key = componentId;
             next.draggable = draggable;
             next.nodeData = prev;
+
+            allKeys.push(componentId);
+            nodeCount++;
 
             if (children && children.length) {
                 next.children = children.map(() => ({}));
@@ -56,6 +63,8 @@ export default config({
         loop(pageConfig, treeData);
 
         setTreeData([treeData]);
+        setNodeCount(nodeCount);
+        setAllKeys(allKeys);
 
     }, [pageConfig]);
 
@@ -65,14 +74,16 @@ export default config({
 
     function renderNode(nodeData) {
 
-        return <TreeNode selectedKey={selectedNodeId} node={nodeData}/>;
+        return <TreeNode selectedKey={selectedNodeId} node={nodeData} />;
     }
 
     function handleExpand(keys) {
         dragPageAction.setComponentTreeExpendedKeys(keys);
     }
 
-
+    useEffect(() => {
+        dragPageAction.setComponentTreeExpendedKeys(allKeys);
+    }, [selectedNodeId, allKeys]);
     useEffect(() => {
         const containerEle = mainRef.current;
 
@@ -90,12 +101,13 @@ export default config({
 
     }, [selectedNodeId]);
 
+
     return (
         <Pane
             header={
                 <div>
-                    <AppstoreOutlined style={{marginRight: 4}}/>
-                    组件树
+                    <AppstoreOutlined style={{ marginRight: 4 }} />
+                    组件树({nodeCount})
                 </div>
             }
         >

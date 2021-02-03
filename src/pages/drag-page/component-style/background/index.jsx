@@ -36,7 +36,7 @@ export default function Background(props) {
             <Form
                 form={form}
                 onValuesChange={handleChange}
-                name="font"
+                name="background"
             >
                 <Form.Item
                     label="背景类型"
