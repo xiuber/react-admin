@@ -1,5 +1,5 @@
 import React from 'react';
-import { Collapse } from 'antd';
+import {Collapse} from 'antd';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
 import Layout from './layout';
@@ -7,7 +7,7 @@ import Font from './font';
 import './style.less';
 
 
-const { Panel } = Collapse;
+const {Panel} = Collapse;
 
 
 export default config({
@@ -19,7 +19,7 @@ export default config({
 })(function ComponentStyle(props) {
     let {
         selectedNode = {},
-        action: { dragPage: dragPageAction },
+        action: {dragPage: dragPageAction},
     } = props;
 
     // 有 null 的情况
@@ -75,14 +75,14 @@ export default config({
             )}
         >
             <Collapse
-                style={{ border: 'none' }}
+                style={{border: 'none'}}
                 defaultActiveKey={['layout', 'text', 'position', 'background', 'border']}
             >
                 <Panel header="布局" key="layout">
-                    <Layout value={style} onChange={handleChange} />
+                    <Layout value={style} onChange={handleChange}/>
                 </Panel>
                 <Panel header="文字" key="text">
-                    <Font value={style} onChange={handleChange} />
+                    <Font value={style} onChange={handleChange}/>
                 </Panel>
                 <Panel header="定位" key="position">
                     定位

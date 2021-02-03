@@ -13,7 +13,7 @@ import {
 import RadioGroup from '../radio-group';
 import SliderInput from '../slider-input';
 import './style.less';
-import UnitInputItem from '../unit-input-item';
+import UnitInput from 'src/pages/drag-page/component-style/unit-input';
 
 const textAlignOptions = [
     { value: 'left', label: '左对齐', icon: <PicCenterOutlined /> },
@@ -28,6 +28,7 @@ export default function Font(props) {
 
     function handleChange(changedValues, allValues) {
         onChange(allValues);
+        console.log('allValues', allValues);
     }
 
     useEffect(() => {
@@ -85,13 +86,12 @@ export default function Font(props) {
                         </Form.Item>
                     </Col>
                     <Col span={10} style={{ paddingLeft: 8 }}>
-                        <UnitInputItem
+                        <Form.Item
                             name="lineHeight"
                             colon={false}
-                            placeholder="行距"
-                            form={form}
-                            handleChange={handleChange}
-                        />
+                        >
+                            <UnitInput placeholder="行距"/>
+                        </Form.Item>
                     </Col>
                 </Row>
 
@@ -100,11 +100,7 @@ export default function Font(props) {
                     name="textAlign"
                     colon={false}
                 >
-                    <RadioGroup
-                        options={textAlignOptions}
-                        form={form}
-                        handleChange={handleChange}
-                    />
+                    <RadioGroup options={textAlignOptions}/>
                 </Form.Item>
                 <Form.Item
                     label="透明"

@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Radio, Tooltip} from 'antd';
-import './style.less'
+import './style.less';
 
 const RadioGroup = props => {
-    const {id, form, options, handleChange, ...others} = props;
-    const field = id.includes('_') ? id.split('_')[1] : id;
+    const {options, onChange, ...others} = props;
 
     function renderOptions(options) {
         return options.map((item, index) => {
@@ -22,17 +21,10 @@ const RadioGroup = props => {
             const la = icon || label;
 
             function handleClick() {
-                const prevValue = form.getFieldValue(field);
-
-                if (prevValue !== value) return;
-
+                // 再次点击选中清空
                 setTimeout(() => {
-                    const fields = {[field]: undefined};
-                    form.setFieldsValue(fields);
-
-                    // 取消选中时，handleChange不触发，手动触发一次
-                    if (prevValue === value) {
-                        handleChange && handleChange(fields, form.getFieldsValue());
+                    if (props.value === value) {
+                        onChange && onChange(undefined);
                     }
                 });
             }
@@ -58,7 +50,7 @@ const RadioGroup = props => {
             options={renderOptions(options)}
             optionType="button"
             buttonStyle="solid"
-            id={id}
+            onChange={onChange}
             {...others}
         />
     );
@@ -66,9 +58,6 @@ const RadioGroup = props => {
 
 RadioGroup.propTypes = {
     options: PropTypes.array,
-    form: PropTypes.object,
-    handleChange: PropTypes.func,
-    field: PropTypes.any,
 };
 
 export default RadioGroup;
