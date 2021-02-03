@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 function UnitInput(props) {
     const {
         onKeyDown,
+        onKeyUp,
         onChange,
         ...others
     } = props;
@@ -22,6 +23,7 @@ function UnitInput(props) {
     }
 
     function handleKeyUp(e) {
+        onKeyUp && onKeyUp(e);
         const {key} = e;
         let nextValue = e.target.value || '';
         nextValue = nextValue.trim();

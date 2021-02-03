@@ -6,6 +6,7 @@ import {
     Select,
     Row,
     Col,
+    Tooltip,
 } from 'antd';
 import {
     PicCenterOutlined,
@@ -43,15 +44,65 @@ export default function Position(props) {
     const [form] = Form.useForm();
 
     function handleChange(changedValues, allValues) {
+        const {translateY, translateX} = allValues;
+        let {transform} = value;
+
+        if (!transform) transform = '';
+
+        const setTransform = (key, value) => {
+            const re = new RegExp(`${key}\\([^\\)]+\\)`);
+
+            if (value) {
+                if (transform.includes(key)) {
+                    transform = transform.replace(re, `${key}(${value})`);
+                } else {
+                    transform = `${transform} ${key}(${value})`;
+                }
+            } else {
+                transform = transform.replace(re, '');
+            }
+            // 去前后空格
+            transform = transform.trim();
+            // 多个空格转为单个空格
+            transform = transform.replace(/\s{2,}/g, ' ');
+            Reflect.deleteProperty(allValues, key);
+        };
+
+        setTransform('translateY', translateY);
+        setTransform('translateX', translateX);
+
+        allValues.transform = transform;
+
         onChange(allValues);
-        console.log('allValues', allValues);
+        console.log('allValues', JSON.stringify(allValues, null, 4));
     }
 
     useEffect(() => {
         // 先重置，否则会有字段不清空情况
         form.resetFields();
         form.setFieldsValue(value);
+        const {transform} = value;
+        if (!transform) return;
+
+        console.log(transform);
+
+        const [, translateY] = (/translateY\(([^\)]+)\)/.exec(transform) || []);
+        const [, translateX] = (/translateX\(([^\)]+)\)/.exec(transform) || []);
+
+        form.setFieldsValue({translateY, translateX});
     }, [value]);
+
+    const quickPositionOptions = [
+        {value: 'topLeft', icon: <PicCenterOutlined/>, label: '左上角', fieldsValue: {top: 0, left: 0}},
+        {value: 'topRight', icon: <PicCenterOutlined/>, label: '右上角', fieldsValue: {top: 0, right: 0}},
+        {value: 'bottomLeft', icon: <PicCenterOutlined/>, label: '左上角', fieldsValue: {bottom: 0, left: 0}},
+        {value: 'bottomRight', icon: <PicCenterOutlined/>, label: '右下角', fieldsValue: {right: 0, bottom: 0}},
+        {value: 'leftCenter', icon: <PicCenterOutlined/>, label: '左居中', fieldsValue: {top: '50%', left: 0, translateY: '-50%'}},
+        {value: 'rightCenter', icon: <PicCenterOutlined/>, label: '右居中', fieldsValue: {top: '50%', right: 0, translateY: '-50%'}},
+        {value: 'topCenter', icon: <PicCenterOutlined/>, label: '上居中', fieldsValue: {top: 0, left: '50%', translateX: '-50%'}},
+        {value: 'bottomCenter', icon: <PicCenterOutlined/>, label: '下居中', fieldsValue: {bottom: 0, left: '50%', translateX: '-50%'}},
+        {value: 'center', icon: <PicCenterOutlined/>, label: '居中', fieldsValue: {top: '50%', left: '50%', translateY: '-50%', translateX: '-50%'}},
+    ];
 
     return (
         <div styleName="root">
@@ -66,7 +117,7 @@ export default function Position(props) {
                     colon={false}
                 >
                     <Select
-                        placeholder="请选择定位类型"
+                        placeholder="position"
                         options={positionOptions.map(item => {
                             const {value, label, icon} = item;
 
@@ -81,53 +132,112 @@ export default function Position(props) {
                         })}
                     />
                 </Form.Item>
-                <RectInputsWrapper large style={{height: 140, marginLeft: 60, marginBottom: 8}}>
-                    {directionOptions.map(item => {
+                <Form.Item shouldUpdate noStyle>
+                    {({getFieldValue}) => {
+                        const position = getFieldValue('position');
+                        if (position === 'absolute' || position === 'fixed') {
+
+                            return (
+                                <div style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-around',
+                                    marginLeft: 60,
+                                    marginBottom: 5,
+                                }}>
+                                    {quickPositionOptions.map(item => {
+                                        const {value, label, icon, fieldsValue} = item;
+                                        const {
+                                            top = 'auto',
+                                            right = 'auto',
+                                            left = 'auto',
+                                            bottom = 'auto',
+                                            translateY,
+                                            translateX,
+                                        } = fieldsValue;
+
+                                        return (
+                                            <Tooltip key={value} placement="top" title={label}>
+                                                <div
+                                                    style={{cursor: 'pointer'}}
+                                                    onClick={() => {
+
+                                                        const fields = {
+                                                            top,
+                                                            right,
+                                                            left,
+                                                            bottom,
+                                                            translateY,
+                                                            translateX,
+                                                        };
+
+                                                        form.setFieldsValue(fields);
+
+                                                        handleChange(fields, form.getFieldsValue());
+                                                    }}
+                                                >
+                                                    {icon}
+                                                </div>
+                                            </Tooltip>
+                                        );
+                                    })}
+                                </div>
+                            );
+                        }
+                    }}
+                </Form.Item>
+                <Form.Item shouldUpdate noStyle>
+                    {({getFieldValue}) => {
+                        const position = getFieldValue('position');
+
+                        if (!position || position === 'static') return null;
+
                         return (
-                            <Form.Item
-                                name={item}
-                                noStyle
-                                colon={false}
-                            >
-                                <UnitInput
-                                    allowClear={false}
-                                    placeholder={''}
-                                    onClick={event => handleSyncFields({event, form, fields: directionOptions, field: item})}
-                                    onKeyDown={event => handleSyncFields({enter: true, event, form, fields: directionOptions, field: item})}
-                                />
-                            </Form.Item>
+                            <RectInputsWrapper large style={{height: 110, marginLeft: 60, marginBottom: 8}}>
+                                {directionOptions.map(item => {
+                                    return (
+                                        <Form.Item
+                                            name={item}
+                                            noStyle
+                                            colon={false}
+                                        >
+                                            <UnitInput
+                                                allowClear={false}
+                                                placeholder='auto'
+                                                onClick={event => handleSyncFields({event, form, fields: directionOptions, field: item})}
+                                                onKeyDown={event => handleSyncFields({enter: true, event, form, fields: directionOptions, field: item})}
+                                            />
+                                        </Form.Item>
+                                    );
+                                })}
+                            </RectInputsWrapper>
                         );
-                    })}
-                    <div styleName="innerInput">
-                        <Form.Item
-                            label="左移"
-                            name="translateX"
-                            colon={false}
-                        >
-                            <UnitInput allowClear={false} style={{width: 60, marginRight: 8}}/>
-                        </Form.Item>
-                        <Form.Item
-                            label="右移"
-                            name="translateY"
-                            colon={false}
-                        >
-                            <UnitInput allowClear={false} style={{width: 60}}/>
-                        </Form.Item>
-                    </div>
-                </RectInputsWrapper>
-                <div style={{paddingLeft: 60}}>
-                    <Form.Item
-                        label="层叠顺序"
-                        name="zIndex"
-                        colon={false}
-                    >
-                        <InputNumber
-                            style={{width: '100%'}}
-                            step={1}
-                            placeholder="请输入"
-                        />
-                    </Form.Item>
-                </div>
+                    }}
+                </Form.Item>
+                <Form.Item
+                    label="层叠顺序"
+                    name="zIndex"
+                    colon={false}
+                >
+                    <InputNumber
+                        style={{width: '100%'}}
+                        step={1}
+                        placeholder="z-index"
+                    />
+                </Form.Item>
+                <Form.Item
+                    label="水平移动"
+                    name="translateX"
+                    colon={false}
+                >
+                    <UnitInput placeholder="translateX"/>
+                </Form.Item>
+                <Form.Item
+                    label="垂直移动"
+                    name="translateY"
+                    colon={false}
+                >
+                    <UnitInput placeholder="translateY"/>
+                </Form.Item>
                 <Form.Item
                     label="浮动方向"
                     name="float"

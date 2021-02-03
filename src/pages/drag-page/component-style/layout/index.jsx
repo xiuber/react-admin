@@ -130,21 +130,21 @@ export default function Layout(props) {
                                     name="flexGrow"
                                     colon={false}
                                 >
-                                    <InputNumber style={{width: '100%'}} placeholder="请输入" min={0} step={1}/>
+                                    <InputNumber style={{width: '100%'}} placeholder="flex-grow" min={0} step={1}/>
                                 </Form.Item>
                                 <Form.Item
                                     label="缩小比例"
                                     name="flexShrink"
                                     colon={false}
                                 >
-                                    <InputNumber style={{width: '100%'}} placeholder="请输入" min={0} step={1}/>
+                                    <InputNumber style={{width: '100%'}} placeholder="flex-shrink" min={0} step={1}/>
                                 </Form.Item>
                                 <Form.Item
                                     label="基础空间"
                                     name="flexBasis"
                                     colon={false}
                                 >
-                                    <UnitInput/>
+                                    <UnitInput placeholder="flex-basis"/>
                                 </Form.Item>
                             </>
                         );
@@ -159,7 +159,7 @@ export default function Layout(props) {
                         >
                             <UnitInput
                                 allowClear={false}
-                                placeholder={''}
+                                placeholder="0"
                                 onClick={event => handleSyncFields({event, form, fields: marginFields, field: item})}
                                 onKeyDown={event => handleSyncFields({enter: true, event, form, fields: marginFields, field: item})}
                             />
@@ -174,9 +174,9 @@ export default function Layout(props) {
                             >
                                 <UnitInput
                                     allowClear={false}
-                                    placeholder={''}
+                                    placeholder="0"
                                     onClick={event => handleSyncFields({event, form, fields: paddingFields, field: item})}
-                                    onKeyDown={event => handleSyncFields({enter: true,event, form, fields: paddingFields, field: item})}
+                                    onKeyDown={event => handleSyncFields({enter: true, event, form, fields: paddingFields, field: item})}
                                 />
                             </Form.Item>
                         ))}
@@ -186,14 +186,22 @@ export default function Layout(props) {
                                 name="width"
                                 colon={false}
                             >
-                                <UnitInput allowClear={false} style={{width: 60, marginRight: 8}}/>
+                                <UnitInput
+                                    style={{width: 60, marginRight: 8}}
+                                    allowClear={false}
+                                    placeholder="width"
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="高"
                                 name="height"
                                 colon={false}
                             >
-                                <UnitInput allowClear={false} style={{width: 60}}/>
+                                <UnitInput
+                                    style={{width: 60}}
+                                    allowClear={false}
+                                    placeholder="height"
+                                />
                             </Form.Item>
                         </div>
                     </RectInputsWrapper>

@@ -6,7 +6,6 @@ import './style.less';
 const RectInputsWrapper = props => {
     const {children, inner, large, tip, ...others} = props;
 
-    console.log(children);
     const styleName = classNames({
         root: true,
         inner,
