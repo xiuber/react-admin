@@ -5,6 +5,7 @@ import Pane from '../pane';
 import Layout from './layout';
 import Font from './font';
 import Position from './position';
+import Background from './background';
 import './style.less';
 
 
@@ -63,7 +64,8 @@ export default config({
             ...val,
         };
 
-        console.log('selectedNode', selectedNode);
+
+        console.log('selectedNode style', JSON.stringify(selectedNode.props.style, null, 4));
 
         dragPageAction.render();
     }
@@ -92,7 +94,7 @@ export default config({
                 </Panel>
 
                 <Panel header="背景" key="background">
-                    背景
+                    <Background value={style} onChange={handleChange}/>
                 </Panel>
                 <Panel header="边框" key="border">
                     边框
