@@ -197,11 +197,15 @@ export default [
             {
                 title: '选择器',
                 renderPreview: node => {
+                    const container = { current: null };
                     return (
-                        <div style={{ position: 'relative', height: 100, width: '100%' }}>
+                        <div
+                            ref={container}
+                            style={{ position: 'relative', height: 100, width: '100%' }}
+                        >
                             <Select
                                 {...node.props}
-                                getPopupContainer={() => document.getElementById('storeComponents')}
+                                getPopupContainer={() => container.current}
                                 open
                             />
                         </div>
