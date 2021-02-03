@@ -17,7 +17,7 @@ function CodeEditor(props) {
         title,
         value,
         onChange = () => undefined,
-        onSave = () => undefined,
+        onSave,
         onClose = () => undefined,
     } = props;
 
@@ -37,7 +37,7 @@ function CodeEditor(props) {
     useEffect(() => {
         const monaco = monacoRef.current;
         editorRef.current.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, function() {
-            onSave(code);
+            onSave && onSave(code);
         });
         editorRef.current.addCommand(monaco.KeyCode.Escape, function() {
             handleClose();
@@ -120,26 +120,28 @@ function CodeEditor(props) {
                         >
                             格式化
                         </Button>
-                        {errors?.length ? (
-                            <Button
-                                type="danger"
-                            >
-                                有语法错误
-                            </Button>
-                        ) : (
-                            <Button
-                                className="codeEditorSave"
-                                type="primary"
-                                onClick={() => onSave(code)}
-                            >
-                                保存({isMac ? '⌘' : 'ctrl'}+s)
-                            </Button>
-                        )}
-
+                        {onSave ? (
+                            errors?.length ? (
+                                <Button
+                                    style={{marginRight: 8}}
+                                    type="danger"
+                                >
+                                    有语法错误
+                                </Button>
+                            ) : (
+                                <Button
+                                    style={{marginRight: 8}}
+                                    className="codeEditorSave"
+                                    type="primary"
+                                    onClick={() => onSave(code)}
+                                >
+                                    保存({isMac ? '⌘' : 'ctrl'}+s)
+                                </Button>
+                            )
+                        ) : null}
                         <Button
                             className="codeEditorClose"
                             onClick={handleClose}
-                            style={{marginLeft: 8}}
                         >
                             {fullScreen ? '退出全屏' : '关闭'} (Esc)
                         </Button>

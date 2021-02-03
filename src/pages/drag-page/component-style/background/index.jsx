@@ -51,16 +51,18 @@ export default function Background(props) {
                         const __type = getFieldValue('__type');
                         if (__type === 'color') {
                             return (
-                                <Form.Item
-                                    name="backgroundColor"
-                                    noStyle
-                                    colon={false}
-                                >
-                                    <Input
-                                        allowClear
-                                        placeholder='background-color'
-                                    />
-                                </Form.Item>
+                                <div style={{paddingLeft: 58}}>
+                                    <Form.Item
+                                        name="backgroundColor"
+                                        noStyle
+                                        colon={false}
+                                    >
+                                        <Input
+                                            allowClear
+                                            placeholder='background-color'
+                                        />
+                                    </Form.Item>
+                                </div>
                             );
                         }
                     }}

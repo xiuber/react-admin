@@ -1,11 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Collapse} from 'antd';
+import {DesktopOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
 import Layout from './layout';
 import Font from './font';
 import Position from './position';
 import Background from './background';
+import StyleEditor from './style-editor';
 import './style.less';
 
 
@@ -42,6 +44,8 @@ export default config({
 
     const currentName = componentDesc || componentName;
 
+    const [styleEditorVisible, setStyleEditorVisible] = useState(false);
+
     function handleChange(values) {
         if (!selectedNode?.componentName) return;
 
@@ -74,11 +78,21 @@ export default config({
         <Pane
             fitHeight
             header={(
-                <div>
-                    当前选中: {currentName}
+                <div styleName="header">
+                    <div>当前选中: {currentName}</div>
+                    <DesktopOutlined
+                        styleName="tool"
+                        onClick={() => setStyleEditorVisible(!styleEditorVisible)}
+                    />
                 </div>
             )}
         >
+            <StyleEditor
+                value={style}
+                onChange={handleChange}
+                visible={styleEditorVisible}
+                onCancel={() => setStyleEditorVisible(false)}
+            />
             <Collapse
                 style={{border: 'none'}}
                 defaultActiveKey={['layout',/*  'text', */ 'position', 'background', 'border']}
