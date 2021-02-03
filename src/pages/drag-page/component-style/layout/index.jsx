@@ -8,6 +8,8 @@ import {
 } from '@ant-design/icons';
 import RadioGroup from '../radio-group';
 import UnitInput from '../unit-input';
+import RectInputsWrapper from '../rect-inputs-wrapper';
+import {handleSyncFields} from '../util';
 import './style.less';
 
 const displayOptions = [
@@ -44,16 +46,19 @@ const flexWrapOptions = [
     {value: 'wrap', label: '正换行'},
     {value: 'wrap-reserve', label: '逆换行'},
 ];
-const paddingMarginFields = [
+const marginFields = [
     'marginTop',
     'marginRight',
     'marginBottom',
     'marginLeft',
+];
+const paddingFields = [
     'paddingTop',
     'paddingRight',
     'paddingBottom',
     'paddingLeft',
 ];
+
 
 export default function Layout(props) {
     const {value, onChange = () => undefined} = props;
@@ -145,40 +150,54 @@ export default function Layout(props) {
                         );
                     }}
                 </Form.Item>
-                <div style={{padding: '0 5px'}}>
-                    <div styleName="contentBox">
-                        {paddingMarginFields.map(item => (
-                            <div styleName={`paddingMargin ${item}`}>
-
-                                <Form.Item
-                                    name={item}
-                                    noStyle
-                                    colon={false}
-                                >
-                                    <UnitInput allowClear={false} placeholder={''}/>
-                                </Form.Item>
-                            </div>
+                <RectInputsWrapper tip="margin" style={{height: 180}}>
+                    {marginFields.map(item => (
+                        <Form.Item
+                            name={item}
+                            noStyle
+                            colon={false}
+                        >
+                            <UnitInput
+                                allowClear={false}
+                                placeholder={''}
+                                onClick={event => handleSyncFields({event, form, fields: marginFields, field: item})}
+                                onKeyDown={event => handleSyncFields({enter: true, event, form, fields: marginFields, field: item})}
+                            />
+                        </Form.Item>
+                    ))}
+                    <RectInputsWrapper tip="padding" inner>
+                        {paddingFields.map(item => (
+                            <Form.Item
+                                name={item}
+                                noStyle
+                                colon={false}
+                            >
+                                <UnitInput
+                                    allowClear={false}
+                                    placeholder={''}
+                                    onClick={event => handleSyncFields({event, form, fields: paddingFields, field: item})}
+                                    onKeyDown={event => handleSyncFields({enter: true,event, form, fields: paddingFields, field: item})}
+                                />
+                            </Form.Item>
                         ))}
-
-                        <div styleName="widthHeight">
-
+                        <div styleName="innerInput">
                             <Form.Item
                                 label="宽"
                                 name="width"
                                 colon={false}
                             >
-                                <UnitInput style={{width: 80, marginRight: 8}}/>
+                                <UnitInput allowClear={false} style={{width: 60, marginRight: 8}}/>
                             </Form.Item>
                             <Form.Item
                                 label="高"
                                 name="height"
                                 colon={false}
                             >
-                                <UnitInput style={{width: 80}}/>
+                                <UnitInput allowClear={false} style={{width: 60}}/>
                             </Form.Item>
                         </div>
-                    </div>
-                </div>
+                    </RectInputsWrapper>
+                </RectInputsWrapper>
             </Form>
         </div>
     );

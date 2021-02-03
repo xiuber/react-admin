@@ -9,3 +9,4 @@
 1. [ ] ctrl + c ctrl + v 复制赞贴组件 
 1. [x] 部分组件无法拖拽，可以添加 withWrapper: true 配置
 1. [ ] dragPage.activeView 标记当前视图，用于快捷键判断
+

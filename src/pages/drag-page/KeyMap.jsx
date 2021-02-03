@@ -3,6 +3,22 @@ import config from 'src/commons/config-hoc';
 import {v4 as uuid} from 'uuid';
 import {copyTextToClipboard, getTextFromClipboard} from './util';
 
+/**
+ ### 快捷键说明
+ ## 通用
+ 1. meta(ctrl) + s 保存
+ 1. esc 关闭 视图
+
+ ## 设计视图
+ 1. meta(ctrl) + c  meta(ctrl) + v 复制粘贴选中节点
+ 1. meta(ctrl) + d 删除选中节点
+
+ ## 上下左右类型输入
+ 1. meta(ctr) + 回车（鼠标点击） 同步上下 或 左右
+ 1. shift + meta(ctr) + 回车（鼠标点击） 同步所有
+
+ * */
+
 export default config({
     connect: state => {
         return {
@@ -111,6 +127,7 @@ export default config({
         const mc = metaKey || ctrlKey;
 
         if (mc && key === 'd') {
+            if (!isDesignPage) return;
             e.preventDefault();
             dragPageAction.deleteSelectedNode();
         }

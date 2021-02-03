@@ -11,6 +11,7 @@ function UnitInput(props) {
 
     // key down 无法获取最新的value
     function handleKeyDown(e) {
+        onKeyDown && onKeyDown(e);
         const {key} = e;
 
         const isUp = key === 'ArrowUp';
@@ -21,7 +22,6 @@ function UnitInput(props) {
     }
 
     function handleKeyUp(e) {
-        onKeyDown && onKeyDown(e);
         const {key} = e;
         let nextValue = e.target.value || '';
         nextValue = nextValue.trim();

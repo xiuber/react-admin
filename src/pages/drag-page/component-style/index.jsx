@@ -4,6 +4,7 @@ import config from 'src/commons/config-hoc';
 import Pane from '../pane';
 import Layout from './layout';
 import Font from './font';
+import Position from './position';
 import './style.less';
 
 
@@ -55,6 +56,8 @@ export default config({
 
         if (!selectedNode.props.style) selectedNode.props.style = {};
 
+        const style = selectedNode.props.style;
+
         selectedNode.props.style = {
             ...style,
             ...val,
@@ -76,7 +79,7 @@ export default config({
         >
             <Collapse
                 style={{border: 'none'}}
-                defaultActiveKey={['layout', 'text', 'position', 'background', 'border']}
+                defaultActiveKey={['layout',/*  'text', */ 'position', 'background', 'border']}
             >
                 <Panel header="布局" key="layout">
                     <Layout value={style} onChange={handleChange}/>
@@ -85,7 +88,7 @@ export default config({
                     <Font value={style} onChange={handleChange}/>
                 </Panel>
                 <Panel header="定位" key="position">
-                    定位
+                    <Position value={style} onChange={handleChange}/>
                 </Panel>
 
                 <Panel header="背景" key="background">
