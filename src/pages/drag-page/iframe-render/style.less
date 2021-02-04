@@ -1,5 +1,8 @@
 @import '../../../theme';
 
+@guide-color: green;
+@guide-size: 2px;
+
 .dragEnter {
     outline: 1px solid #14ee69;
 }
@@ -19,11 +22,11 @@
     }
 
     &:hover {
-        outline: 1px dashed @primary-color;
+        outline: 1px dashed @guide-color;
     }
 
     &.selected {
-        outline: 1px solid @primary-color;
+        outline: 1px solid @guide-color;
 
         &::before {
             content: attr(data-componentDesc);
@@ -32,7 +35,7 @@
             left: 0;
             top: 0;
             padding: 0 4px;
-            background: @primary-color;
+            background: @guide-color;
             color: #fff;
             word-break: keep-all;
             z-index: 999;
@@ -41,8 +44,7 @@
     }
 }
 
-@guide-color: green;
-@guide-size: 2px;
+
 .guideActive {
     display: flex !important;
     position: fixed;
