@@ -20,8 +20,8 @@ export default function Background(props) {
 
     function handleChange(changedValues, allValues) {
 
-        onChange(allValues);
         console.log('allValues', JSON.stringify(allValues, null, 4));
+        onChange(allValues);
     }
 
     useEffect(() => {

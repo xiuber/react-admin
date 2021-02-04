@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
+import {Button} from 'antd';
 import MonacoEditor from 'react-monaco-editor';
 import './style.less';
 import {
@@ -9,13 +9,16 @@ import {
     FullscreenOutlined,
 } from '@ant-design/icons';
 import Pane from 'src/pages/drag-page/pane';
-import { useHeight } from 'ra-lib';
-import { isMac } from '../util';
+import {useHeight} from 'ra-lib';
+import prettier from 'prettier/standalone';
+import parserPostCss from 'prettier/parser-postcss';
+import {isMac} from '../util';
 
 function CodeEditor(props) {
     const {
         title,
         value,
+        language,
         onChange = () => undefined,
         onSave,
         onClose = () => undefined,
@@ -31,7 +34,18 @@ function CodeEditor(props) {
     const [fullScreen, setFullScreen] = useState(false);
 
     useEffect(() => {
-        setCode(value);
+        if (value instanceof Promise) {
+            value.then(code => {
+                if(language === 'css') {
+                    const formattedCss = prettier.format(code, {parser: 'css', plugins: [parserPostCss]});
+                    setCode(formattedCss);
+                    return;
+                }
+                setCode(code);
+            });
+        } else {
+            setCode(value);
+        }
     }, [value]);
 
     useEffect(() => {
@@ -46,6 +60,11 @@ function CodeEditor(props) {
     }, [code, monacoRef.current, fullScreen]);
 
     function handleFormat() {
+        if (language === 'css') {
+            const formattedCss = prettier.format(code, {parser: 'css', plugins: [parserPostCss]});
+            setCode(formattedCss);
+            return;
+        }
         editorRef.current.getAction(['editor.action.formatDocument'])._run();
     }
 
@@ -91,11 +110,11 @@ function CodeEditor(props) {
                 header={
                     <div styleName="header">
                         <div>
-                            <DesktopOutlined style={{ marginRight: 4 }} /> {title}
+                            <DesktopOutlined style={{marginRight: 4}}/> {title}
                         </div>
                         <div styleName="tool">
                             <span onClick={handleFullScreen}>
-                                {fullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+                                {fullScreen ? <FullscreenExitOutlined/> : <FullscreenOutlined/>}
                             </span>
                         </div>
                     </div>
@@ -106,7 +125,7 @@ function CodeEditor(props) {
                         <MonacoEditor
                             width="100%"
                             height={height}
-                            language="javascript"
+                            language={language}
                             theme="vs-dark"
                             value={code}
                             options={options}
@@ -116,7 +135,7 @@ function CodeEditor(props) {
                     </main>
                     <footer>
                         <Button
-                            style={{ marginRight: 8 }}
+                            style={{marginRight: 8}}
                             onClick={handleFormat}
                         >
                             格式化
@@ -124,14 +143,14 @@ function CodeEditor(props) {
                         {onSave ? (
                             errors?.length ? (
                                 <Button
-                                    style={{ marginRight: 8 }}
+                                    style={{marginRight: 8}}
                                     type="danger"
                                 >
                                     有语法错误
                                 </Button>
                             ) : (
                                 <Button
-                                    style={{ marginRight: 8 }}
+                                    style={{marginRight: 8}}
                                     className="codeEditorSave"
                                     type="primary"
                                     onClick={() => onSave(code)}
@@ -154,11 +173,16 @@ function CodeEditor(props) {
 }
 
 CodeEditor.propTypes = {
+    language: PropTypes.string,
     title: PropTypes.any,
     value: PropTypes.string,
     onChange: PropTypes.func,
     onSave: PropTypes.func,
     onClose: PropTypes.func,
+};
+
+CodeEditor.defaultProps = {
+    language: 'javascript',
 };
 
 export default CodeEditor;

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Collapse } from 'antd';
-import { DesktopOutlined } from '@ant-design/icons';
+import React, {useState} from 'react';
+import {Collapse} from 'antd';
+import {DesktopOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
 import Layout from './layout';
@@ -8,10 +8,11 @@ import Font from './font';
 import Position from './position';
 import Background from './background';
 import StyleEditor from './style-editor';
+import {v4 as uuid} from 'uuid';
 import './style.less';
 
 
-const { Panel } = Collapse;
+const {Panel} = Collapse;
 
 
 export default config({
@@ -23,7 +24,7 @@ export default config({
 })(function ComponentStyle(props) {
     let {
         selectedNode = {},
-        action: { dragPage: dragPageAction },
+        action: {dragPage: dragPageAction},
     } = props;
 
     // 有 null 的情况
@@ -45,6 +46,7 @@ export default config({
     const currentName = componentDesc || componentName;
 
     const [styleEditorVisible, setStyleEditorVisible] = useState(false);
+    const [, setRender] = useState('');
 
     function handleChange(values, replace) {
         if (!selectedNode?.componentName) return;
@@ -56,18 +58,23 @@ export default config({
         const style = selectedNode.props.style;
 
         if (replace) {
+            // 直接替换，一般来自源码编辑器
             selectedNode.props.style = values;
+            // 触发当前组件重新渲染 让编辑器拿到最新的style
+            setRender(uuid());
         } else {
+            // 合并
             selectedNode.props.style = {
                 ...style,
                 ...values,
             };
         }
 
-        // 使props改变，Element会重新设置key，从新加载
-        selectedNode.props = { ...selectedNode.props };
+        // 设置 key 每次保证渲染，都重新创建节点，否则属性无法被清空，样式为空，或者不合法，将不能覆盖已有样式
+        // prefStyle: {backgroundColor: 'red'} nextStyle: {backgroundColor: 'red111'}, 样式依旧为红色
+        selectedNode.props.key = uuid();
 
-        console.log('selectedNode style', JSON.stringify(selectedNode.props.style, null, 4));
+        // console.log('selectedNode style', JSON.stringify(selectedNode.props.style, null, 4));
 
         dragPageAction.render();
     }
@@ -92,21 +99,21 @@ export default config({
                 onCancel={() => setStyleEditorVisible(false)}
             />
             <Collapse
-                style={{ border: 'none' }}
+                style={{border: 'none'}}
                 defaultActiveKey={['layout',/*  'text', */ 'position', 'background', 'border']}
             >
                 <Panel header="布局" key="layout">
-                    <Layout value={style} onChange={handleChange} />
+                    <Layout value={style} onChange={handleChange}/>
                 </Panel>
                 <Panel header="文字" key="text">
-                    <Font value={style} onChange={handleChange} />
+                    <Font value={style} onChange={handleChange}/>
                 </Panel>
                 <Panel header="定位" key="position">
-                    <Position value={style} onChange={handleChange} />
+                    <Position value={style} onChange={handleChange}/>
                 </Panel>
 
                 <Panel header="背景" key="background">
-                    <Background value={style} onChange={handleChange} />
+                    <Background value={style} onChange={handleChange}/>
                 </Panel>
                 <Panel header="边框" key="border">
                     边框

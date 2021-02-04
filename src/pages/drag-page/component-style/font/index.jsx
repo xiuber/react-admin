@@ -27,8 +27,8 @@ export default function Font(props) {
     const [form] = Form.useForm();
 
     function handleChange(changedValues, allValues) {
+        console.log('allValues', JSON.stringify(allValues, null, 4));
         onChange(allValues);
-        console.log('allValues', allValues);
     }
 
     useEffect(() => {

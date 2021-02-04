@@ -1,13 +1,11 @@
-import React, { createElement, useRef, useEffect } from 'react';
+import React, {createElement, useRef, useEffect} from 'react';
 import styles from './style.less';
 import {
     getDropGuidePosition,
     TRIGGER_SIZE,
     isDropAccept,
     getComponent,
-    usePrevious,
 } from '../util';
-import { v4 as uuid } from 'uuid';
 
 export default function Element(props) {
     const {
@@ -24,8 +22,6 @@ export default function Element(props) {
     const isPreview = activeToolKey === 'preview';
 
     const prevSideKeyRef = useRef(null);
-    const prevComponentKey = useRef(uuid());
-    const prevComponentProps = usePrevious(config.props);
 
     // 预览时，不显示 DragHolder
     useEffect(() => {
@@ -116,7 +112,7 @@ export default function Element(props) {
         const isBefore = isTop || isLeft;
         const isAfter = isBottom || isRight;
 
-        return { ...position, isBefore, isAfter, isChildren };
+        return {...position, isBefore, isAfter, isChildren};
     }
 
     const onDragOver = function(e) {
@@ -220,7 +216,7 @@ export default function Element(props) {
 
         targetElement.classList.add(styles.dragEnter);
         const targetRect = targetElement.getBoundingClientRect();
-        const { height } = targetRect;
+        const {height} = targetRect;
         const targetIsContainer = targetElement.getAttribute('data-isContainer') === 'true';
 
         if (targetIsContainer) {
@@ -291,19 +287,10 @@ export default function Element(props) {
             return prev;
         }, {});
 
-    // 每次保证渲染，都重新创建节点，否则属性无法被清空，样式为空，或者不合法，将不能覆盖已有样式
-    // prefStyle: {backgroundColor: 'red'} nextStyle: {backgroundColor: 'red111'}, 样式依旧为红色
-    let key = prevComponentKey.current;
-
-    if (config.props !== prevComponentProps) {
-        key = prevComponentKey.current = uuid();
-    }
-
     const commonProps = {
         getPopupContainer: () => iframeDocument.body,
         children: childrenEle,
         ...componentActions,
-        key,
     };
 
     if (isPreview) {
@@ -314,10 +301,10 @@ export default function Element(props) {
     }
 
     if (withWrapper) {
-        let { style = {} } = componentProps;
-        const wStyle = { ...wrapperStyle };
+        let {style = {}} = componentProps;
+        const wStyle = {...wrapperStyle};
 
-        style = { ...style }; // 浅拷贝一份 有可能会修改
+        style = {...style}; // 浅拷贝一份 有可能会修改
 
         // 同步到 wrapper 的样式
         const syncTopWStyle = [

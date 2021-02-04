@@ -2,6 +2,7 @@ import React from 'react';
 import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
+import {objectToCss, cssToObject} from '../../util';
 import './style.less';
 
 export default config({
@@ -21,21 +22,15 @@ export default config({
         draggingNode,
     } = props;
 
-    function handleChange(value) {
-        let style = null;
-        if (value) {
-            const val = value.replace('export', '').replace('default', '');
-            try {
-                style = JSON5.parse(val);
+    function handleSave(value) {
+        if (!value) return;
 
-                if (typeof style !== 'object' || Array.isArray(style)) {
-                    return;
-                }
-                onChange && onChange(style);
-            } catch (e) {
-                return;
-            }
-        }
+        let val = value.replace('*', '').trim();
+
+        val = val.substring(1, val.length - 1);
+        const style = cssToObject(val);
+
+        onChange && onChange(style);
     }
 
     if (!visible) return null;
@@ -49,15 +44,18 @@ export default config({
 
         return prev;
     }, {});
-    const code = `export default ${JSON5.stringify(obj, null, 4)}`;
+
+    // const code = `export default ${JSON5.stringify(obj, null, 4)}`;
+    const code = objectToCss(obj).then(code => `* {${code}}`);
 
     return (
         <div styleName="root">
             <CodeEditor
+                language="css"
                 title="样式源码开发"
-                value={draggingNode ? "'拖拽中...'" : code}
-                onChange={handleChange}
+                value={draggingNode ? '\'拖拽中...\'' : code}
                 onClose={onCancel}
+                onSave={handleSave}
             />
         </div>
     );

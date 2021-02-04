@@ -73,8 +73,8 @@ export default function Position(props) {
 
         allValues.transform = transform;
 
-        onChange(allValues);
         console.log('allValues', JSON.stringify(allValues, null, 4));
+        onChange(allValues);
     }
 
     useEffect(() => {

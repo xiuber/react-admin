@@ -1,5 +1,6 @@
-import { useRef, useEffect } from 'react';
-
+import {useRef, useEffect, createElement} from 'react';
+import ReactDOM from 'react-dom';
+import inflection from 'inflection';
 import * as raLibComponent from 'ra-lib';
 import * as components from './components';
 import * as antdComponent from 'antd/es';
@@ -8,9 +9,65 @@ export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
+// css 样式字符串 转 js 样式对象
+export function cssToObject(css) {
+    if (!css) return {};
+
+    const ele = document.createElement('div');
+    ele.innerHTML = `<div style="${css}"></div>`;
+
+    const style = ele.childNodes[0].style || {};
+
+    const cssKeys = css.split(';').map(item => {
+        const key = inflection.camelize(item.split(':')[0].replace(/-/g, '_'), true);
+
+        return key.trim();
+    }).filter(item => !!item);
+
+    return cssKeys.reduce((prev, key) => {
+        const value = style[key];
+        if (
+            value === ''
+            || value === 'initial'
+            || key.startsWith('webkit')
+            || !window.isNaN(key) // key 是数字
+        ) return prev;
+
+        prev[key] = value;
+        return prev;
+    }, {});
+}
+
+
+// js 样式对象 转 css 字符串
+export async function objectToCss(style) {
+    return new Promise((resolve, reject) => {
+
+        if (!style) return resolve('');
+
+        const ele = document.createElement('div');
+        ele.style.position = 'fixed';
+        ele.style.zIndex = -999;
+        ele.style.top = '-1000px';
+
+        document.body.append(ele);
+
+        ReactDOM.render(createElement('div', {style}), ele);
+
+        setTimeout(() => {
+            const css = ele.childNodes[0].style.cssText;
+
+            ele.remove();
+
+            resolve(css);
+        });
+    });
+}
+
+
 // 表单值转换，纯数字字符串，转换为数字 并不允许输入空格
 export function getNumberValueFromEvent(e) {
-    let { value } = e.target;
+    let {value} = e.target;
     if (!value) return value;
 
     // 不允许输入空格
@@ -28,7 +85,7 @@ export function getNumberValueFromEvent(e) {
 
 // 表单值转换，不允许输入空格
 export function getNoSpaceValueFromEvent(e) {
-    let { value } = e.target;
+    let {value} = e.target;
     if (!value) return value;
 
     // 不允许输入空格
@@ -45,7 +102,7 @@ export function filterTree(array, filter) {
         }
         if (Array.isArray(node.children)) {
             const children = node.children.reduce(getNodes, []);
-            if (children.length) result.push({ ...node, children });
+            if (children.length) result.push({...node, children});
         }
         return result;
     };
@@ -68,7 +125,7 @@ export function elementIsVisible(containerEle, element) {
     const containerScrollTop = containerEle.scrollTop;
     const elementRect = element.getBoundingClientRect();
     const containerRect = containerEle.getBoundingClientRect();
-    const { y, height: elementHeight } = elementRect;
+    const {y, height: elementHeight} = elementRect;
     const elementTop = y - containerRect.y + containerScrollTop;
 
     const elementBottom = elementTop + elementHeight;
@@ -137,7 +194,7 @@ export function isDropAccept(options) {
     if (!targetNode) return false;
 
     const config = targetNode.__config || {};
-    const { isContainer = true } = config;
+    const {isContainer = true} = config;
 
     if (!isContainer) return false;
 
@@ -145,7 +202,7 @@ export function isDropAccept(options) {
 
     if (dropAccept === undefined) return true;
 
-    const { componentName } = draggingNode;
+    const {componentName} = draggingNode;
 
     return dropAccept.some(name => name === componentName);
 }
