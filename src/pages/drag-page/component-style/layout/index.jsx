@@ -65,8 +65,7 @@ export default function Layout(props) {
     const [form] = Form.useForm();
 
     function handleChange(changedValues, allValues) {
-        console.log('values', allValues);
-        // TODO paddingTop 等 去空格 、'100' => 100 纯数字，转数字
+        console.log('allValues', allValues);
         onChange(allValues);
     }
 

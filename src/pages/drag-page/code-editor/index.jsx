@@ -27,7 +27,6 @@ function CodeEditor(props) {
     const mainRef = useRef(null);
     const monacoRef = useRef(null);
     const editorRef = useRef(null);
-    const checkRef = useRef(0);
     const [height] = useHeight(mainRef, 53);
     const [errors, setErrors] = useState([]);
     const [code, setCode] = useState('');
@@ -62,7 +61,7 @@ function CodeEditor(props) {
             handleClose();
         });
 
-    }, [code, monacoRef.current, fullScreen]);
+    }, [code, errors, monacoRef.current, fullScreen]);
 
     function handleFormat() {
         if (language === 'css') {
@@ -81,14 +80,25 @@ function CodeEditor(props) {
 
     function handleChange(code) {
         setCode(code);
-        onChange(code);
+        onChange(code, errors);
+    }
 
-        clearTimeout(checkRef.current);
-        checkRef.current = setTimeout(() => {
+
+    // 检测错误
+    useEffect(() => {
+        const si = setInterval(() => {
             const errors = monacoRef.current.editor.getModelMarkers();
             setErrors(errors);
-        }, 1000);
-    }
+        }, 100);
+        const st = setTimeout(() => {
+            clearInterval(si);
+        }, 3000);
+
+        return () => {
+            clearInterval(si);
+            clearTimeout(st);
+        };
+    }, [code]);
 
     function editorDidMount(editor, monaco) {
         monacoRef.current = monaco;

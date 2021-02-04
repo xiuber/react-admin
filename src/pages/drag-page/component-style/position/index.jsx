@@ -84,8 +84,6 @@ export default function Position(props) {
         const {transform} = value;
         if (!transform) return;
 
-        console.log(transform);
-
         const [, translateY] = (/translateY\(([^\)]+)\)/.exec(transform) || []);
         const [, translateX] = (/translateX\(([^\)]+)\)/.exec(transform) || []);
 

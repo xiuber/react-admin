@@ -32,7 +32,8 @@ export default config({
         setVisible(visible);
     }, [activeSideKey]);
 
-    function handleSave(value) {
+    function handleSave(value, errors) {
+        if(errors?.length) return message.error('语法错误，请修改后保存！');
         let pageConfig = null;
         if (value) {
             const val = value.replace('export', '').replace('default', '');
@@ -40,18 +41,19 @@ export default config({
                 pageConfig = JSON5.parse(val);
 
                 if (typeof pageConfig !== 'object' || Array.isArray(pageConfig)) {
-                    return message.error('格式错误');
+                    return message.error('语法错误，请修改后保存！');
                 }
 
                 setComponentDefaultOptions(pageConfig);
             } catch (e) {
-                return message.error('格式错误');
+                return message.error('语法错误，请修改后保存！');
             }
         }
 
         dragPageAction.setPageConfig(pageConfig);
 
         dragPageAction.setSelectedNodeId(null);
+        message.success('保存成功！');
     }
 
     function handleClose() {
