@@ -22,20 +22,20 @@ const defaultConfig = {
     withWrapper: false, // 是否需要拖拽包裹元素，默认 false，有些组件拖拽无效，需要包裹一下
     // wrapperStyle: undefined, // {display: 'inline-block'}, // 拖拽包裹元素样式，一般用来设置 display width height 等
     // dropAccept: undefined, // ['Text'], // 可拖入组件，默认 任意组件都可放入
-    // actions: { // 事件 value 组件时间原始数据 args 自定义数据
-    //     onSearch: value => args => {
+    // actions: { // 事件 event:组件事件原始数据 options: 自定义数据
+    //     onSearch: event => options => {
     //
     //         const {
     //             pageConfig, // 页面整体配置
     //             dragPageAction, // 页面action
     //             node, // 当前组件配置
-    //         } = args;
+    //         } = options;
     //         if (!node.props) node.props = {};
     //
     //         node.props.options = [
-    //             {value: `${value}@qq.com`},
-    //             {value: `${value}@163.com`},
-    //             {value: `${value}@qiye.com`},
+    //             {event: `${event}@qq.com`},
+    //             {event: `${event}@163.com`},
+    //             {event: `${event}@qiye.com`},
     //         ];
     //
     //         dragPageAction.render(); // props改变了，重新出发页面渲染
