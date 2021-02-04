@@ -19,6 +19,7 @@ const holderNode = {
             },
             componentName: 'DragHolder',
             props: {
+                // className: 'grid-background',
                 style: {
                     height: 'calc(100vh - 2px)',
                     fontSize: 18,
@@ -50,6 +51,9 @@ const initialState = {
 
     rightSideExpended: true,
 
+    canvasWidth: '100%',
+    canvasHeight: '100%',
+
     pageConfig: {...holderNode},
 };
 
@@ -63,6 +67,8 @@ export default {
     initialState,
     syncStorage,
     init: () => cloneDeep(initialState),
+    setCanvasWidth: canvasWidth => ({canvasWidth}),
+    setCanvasHeight: canvasHeight => ({canvasHeight}),
     setRightSideExpended: rightSideExpended => ({rightSideExpended}),
     setComponentTreeWidth: componentTreeWidth => ({componentTreeWidth}),
     setSchemaEditorWidth: schemaEditorWidth => ({schemaEditorWidth}),

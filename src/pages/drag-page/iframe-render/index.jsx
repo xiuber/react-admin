@@ -1,8 +1,8 @@
-import React, { useCallback, useRef, useEffect, useState } from 'react';
+import React, {useCallback, useRef, useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 import config from 'src/commons/config-hoc';
 import Element from './Element';
-import { scrollElement } from 'src/pages/drag-page/util';
+import {scrollElement} from 'src/pages/drag-page/util';
 import KeyMap from 'src/pages/drag-page/KeyMap';
 import Scale from './Scale';
 
@@ -26,6 +26,8 @@ export default config({
             selectedNodeId: state.dragPage.selectedNodeId,
             activeSideKey: state.dragPage.activeSideKey,
             draggingNode: state.dragPage.draggingNode,
+            canvasWidth: state.dragPage.canvasWidth,
+            canvasHeight: state.dragPage.canvasHeight,
         };
     },
 })(function IframeRender(props) {
@@ -35,12 +37,16 @@ export default config({
         selectedNodeId,
         activeSideKey,
         draggingNode,
+        canvasWidth,
+        canvasHeight,
     } = props;
     const dragPageAction = props.action.dragPage;
 
+    const containerRef = useRef(null);
     const iframeRef = useRef(null);
     const iframeRootRef = useRef(null);
     const [scaleElement, setScaleElement] = useState(null);
+    const [containerStyle, setContainerStyle] = useState({});
 
     // 渲染设计页面
     function renderDesignPage() {
@@ -108,32 +114,73 @@ export default config({
 
     }, [selectedNodeId, iframeRef.current]);
 
+    // 设置居中
+    useEffect(() => {
+        if (!containerRef.current) return;
+
+        const rect = containerRef.current.getBoundingClientRect();
+
+        const style = {};
+        const {width, height} = rect;
+
+        const iRect = iframeRef.current.getBoundingClientRect();
+        const {width: iWidth, height: iHeight} = iRect;
+
+        if (iWidth < width) {
+            style.justifyContent = 'center';
+        }
+        if (iHeight < height) {
+            style.alignItems = 'center';
+        }
+
+        setContainerStyle(style);
+
+    }, [canvasWidth, canvasHeight, iframeRef.current]);
+
+
     return (
-        <div style={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-        }}>
-            <KeyMap iframe={iframeRef.current} />
-            <iframe
-                id="dnd-iframe"
-                title="dnd-iframe"
-                ref={iframeRef}
-                srcDoc={iframeSrcDoc}
-                onLoad={() => handleIframeLoad()}
+        <div
+            style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                overflow: 'auto',
+            }}
+        >
+            <div
+                ref={containerRef}
                 style={{
-                    border: 0,
-                    position: 'absolute',
+                    display: 'flex',
+                    position: 'relative',
                     width: '100%',
                     height: '100%',
+                    overflow: 'auto',
+                    ...containerStyle,
                 }}
-            />
+            >
+                <KeyMap iframe={iframeRef.current}/>
+                <iframe
+                    id="dnd-iframe"
+                    title="dnd-iframe"
+                    ref={iframeRef}
+                    srcDoc={iframeSrcDoc}
+                    onLoad={() => handleIframeLoad()}
+                    style={{
+                        border: 0,
+                        position: 'absolute',
+                        width: canvasWidth,
+                        height: canvasHeight,
+                    }}
+                />
+            </div>
+
+
             <div style={{
                 position: 'absolute',
                 left: 10,
                 bottom: 10,
             }}>
-                <Scale element={scaleElement} />
+                <Scale element={scaleElement}/>
             </div>
         </div>
     );

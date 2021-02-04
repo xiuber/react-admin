@@ -12,6 +12,7 @@ import config from 'src/commons/config-hoc';
 import ComponentTree from '../component-tree';
 import ComponentStore from '../component-store';
 import SchemaEditor from '../schema-editor';
+import CanvasSetting from '../canvas-setting';
 import './style.less';
 
 export default config({
@@ -61,6 +62,13 @@ export default config({
             key: 'componentStore',
             icon: <AppstoreOutlined/>,
             component: <ComponentStore/>,
+        },
+        {
+            title: '画布设置',
+            key: 'canvasSetting',
+            icon: <DesktopOutlined/>,
+            component: <CanvasSetting/>,
+            bottom: true,
         },
         {
             title: '源码开发',

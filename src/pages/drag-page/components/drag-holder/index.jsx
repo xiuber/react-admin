@@ -13,6 +13,7 @@ export default function DragHolder(props) {
                 justifyContent: 'center',
                 pointerEvents: 'none', // 忽略鼠标事件，拖拽元素不会放入其中，也不会拖动了
                 outline: 'none',
+                color: '#999',
                 ...style,
             }}
         >
