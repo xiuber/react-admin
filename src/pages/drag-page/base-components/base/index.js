@@ -14,7 +14,7 @@ export default [
         children: [
             {
                 title: '拖拽占位',
-                icon: <PicCenterOutlined />,
+                icon: <PicCenterOutlined/>,
                 config: {
                     __config: {
                         isContainer: false,
@@ -30,7 +30,7 @@ export default [
         children: [
             {
                 title: '页面容器',
-                icon: <PicCenterOutlined />,
+                icon: <PicCenterOutlined/>,
                 config: {
                     __config: {
                         componentType: 'ra-lib',
@@ -40,7 +40,13 @@ export default [
                         {
                             componentName: 'DragHolder',
                             props: {
-                                style: { flex: 1 },
+                                style: {
+                                    position: 'absolute',
+                                    top: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    left: 0,
+                                },
                             },
                         },
                     ],
@@ -54,14 +60,14 @@ export default [
         children: [
             {
                 title: 'div 容器',
-                icon: <PicCenterOutlined />,
+                icon: <PicCenterOutlined/>,
                 config: {
                     componentName: 'div',
                     children: [
                         {
                             componentName: 'DragHolder',
                             props: {
-                                style: { height: 100 },
+                                style: {height: 100},
                             },
                         },
                     ],
@@ -75,7 +81,7 @@ export default [
         children: [
             {
                 title: '文本',
-                icon: <FontSizeOutlined />,
+                icon: <FontSizeOutlined/>,
                 config: {
                     __config: {
                         isContainer: false,
@@ -94,7 +100,7 @@ export default [
         children: [
             {
                 title: '超链接',
-                icon: <LinkOutlined />,
+                icon: <LinkOutlined/>,
                 config: {
                     componentName: 'a',
                     children: [
@@ -115,7 +121,7 @@ export default [
         children: [
             {
                 title: '图片',
-                icon: <FileImageOutlined />,
+                icon: <FileImageOutlined/>,
                 config: {
                     __config: {
                         isContainer: false,

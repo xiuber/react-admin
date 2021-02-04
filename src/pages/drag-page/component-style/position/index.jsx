@@ -1,18 +1,14 @@
 import React, {useEffect} from 'react';
 import {
     Form,
-    Input,
     InputNumber,
     Select,
-    Row,
-    Col,
     Tooltip,
 } from 'antd';
 import {
     PicCenterOutlined,
 } from '@ant-design/icons';
 import RadioGroup from '../radio-group';
-import SliderInput from '../slider-input';
 import RectInputsWrapper from '../rect-inputs-wrapper';
 import './style.less';
 import UnitInput from 'src/pages/drag-page/component-style/unit-input';
@@ -84,8 +80,8 @@ export default function Position(props) {
         const {transform} = value;
         if (!transform) return;
 
-        const [, translateY] = (/translateY\(([^\)]+)\)/.exec(transform) || []);
-        const [, translateX] = (/translateX\(([^\)]+)\)/.exec(transform) || []);
+        const [, translateY] = (/translateY\(([^)]+)\)/.exec(transform) || []);
+        const [, translateX] = (/translateX\(([^)]+)\)/.exec(transform) || []);
 
         form.setFieldsValue({translateY, translateX});
     }, [value]);
