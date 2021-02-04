@@ -115,6 +115,14 @@ export default {
             });
         }
 
+        if (selectedNode?.__config?.isRootHolder) {
+            return {
+                selectedNodeId: null,
+                selectedNode: null,
+                componentTreeExpendedKeys: [...componentTreeExpendedKeys],
+            };
+        }
+
         return {
             selectedNodeId,
             selectedNode,
