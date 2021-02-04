@@ -1,5 +1,5 @@
 import React from 'react';
-import JSON5 from 'json5';
+import {message} from 'antd';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
 import {objectToCss, cssToObject} from '../../util';
@@ -22,7 +22,9 @@ export default config({
         draggingNode,
     } = props;
 
-    function handleSave(value) {
+    function handleSave(value, errors) {
+        if (errors?.length) return message.error('有语法错误，请修改后保存！');
+
         if (!value) return;
 
         let val = value.replace('*', '').trim();
@@ -31,6 +33,7 @@ export default config({
         const style = cssToObject(val);
 
         onChange && onChange(style);
+        message.success('保存成功！');
     }
 
     if (!visible) return null;

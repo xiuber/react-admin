@@ -33,10 +33,15 @@ function CodeEditor(props) {
     const [code, setCode] = useState('');
     const [fullScreen, setFullScreen] = useState(false);
 
+    function handleSave(code) {
+
+        onSave && onSave(code, errors);
+    }
+
     useEffect(() => {
         if (value instanceof Promise) {
             value.then(code => {
-                if(language === 'css') {
+                if (language === 'css') {
                     const formattedCss = prettier.format(code, {parser: 'css', plugins: [parserPostCss]});
                     setCode(formattedCss);
                     return;
@@ -51,7 +56,7 @@ function CodeEditor(props) {
     useEffect(() => {
         const monaco = monacoRef.current;
         editorRef.current.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, function() {
-            onSave && onSave(code);
+            handleSave(code);
         });
         editorRef.current.addCommand(monaco.KeyCode.Escape, function() {
             handleClose();
@@ -89,6 +94,11 @@ function CodeEditor(props) {
         monacoRef.current = monaco;
         editorRef.current = editor;
         editor.focus();
+
+        // 取消选中，打开Editor 时，内容会被全部选中
+        setTimeout(() => {
+            editor.setSelection(new monaco.Selection(0, 0, 0, 0));
+        });
     }
 
     function handleFullScreen() {
@@ -100,8 +110,13 @@ function CodeEditor(props) {
         setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
     }
 
+    // https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.ieditorconstructionoptions.html
     const options = {
         selectOnLineNumbers: true,
+        tabSize: 2,
+        minimap: {
+            enabled: fullScreen,
+        },
     };
 
     return (
@@ -153,7 +168,7 @@ function CodeEditor(props) {
                                     style={{marginRight: 8}}
                                     className="codeEditorSave"
                                     type="primary"
-                                    onClick={() => onSave(code)}
+                                    onClick={() => handleSave(code)}
                                 >
                                     保存({isMac ? '⌘' : 'ctrl'}+s)
                                 </Button>

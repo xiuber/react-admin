@@ -60,7 +60,7 @@ export default config({
 
     if (!visible) return null;
 
-    const code = `export default ${JSON5.stringify(removeComponentConfig(pageConfig), null, 4)}`;
+    const code = `export default ${JSON5.stringify(removeComponentConfig(pageConfig), null, 2)}`;
     return (
         <div styleName="root" id="schemaEditor">
             <CodeEditor
