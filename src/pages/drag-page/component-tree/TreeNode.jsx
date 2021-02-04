@@ -1,7 +1,7 @@
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from 'react';
 import config from 'src/commons/config-hoc';
-import {getDropGuidePosition, isDropAccept} from 'src/pages/drag-page/util';
-import {getComponentIcon} from '../base-components';
+import { getDropGuidePosition, isDropAccept } from 'src/pages/drag-page/util';
+import { getComponentIcon } from '../base-components';
 
 import './style.less';
 
@@ -20,10 +20,10 @@ export default config({
         pageConfig,
         draggingNode,
         componentTreeExpendedKeys,
-        action: {dragPage: dragPageAction},
+        action: { dragPage: dragPageAction },
     } = props;
 
-    let {key, title, isContainer, draggable, nodeData} = node;
+    let { key, title, isContainer, draggable, nodeData } = node;
 
     let icon = getComponentIcon(nodeData?.componentName, isContainer);
 
@@ -65,7 +65,7 @@ export default config({
             isInFrame: false,
             triggerSize: 10,
         });
-        const {isTop, isBottom, isCenter} = options;
+        const { isTop, isBottom, isCenter } = options;
 
         const accept = isDropAccept({
             draggingNode,
@@ -77,8 +77,12 @@ export default config({
         });
 
         setDropPosition('');
+        setDragIn(true);
 
-        if (!accept) return;
+        if (!accept) {
+            setDragIn(false);
+            return;
+        }
 
         if (isTop) setDropPosition('top');
         if (isBottom) setDropPosition('bottom');
@@ -114,7 +118,7 @@ export default config({
             isInFrame: false,
             triggerSize: 10,
         });
-        const {isTop, isBottom, isCenter} = options;
+        const { isTop, isBottom, isCenter } = options;
 
 
         const accept = isDropAccept({
@@ -192,7 +196,7 @@ export default config({
             onDragEnd={handleDragEnd}
         >
             {title}
-            <div styleName="dragGuide" style={{display: dragIn && draggingNode ? 'flex' : 'none'}}>
+            <div styleName="dragGuide" style={{ display: dragIn && draggingNode ? 'flex' : 'none' }}>
                 <span>{positionMap[dropPosition]}</span>
             </div>
         </div>
