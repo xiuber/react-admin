@@ -34,7 +34,7 @@ export default [
                                 componentName: 'Text',
                                 props: {
                                     text: text || title,
-                                    draggable: false,
+                                    isDraggable: false,
                                 },
                             },
                         ],

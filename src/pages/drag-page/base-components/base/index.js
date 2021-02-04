@@ -89,6 +89,13 @@ export default [
                     componentName: 'Text',
                     props: {
                         text: '文本',
+                        isDraggable: true,
+                        style: {
+                            display: 'flex',
+                            width: 100,
+                            height: 100,
+                            background: 'red',
+                        },
                     },
                 },
             },

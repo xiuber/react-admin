@@ -1,4 +1,4 @@
-import {useRef, useEffect, createElement} from 'react';
+import { useRef, useEffect, createElement } from 'react';
 import ReactDOM from 'react-dom';
 import inflection from 'inflection';
 import * as raLibComponent from 'ra-lib';
@@ -52,7 +52,7 @@ export async function objectToCss(style) {
 
         document.body.append(ele);
 
-        ReactDOM.render(createElement('div', {style}), ele);
+        ReactDOM.render(createElement('div', { style }), ele);
 
         setTimeout(() => {
             const css = ele.childNodes[0].style.cssText;
@@ -67,7 +67,7 @@ export async function objectToCss(style) {
 
 // 表单值转换，纯数字字符串，转换为数字 并不允许输入空格
 export function getNumberValueFromEvent(e) {
-    let {value} = e.target;
+    let { value } = e.target;
     if (!value) return value;
 
     // 不允许输入空格
@@ -85,7 +85,7 @@ export function getNumberValueFromEvent(e) {
 
 // 表单值转换，不允许输入空格
 export function getNoSpaceValueFromEvent(e) {
-    let {value} = e.target;
+    let { value } = e.target;
     if (!value) return value;
 
     // 不允许输入空格
@@ -94,6 +94,7 @@ export function getNoSpaceValueFromEvent(e) {
     return value;
 }
 
+// 树过滤函数
 export function filterTree(array, filter) {
     const getNodes = (result, node) => {
         if (filter(node)) {
@@ -102,7 +103,7 @@ export function filterTree(array, filter) {
         }
         if (Array.isArray(node.children)) {
             const children = node.children.reduce(getNodes, []);
-            if (children.length) result.push({...node, children});
+            if (children.length) result.push({ ...node, children });
         }
         return result;
     };
@@ -118,6 +119,7 @@ export function usePrevious(value) {
     return ref.current;
 }
 
+// 元素是否在可视窗口内
 export function elementIsVisible(containerEle, element) {
     if (!element) return {};
 
@@ -125,7 +127,7 @@ export function elementIsVisible(containerEle, element) {
     const containerScrollTop = containerEle.scrollTop;
     const elementRect = element.getBoundingClientRect();
     const containerRect = containerEle.getBoundingClientRect();
-    const {y, height: elementHeight} = elementRect;
+    const { y, height: elementHeight } = elementRect;
     const elementTop = y - containerRect.y + containerScrollTop;
 
     const elementBottom = elementTop + elementHeight;
@@ -146,6 +148,7 @@ export function elementIsVisible(containerEle, element) {
 
 }
 
+// 果冻元素到可视窗口内
 export function scrollElement(containerEle, element, toTop, force) {
     if (!element) return;
 
@@ -175,6 +178,7 @@ export function scrollElement(containerEle, element, toTop, force) {
     }
 }
 
+// 是否接受放入
 export function isDropAccept(options) {
     const {
         draggingNode,
@@ -193,8 +197,11 @@ export function isDropAccept(options) {
 
     if (!targetNode) return false;
 
+    // 不允许父节点拖入子节点
+    if (isChildrenNode(draggingNode, targetNode)) return false;
+
     const config = targetNode.__config || {};
-    const {isContainer = true} = config;
+    const { isContainer = true } = config;
 
     if (!isContainer) return false;
 
@@ -202,11 +209,22 @@ export function isDropAccept(options) {
 
     if (dropAccept === undefined) return true;
 
-    const {componentName} = draggingNode;
+    const { componentName } = draggingNode;
 
     return dropAccept.some(name => name === componentName);
 }
 
+// 检查是否是某个节点的子节点
+export function isChildrenNode(parentNode, childrenNode) {
+    if (!parentNode) return false;
+
+    const id = childrenNode?.__config?.componentId;
+
+    if (!id) return false;
+    return !!findNodeById(parentNode, id);
+}
+
+// 根据id查找节点
 export function findNodeById(root, id) {
     if (root.__config?.componentId === id) return root;
 
@@ -218,6 +236,7 @@ export function findNodeById(root, id) {
     }
 }
 
+// 根据id查找父节点
 export function findParentNodeById(root, id) {
     if (root.__config?.componentId === id) return null;
 
@@ -233,6 +252,7 @@ export function findParentNodeById(root, id) {
     }
 }
 
+// 获取拖放提示位置
 export function getDropGuidePosition(options) {
     const {
         event,
@@ -332,6 +352,7 @@ export function getDropGuidePosition(options) {
     };
 }
 
+// 根据 componentName 获取组件
 export function getComponent(componentName, componentType) {
     const [name, subName] = componentName.split('.');
     const com = Com => {
@@ -377,6 +398,7 @@ function fallbackCopyTextToClipboard(text) {
     document.body.removeChild(textArea);
 }
 
+// 复制到剪切板
 export function copyTextToClipboard(text) {
     if (!navigator.clipboard) {
         fallbackCopyTextToClipboard(text);
@@ -387,6 +409,7 @@ export function copyTextToClipboard(text) {
     navigator.clipboard.writeText(text);
 }
 
+// 获取剪切板中内容
 export function getTextFromClipboard() {
     return navigator.clipboard.readText();
 }
