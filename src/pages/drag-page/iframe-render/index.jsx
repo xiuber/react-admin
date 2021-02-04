@@ -28,6 +28,11 @@ export default config({
             draggingNode: state.dragPage.draggingNode,
             canvasWidth: state.dragPage.canvasWidth,
             canvasHeight: state.dragPage.canvasHeight,
+            rightSideExpended: state.dragPage.rightSideExpended,
+            showSide: state.dragPage.showSide,
+            rightSideWidth: state.dragPage.rightSideWidth,
+            schemaEditorWidth: state.dragPage.schemaEditorWidth,
+            componentTreeWidth: state.dragPage.componentTreeWidth,
         };
     },
 })(function IframeRender(props) {
@@ -39,6 +44,11 @@ export default config({
         draggingNode,
         canvasWidth,
         canvasHeight,
+        rightSideExpended,
+        showSide,
+        rightSideWidth,
+        schemaEditorWidth,
+        componentTreeWidth,
     } = props;
     const dragPageAction = props.action.dragPage;
 
@@ -135,8 +145,17 @@ export default config({
 
         setContainerStyle(style);
 
-    }, [canvasWidth, canvasHeight, iframeRef.current]);
-
+    }, [
+        // 所有可能影响到中间部分尺寸变化的操作，都要添加
+        rightSideExpended,
+        showSide,
+        rightSideWidth,
+        schemaEditorWidth,
+        componentTreeWidth,
+        canvasWidth,
+        canvasHeight,
+        iframeRef.current,
+    ]);
 
     return (
         <div
