@@ -236,11 +236,16 @@ export default [
             {
                 title: '滑动输入条',
                 renderPreview: true,
+                previewStyle: {width: '100%'},
+                // previewWrapperStyle: {background: 'red'},
                 config: {
                     __config: {
                         isContainer: false,
                     },
                     componentName: 'Slider',
+                    props:{
+                        value: 50,
+                    }
                 },
             },
         ],

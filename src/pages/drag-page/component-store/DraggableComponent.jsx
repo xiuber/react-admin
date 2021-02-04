@@ -9,7 +9,7 @@ export default config({})(function DraggableComponent(props) {
     const { data } = props;
 
     function _renderPreview() {
-        const { renderPreview, previewZoom, previewStyle, config } = data;
+        const { renderPreview, previewZoom, previewStyle, previewWrapperStyle, config } = data;
 
         if (!renderPreview) return null;
 
@@ -36,10 +36,12 @@ export default config({})(function DraggableComponent(props) {
         }
 
         return (
-            <div styleName="preview">
-                <div styleName="previewZoom" style={{ zoom: previewZoom || 1 }}>
-                    {preview}
-                </div>
+            <div styleName="preview" style={previewWrapperStyle}>
+                {previewZoom ? (
+                    <div styleName="previewZoom" style={{ zoom: previewZoom || 1 }}>
+                        {preview}
+                    </div>
+                ) : preview}
             </div>
         );
     }

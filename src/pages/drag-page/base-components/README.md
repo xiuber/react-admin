@@ -15,7 +15,8 @@ export default {
             renderPreview: <div>直接jsx</div>,
             // renderPreview: config => <div>函数返回jsx</div>,
             previewZoom: .5, // 预览缩放
-            previewStyle: {width: '100%'}, // 预览样式
+            previewStyle: {width: '100%'}, // 预览组件样式
+            previewWrapperStyle: {}, // 预览容器样式
             config: {
                 componentName: 'Select',
                 props: {
