@@ -31,13 +31,10 @@ export default [
                         },
                         children: [
                             {
-                                __config: {
-                                    draggable: false,
-                                    isContainer: false,
-                                },
                                 componentName: 'Text',
                                 props: {
                                     text: text || title,
+                                    draggable: false,
                                 },
                             },
                         ],

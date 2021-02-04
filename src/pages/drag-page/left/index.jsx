@@ -71,7 +71,7 @@ export default config({
             bottom: true,
         },
         {
-            title: '源码开发',
+            title: 'Schema 源码开发',
             key: 'schemaEditor',
             icon: <DesktopOutlined/>,
             component: <SchemaEditor/>,

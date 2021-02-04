@@ -9,4 +9,5 @@
 1. [ ] ctrl + c ctrl + v 复制赞贴组件 
 1. [x] 部分组件无法拖拽，可以添加 withWrapper: true 配置
 1. [ ] dragPage.activeView 标记当前视图，用于快捷键判断
+1. [ ] component store 中深层组件不要写__config，源码编辑之后，会被干掉，可以编写特殊组件，放入drag-page/components中 或者通过props控制行为
 
