@@ -11,9 +11,7 @@ import StyleEditor from './style-editor';
 import {v4 as uuid} from 'uuid';
 import './style.less';
 
-
 const {Panel} = Collapse;
-
 
 export default config({
     connect: state => {
@@ -80,8 +78,7 @@ export default config({
     }
 
     useEffect(() => {
-        const width = styleEditorVisible ? 440 : 330;
-        dragPageAction.setRightSideWidth(width);
+        dragPageAction.setRightSideWidth(styleEditorVisible ? 440 : 330);
     }, [styleEditorVisible]);
 
     return (
@@ -116,7 +113,6 @@ export default config({
                 <Panel header="定位" key="position">
                     <Position value={style} onChange={handleChange}/>
                 </Panel>
-
                 <Panel header="背景" key="background">
                     <Background value={style} onChange={handleChange}/>
                 </Panel>

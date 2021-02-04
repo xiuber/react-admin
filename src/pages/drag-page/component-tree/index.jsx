@@ -7,6 +7,7 @@ import { scrollElement } from '../util';
 import Pane from '../pane';
 
 import './style.less';
+import DragBar from 'src/pages/drag-page/drag-bar';
 
 export default config({
     connect: state => {
@@ -14,6 +15,7 @@ export default config({
             pageConfig: state.dragPage.pageConfig,
             selectedNodeId: state.dragPage.selectedNodeId,
             componentTreeExpendedKeys: state.dragPage.componentTreeExpendedKeys,
+            componentTreeWidth: state.dragPage.componentTreeWidth,
         };
     },
 })(function ComponentTree(props) {
@@ -21,6 +23,7 @@ export default config({
         pageConfig,
         selectedNodeId,
         componentTreeExpendedKeys,
+        componentTreeWidth,
         action: { dragPage: dragPageAction },
     } = props;
     const [treeData, setTreeData] = useState([]);
@@ -101,6 +104,11 @@ export default config({
 
     }, [selectedNodeId]);
 
+    function handleDragging(info) {
+        const {clientX} = info;
+
+        dragPageAction.setComponentTreeWidth(clientX - 56);
+    }
 
     return (
         <Pane
@@ -111,7 +119,8 @@ export default config({
                 </div>
             }
         >
-            <div styleName="root" ref={mainRef}>
+            <div styleName="root" ref={mainRef} style={{width: componentTreeWidth}}>
+                <DragBar onDragging={handleDragging}/>
                 <Tree
                     expandedKeys={componentTreeExpendedKeys}
                     onExpand={handleExpand}

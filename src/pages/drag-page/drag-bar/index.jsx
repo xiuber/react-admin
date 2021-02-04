@@ -100,7 +100,7 @@ export default class DragBar extends Component {
                 onMouseDown={this.handleDragStart}
                 onTouchStart={this.handleDragStart}
             >
-                <div className={[styles.dragBarIcon, styles.left].join(' ')}>
+                <div className={[styles.dragBarIcon, left ? styles.left : ''].join(' ')}>
                     <span/>
                     <span/>
                     <span/>

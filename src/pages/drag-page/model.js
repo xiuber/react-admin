@@ -45,18 +45,27 @@ const initialState = {
     componentTreeExpendedKeys: [], // 组件树 展开节点
 
     rightSideWidth: 330,
+    schemaEditorWidth: 350,
+    componentTreeWidth: 250,
+
+    rightSideExpended: true,
 
     pageConfig: {...holderNode},
 };
 
 const syncStorage = {
     // rightSideWidth: true,
+    schemaEditorWidth: true,
+    componentTreeWidth: true,
 };
 
 export default {
     initialState,
     syncStorage,
     init: () => cloneDeep(initialState),
+    setRightSideExpended: rightSideExpended => ({rightSideExpended}),
+    setComponentTreeWidth: componentTreeWidth => ({componentTreeWidth}),
+    setSchemaEditorWidth: schemaEditorWidth => ({schemaEditorWidth}),
     setRightSideWidth: rightSideWidth => ({rightSideWidth}),
     setComponentTreeExpendedKeys: componentTreeExpendedKeys => ({componentTreeExpendedKeys}),
     setDraggingNode: draggingNode => ({draggingNode}),

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {message} from 'antd';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
@@ -38,11 +38,6 @@ export default config({
         message.success('保存成功！');
     }
 
-    useEffect(() => {
-        setTimeout(() => window.dispatchEvent(new Event('resize')));
-        setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
-    }, [rightSideWidth]);
-
     if (!visible) return null;
 
 
@@ -61,6 +56,7 @@ export default config({
     return (
         <div styleName="root">
             <CodeEditor
+                editorWidth={rightSideWidth}
                 language="css"
                 title="样式源码开发"
                 value={draggingNode ? '\'拖拽中...\'' : code}

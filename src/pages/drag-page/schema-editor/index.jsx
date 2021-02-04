@@ -5,6 +5,7 @@ import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
 import {usePrevious} from '../util';
 import {removeComponentConfig, setComponentDefaultOptions} from '../base-components';
+import DragBar from '../drag-bar';
 import './style.less';
 
 export default config({
@@ -12,12 +13,14 @@ export default config({
         return {
             pageConfig: state.dragPage.pageConfig,
             activeSideKey: state.dragPage.activeSideKey,
+            schemaEditorWidth: state.dragPage.schemaEditorWidth,
         };
     },
 })(function SchemaEditor(props) {
     const {
         pageConfig,
         activeSideKey,
+        schemaEditorWidth,
         action: {dragPage: dragPageAction},
     } = props;
 
@@ -33,7 +36,7 @@ export default config({
     }, [activeSideKey]);
 
     function handleSave(value, errors) {
-        if(errors?.length) return message.error('语法错误，请修改后保存！');
+        if (errors?.length) return message.error('语法错误，请修改后保存！');
         let pageConfig = null;
         if (value) {
             const val = value.replace('export', '').replace('default', '');
@@ -62,10 +65,18 @@ export default config({
 
     if (!visible) return null;
 
+    function handleDragging(info) {
+        const {clientX} = info;
+
+        dragPageAction.setSchemaEditorWidth(clientX - 56);
+    }
+
     const code = `export default ${JSON5.stringify(removeComponentConfig(pageConfig), null, 2)}`;
     return (
-        <div styleName="root" id="schemaEditor">
+        <div styleName="root" id="schemaEditor" style={{width: schemaEditorWidth}}>
+            <DragBar onDragging={handleDragging}/>
             <CodeEditor
+                editorWidth={schemaEditorWidth}
                 title="Schema 源码开发"
                 value={code}
                 onSave={handleSave}

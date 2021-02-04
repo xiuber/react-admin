@@ -2,10 +2,10 @@ import React, {useRef} from 'react';
 import {Tooltip} from 'antd';
 import {
     MenuFoldOutlined,
+    MenuUnfoldOutlined,
     ShareAltOutlined,
     AppstoreOutlined,
     DesktopOutlined,
-    MenuUnfoldOutlined,
 } from '@ant-design/icons';
 import {useHeight} from 'ra-lib';
 import config from 'src/commons/config-hoc';
@@ -55,14 +55,12 @@ export default config({
             key: 'componentTree',
             icon: <ShareAltOutlined/>,
             component: <ComponentTree/>,
-            width: 250,
         },
         {
             title: '组件库',
             key: 'componentStore',
             icon: <AppstoreOutlined/>,
             component: <ComponentStore/>,
-            width: 250,
         },
         {
             title: '源码开发',
@@ -70,7 +68,6 @@ export default config({
             icon: <DesktopOutlined/>,
             component: <SchemaEditor/>,
             bottom: true,
-            width: 350,
         },
     ];
 

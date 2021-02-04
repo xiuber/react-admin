@@ -19,6 +19,7 @@ function CodeEditor(props) {
         title,
         value,
         language,
+        editorWidth,
         onChange = () => undefined,
         onSave,
         onClose = () => undefined,
@@ -27,10 +28,11 @@ function CodeEditor(props) {
     const mainRef = useRef(null);
     const monacoRef = useRef(null);
     const editorRef = useRef(null);
-    const [height] = useHeight(mainRef, 53);
     const [errors, setErrors] = useState([]);
     const [code, setCode] = useState('');
     const [fullScreen, setFullScreen] = useState(false);
+
+    const [height] = useHeight(mainRef, 53, [fullScreen]);
 
     function handleSave(code) {
 
@@ -89,7 +91,7 @@ function CodeEditor(props) {
         const si = setInterval(() => {
             const errors = monacoRef.current.editor.getModelMarkers();
             setErrors(errors);
-        }, 100);
+        }, 300);
         const st = setTimeout(() => {
             clearInterval(si);
         }, 3000);
@@ -115,9 +117,6 @@ function CodeEditor(props) {
         const nextFullScreen = !fullScreen;
 
         setFullScreen(nextFullScreen);
-
-        setTimeout(() => window.dispatchEvent(new Event('resize')));
-        setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
     }
 
     // https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.ieditorconstructionoptions.html
@@ -128,6 +127,8 @@ function CodeEditor(props) {
             enabled: fullScreen,
         },
     };
+
+    const width = fullScreen ? '100%' : editorWidth;
 
     return (
         <div styleName={fullScreen ? 'fullScreen' : ''}>
@@ -148,7 +149,7 @@ function CodeEditor(props) {
                 <div styleName="root" ref={mainRef}>
                     <main>
                         <MonacoEditor
-                            width="100%"
+                            width={width}
                             height={height}
                             language={language}
                             theme="vs-dark"
@@ -204,10 +205,12 @@ CodeEditor.propTypes = {
     onChange: PropTypes.func,
     onSave: PropTypes.func,
     onClose: PropTypes.func,
+    editorWidth: PropTypes.number,
 };
 
 CodeEditor.defaultProps = {
     language: 'javascript',
+    editorWidth: '100%',
 };
 
 export default CodeEditor;
