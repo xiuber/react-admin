@@ -1,11 +1,12 @@
 import React from 'react';
-import { Tabs } from 'antd';
+import {Tabs} from 'antd';
 import config from 'src/commons/config-hoc';
 import ComponentStyle from '../component-style';
 import ComponentProps from '../component-props';
+import DragBar from '../drag-bar';
 import './style.less';
 
-const { TabPane } = Tabs;
+const {TabPane} = Tabs;
 
 export default config({
     connect: state => {
@@ -13,6 +14,7 @@ export default config({
             activeTabKey: state.dragPage.activeTabKey,
             selectedNode: state.dragPage.selectedNode,
             draggingNode: state.dragPage.draggingNode,
+            rightSideWidth: state.dragPage.rightSideWidth,
         };
     },
 })(function Right(props) {
@@ -20,26 +22,48 @@ export default config({
         activeTabKey,
         // selectedNode,
         // draggingNode,
-        action: { dragPage: dragPageAction },
+        rightSideWidth,
+        action: {dragPage: dragPageAction},
     } = props;
 
     function handleChange(key) {
         dragPageAction.setActiveTabKey(key);
     }
 
+    const windowWidth = document.documentElement.clientWidth;
+
+    function handleDragging(info) {
+        const {clientX} = info;
+
+        const width = windowWidth - clientX - 12;
+
+        dragPageAction.setRightSideWidth(width);
+    }
+
+    function handleDragEnd() {
+        // console.log('handleDragEnd');
+        // window.dispatchEvent(new Event('resize'));
+        // setTimeout(() => window.dispatchEvent(new Event('resize')));
+        // setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
+    }
+
     return (
-        <div styleName="root">
+        <div styleName="root" style={{width: rightSideWidth}}>
+            <DragBar
+                onDragging={handleDragging}
+                onDragEnd={handleDragEnd}
+            />
             <Tabs
                 type="card"
-                tabBarStyle={{ marginBottom: 0 }}
+                tabBarStyle={{marginBottom: 0}}
                 activeKey={activeTabKey}
                 onChange={handleChange}
             >
                 <TabPane tab="属性" key="attribute">
-                    <ComponentProps />
+                    <ComponentProps/>
                 </TabPane>
                 <TabPane tab="样式" key="style">
-                    <ComponentStyle />
+                    <ComponentStyle/>
                 </TabPane>
                 <TabPane tab="事件" key="action">
                     Content of Tab Pane 3

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Collapse} from 'antd';
 import {DesktopOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
@@ -78,6 +78,11 @@ export default config({
 
         dragPageAction.render();
     }
+
+    useEffect(() => {
+        const width = styleEditorVisible ? 440 : 330;
+        dragPageAction.setRightSideWidth(width);
+    }, [styleEditorVisible]);
 
     return (
         <Pane

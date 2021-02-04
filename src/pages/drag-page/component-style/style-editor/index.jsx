@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {message} from 'antd';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
@@ -11,6 +11,7 @@ export default config({
             pageConfig: state.dragPage.pageConfig,
             draggingNode: state.dragPage.draggingNode,
             activeSideKey: state.dragPage.activeSideKey,
+            rightSideWidth: state.dragPage.rightSideWidth,
         };
     },
 })(function StyleEditor(props) {
@@ -20,6 +21,7 @@ export default config({
         onChange,
         onCancel,
         draggingNode,
+        rightSideWidth,
     } = props;
 
     function handleSave(value, errors) {
@@ -35,6 +37,11 @@ export default config({
         onChange && onChange(style);
         message.success('保存成功！');
     }
+
+    useEffect(() => {
+        setTimeout(() => window.dispatchEvent(new Event('resize')));
+        setTimeout(() => window.dispatchEvent(new Event('resize')), 300);
+    }, [rightSideWidth]);
 
     if (!visible) return null;
 
