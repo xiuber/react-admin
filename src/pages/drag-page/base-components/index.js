@@ -21,7 +21,9 @@ const defaultConfig = {
     isContainer: true, // 组件是否是容器，默认true，如果是容器，则可托放入子节点
     withWrapper: false, // 是否需要拖拽包裹元素，默认 false，有些组件拖拽无效，需要包裹一下
     // wrapperStyle: undefined, // {display: 'inline-block'}, // 拖拽包裹元素样式，一般用来设置 display width height 等
-    // dropAccept: undefined, // ['Text'], // 可拖入组件，默认 任意组件都可放入
+    // dropAccept: undefined, // ['Text'] || function, // 可拖入组件，默认 任意组件都可放入
+    withHolder: false, // 当没有子组件的时候，是否显示holder 默认 false ，true && isContainer 显示
+    // holderProps: {}, //
     // actions: { // 事件 event:组件事件原始数据 options: 自定义数据
     //     onSearch: event => options => {
     //
@@ -95,9 +97,12 @@ baseComponents.forEach(item => {
 
 export default baseComponents;
 
-// 获取组件配置 __config
+// 获取组件配置 __config 并设置默认值
 export function getComponentConfig(componentName) {
-    return componentConfigMap[componentName] || defaultConfig;
+    const config = componentConfigMap[componentName];
+    if (!config) return defaultConfig;
+
+    return {...defaultConfig, ...config};
 }
 
 export function getComponentIcon(componentName, isContainer = true) {
@@ -126,15 +131,8 @@ export function setComponentDefaultOptions(componentNode) {
 
     const loop = nodes => {
         nodes.forEach(node => {
-            if (!node.__config) node.__config = {};
+            node.__config = getComponentConfig(node.componentName);
             node.__config.componentId = uuid();
-
-            const defaultConfig = getComponentConfig(node.componentName);
-
-            // 设置默认值
-            Object.entries(defaultConfig).forEach(([key, value]) => {
-                if (!(key in node.__config)) node.__config[key] = value;
-            });
 
             if (node.children?.length) {
                 loop(node.children);

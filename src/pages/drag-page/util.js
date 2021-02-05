@@ -208,9 +208,17 @@ export function isDropAccept(options) {
 
     if (!isContainer) return false;
 
-    const dropAccept = targetNode?.__config?.dropAccept;
+    let dropAccept = targetNode?.__config?.dropAccept;
 
-    if (dropAccept === undefined) return true;
+    const args = {
+        draggingNode,
+        targetNode,
+        pageConfig,
+    };
+
+    dropAccept = typeof dropAccept === 'function' ? dropAccept(args) : dropAccept;
+
+    if (!Array.isArray(dropAccept)) return true;
 
     const {componentName} = draggingNode;
 

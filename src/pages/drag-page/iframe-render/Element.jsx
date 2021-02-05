@@ -210,6 +210,7 @@ export default function Element(props) {
         e.preventDefault();
 
         const targetElement = getDroppableEle(e.target);
+
         if (!targetElement) return;
 
         const targetId = targetElement.getAttribute('data-componentId');
@@ -217,6 +218,7 @@ export default function Element(props) {
 
 
         targetElement.classList.add(styles.dragEnter);
+
         const targetRect = targetElement.getBoundingClientRect();
         const {height} = targetRect;
         const targetIsContainer = targetElement.getAttribute('data-isContainer') === 'true';

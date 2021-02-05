@@ -171,13 +171,11 @@ export default config({
                                             const data = children[0];
 
                                             const handleCategoryClick = () => {
-                                                console.log('handleCategoryClick');
                                                 const element = document.getElementById(`componentCategory_${subCategoryId}`);
                                                 scrollElement(componentRef.current, element, true, true);
 
                                                 // 等待组件滚动完，否则 三角标志会跳动
                                                 // setTimeout(() => {
-                                                console.log(subCategoryId);
                                                 storeAction.setCategory(subCategoryId);
                                                 // }, 300);
                                             };

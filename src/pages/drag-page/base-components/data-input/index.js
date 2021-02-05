@@ -99,8 +99,15 @@ export default [
         children: [
             {
                 title: '表单项',
-                hiddenInStore: true,
+                // hiddenInStore: true,
                 config: {
+                    __config: {
+                        withHolder: true,
+                        holderProps: {
+                            style: {height: 50},
+                            tip: '请拖入表单元素',
+                        },
+                    },
                     componentName: 'Form.Item',
                 },
             },
@@ -108,9 +115,6 @@ export default [
                 title: '垂直表单',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Form',
                     children: [
                         {

@@ -1,23 +1,19 @@
 import React from 'react';
+import styles from './style.less';
 
 export default function DragHolder(props) {
-    const {style, className, ...others} = props;
+    const {
+        className,
+        tip = '请拖入组件',
+        ...others
+    } = props;
 
     return (
         <div
+            className={`${styles.root} ${className} DragHolder`}
             {...others}
-            className={`${className} DragHolder`}
-            style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                pointerEvents: 'none', // 忽略鼠标事件，拖拽元素不会放入其中，也不会拖动了
-                outline: 'none',
-                color: '#999',
-                ...style,
-            }}
         >
-            请拖入组件
+            {tip}
         </div>
     );
 };

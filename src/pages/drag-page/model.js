@@ -1,9 +1,69 @@
-import {findNodeById} from './util';
+import {findNodeById, findParentNodeById} from './util';
 import {v4 as uuid} from 'uuid';
 import {cloneDeep} from 'lodash';
-import {getComponentConfig} from './base-components';
+import {getComponentConfig, setComponentDefaultOptions} from './base-components';
 
-const holderNode = {
+const test = setComponentDefaultOptions(
+    {
+        __config: {
+            componentDisplayName: 'PageContent',
+        },
+        componentName: 'div',
+        props: {
+            style: {
+                flexGrow: 1,
+                flexShrink: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                paddingTop: 8,
+                paddingRight: 8,
+                paddingBottom: 8,
+                paddingLeft: 8,
+                marginTop: 8,
+                marginRight: 8,
+                marginBottom: 8,
+                marginLeft: 8,
+                backgroundColor: '#fff',
+            },
+        },
+        children: [
+            {
+                componentName: 'Form',
+                children: [
+                    {
+                        componentName: 'Form.Item',
+                        props: {
+                            label: '姓名',
+                        },
+                        children: [
+                            {
+                                componentName: 'Input',
+                            },
+                        ],
+                    },
+                    {
+                        componentName: 'Form.Item',
+                        props: {
+                            label: '年龄',
+                        },
+                        children: [
+                            {
+                                componentName: 'InputNumber',
+                                props: {
+                                    style: {
+                                        width: '100%',
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    },
+);
+
+const holderNode = test || {
     __config: {
         draggable: false,
         componentId: uuid(),
@@ -158,10 +218,10 @@ export default {
     addNode: ({node, targetId, isBefore, isAfter, isChildren}, state) => {
         const {pageConfig} = state;
 
-
         // 拖拽节点 进行了 JSON.stringify, 会导致 actions 函数丢失
-        const defaultConfig = getComponentConfig(node.componentName);
-        node.__config.actions = defaultConfig.actions;
+        node.__config = getComponentConfig(node.componentName);
+
+        addDragHolder(node);
 
         return modifyPageConfig({
             pageConfig,
@@ -225,11 +285,13 @@ function modifyPageConfig(options) {
     if (isBefore) {
         const index = targetCollection.findIndex(item => item.__config?.componentId === targetId);
         targetCollection.splice(index, 0, node);
+        return {pageConfig: {...pageConfig}};
     }
 
     if (isAfter) {
         const index = targetCollection.findIndex(item => item.__config?.componentId === targetId);
         targetCollection.splice(index + 1, 0, node);
+        return {pageConfig: {...pageConfig}};
     }
 
     return {pageConfig: {...pageConfig}};
@@ -330,7 +392,27 @@ function deleteNode(id, state) {
         return {pageConfig: {...holderNode}, selectedNodeId, selectedNode};
     }
 
+    const parentNode = findParentNodeById(pageConfig, id);
+
     deleteNodeById(pageConfig, id);
 
+    // 添加站位符
+    addDragHolder(parentNode);
+
     return {pageConfig: {...pageConfig}, selectedNodeId, selectedNode};
+}
+
+function addDragHolder(node) {
+    if (!node) return;
+    // 添加占位符
+    const {children, __config: {isContainer, withHolder, holderProps}} = node;
+
+    if (isContainer && withHolder && !children?.length) {
+        node.children = [
+            setComponentDefaultOptions({
+                componentName: 'DragHolder',
+                props: {...holderProps},
+            }),
+        ];
+    }
 }

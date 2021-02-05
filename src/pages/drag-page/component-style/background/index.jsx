@@ -77,7 +77,6 @@ export default function Background(props) {
         // 先重置，否则会有字段不清空情况
         form.resetFields();
         form.setFieldsValue(value);
-        console.log(value);
 
         let {
             backgroundImage,
