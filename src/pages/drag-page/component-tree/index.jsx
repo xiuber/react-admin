@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Tree } from 'antd';
-import { AppstoreOutlined } from '@ant-design/icons';
+import React, {useState, useEffect, useRef} from 'react';
+import {Tree} from 'antd';
+import {AppstoreOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import TreeNode from './TreeNode';
-import { scrollElement } from '../util';
+import {scrollElement} from '../util';
 import Pane from '../pane';
 
 import './style.less';
@@ -24,7 +24,7 @@ export default config({
         selectedNodeId,
         componentTreeExpendedKeys,
         componentTreeWidth,
-        action: { dragPage: dragPageAction },
+        action: {dragPage: dragPageAction},
     } = props;
     const [treeData, setTreeData] = useState([]);
     const [nodeCount, setNodeCount] = useState(0);
@@ -38,7 +38,7 @@ export default config({
         let nodeCount = 0;
         const allKeys = [];
         const loop = (prev, next) => {
-            const { __config = {}, componentName, children } = prev;
+            const {__config = {}, componentName, children} = prev;
             const {
                 componentId,
                 componentDisplayName,
@@ -46,6 +46,7 @@ export default config({
                 draggable = true,
             } = __config;
             next.title = componentDisplayName || componentName;
+            if (typeof next.title === 'function') next.title = next.title({node: prev, pageConfig});
             next.isContainer = isContainer;
             next.key = componentId;
             next.draggable = draggable;
@@ -77,7 +78,7 @@ export default config({
 
     function renderNode(nodeData) {
 
-        return <TreeNode selectedKey={selectedNodeId} node={nodeData} />;
+        return <TreeNode selectedKey={selectedNodeId} node={nodeData}/>;
     }
 
     function handleExpand(keys) {
@@ -114,7 +115,7 @@ export default config({
         <Pane
             header={
                 <div>
-                    <AppstoreOutlined style={{ marginRight: 4 }} />
+                    <AppstoreOutlined style={{marginRight: 4}}/>
                     组件树({nodeCount})
                 </div>
             }

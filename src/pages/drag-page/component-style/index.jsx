@@ -18,11 +18,13 @@ export default config({
     connect: state => {
         return {
             selectedNode: state.dragPage.selectedNode,
+            pageConfig:state.dragPage.pageConfig,
         };
     },
 })(function ComponentStyle(props) {
     let {
         selectedNode = {},
+        pageConfig,
         action: {dragPage: dragPageAction},
     } = props;
 
@@ -42,7 +44,8 @@ export default config({
         style = {},
     } = componentProps;
 
-    const currentName = componentDisplayName || componentName;
+    let currentName = componentDisplayName || componentName;
+    if(typeof currentName === 'function') currentName = currentName({node: selectedNode, pageConfig})
 
     const [styleEditorVisible, setStyleEditorVisible] = useState(false);
     const [, setRender] = useState('');

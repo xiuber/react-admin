@@ -113,6 +113,12 @@ export default [
                         //         if (!node) return;
                         //     },
                         // },
+                        componentDisplayName: ({node, pageConfig}) => {
+                            const {componentName, props = {}} = node;
+                            const {label} = props;
+
+                            return `${componentName} ${label}`;
+                        },
                     },
                     componentName: 'Form.Item',
                 },

@@ -57,6 +57,7 @@ export default function Element(props) {
 
     componentDesc = componentDesc || componentName;
     componentDisplayName = componentDisplayName || componentName;
+    if (typeof componentDisplayName === 'function') componentDisplayName = componentDisplayName({node: config, pageConfig});
 
     let childrenEle = (children || []).map(item => (
         <Element
