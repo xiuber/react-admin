@@ -32,6 +32,7 @@ export default config({
     const {
         iframe,
         selectedNode,
+        selectedNodeId,
         activeSideKey,
         showSide,
         action: {dragPage: dragPageAction},
@@ -129,7 +130,7 @@ export default config({
         if (mc && key === 'd') {
             if (!isDesignPage) return;
             e.preventDefault();
-            dragPageAction.deleteSelectedNode();
+            dragPageAction.deleteNodeById(selectedNodeId);
         }
         if (mc && key === 's') handleCtrlOrCommandS(e);
         if (mc && key === 'c') handleCtrlOrCommandC(e);

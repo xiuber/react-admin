@@ -212,12 +212,51 @@ export default {
         return {pageConfig};
     },
 
-    // TODO 删除后，选中下一个？？
-    deleteSelectedNode: (_, state) => {
-        return deleteNode(state.selectedNodeId, state);
-    },
-    deleteNode: (id, state) => {
-        return deleteNode(id, state);
+    deleteNodeById: (id, state) => {
+        let {pageConfig, selectedNodeId, selectedNode} = state;
+
+        if (selectedNodeId === id) {
+            selectedNodeId = null;
+            selectedNode = null;
+        }
+
+
+        // 删除的是根节点
+        if (id === pageConfig.__config.componentId) {
+            return {pageConfig: {...holderNode}, selectedNodeId, selectedNode};
+        }
+        const node = findNodeById(pageConfig, id);
+
+        if (!node) return {selectedNode: null, selectedNodeId: null};
+
+        const parentNode = findParentNodeById(pageConfig, id);
+
+
+        const {beforeDelete, afterDelete} = node.__config.hooks || {};
+
+        const {beforeDeleteChildren, afterDeleteChildren} = parentNode?.__config?.hooks || {};
+
+        const args = {node, pageConfig};
+        const result = beforeDelete && beforeDelete(args);
+
+        if (result === false) return {pageConfig};
+
+        const pargs = {node: parentNode, pageConfig};
+
+        const res = beforeDeleteChildren && beforeDeleteChildren(pargs);
+
+        if (res === false) return {pageConfig};
+
+
+        deleteComponentById(pageConfig, id);
+
+        // 添加占位符
+        addDragHolder(parentNode);
+
+        afterDelete && afterDelete(args);
+        afterDeleteChildren && afterDeleteChildren();
+
+        return {pageConfig: {...pageConfig}, selectedNodeId, selectedNode};
     },
     addNode: (options, state) => {
         const {node, targetId, isBefore, isAfter, isChildren} = options;
@@ -268,7 +307,7 @@ export default {
 
         const parentNode = findParentNodeById(pageConfig, sourceId);
 
-        const [node] = deleteNodeById(pageConfig, sourceId);
+        const [node] = deleteComponentById(pageConfig, sourceId);
 
         // 添加占位符
         addDragHolder(parentNode);
@@ -374,7 +413,7 @@ function findChildrenCollection(root, id) {
  * @param id
  * @returns {any} 被删除的节点
  */
-function deleteNodeById(root, id) {
+function deleteComponentById(root, id) {
     const dataSource = Array.isArray(root) ? root : [root];
 
     let deletedNode = undefined;
@@ -427,50 +466,6 @@ function getParentIds(root, id) {
     }
 
     return dfs(data, id, []);
-}
-
-function deleteNode(id, state) {
-    let {pageConfig, selectedNodeId, selectedNode} = state;
-
-    if (selectedNodeId === id) {
-        selectedNodeId = null;
-        selectedNode = null;
-    }
-
-
-    // 删除的是根节点
-    if (id === pageConfig.__config.componentId) {
-        return {pageConfig: {...holderNode}, selectedNodeId, selectedNode};
-    }
-
-    const parentNode = findParentNodeById(pageConfig, id);
-    const node = findNodeById(pageConfig, id);
-
-    const {beforeDelete, afterDelete} = node.__config.hooks || {};
-
-    const {beforeDeleteChildren, afterDeleteChildren} = parentNode?.__config?.hooks || {};
-
-    const args = {node, pageConfig};
-    const result = beforeDelete && beforeDelete(args);
-
-    if (result === false) return {pageConfig};
-
-    const pargs = {node: parentNode, pageConfig};
-
-    const res = beforeDeleteChildren && beforeDeleteChildren(pargs);
-
-    if (res === false) return {pageConfig};
-
-
-    deleteNodeById(pageConfig, id);
-
-    // 添加占位符
-    addDragHolder(parentNode);
-
-    afterDelete && afterDelete(args);
-    afterDeleteChildren && afterDeleteChildren();
-
-    return {pageConfig: {...pageConfig}, selectedNodeId, selectedNode};
 }
 
 // 添加占位符

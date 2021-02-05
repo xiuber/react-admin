@@ -360,6 +360,10 @@ export function getDropGuidePosition(options) {
         isLeft,
         isRight,
         ...guidePosition,
+        targetHeight,
+        targetWidth,
+        targetX,
+        targetY,
         targetRect,
     };
 }

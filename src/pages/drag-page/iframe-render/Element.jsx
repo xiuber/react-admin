@@ -150,6 +150,14 @@ export default function Element(props) {
             return;
         }
 
+        if (position.targetRect.height < TRIGGER_SIZE * 3) {
+            targetElement.classList.add(styles.largeY);
+        }
+        if (position.targetRect.width < TRIGGER_SIZE * 3) {
+            targetElement.classList.add(styles.largeX);
+        }
+
+        targetElement.classList.add(styles.dragOver);
         showDropGuideLine(e, targetElement, position);
     };
     const onDrop = function(e) {
@@ -217,41 +225,13 @@ export default function Element(props) {
 
         const targetId = targetElement.getAttribute('data-componentId');
         dragPageAction.setSelectedNodeId(targetId);
-
-        targetElement.classList.add(styles.dragEnter);
-
-        const targetRect = targetElement.getBoundingClientRect();
-        const {height} = targetRect;
-        const targetIsContainer = targetElement.getAttribute('data-isContainer') === 'true';
-
-        if (targetIsContainer) {
-            if (height < TRIGGER_SIZE * 3) {
-                targetElement.setAttribute('data-change-padding', true);
-                targetElement.setAttribute('data-prev-padding', targetElement.style.padding);
-
-                targetElement.style.padding = '30px 0';
-            }
-        }
     }
 
     function onDragLeave(e) {
         hideDropGuide();
-        const targetElement = getDroppableEle(e.target);
-
-        if (!targetElement) return;
-
-        // if (targetElement !== e.target) return;
-
-        targetElement.classList.remove(styles.dragEnter);
-
-        const targetIsContainer = targetElement.getAttribute('data-isContainer') === 'true';
-        if (targetIsContainer) {
-            const changePadding = targetElement.getAttribute('data-change-padding');
-
-            if (changePadding) {
-                targetElement.style.padding = targetElement.getAttribute('data-prev-padding');
-            }
-        }
+        e.target.classList.remove(styles.largeY);
+        e.target.classList.remove(styles.largeX);
+        e.target.classList.remove(styles.dragOver);
     }
 
     function onDragEnd() {
@@ -397,6 +377,10 @@ function showDropGuideLine(e, targetElement, position) {
         left,
         width,
         height,
+        targetHeight,
+        targetWidth,
+        targetX,
+        targetY,
     } = position;
 
     if (isLeft || isRight) {
@@ -417,8 +401,13 @@ function showDropGuideLine(e, targetElement, position) {
 
     if (!guideLineEle) return;
 
-    const guildTipEle = guideLineEle.querySelector('span');
+    const guideBgEle = guideLineEle.querySelector('.drop-guide-bg');
+    guideBgEle.style.top = `${targetY}px`;
+    guideBgEle.style.left = `${targetX}px`;
+    guideBgEle.style.width = `${targetWidth}px`;
+    guideBgEle.style.height = `${targetHeight}px`;
 
+    const guildTipEle = guideLineEle.querySelector('span');
     guideLineEle.classList.add(styles.guideActive);
     guideLineEle.classList.remove(styles.gLeft);
     guideLineEle.classList.remove(styles.gRight);

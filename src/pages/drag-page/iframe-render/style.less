@@ -3,8 +3,16 @@
 @guide-color: green;
 @guide-size: 2px;
 
-.dragEnter {
-    outline: 1px solid @guide-color;
+.largeY {
+    padding: 20px 0;
+}
+
+.largeX {
+    padding: 0 20px;
+}
+
+.dragOver {
+    outline: none !important;
 }
 
 .dragging {
@@ -14,7 +22,6 @@
 
 .element {
     position: relative;
-
     outline: 1px dashed #d8d8d8;
 
     &.unDraggable {
@@ -51,6 +58,16 @@
     pointer-events: none;
     height: @guide-size;
     align-items: center;
+
+    :global {
+        .drop-guide-bg {
+            position: fixed;
+            z-index: 9999;
+            background: rgba(0, 255, 0, 0.05);
+            pointer-events: none;
+            border: 1px solid @guide-color;
+        }
+    }
 
     &:before,
     &:after {
