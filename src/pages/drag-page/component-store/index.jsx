@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Input, Select, Empty } from 'antd';
-import { AppstoreOutlined } from '@ant-design/icons';
+import React, {useState, useEffect, useRef} from 'react';
+import {Input, Select, Empty} from 'antd';
+import {AppstoreOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
-import { getComponents, getStores } from '../dataSource';
+import {getComponents, getStores} from '../dataSource';
 import DraggableComponent from './DraggableComponent';
-import { scrollElement, elementIsVisible, filterTree } from '../util';
-import { debounce } from 'lodash';
+import {scrollElement, elementIsVisible, filterTree} from '../util';
+import {debounce} from 'lodash';
 import Draggable from './Draggable';
 import './style.less';
 
@@ -63,7 +63,7 @@ export default config({
 
         const element = elements[elements.length - 1];
         const elementRect = element.getBoundingClientRect();
-        const { height } = elementRect;
+        const {height} = elementRect;
 
         componentSpaceRef.current.style.height = `calc(100% - ${height}px)`;
 
@@ -73,7 +73,7 @@ export default config({
     const handleComponentScroll = debounce(() => {
         const all = document.querySelectorAll('.componentCategory');
         for (const ele of Array.from(all)) {
-            const { visible } = elementIsVisible(componentRef.current, ele);
+            const {visible} = elementIsVisible(componentRef.current, ele);
             if (visible) {
                 const subCategoryId = ele.getAttribute('data-subCategoryId');
 
@@ -105,7 +105,7 @@ export default config({
         const result = filterTree(
             allComponents,
             node => {
-                let { title = '', subTitle = '' } = node;
+                let {title = '', subTitle = ''} = node;
 
                 title = title.toLowerCase();
                 subTitle = subTitle.toLowerCase();
@@ -123,7 +123,7 @@ export default config({
         <Pane
             header={
                 <div>
-                    <AppstoreOutlined style={{ marginRight: 4 }} />
+                    <AppstoreOutlined style={{marginRight: 4}}/>
                     组件
                 </div>
             }
@@ -135,14 +135,14 @@ export default config({
                         placeholder="请输入关键词搜索组件"
                         value={searchValue}
                         onChange={e => {
-                            const { value } = e.target;
+                            const {value} = e.target;
 
                             setSearchValue(value);
                             handleSearch(value);
                         }}
                     />
                     <Select
-                        style={{ width: '100%', marginTop: 4 }}
+                        style={{width: '100%', marginTop: 4}}
                         placeholder="选择组件分类"
                         value={store}
                         onChange={handleStoreChange}
@@ -150,42 +150,49 @@ export default config({
                     />
                 </header>
                 {!components?.length ? (
-                    <main style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <Empty description="暂无组件" />
+                    <main style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <Empty description="暂无组件"/>
                     </main>
                 ) : (
                     <main>
                         <div styleName="category" ref={categoryRef}>
                             {components.map(baseCategory => {
-                                const { id: baseCategoryId, title, children = [], hiddenInStore } = baseCategory;
+                                const {id: baseCategoryId, title, children = [], hiddenInStore} = baseCategory;
                                 if (hiddenInStore) return null;
 
                                 return (
                                     <div key={baseCategoryId} id={`baseCategory_${baseCategoryId}`}>
                                         <div styleName='baseCategory'>{title}</div>
                                         {children.map(item => {
-                                            const { id: subCategoryId, hiddenInStore, children = [] } = item;
+                                            const {id: subCategoryId, hiddenInStore, children = []} = item;
                                             if (hiddenInStore) return null;
                                             const isActive = subCategoryId === category;
 
                                             const data = children[0];
+
+                                            const handleCategoryClick = () => {
+                                                console.log('handleCategoryClick');
+                                                const element = document.getElementById(`componentCategory_${subCategoryId}`);
+                                                scrollElement(componentRef.current, element, true, true);
+
+                                                // 等待组件滚动完，否则 三角标志会跳动
+                                                // setTimeout(() => {
+                                                console.log(subCategoryId);
+                                                storeAction.setCategory(subCategoryId);
+                                                // }, 300);
+                                            };
 
                                             return (
                                                 <div
                                                     key={subCategoryId}
                                                     id={`subCategory_${subCategoryId}`}
                                                     styleName={`subCategory ${isActive ? 'active' : ''}`}
-                                                    onClick={() => {
-                                                        const element = document.getElementById(`componentCategory_${subCategoryId}`);
-                                                        scrollElement(componentRef.current, element, true, true);
-
-                                                        // 等待组件滚动完，否则 三角标志会跳动
-                                                        // setTimeout(() => {
-                                                        storeAction.setCategory(subCategoryId);
-                                                        // }, 300);
-                                                    }}
+                                                    onClick={() => handleCategoryClick()}
                                                 >
-                                                    <Draggable data={data}>
+                                                    <Draggable
+                                                        data={data}
+                                                        onDragEnd={() => setTimeout(handleCategoryClick)} // 等待组件面板显示出来
+                                                    >
                                                         <div styleName="title">
                                                             {item.title}
                                                         </div>
@@ -199,10 +206,10 @@ export default config({
                         </div>
                         <div styleName="components" id="storeComponents" ref={componentRef} onScroll={handleComponentScroll}>
                             {components.map(baseCategory => {
-                                const { id: baseCategoryId, children = [], hiddenInStore } = baseCategory;
+                                const {id: baseCategoryId, children = [], hiddenInStore} = baseCategory;
                                 if (hiddenInStore) return null;
                                 return children.map(category => {
-                                    const { id: subCategoryId, subTitle, children = [], hiddenInStore } = category;
+                                    const {id: subCategoryId, subTitle, children = [], hiddenInStore} = category;
                                     if (hiddenInStore) return null;
                                     return (
                                         <div
@@ -227,7 +234,7 @@ export default config({
                                                             storeAction.setCategory(subCategoryId);
                                                         }}
                                                     >
-                                                        <DraggableComponent key={item.id} data={item} />
+                                                        <DraggableComponent key={item.id} data={item}/>
                                                     </div>
                                                 );
                                             })}
@@ -235,7 +242,7 @@ export default config({
                                     );
                                 });
                             })}
-                            <div ref={componentSpaceRef} />
+                            <div ref={componentSpaceRef}/>
                         </div>
                     </main>
                 )}

@@ -1,15 +1,15 @@
 import React from 'react';
-import { AppstoreOutlined, DropboxOutlined, MacCommandOutlined } from '@ant-design/icons';
-import { v4 as uuid } from 'uuid';
-import { cloneDeep } from 'lodash';
+import {AppstoreOutlined, DropboxOutlined, MacCommandOutlined} from '@ant-design/icons';
+import {v4 as uuid} from 'uuid';
+import {cloneDeep} from 'lodash';
 import base from './base';
 import common from './common';
 import dataInput from './data-input';
 
 let baseComponents = [
-    { title: '默认', children: base },
-    { title: '通用', children: common },
-    { title: '数据输入', children: dataInput },
+    {title: '默认', children: base},
+    {title: '通用', children: common},
+    {title: '数据输入', children: dataInput},
 ];
 
 // __config 说明
@@ -41,18 +41,28 @@ const defaultConfig = {
     //         dragPageAction.render(); // props改变了，重新出发页面渲染
     //     },
     // },
+    hooks: {
+        // beforeMove // 返回false， 不允许移动
+        // afterMove
+
+        // beforeAddChildren // 返回false，不允许添加
+        // afterAddChildren
+
+        // beforeDeleteChildren // 返回false，不允许删除
+        // afterDeleteChildren
+    },
 };
 
 const componentConfigMap = {};
 const componentIconMap = {};
 
 baseComponents.forEach(item => {
-    const { title } = item;
+    const {title} = item;
     item.children.forEach(it => {
-        const { subTitle } = it;
+        const {subTitle} = it;
         it.children.forEach(i => {
-            const { title: t, config, icon } = i;
-            const { __config = defaultConfig, componentName, children } = config;
+            const {title: t, config, icon} = i;
+            const {__config = defaultConfig, componentName, children} = config;
             componentConfigMap[componentName] = __config;
             componentIconMap[componentName] = icon;
             check__config(children, `${title} > ${subTitle} > ${t}`);
@@ -66,8 +76,8 @@ function check__config(children, position) {
     const loop = nodes => {
         for (let node of nodes) {
             if ('__config' in node) {
-                const { componentName } = node;
-                console.error(`${position} 中深层组件「${componentName}」配置中不要写「__config」! 
+                const {componentName} = node;
+                console.error(`${position} 中深层组件「${componentName}」配置中不要写「__config」!
 Schema 源码编辑，或存库之后，会导致深层「__config」属性丢失，可以考虑编写特殊组件，使用props控制行为`);
                 return;
             }
@@ -92,7 +102,7 @@ export function getComponentConfig(componentName) {
 
 export function getComponentIcon(componentName, isContainer = true) {
     const icon = componentIconMap[componentName];
-    if (!icon) return isContainer ? <DropboxOutlined /> : <MacCommandOutlined />;
+    if (!icon) return isContainer ? <DropboxOutlined/> : <MacCommandOutlined/>;
     return icon;
 }
 
@@ -145,7 +155,7 @@ export function setDefaultOptions(nodes) {
 
         (node?.children || []).forEach(node => {
             if (!node.id) node.id = uuid();
-            if (!node.icon) node.icon = <AppstoreOutlined />;
+            if (!node.icon) node.icon = <AppstoreOutlined/>;
 
             if (node.config) setComponentDefaultOptions(node.config);
         });

@@ -14,10 +14,13 @@ export default config({
         },
         children,
         style = {},
+        onDragStart,
+        onDragEnd,
         ...others
     } = props;
 
     function handleDragStart(e) {
+        onDragStart && onDragStart(e);
         e.stopPropagation();
 
         // 打开组件组
@@ -44,10 +47,11 @@ export default config({
         dragPageAction.setDraggingNode(config);
     }
 
-    function handleDragEnd() {
+    function handleDragEnd(e) {
         // 从新打开组件库
         dragPageAction.setActiveSideKey('componentStore');
         dragPageAction.setDraggingNode(null);
+        onDragEnd && onDragEnd(e);
     }
 
     const draggable = !!data;

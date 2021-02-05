@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select } from 'antd';
+import {Select} from 'antd';
 
 export default [
     {
@@ -22,9 +22,9 @@ export default [
                                 if (!node.props) node.props = {};
 
                                 node.props.options = [
-                                    { value: `${value}@qq.com` },
-                                    { value: `${value}@163.com` },
-                                    { value: `${value}@qiye.com` },
+                                    {value: `${value}@qq.com`},
+                                    {value: `${value}@163.com`},
+                                    {value: `${value}@qiye.com`},
                                 ];
 
                                 dragPageAction.render();
@@ -33,12 +33,12 @@ export default [
                     },
                     componentName: 'AutoComplete',
                     props: {
-                        style: { width: '100%' },
+                        style: {width: '100%'},
                         placeholder: '请输入',
                         options: [
-                            { value: '@qq.com' },
-                            { value: '@163.com' },
-                            { value: '@qiye.com' },
+                            {value: '@qq.com'},
+                            {value: '@163.com'},
+                            {value: '@qiye.com'},
                         ],
                     },
                 },
@@ -98,13 +98,47 @@ export default [
         subTitle: '表单 Form',
         children: [
             {
-                title: '表单',
+                title: '表单项',
+                hiddenInStore: true,
+                config: {
+                    componentName: 'Form.Item',
+                },
+            },
+            {
+                title: '垂直表单',
                 renderPreview: true,
                 config: {
                     __config: {
                         isContainer: false,
                     },
                     componentName: 'Form',
+                    children: [
+                        {
+                            componentName: 'Form.Item',
+                            props: {
+                                label: '姓名',
+                            },
+                            children: [
+                                {
+                                    componentName: 'Input',
+                                },
+                            ],
+                        },
+                        {
+                            componentName: 'Form.Item',
+                            props: {
+                                label: '年龄',
+                            },
+                            children: [
+                                {
+                                    componentName: 'InputNumber',
+                                    props: {
+                                        style: {width: '100%'},
+                                    },
+                                },
+                            ],
+                        },
+                    ],
                 },
             },
         ],
@@ -123,18 +157,14 @@ export default [
                     componentName: 'Input',
                 },
             },
-        ],
-    },
-    {
-        title: '数字输入框',
-        subTitle: '数字输入框 InputNumber',
-        children: [
             {
                 title: '数字输入框',
                 renderPreview: true,
                 config: {
                     __config: {
                         isContainer: false,
+                        withWrapper: true,
+                        wrapperStyle: {display: 'inline-block'},
                     },
                     componentName: 'InputNumber',
                 },
@@ -197,11 +227,11 @@ export default [
             {
                 title: '选择器',
                 renderPreview: node => {
-                    const container = { current: null };
+                    const container = {current: null};
                     return (
                         <div
                             ref={container}
-                            style={{ position: 'relative', height: 100, width: '100%' }}
+                            style={{position: 'relative', height: 100, width: '100%'}}
                         >
                             <Select
                                 {...node.props}
@@ -220,10 +250,10 @@ export default [
                     props: {
                         placeholder: '请选择',
                         options: [
-                            { value: '1', label: '下拉项1' },
-                            { value: '2', label: '下拉项2' },
+                            {value: '1', label: '下拉项1'},
+                            {value: '2', label: '下拉项2'},
                         ],
-                        style: { width: '100%' },
+                        style: {width: '100%'},
                     },
                 },
             },
@@ -243,9 +273,9 @@ export default [
                         isContainer: false,
                     },
                     componentName: 'Slider',
-                    props:{
+                    props: {
                         value: 50,
-                    }
+                    },
                 },
             },
         ],
@@ -277,7 +307,7 @@ export default [
                     __config: {
                         isContainer: false,
                         withWrapper: true,
-                        wrapperStyle: { display: 'inline-block' },
+                        wrapperStyle: {display: 'inline-block'},
                     },
                     componentName: 'TimePicker',
                 },
