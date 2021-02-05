@@ -221,6 +221,7 @@ export default {
         // 拖拽节点 进行了 JSON.stringify, 会导致 actions 函数丢失
         node.__config = getComponentConfig(node.componentName);
 
+        // 添加占位符
         addDragHolder(node);
 
         return modifyPageConfig({
@@ -396,15 +397,16 @@ function deleteNode(id, state) {
 
     deleteNodeById(pageConfig, id);
 
-    // 添加站位符
+    // 添加占位符
     addDragHolder(parentNode);
 
     return {pageConfig: {...pageConfig}, selectedNodeId, selectedNode};
 }
 
+// 添加占位符
 function addDragHolder(node) {
     if (!node) return;
-    // 添加占位符
+
     const {children, __config: {isContainer, withHolder, holderProps}} = node;
 
     if (isContainer && withHolder && !children?.length) {
