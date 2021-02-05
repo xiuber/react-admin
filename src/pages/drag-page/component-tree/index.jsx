@@ -41,11 +41,11 @@ export default config({
             const { __config = {}, componentName, children } = prev;
             const {
                 componentId,
-                componentDesc,
+                componentDisplayName,
                 isContainer = true,
                 draggable = true,
             } = __config;
-            next.title = componentDesc || componentName;
+            next.title = componentDisplayName || componentName;
             next.isContainer = isContainer;
             next.key = componentId;
             next.draggable = draggable;

@@ -10,6 +10,7 @@ import {PicCenterOutlined} from '@ant-design/icons';
 import RadioGroup from '../radio-group';
 import UnitInput from '../unit-input';
 import QuickPosition from '../quick-position';
+import ColorInput from '../color-input';
 
 
 import './style.less';
@@ -76,6 +77,7 @@ export default function Background(props) {
         // 先重置，否则会有字段不清空情况
         form.resetFields();
         form.setFieldsValue(value);
+        console.log(value);
 
         let {
             backgroundImage,
@@ -125,7 +127,7 @@ export default function Background(props) {
                     name="backgroundColor"
                     colon={false}
                 >
-                    <Input
+                    <ColorInput
                         allowClear
                         placeholder='background-color'
                     />

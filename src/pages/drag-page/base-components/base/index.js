@@ -33,9 +33,26 @@ export default [
                 icon: <PicCenterOutlined/>,
                 config: {
                     __config: {
-                        componentType: 'ra-lib',
+                        componentDisplayName: 'PageContent',
                     },
-                    componentName: 'PageContent',
+                    componentName: 'div',
+                    props: {
+                        style: {
+                            flexGrow: 1,
+                            flexShrink: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            paddingTop: 8,
+                            paddingRight: 8,
+                            paddingBottom: 8,
+                            paddingLeft: 8,
+                            marginTop: 8,
+                            marginRight: 8,
+                            marginBottom: 8,
+                            marginLeft: 8,
+                            backgroundColor: '#fff',
+                        },
+                    },
                     children: [
                         {
                             componentName: 'DragHolder',
@@ -63,13 +80,6 @@ export default [
                 icon: <PicCenterOutlined/>,
                 config: {
                     componentName: 'div',
-                    props: {
-                        style: {
-                            backgroundImage: `url('https://img.alicdn.com/tfs/TB1zpkUoUT1gK0jSZFhXXaAtVXa-620-430.png')`,
-                            backgroundColor: 'red',
-                            borderRadius: '50px',
-                        },
-                    },
                     children: [
                         {
                             componentName: 'DragHolder',
@@ -97,12 +107,6 @@ export default [
                     props: {
                         text: '文本',
                         isDraggable: true,
-                        style: {
-                            display: 'flex',
-                            width: 100,
-                            height: 100,
-                            background: 'red',
-                        },
                     },
                 },
             },

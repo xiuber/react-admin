@@ -14,6 +14,7 @@ import RadioGroup from '../radio-group';
 import SliderInput from '../slider-input';
 import './style.less';
 import UnitInput from 'src/pages/drag-page/component-style/unit-input';
+import ColorInput from 'src/pages/drag-page/component-style/color-input';
 
 const textAlignOptions = [
     {value: 'left', label: '左对齐', icon: <PicCenterOutlined/>},
@@ -21,6 +22,7 @@ const textAlignOptions = [
     {value: 'right', label: '右对齐', icon: <PicCenterOutlined/>},
     {value: 'justify', label: '两端对齐', icon: <PicCenterOutlined/>},
 ];
+const labelCol = {flex: '38px'};
 
 export default function Font(props) {
     const {value, onChange = () => undefined} = props;
@@ -49,8 +51,7 @@ export default function Font(props) {
                         <Form.Item
                             label="字符"
                             name="fontWeight"
-                            labelCol={{span: 5}}
-                            wrapperCol={{span: 19}}
+                            labelCol={labelCol}
                             colon={false}
                         >
                             <Select
@@ -81,12 +82,12 @@ export default function Font(props) {
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={14} style={{paddingLeft: 34}}>
+                    <Col span={14} style={{paddingLeft: labelCol.flex}}>
                         <Form.Item
                             name="color"
                             colon={false}
                         >
-                            <Input placeholder="颜色 color"/>
+                            <ColorInput placeholder="颜色 color"/>
                         </Form.Item>
                     </Col>
                     <Col span={10} style={{paddingLeft: 8}}>
@@ -100,6 +101,7 @@ export default function Font(props) {
                 </Row>
 
                 <Form.Item
+                    labelCol={labelCol}
                     label="对齐"
                     name="textAlign"
                     colon={false}
@@ -107,6 +109,7 @@ export default function Font(props) {
                     <RadioGroup options={textAlignOptions}/>
                 </Form.Item>
                 <Form.Item
+                    labelCol={labelCol}
                     label="透明"
                     name="opacity"
                     initialValue={1}

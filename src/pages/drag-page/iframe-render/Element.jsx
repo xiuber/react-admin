@@ -42,6 +42,7 @@ export default function Element(props) {
             componentId,
             componentType,
             componentDesc,
+            componentDisplayName,
             draggable = true,
             withWrapper,
             wrapperStyle,
@@ -55,6 +56,7 @@ export default function Element(props) {
     if (!componentName) return null;
 
     componentDesc = componentDesc || componentName;
+    componentDisplayName = componentDisplayName || componentName;
 
     let childrenEle = (children || []).map(item => (
         <Element
@@ -262,6 +264,7 @@ export default function Element(props) {
         onDragEnd,
         className: dragClassName.join(' '),
         'data-componentDesc': componentDesc,
+        'data-componentDisplayName': componentDisplayName,
         'data-componentId': componentId,
         'data-isContainer': isContainer,
         onClick: (e) => {

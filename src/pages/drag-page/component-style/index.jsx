@@ -35,14 +35,14 @@ export default config({
         props: componentProps = {},
     } = selectedNode;
     const {
-        componentDesc,
+        componentDisplayName,
     } = __config;
 
     const {
         style = {},
     } = componentProps;
 
-    const currentName = componentDesc || componentName;
+    const currentName = componentDisplayName || componentName;
 
     const [styleEditorVisible, setStyleEditorVisible] = useState(false);
     const [, setRender] = useState('');
@@ -105,16 +105,16 @@ export default config({
                 style={{border: 'none'}}
                 defaultActiveKey={[
                     // 'layout',
-                    // 'text',
+                    'font',
                     // 'position',
                     // 'background',
-                    'border',
+                    // 'border',
                 ]}
             >
                 <Panel header="布局" key="layout">
                     <Layout value={style} onChange={handleChange}/>
                 </Panel>
-                <Panel header="文字" key="text">
+                <Panel header="文字" key="font">
                     <Font value={style} onChange={handleChange}/>
                 </Panel>
                 <Panel header="定位" key="position">
