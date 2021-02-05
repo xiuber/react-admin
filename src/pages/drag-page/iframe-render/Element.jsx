@@ -145,10 +145,7 @@ export default function Element(props) {
             ...position,
         });
 
-        if (!accept) {
-            hideDropGuide();
-            return;
-        }
+        if (!accept) return dragPageAction.setDragOverInfo(null);
 
         if (position.targetRect.height < TRIGGER_SIZE * 3) {
             targetElement.classList.add(styles.largeY);
@@ -158,7 +155,15 @@ export default function Element(props) {
         }
 
         targetElement.classList.add(styles.dragOver);
-        showDropGuideLine(e, targetElement, position);
+        const {pageX, pageY, clientX, clientY} = e;
+
+        dragPageAction.setDragOverInfo({
+            targetElement,
+            pageX,
+            pageY,
+            clientX,
+            clientY,
+        });
     };
     const onDrop = function(e) {
         e.preventDefault();
@@ -228,13 +233,14 @@ export default function Element(props) {
     }
 
     function onDragLeave(e) {
-        hideDropGuide();
+        dragPageAction.setDragOverInfo(null);
         e.target.classList.remove(styles.largeY);
         e.target.classList.remove(styles.largeX);
         e.target.classList.remove(styles.dragOver);
     }
 
     function onDragEnd() {
+        dragPageAction.setDragOverInfo(null);
         dragPageAction.setDraggingNode(null);
         if (prevSideKeyRef.current) dragPageAction.setActiveSideKey(prevSideKeyRef.current);
     }
@@ -364,76 +370,4 @@ function getDroppableEle(target) {
     if (draggable) return target;
 
     return getDroppableEle(target.parentNode);
-}
-
-function showDropGuideLine(e, targetElement, position) {
-    let {
-        isCenter,
-        isLeft,
-        isRight,
-        isTop,
-        isBottom,
-        top,
-        left,
-        width,
-        height,
-        targetHeight,
-        targetWidth,
-        targetX,
-        targetY,
-    } = position;
-
-    if (isLeft || isRight) {
-        isCenter = false;
-        isTop = false;
-        isBottom = false;
-    }
-
-    const guidePosition = {
-        top,
-        width,
-        height,
-        left,
-    };
-
-    const frameDocument = document.getElementById('dnd-iframe').contentDocument;
-    const guideLineEle = frameDocument.getElementById('drop-guide-line');
-
-    if (!guideLineEle) return;
-
-    const guideBgEle = guideLineEle.querySelector('.drop-guide-bg');
-    guideBgEle.style.top = `${targetY}px`;
-    guideBgEle.style.left = `${targetX}px`;
-    guideBgEle.style.width = `${targetWidth}px`;
-    guideBgEle.style.height = `${targetHeight}px`;
-
-    const guildTipEle = guideLineEle.querySelector('span');
-    guideLineEle.classList.add(styles.guideActive);
-    guideLineEle.classList.remove(styles.gLeft);
-    guideLineEle.classList.remove(styles.gRight);
-    if (isLeft) {
-        guildTipEle.innerHTML = '前';
-        guideLineEle.classList.add(styles.gLeft);
-    }
-    if (isRight) {
-        guildTipEle.innerHTML = '后';
-        guideLineEle.classList.add(styles.gRight);
-    }
-    if (isTop) guildTipEle.innerHTML = '上';
-    if (isBottom) guildTipEle.innerHTML = '下';
-    if (isCenter) guildTipEle.innerHTML = '内';
-
-    Object.entries(guidePosition).forEach(([key, value]) => {
-        guideLineEle.style[key] = `${value}px`;
-    });
-}
-
-
-function hideDropGuide() {
-    const frameDocument = document.getElementById('dnd-iframe').contentDocument;
-
-    const guideLineEle = frameDocument.getElementById('drop-guide-line');
-    if (!guideLineEle) return;
-
-    guideLineEle.classList.remove(styles.guideActive);
 }

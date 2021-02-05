@@ -5,6 +5,7 @@ import Element from './Element';
 import {scrollElement} from 'src/pages/drag-page/util';
 import KeyMap from 'src/pages/drag-page/KeyMap';
 import Scale from './Scale';
+import DragOver from './drag-over';
 
 const iframeSrcDoc = `
 <!DOCTYPE html>
@@ -14,8 +15,8 @@ const iframeSrcDoc = `
         <div id="dnd-container" style="display: flex; flex-direction: column; min-height: 100vh"></div>
         <div id="drop-guide-line" style="display: none">
             <span>前</span>
-            <div class="drop-guide-bg"></div>
         </div>
+        <div id="drop-guide-bg" style="display: none"></div>
     </body>
 </html>
 `;
@@ -204,6 +205,7 @@ export default config({
             }}>
                 <Scale element={scaleElement}/>
             </div>
+            <DragOver frameDocument={iframeRef.current?.contentDocument}/>
         </div>
     );
 });

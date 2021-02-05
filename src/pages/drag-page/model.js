@@ -98,6 +98,7 @@ const initialState = {
     selectedNodeId: null,
     selectedNode: null,
     draggingNode: null, // 正在拖动的节点 key
+    dragOverInfo: null, // 悬停节点信息
     showCode: false, // 显示代码
     // showSide: false, // 左侧是否显示
     showSide: true,
@@ -131,6 +132,7 @@ export default {
     initialState,
     syncStorage,
     init: () => cloneDeep(initialState),
+    setDragOverInfo: dragOverInfo => ({dragOverInfo}),
     setCanvasWidth: canvasWidth => ({canvasWidth}),
     setCanvasHeight: canvasHeight => ({canvasHeight}),
     setRightSideExpended: rightSideExpended => ({rightSideExpended}),

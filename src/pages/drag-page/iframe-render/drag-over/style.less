@@ -1,60 +1,11 @@
-@import '../../../theme';
-
 @guide-color: green;
 @guide-size: 2px;
 @large-size: 15px;
 
-.largeY {
-    padding: @large-size 0;
-}
-
-.largeX {
-    padding: 0 @large-size;
-}
-
-.dragOver {
-    outline: none !important;
-}
-
-.dragging {
-    filter: blur(2px);
-}
-
-.element {
-    position: relative;
-    outline: 1px dashed #d8d8d8;
-
-    &.unDraggable {
-        outline: none !important;
-    }
-
-    &:hover {
-        outline: 1px dashed @guide-color;
-    }
-
-    &.selected {
-        outline: 1px solid @guide-color;
-
-        &::before {
-            content: attr(data-componentDisplayName);
-            font-size: 12px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            padding: 0 4px;
-            background: @guide-color;
-            color: #fff;
-            word-break: keep-all;
-            z-index: 999;
-            //opacity: .5;
-        }
-    }
-}
-
 :global {
     #drop-guide-line,
     #drop-guide-bg {
-        transition: 100ms;
+        transition: 300ms;
     }
 }
 
