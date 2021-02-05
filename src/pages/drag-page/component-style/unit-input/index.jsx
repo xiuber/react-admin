@@ -10,7 +10,6 @@ function UnitInput(props) {
         ...others
     } = props;
 
-    // key down 无法获取最新的value
     function handleKeyDown(e) {
         onKeyDown && onKeyDown(e);
         const {key} = e;
@@ -20,16 +19,9 @@ function UnitInput(props) {
 
         // 防止光标来回跳动
         if (isUp || isDown) e.preventDefault();
-    }
 
-    function handleKeyUp(e) {
-        onKeyUp && onKeyUp(e);
-        const {key} = e;
         let nextValue = e.target.value || '';
         nextValue = nextValue.trim();
-
-        const isUp = key === 'ArrowUp';
-        const isDown = key === 'ArrowDown';
 
         // 为纯数字 直接转换为数字
         if (nextValue && !window.isNaN(nextValue)) {
@@ -72,7 +64,6 @@ function UnitInput(props) {
             onChange={onChange}
             {...others}
             onKeyDown={handleKeyDown}
-            onKeyUp={handleKeyUp}
         />
     );
 
