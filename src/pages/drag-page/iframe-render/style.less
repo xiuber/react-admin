@@ -2,13 +2,14 @@
 
 @guide-color: green;
 @guide-size: 2px;
+@large-size: 15px;
 
 .largeY {
-    padding: 20px 0;
+    padding: @large-size 0;
 }
 
 .largeX {
-    padding: 0 20px;
+    padding: 0 @large-size;
 }
 
 .dragOver {
@@ -17,7 +18,6 @@
 
 .dragging {
     filter: blur(2px);
-    //pointer-events: none;
 }
 
 .element {
