@@ -107,6 +107,12 @@ export default [
                             style: {height: 50},
                             tip: '请拖入表单元素',
                         },
+                        // hooks: {
+                        //     beforeAdd: (options) => {
+                        //         const {node} = options;
+                        //         if (!node) return;
+                        //     },
+                        // },
                     },
                     componentName: 'Form.Item',
                 },

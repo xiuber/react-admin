@@ -216,7 +216,6 @@ export default function Element(props) {
         const targetId = targetElement.getAttribute('data-componentId');
         dragPageAction.setSelectedNodeId(targetId);
 
-
         targetElement.classList.add(styles.dragEnter);
 
         const targetRect = targetElement.getBoundingClientRect();
@@ -236,7 +235,10 @@ export default function Element(props) {
     function onDragLeave(e) {
         hideDropGuide();
         const targetElement = getDroppableEle(e.target);
+
         if (!targetElement) return;
+
+        if (targetElement !== e.target) return;
 
         targetElement.classList.remove(styles.dragEnter);
 

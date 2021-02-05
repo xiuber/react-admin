@@ -48,6 +48,12 @@ const defaultConfig = {
         // beforeMove // 返回false， 不允许移动
         // afterMove
 
+        // beforeAdd, // 返回false， 不添加
+        // afterAdd,
+
+        // beforeDelete,  // 返回false，不删除
+        // afterDelete,
+
         // beforeAddChildren // 返回false，不允许添加
         // afterAddChildren
 
@@ -100,8 +106,7 @@ export default baseComponents;
 
 // 获取组件配置 __config 并设置默认值
 export function getComponentConfig(componentName) {
-    const config = componentConfigMap[componentName];
-    if (!config) return defaultConfig;
+    const config = componentConfigMap[componentName] || {};
 
     return {...defaultConfig, ...config};
 }

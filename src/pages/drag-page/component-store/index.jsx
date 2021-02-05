@@ -9,6 +9,7 @@ import {scrollElement, elementIsVisible, filterTree} from '../util';
 import {debounce} from 'lodash';
 import Draggable from './Draggable';
 import './style.less';
+import DragBar from 'src/pages/drag-page/drag-bar';
 
 export default config({
     connect: state => {
@@ -19,6 +20,7 @@ export default config({
             category: state.componentStore.category,
             components: state.componentStore.components,
             activeSideKey: state.dragPage.activeSideKey,
+            componentTreeWidth: state.dragPage.componentTreeWidth,
         };
     },
 })(function ComponentStore(props) {
@@ -29,8 +31,9 @@ export default config({
         category,
         components,
         // activeSideKey,
+        componentTreeWidth, // 保持和tree同宽度
         action: {
-            // dragPage: dragPageAction,
+            dragPage: dragPageAction,
             componentStore: storeAction,
         },
     } = props;
@@ -119,6 +122,12 @@ export default config({
         storeAction.setComponents(result);
     }, 300);
 
+    function handleDragging(info) {
+        const {clientX} = info;
+
+        dragPageAction.setComponentTreeWidth(clientX - 56);
+    }
+
     return (
         <Pane
             header={
@@ -128,7 +137,8 @@ export default config({
                 </div>
             }
         >
-            <div styleName="root">
+            <div styleName="root" style={{width: componentTreeWidth}}>
+                <DragBar onDragging={handleDragging}/>
                 <header>
                     <Input
                         allowClear
