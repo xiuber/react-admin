@@ -22,6 +22,7 @@ const defaultConfig = {
     withWrapper: false, // 是否需要拖拽包裹元素，默认 false，有些组件拖拽无效，需要包裹一下
     // wrapperStyle: undefined, // {display: 'inline-block'}, // 拖拽包裹元素样式，一般用来设置 display width height 等
     // dropAccept: undefined, // ['Text'] || function, // 可拖入组件，默认 任意组件都可放入
+    // 如果某个组件必须存在子元素，可以添加 withHolder: true, 提示用户必须拖入子元素，比如 Form.Item，但是div不要设置true，有些情况div不需要子元素
     withHolder: false, // 当没有子组件的时候，是否显示holder 默认 false ，true && isContainer 显示
     // holderProps: {}, //
     // actions: { // 事件 event:组件事件原始数据 options: 自定义数据
