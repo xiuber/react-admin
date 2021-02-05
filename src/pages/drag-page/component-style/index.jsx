@@ -102,7 +102,13 @@ export default config({
             />
             <Collapse
                 style={{border: 'none'}}
-                defaultActiveKey={['layout',/*  'text', */ 'position', 'background', 'border']}
+                defaultActiveKey={[
+                    // 'layout',
+                    // 'text',
+                    // 'position',
+                    'background',
+                    'border',
+                ]}
             >
                 <Panel header="布局" key="layout">
                     <Layout value={style} onChange={handleChange}/>

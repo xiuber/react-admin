@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
     Form,
     InputNumber,
@@ -11,42 +11,54 @@ import RadioGroup from '../radio-group';
 import RectInputsWrapper from '../rect-inputs-wrapper';
 import './style.less';
 import UnitInput from 'src/pages/drag-page/component-style/unit-input';
-import { handleSyncFields } from 'src/pages/drag-page/component-style/util';
+import {handleSyncFields} from 'src/pages/drag-page/component-style/util';
 import QuickPosition from '../quick-position';
 
 const positionOptions = [
-    { value: 'static', label: '无定位', icon: <PicCenterOutlined /> },
-    { value: 'relative', label: '相对定位', icon: <PicCenterOutlined /> },
-    { value: 'absolute', label: '绝对定位', icon: <PicCenterOutlined /> },
-    { value: 'fixed', label: '固定定位', icon: <PicCenterOutlined /> },
-    { value: 'sticky', label: '粘性定位', icon: <PicCenterOutlined /> },
+    {value: 'static', label: '无定位', icon: <PicCenterOutlined/>},
+    {value: 'relative', label: '相对定位', icon: <PicCenterOutlined/>},
+    {value: 'absolute', label: '绝对定位', icon: <PicCenterOutlined/>},
+    {value: 'fixed', label: '固定定位', icon: <PicCenterOutlined/>},
+    {value: 'sticky', label: '粘性定位', icon: <PicCenterOutlined/>},
 ];
 
 const floatOptions = [
-    { value: 'none', label: '不浮动', icon: <PicCenterOutlined /> },
-    { value: 'left', label: '左浮动', icon: <PicCenterOutlined /> },
-    { value: 'right', label: '右浮动', icon: <PicCenterOutlined /> },
+    {value: 'none', label: '不浮动', icon: <PicCenterOutlined/>},
+    {value: 'left', label: '左浮动', icon: <PicCenterOutlined/>},
+    {value: 'right', label: '右浮动', icon: <PicCenterOutlined/>},
 ];
 const clearOptions = [
-    { value: 'none', label: '不清除', icon: <PicCenterOutlined /> },
-    { value: 'left', label: '左清除', icon: <PicCenterOutlined /> },
-    { value: 'right', label: '右清除', icon: <PicCenterOutlined /> },
-    { value: 'both', label: '左右清除', icon: <PicCenterOutlined /> },
+    {value: 'none', label: '不清除', icon: <PicCenterOutlined/>},
+    {value: 'left', label: '左清除', icon: <PicCenterOutlined/>},
+    {value: 'right', label: '右清除', icon: <PicCenterOutlined/>},
+    {value: 'both', label: '左右清除', icon: <PicCenterOutlined/>},
 ];
 const directionOptions = ['top', 'right', 'bottom', 'left'];
+const quickPositionFields = {
+    topLeft: {top: 0, left: 0},
+    top: {top: 0, left: '50%', translateX: '-50%'},
+    topRight: {top: 0, right: 0},
+    left: {top: '50%', left: 0, translateY: '-50%'},
+    center: {top: '50%', left: '50%', translateY: '-50%', translateX: '-50%'},
+    right: {top: '50%', right: 0, translateY: '-50%'},
+    bottomLeft: {bottom: 0, left: 0},
+    bottom: {bottom: 0, left: '50%', translateX: '-50%'},
+    bottomRight: {right: 0, bottom: 0},
+
+};
 
 export default function Position(props) {
-    const { value, onChange = () => undefined } = props;
+    const {value, onChange = () => undefined} = props;
     const [form] = Form.useForm();
 
     function handleChange(changedValues, allValues) {
-        const { translateY, translateX } = allValues;
-        let { transform } = value;
+        const {translateY, translateX} = allValues;
+        let {transform} = value;
 
         if (!transform) transform = '';
 
         const setTransform = (key, value) => {
-            const re = new RegExp(`${key}\\([^\\)]+\\)`);
+            const re = new RegExp(`${key}([^)]+)`);
 
             if (value) {
                 if (transform.includes(key)) {
@@ -77,13 +89,13 @@ export default function Position(props) {
         // 先重置，否则会有字段不清空情况
         form.resetFields();
         form.setFieldsValue(value);
-        const { transform } = value;
+        const {transform} = value;
         if (!transform) return;
 
         const [, translateY] = (/translateY\(([^)]+)\)/.exec(transform) || []);
         const [, translateX] = (/translateX\(([^)]+)\)/.exec(transform) || []);
 
-        form.setFieldsValue({ translateY, translateX });
+        form.setFieldsValue({translateY, translateX});
     }, [value]);
 
     return (
@@ -101,7 +113,7 @@ export default function Position(props) {
                     <Select
                         placeholder="position"
                         options={positionOptions.map(item => {
-                            const { value, label, icon } = item;
+                            const {value, label, icon} = item;
 
                             let lab = `${label} ${value}`;
 
@@ -115,7 +127,7 @@ export default function Position(props) {
                     />
                 </Form.Item>
                 <Form.Item shouldUpdate noStyle>
-                    {({ getFieldValue }) => {
+                    {({getFieldValue}) => {
                         const position = getFieldValue('position');
                         if (position === 'absolute' || position === 'fixed') {
 
@@ -126,44 +138,70 @@ export default function Position(props) {
                                     marginLeft: 60,
                                     marginBottom: 5,
                                 }}>
-                                    <QuickPosition onClick={item => {
-                                        const { fieldsValue } = item;
-                                        const {
-                                            top = 'auto',
-                                            right = 'auto',
-                                            left = 'auto',
-                                            bottom = 'auto',
-                                            translateY,
-                                            translateX,
-                                        } = fieldsValue;
+                                    <QuickPosition
+                                        selectedKey={item => {
+                                            const {value} = item;
+                                            const fieldsValue = quickPositionFields[value];
+                                            const {
+                                                top = 'auto',
+                                                right = 'auto',
+                                                left = 'auto',
+                                                bottom = 'auto',
+                                                translateY,
+                                                translateX,
+                                            } = fieldsValue;
 
-                                        const fields = {
-                                            top,
-                                            right,
-                                            left,
-                                            bottom,
-                                            translateY,
-                                            translateX,
-                                        };
+                                            const values = form.getFieldsValue();
 
-                                        form.setFieldsValue(fields);
+                                            if ((
+                                                values.top === top
+                                                && values.right === right
+                                                && values.left === left
+                                                && values.bottom === bottom
+                                                && values.translateY === translateY
+                                                && values.translateX === translateX
+                                            )) {
+                                                return value;
+                                            }
+                                        }}
+                                        onClick={item => {
+                                            const {value} = item;
+                                            const fieldsValue = quickPositionFields[value];
+                                            const {
+                                                top = 'auto',
+                                                right = 'auto',
+                                                left = 'auto',
+                                                bottom = 'auto',
+                                                translateY,
+                                                translateX,
+                                            } = fieldsValue;
 
-                                        handleChange(fields, form.getFieldsValue());
+                                            const fields = {
+                                                top,
+                                                right,
+                                                left,
+                                                bottom,
+                                                translateY,
+                                                translateX,
+                                            };
 
-                                    }} />
+                                            form.setFieldsValue(fields);
+
+                                            handleChange(fields, form.getFieldsValue());
+                                        }}/>
                                 </div>
                             );
                         }
                     }}
                 </Form.Item>
                 <Form.Item shouldUpdate noStyle>
-                    {({ getFieldValue }) => {
+                    {({getFieldValue}) => {
                         const position = getFieldValue('position');
 
                         if (!position || position === 'static') return null;
 
                         return (
-                            <RectInputsWrapper large style={{ height: 110, marginLeft: 60, marginBottom: 8 }}>
+                            <RectInputsWrapper large style={{height: 110, marginLeft: 60, marginBottom: 8}}>
                                 {directionOptions.map(item => {
                                     return (
                                         <Form.Item
@@ -174,8 +212,8 @@ export default function Position(props) {
                                             <UnitInput
                                                 allowClear={false}
                                                 placeholder='auto'
-                                                onClick={event => handleSyncFields({ event, form, fields: directionOptions, field: item })}
-                                                onKeyDown={event => handleSyncFields({ enter: true, event, form, fields: directionOptions, field: item })}
+                                                onClick={event => handleSyncFields({event, form, fields: directionOptions, field: item})}
+                                                onKeyDown={event => handleSyncFields({enter: true, event, form, fields: directionOptions, field: item})}
                                             />
                                         </Form.Item>
                                     );
@@ -190,7 +228,7 @@ export default function Position(props) {
                     colon={false}
                 >
                     <InputNumber
-                        style={{ width: '100%' }}
+                        style={{width: '100%'}}
                         step={1}
                         placeholder="z-index"
                     />
@@ -200,21 +238,21 @@ export default function Position(props) {
                     name="translateX"
                     colon={false}
                 >
-                    <UnitInput placeholder="translateX" />
+                    <UnitInput placeholder="translateX"/>
                 </Form.Item>
                 <Form.Item
                     label="垂直移动"
                     name="translateY"
                     colon={false}
                 >
-                    <UnitInput placeholder="translateY" />
+                    <UnitInput placeholder="translateY"/>
                 </Form.Item>
                 <Form.Item
                     label="浮动方向"
                     name="float"
                     colon={false}
                 >
-                    <RadioGroup options={floatOptions} />
+                    <RadioGroup options={floatOptions}/>
                 </Form.Item>
 
                 <Form.Item
@@ -222,7 +260,7 @@ export default function Position(props) {
                     name="clear"
                     colon={false}
                 >
-                    <RadioGroup options={clearOptions} />
+                    <RadioGroup options={clearOptions}/>
                 </Form.Item>
             </Form>
         </div>

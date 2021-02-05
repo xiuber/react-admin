@@ -63,6 +63,11 @@ export default [
                 icon: <PicCenterOutlined/>,
                 config: {
                     componentName: 'div',
+                    props: {
+                        style: {
+                            backgroundImage: `url('https://img.alicdn.com/tfs/TB1zpkUoUT1gK0jSZFhXXaAtVXa-620-430.png')`,
+                        },
+                    },
                     children: [
                         {
                             componentName: 'DragHolder',

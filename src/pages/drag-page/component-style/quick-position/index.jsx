@@ -1,35 +1,45 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PicCenterOutlined } from '@ant-design/icons';
-import { Tooltip } from 'antd';
+import {PicCenterOutlined} from '@ant-design/icons';
+import {Tooltip} from 'antd';
+import classNames from 'classnames';
 import './style.less';
 
 const quickPositionOptions = [
-    { value: 'topLeft', icon: <PicCenterOutlined />, label: '左上角', fieldsValue: { top: 0, left: 0 } },
-    { value: 'top', icon: <PicCenterOutlined />, label: '上居中', fieldsValue: { top: 0, left: '50%', translateX: '-50%' } },
-    { value: 'topRight', icon: <PicCenterOutlined />, label: '右上角', fieldsValue: { top: 0, right: 0 } },
-    { value: 'left', icon: <PicCenterOutlined />, label: '左居中', fieldsValue: { top: '50%', left: 0, translateY: '-50%' } },
-    { value: 'center', placement: 'top', icon: <PicCenterOutlined />, label: '居中', fieldsValue: { top: '50%', left: '50%', translateY: '-50%', translateX: '-50%' } },
-    { value: 'right', icon: <PicCenterOutlined />, label: '右居中', fieldsValue: { top: '50%', right: 0, translateY: '-50%' } },
-    { value: 'bottomLeft', icon: <PicCenterOutlined />, label: '左下角', fieldsValue: { bottom: 0, left: 0 } },
-    { value: 'bottom', icon: <PicCenterOutlined />, label: '下居中', fieldsValue: { bottom: 0, left: '50%', translateX: '-50%' } },
-    { value: 'bottomRight', icon: <PicCenterOutlined />, label: '右下角', fieldsValue: { right: 0, bottom: 0 } },
+    {value: 'topLeft', icon: <PicCenterOutlined/>, label: '左上角'},
+    {value: 'top', icon: <PicCenterOutlined/>, label: '上居中'},
+    {value: 'topRight', icon: <PicCenterOutlined/>, label: '右上角'},
+    {value: 'left', icon: <PicCenterOutlined/>, label: '左居中'},
+    {value: 'center', placement: 'top', icon: <PicCenterOutlined/>, label: '居中'},
+    {value: 'right', icon: <PicCenterOutlined/>, label: '右居中'},
+    {value: 'bottomLeft', icon: <PicCenterOutlined/>, label: '左下角'},
+    {value: 'bottom', icon: <PicCenterOutlined/>, label: '下居中'},
+    {value: 'bottomRight', icon: <PicCenterOutlined/>, label: '右下角'},
 ];
 
 function QuickPosition(props) {
-    const { onClick, type } = props;
+    const {onClick, type, selectedKey} = props;
     const isLine = type === 'line';
 
+    const styleName = classNames(['root', type]);
 
     return (
-        <div styleName={`root ${type}`}>
+        <div styleName={styleName}>
             {quickPositionOptions.map(item => {
-                const { value, placement, label, icon } = item;
+                const {value, placement, label, icon} = item;
+
+                const sk = typeof selectedKey === 'function' ? selectedKey(item) : selectedKey;
+
+                const isSelected = value === sk;
+                const styleName = classNames({
+                    isSelected,
+                });
 
                 return (
                     <Tooltip key={value} placement={isLine ? 'top' : placement || value} title={label}>
                         <div
-                            style={{ cursor: 'pointer' }}
+                            styleName={styleName}
+                            style={{cursor: 'pointer'}}
                             onClick={() => onClick(item)}
                         >
                             {icon}
@@ -44,6 +54,7 @@ function QuickPosition(props) {
 QuickPosition.propTypes = {
     type: PropTypes.string,
     onClick: PropTypes.func,
+    selectedKey: PropTypes.any,
 };
 
 QuickPosition.defaultProps = {

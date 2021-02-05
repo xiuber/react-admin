@@ -1,4 +1,4 @@
-import { useRef, useEffect, createElement } from 'react';
+import {useRef, useEffect, createElement} from 'react';
 import ReactDOM from 'react-dom';
 import inflection from 'inflection';
 import * as raLibComponent from 'ra-lib';
@@ -13,13 +13,16 @@ export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 export function cssToObject(css) {
     if (!css) return {};
 
+    css = css.replace(/"/g, '');
+
     const ele = document.createElement('div');
     ele.innerHTML = `<div style="${css}"></div>`;
 
     const style = ele.childNodes[0].style || {};
 
     const cssKeys = css.split(';').map(item => {
-        const key = inflection.camelize(item.split(':')[0].replace(/-/g, '_'), true);
+        const cssKey = item.split(':')[0].replace(/-/g, '_');
+        const key = inflection.camelize(cssKey, true);
 
         return key.trim();
     }).filter(item => !!item);
@@ -52,7 +55,7 @@ export async function objectToCss(style) {
 
         document.body.append(ele);
 
-        ReactDOM.render(createElement('div', { style }), ele);
+        ReactDOM.render(createElement('div', {style}), ele);
 
         setTimeout(() => {
             const css = ele.childNodes[0].style.cssText;
@@ -67,7 +70,7 @@ export async function objectToCss(style) {
 
 // 表单值转换，纯数字字符串，转换为数字 并不允许输入空格
 export function getNumberValueFromEvent(e) {
-    let { value } = e.target;
+    let {value} = e.target;
     if (!value) return value;
 
     // 不允许输入空格
@@ -85,7 +88,7 @@ export function getNumberValueFromEvent(e) {
 
 // 表单值转换，不允许输入空格
 export function getNoSpaceValueFromEvent(e) {
-    let { value } = e.target;
+    let {value} = e.target;
     if (!value) return value;
 
     // 不允许输入空格
@@ -103,7 +106,7 @@ export function filterTree(array, filter) {
         }
         if (Array.isArray(node.children)) {
             const children = node.children.reduce(getNodes, []);
-            if (children.length) result.push({ ...node, children });
+            if (children.length) result.push({...node, children});
         }
         return result;
     };
@@ -127,7 +130,7 @@ export function elementIsVisible(containerEle, element) {
     const containerScrollTop = containerEle.scrollTop;
     const elementRect = element.getBoundingClientRect();
     const containerRect = containerEle.getBoundingClientRect();
-    const { y, height: elementHeight } = elementRect;
+    const {y, height: elementHeight} = elementRect;
     const elementTop = y - containerRect.y + containerScrollTop;
 
     const elementBottom = elementTop + elementHeight;
@@ -201,7 +204,7 @@ export function isDropAccept(options) {
     if (isChildrenNode(draggingNode, targetNode)) return false;
 
     const config = targetNode.__config || {};
-    const { isContainer = true } = config;
+    const {isContainer = true} = config;
 
     if (!isContainer) return false;
 
@@ -209,7 +212,7 @@ export function isDropAccept(options) {
 
     if (dropAccept === undefined) return true;
 
-    const { componentName } = draggingNode;
+    const {componentName} = draggingNode;
 
     return dropAccept.some(name => name === componentName);
 }

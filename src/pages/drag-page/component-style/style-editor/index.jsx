@@ -32,7 +32,9 @@ export default config({
         let val = value.replace('*', '').trim();
 
         val = val.substring(1, val.length - 1);
+        console.log('style editor save', val);
         const style = cssToObject(val);
+        console.log('style editor save', style);
 
         onChange && onChange(style);
         message.success('保存成功！');
