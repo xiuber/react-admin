@@ -54,7 +54,22 @@ function UnitInput(props) {
 
         // 有处理过，重新触发onChange
         if (e.target.value !== nextValue) {
-            onChange && onChange({target: {value: nextValue}});
+            onChange && onChange(nextValue);
+        }
+    }
+
+    function handleKeyUp(e) {
+        let nextValue = e.target.value || '';
+        nextValue = nextValue.trim();
+
+        // 为纯数字 直接转换为数字
+        if (nextValue && !window.isNaN(nextValue)) {
+            nextValue = window.parseFloat(nextValue);
+        }
+
+        // 有处理过，重新触发onChange
+        if (e.target.value !== nextValue) {
+            onChange && onChange(nextValue);
         }
     }
 
@@ -64,6 +79,7 @@ function UnitInput(props) {
             onChange={onChange}
             {...others}
             onKeyDown={handleKeyDown}
+            onKeyUp={handleKeyUp}
         />
     );
 

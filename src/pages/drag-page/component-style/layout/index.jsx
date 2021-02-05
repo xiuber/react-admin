@@ -65,7 +65,7 @@ export default function Layout(props) {
     const [form] = Form.useForm();
 
     function handleChange(changedValues, allValues) {
-        console.log('allValues', allValues);
+        console.log('allValues', JSON.stringify(allValues, null, 4));
         onChange(allValues);
     }
 
