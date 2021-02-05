@@ -104,6 +104,7 @@ export default function Element(props) {
             isBottom,
             isRight,
             isCenter: isChildren,
+            targetRect,
         } = position;
 
         if (isLeft || isRight) {
@@ -115,7 +116,7 @@ export default function Element(props) {
         const isBefore = isTop || isLeft;
         const isAfter = isBottom || isRight;
 
-        return {...position, isBefore, isAfter, isChildren};
+        return {...position, isBefore, isAfter, isChildren, targetRect};
     }
 
     const onDragOver = function(e) {
@@ -239,7 +240,7 @@ export default function Element(props) {
 
         if (!targetElement) return;
 
-        if (targetElement !== e.target) return;
+        // if (targetElement !== e.target) return;
 
         targetElement.classList.remove(styles.dragEnter);
 

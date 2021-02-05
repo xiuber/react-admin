@@ -117,6 +117,8 @@ export default [
                             const {componentName, props = {}} = node;
                             const {label} = props;
 
+                            if(!label) return componentName;
+
                             return `${componentName} ${label}`;
                         },
                     },
