@@ -38,6 +38,9 @@ const test = setComponentDefaultOptions(
                         children: [
                             {
                                 componentName: 'Input',
+                                props: {
+                                    placeholder: '请输入姓名',
+                                },
                             },
                         ],
                     },
@@ -53,6 +56,7 @@ const test = setComponentDefaultOptions(
                                     style: {
                                         width: '100%',
                                     },
+                                    placeholder: '请输入年龄',
                                 },
                             },
                         ],

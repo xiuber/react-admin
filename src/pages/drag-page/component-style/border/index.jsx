@@ -40,7 +40,8 @@ export default function Background(props) {
             ['Width', 'Style', 'Color'].forEach(p => {
                 ['Top', 'Right', 'Bottom', 'Left'].forEach(item => {
                     const key = `border${item}${p}`;
-                    allValues[key] = allValues[`border${p}`];
+                    // allValues[key] = allValues[`border${p}`];
+                    allValues[key] = undefined;
                 });
             });
         } else {
@@ -52,8 +53,8 @@ export default function Background(props) {
         if (__borderRadius === 'all') {
             ['TopLeft', 'TopRight', 'BottomLeft', 'BottomRight'].forEach(p => {
                 const key = `border${p}Radius`;
-                allValues[key] = allValues.borderRadius;
-
+                // allValues[key] = allValues.borderRadius;
+                allValues[key] = undefined;
             });
         } else {
             allValues.borderRadius = undefined;
