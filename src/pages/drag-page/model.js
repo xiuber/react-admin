@@ -45,7 +45,7 @@ const initialState = {
 
     componentTreeExpendedKeys: [], // 组件树 展开节点
 
-    rightSideWidth: 330,
+    rightSideWidth: 385,
     schemaEditorWidth: 350,
     componentTreeWidth: 250,
 

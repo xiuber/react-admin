@@ -54,7 +54,7 @@ function UnitInput(props) {
 
         // 有处理过，重新触发onChange
         if (e.target.value !== nextValue) {
-            onChange && onChange(nextValue);
+            onChange && onChange({target: {value: nextValue}});
         }
     }
 
@@ -69,7 +69,7 @@ function UnitInput(props) {
 
         // 有处理过，重新触发onChange
         if (e.target.value !== nextValue) {
-            onChange && onChange(nextValue);
+            onChange && onChange({target: {value: nextValue}});
         }
     }
 

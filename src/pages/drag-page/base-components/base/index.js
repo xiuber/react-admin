@@ -66,6 +66,8 @@ export default [
                     props: {
                         style: {
                             backgroundImage: `url('https://img.alicdn.com/tfs/TB1zpkUoUT1gK0jSZFhXXaAtVXa-620-430.png')`,
+                            backgroundColor: 'red',
+                            borderRadius: '50px',
                         },
                     },
                     children: [

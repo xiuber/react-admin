@@ -7,6 +7,7 @@ import Layout from './layout';
 import Font from './font';
 import Position from './position';
 import Background from './background';
+import Border from './border';
 import StyleEditor from './style-editor';
 import {v4 as uuid} from 'uuid';
 import './style.less';
@@ -72,13 +73,13 @@ export default config({
         // prefStyle: {backgroundColor: 'red'} nextStyle: {backgroundColor: 'red111'}, 样式依旧为红色
         selectedNode.props.key = uuid();
 
-        // console.log('selectedNode style', JSON.stringify(selectedNode.props.style, null, 4));
+        console.log('selectedNode style', JSON.stringify(selectedNode.props.style, null, 4));
 
         dragPageAction.render();
     }
 
     useEffect(() => {
-        dragPageAction.setRightSideWidth(styleEditorVisible ? 440 : 330);
+        dragPageAction.setRightSideWidth(styleEditorVisible ? 440 : 385);
     }, [styleEditorVisible]);
 
     return (
@@ -106,7 +107,7 @@ export default config({
                     // 'layout',
                     // 'text',
                     // 'position',
-                    'background',
+                    // 'background',
                     'border',
                 ]}
             >
@@ -123,7 +124,7 @@ export default config({
                     <Background value={style} onChange={handleChange}/>
                 </Panel>
                 <Panel header="边框" key="border">
-                    边框
+                    <Border value={style} onChange={handleChange}/>
                 </Panel>
             </Collapse>
         </Pane>

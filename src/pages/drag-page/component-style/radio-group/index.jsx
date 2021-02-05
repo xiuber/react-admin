@@ -4,7 +4,7 @@ import {Radio, Tooltip} from 'antd';
 import './style.less';
 
 const RadioGroup = props => {
-    const {options, onChange, ...others} = props;
+    const {options, nullable, onChange, ...others} = props;
 
     function renderOptions(options) {
         return options.map((item, index) => {
@@ -13,6 +13,7 @@ const RadioGroup = props => {
                 label,
                 icon,
                 tip,
+                title: ti,
             } = item;
 
             const isLast = index === options.length - 1;
@@ -21,6 +22,7 @@ const RadioGroup = props => {
             const la = icon || label;
 
             function handleClick() {
+                if (!nullable) return;
                 // 再次点击选中清空
                 setTimeout(() => {
                     if (props.value === value) {
@@ -29,8 +31,10 @@ const RadioGroup = props => {
                 });
             }
 
+            const tooltipTitle = ti || `${title} ${value}`;
+
             let labelNode = (
-                <Tooltip placement={isLast ? 'topRight' : 'top'} title={`${title} ${value}`}>
+                <Tooltip placement={isLast ? 'topRight' : 'top'} title={tooltipTitle}>
                     <div style={{userSelect: 'none'}} onClick={handleClick}>
                         {la}
                     </div>
@@ -58,6 +62,10 @@ const RadioGroup = props => {
 
 RadioGroup.propTypes = {
     options: PropTypes.array,
+    nullable: PropTypes.bool,
+};
+RadioGroup.defaultProps = {
+    nullable: true,
 };
 
 export default RadioGroup;
