@@ -33,6 +33,7 @@ export default [
                 icon: <PicCenterOutlined/>,
                 config: {
                     __config: {
+                        componentDisplayName: 'PageContent',
                         withHolder: true,
                         holderProps: {
                             style: {

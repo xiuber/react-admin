@@ -18,6 +18,12 @@ export default {
             previewStyle: {width: '100%'}, // 预览组件样式
             previewWrapperStyle: {}, // 预览容器样式
             config: {
+                // 基础组件唯一稳定id， 默认componentName
+                // 有些特殊情况，两个基础组件 componentName 会相同
+                // 比如 PageContent 和 div componentName 都为div
+                // 在获取 getComponentConfig 时，仅通过 componentName 无法区分
+                // PageContent 需要设置一个id
+                id: 'Select', 
                 componentName: 'Select',
                 props: {
                     style: {width: '100%'},

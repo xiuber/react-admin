@@ -72,8 +72,10 @@ baseComponents.forEach(item => {
         it.children.forEach(i => {
             const {title: t, config, icon} = i;
             const {__config = defaultConfig, componentName, children} = config;
+
             if (componentConfigMap[componentName]) {
-                console.info(`${title} > ${subTitle} > ${t} componentName 已经被使用，注意，相同的componentName将使用同一的__config配置！`);
+                console.info(`${title} > ${subTitle} > ${t} componentName 已经被使用！
+注意：相同的componentName将使用相同的__config、icon配置，若想区分，请在components中定义别名组件，比如PageContent！`);
             }
             componentConfigMap[componentName] = __config;
             componentIconMap[componentName] = icon;
@@ -115,7 +117,9 @@ export function getComponentConfig(node) {
     return {...defaultConfig, ...config};
 }
 
-export function getComponentIcon(componentName, isContainer = true) {
+export function getComponentIcon(node = {}, isContainer = true) {
+    const {componentName} = node;
+
     const icon = componentIconMap[componentName];
     if (!icon) return isContainer ? <DropboxOutlined/> : <MacCommandOutlined/>;
     return icon;

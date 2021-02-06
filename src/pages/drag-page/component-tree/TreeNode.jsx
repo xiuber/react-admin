@@ -25,7 +25,7 @@ export default config({
 
     let {key, title, isContainer, draggable, nodeData} = node;
 
-    let icon = getComponentIcon(nodeData?.componentName, isContainer);
+    let icon = getComponentIcon(nodeData, isContainer);
 
     title = <span>{icon}{title}</span>;
 
