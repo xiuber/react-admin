@@ -10,6 +10,7 @@ import {PicCenterOutlined} from '@ant-design/icons';
 
 import RadioGroup from '../radio-group';
 import UnitInput from '../unit-input';
+import ColorInput from '../color-input';
 
 import './style.less';
 
@@ -25,6 +26,26 @@ const inputTypeOptions = [
     {value: 'separate', title: '单独设置', icon: <PicCenterOutlined/>},
 ];
 
+
+const radiusKeys = [
+    'TopLeft',
+    'TopRight',
+    'BottomLeft',
+    'BottomRight',
+];
+
+const borderKeys = [
+    'Top',
+    'Right',
+    'Bottom',
+    'Left',
+];
+const borderPropKeys = [
+    'Width',
+    'Style',
+    'Color',
+];
+
 const layout = {
     labelCol: {flex: '30px'},
     wrapperCol: {flex: 1},
@@ -37,29 +58,24 @@ export default function Background(props) {
         const {__border, __borderRadius} = allValues;
 
         if (__border === 'all') {
-            ['Width', 'Style', 'Color'].forEach(p => {
-                ['Top', 'Right', 'Bottom', 'Left'].forEach(item => {
+            borderPropKeys.forEach(p => {
+                borderKeys.forEach(item => {
                     const key = `border${item}${p}`;
-                    // allValues[key] = allValues[`border${p}`];
-                    allValues[key] = undefined;
+                    allValues[key] = allValues[`border${p}`];
                 });
             });
-        } else {
-            ['Width', 'Style', 'Color'].forEach(p => {
-                allValues[`border${p}`] = undefined;
-            });
+
         }
 
         if (__borderRadius === 'all') {
-            ['TopLeft', 'TopRight', 'BottomLeft', 'BottomRight'].forEach(p => {
+            radiusKeys.forEach(p => {
                 const key = `border${p}Radius`;
-                // allValues[key] = allValues.borderRadius;
-                allValues[key] = undefined;
+                allValues[key] = allValues.borderRadius;
             });
-        } else {
-            allValues.borderRadius = undefined;
         }
 
+        Reflect.deleteProperty(allValues, 'borderRadius');
+        Reflect.deleteProperty(allValues, 'border');
         Reflect.deleteProperty(allValues, '__borderRadius');
         Reflect.deleteProperty(allValues, '__border');
 
@@ -72,40 +88,44 @@ export default function Background(props) {
         form.resetFields();
         form.setFieldsValue(value);
 
-        const {
-            borderTopLeftRadius = '',
-            borderTopRightRadius = '',
-            borderBottomLeftRadius = '',
-            borderBottomRightRadius = '',
+        const isSame = arr => {
+            if (!arr) return true;
 
-            borderTopWidth = '',
-            borderRightWidth = '',
-            borderBottomWidth = '',
-            borderLeftWidth = '',
-        } = value;
+            const value = arr[0];
 
-        if (
-            borderTopLeftRadius !== ''
-            || borderTopRightRadius !== ''
-            || borderBottomLeftRadius !== ''
-            || borderBottomRightRadius !== ''
-        ) {
+            return arr.every(item => item === value);
+        };
+
+        const radiusValues = radiusKeys.map(key => value[`border${key}Radius`]);
+        const borderValues = borderKeys.map(key => {
+            return borderPropKeys.map(p => value[`border${key}${p}`]).join(' ');
+        });
+
+        if (isSame(radiusValues)) {
+            form.setFieldsValue({
+                __borderRadius: 'all',
+                borderRadius: radiusValues[0],
+            });
+
+        } else {
             form.setFieldsValue({__borderRadius: 'separate'});
-        } else {
-            form.setFieldsValue({__borderRadius: 'all'});
         }
 
-        if (
-            borderTopWidth !== ''
-            || borderRightWidth !== ''
-            || borderBottomWidth !== ''
-            || borderLeftWidth !== ''
-        ) {
+        if (isSame(borderValues)) {
+            const borders = {};
+            borderPropKeys.forEach((p, index) => {
+                const key = `border${p}`;
+                borders[key] = borderValues[0].split(' ')[index];
+            });
+
+            form.setFieldsValue({
+                __border: 'all',
+                ...borders,
+            });
+
+        } else {
             form.setFieldsValue({__border: 'separate'});
-        } else {
-            form.setFieldsValue({__border: 'all'});
         }
-
     }, [value]);
 
     return (
@@ -296,10 +316,9 @@ export default function Background(props) {
                                             name="borderColor"
                                             colon={false}
                                         >
-                                            <UnitInput
+                                            <ColorInput
                                                 placeholder="border-color"
-                                                onChange={e => {
-                                                    const {value} = e.target;
+                                                onChange={value => {
                                                     const fieldsValue = {
                                                         borderTopColor: value,
                                                         borderRightColor: value,
@@ -358,7 +377,7 @@ export default function Background(props) {
                                             name={`${name}Color`}
                                             colon={false}
                                         >
-                                            <UnitInput placeholder={`${placeholder}-color`}/>
+                                            <ColorInput placeholder={`${placeholder}-color`}/>
                                         </Form.Item>
                                     </Col>
                                 </Row>
