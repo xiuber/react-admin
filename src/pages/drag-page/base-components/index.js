@@ -5,6 +5,9 @@ import {cloneDeep} from 'lodash';
 import base from './base';
 import common from './common';
 import dataInput from './data-input';
+import propsMap from './props';
+
+console.log('propsMap', propsMap['Button']);
 
 let baseComponents = [
     {title: '默认', children: base},

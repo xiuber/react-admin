@@ -54,8 +54,8 @@ export default config({
     }
 
     const panes = [
-        {key: 'attribute', title: '属性', component: <ComponentProps/>, icon: <ShareAltOutlined/>},
         {key: 'style', title: '样式', component: <ComponentStyle/>, icon: <AppstoreOutlined/>},
+        {key: 'attribute', title: '属性', component: <ComponentProps/>, icon: <ShareAltOutlined/>},
         {key: 'action', title: '事件', component: '事件', icon: <DesktopOutlined/>},
         {key: 'dataSource', title: '数据', component: '数据', icon: <ShareAltOutlined/>},
         {key: 'comment', title: '注释', component: '注释', icon: <ShareAltOutlined/>},

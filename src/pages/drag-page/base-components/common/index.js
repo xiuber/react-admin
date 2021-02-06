@@ -28,6 +28,7 @@ export default [
                         props: {
                             type,
                             danger,
+                            block: true,
                         },
                         children: [
                             {

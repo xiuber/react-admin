@@ -41,6 +41,34 @@ const test = setComponentDefaultOptions(
                             },
                         ],
                     },
+                    {
+                        componentName: 'Button',
+                        props: {
+                            type: 'primary',
+                            style: {
+                                marginRight: 8,
+                            },
+                        },
+                        children: [
+                            {
+                                componentName: 'Text',
+                                props: {
+                                    text: '保存',
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        componentName: 'Button',
+                        children: [
+                            {
+                                componentName: 'Text',
+                                props: {
+                                    text: '重置',
+                                },
+                            },
+                        ],
+                    },
                 ],
             },
         ],

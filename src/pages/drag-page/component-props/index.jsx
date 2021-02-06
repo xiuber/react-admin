@@ -1,10 +1,31 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
+import propsMap from '../base-components/props';
 import './style.less';
 
+export default config({
+    connect: state => {
 
-export default config({})(function ComponentProps(props) {
+        return {
+            selectedNode: state.dragPage.selectedNode,
+        };
+    },
+})(function ComponentProps(props) {
+    const {
+        selectedNode,
+    } = props;
+    const [propFields, setPropFields] = useState([]);
+    useEffect(() => {
+        if (!selectedNode) return setPropFields([]);
+
+        const {componentName} = selectedNode;
+        const propFields = propsMap[componentName];
+
+        setPropFields(propFields);
+    }, [selectedNode]);
+
+    console.log(propFields);
     return (
         <Pane
             fitHeight
@@ -14,7 +35,7 @@ export default config({})(function ComponentProps(props) {
                 </div>
             )}
         >
-            <div style={{height: 1000, background: 'green'}}/>
+            {JSON.stringify(propFields, null, 4)}
         </Pane>
     );
 });

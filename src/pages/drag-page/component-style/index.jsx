@@ -47,7 +47,6 @@ export default config({
     let currentName = componentDisplayName || componentName;
     if (typeof currentName === 'function') currentName = currentName({node: selectedNode});
 
-
     const options = [
         {key: 'layout', title: '布局', icon: <DesktopOutlined/>, Component: Layout},
         {key: 'font', title: '文字', icon: <DesktopOutlined/>, Component: Font},
