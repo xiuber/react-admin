@@ -50,6 +50,7 @@ export default config({
     const [styleEditorVisible, setStyleEditorVisible] = useState(false);
     const [, setRender] = useState('');
     const boxRef = useRef(null);
+
     const [height] = useHeight(boxRef);
 
     function handleChange(values, replace) {
@@ -94,6 +95,7 @@ export default config({
         {key: 'background', title: '背景', icon: <DesktopOutlined/>, Component: Background},
         {key: 'border', title: '边框', icon: <DesktopOutlined/>, Component: Border},
     ];
+
     return (
         <Pane
             fitHeight
