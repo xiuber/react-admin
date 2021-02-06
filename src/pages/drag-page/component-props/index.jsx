@@ -6,7 +6,7 @@ import propsMap from '../base-components/props';
 import elementMap from './form-element';
 import CurrentSelectedNode from '../current-selected-node';
 import './style.less';
-
+import {v4 as uuid} from 'uuid';
 
 const layout = {
     labelCol: {flex: '100px'},
@@ -23,6 +23,7 @@ export default config({
 })(function ComponentProps(props) {
     const {
         selectedNode,
+        action: {dragPage: dragPageAction},
     } = props;
 
     const [propFields, setPropFields] = useState([]);
@@ -30,24 +31,42 @@ export default config({
 
     function handleChange(changedValues, allValues) {
 
-        console.log('allValues', JSON.stringify(allValues, null, 4));
+        console.log('props', JSON.stringify(allValues, null, 4));
+
+        if (!selectedNode?.componentName) return;
+
+        if (!selectedNode?.props) selectedNode.props = {};
+
+        selectedNode.props = {
+            ...selectedNode.props,
+            ...allValues,
+            key: uuid(),
+        };
+
+        dragPageAction.render();
     }
 
     useEffect(() => {
+        form.resetFields();
+
         if (!selectedNode) return setPropFields([]);
 
         const {componentName} = selectedNode;
         const propFields = propsMap[componentName];
 
         setPropFields(propFields || []);
-    }, [selectedNode]);
 
+        const fieldsValue = selectedNode.props || {};
+
+        form.setFieldsValue(fieldsValue);
+
+    }, [selectedNode]);
     return (
         <Pane
             fitHeight
             header={(
                 <div>
-                    <CurrentSelectedNode/>
+                    <CurrentSelectedNode />
                 </div>
             )}
         >

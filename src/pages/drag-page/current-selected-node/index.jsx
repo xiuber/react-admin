@@ -5,6 +5,8 @@ import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
 export default config({
     connect: state => {
         return {
+            // 保证页面配置改变之后，重新渲染
+            pageConfig: state.dragPage.pageConfig,
             selectedNode: state.dragPage.selectedNode,
         };
     },

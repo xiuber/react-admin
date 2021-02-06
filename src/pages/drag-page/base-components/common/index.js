@@ -23,7 +23,7 @@ export default [
                     config: {
                         __config: {
                             isContainer: false,
-                            componentDisplayName: 'render',
+                            renderAsDisplayName: true,
                         },
                         componentName: 'Button',
                         props: {

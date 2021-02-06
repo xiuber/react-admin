@@ -18,7 +18,8 @@ const defaultConfig = {
     // componentId: undefined, // 渲染时组件id
     // componentDesc: undefined, // 组件描述
     // componentType: undefined, // 组件类型，详见 getComponent方法，默认 drag-page/components -> antd -> html
-    // componentDisplayName: '', // 组件展示名称，默认 componentName，string 字符串 || ReactNode 节点 || ({node, pageConfig}) => name 函数返回值|| 'render' 渲染节点
+    // componentDisplayName: '', // 组件展示名称，默认 componentName，string 字符串 || ReactNode 节点 || ({node, pageConfig}) => name 函数返回值
+    // renderAsDisplayName: '', // 是否渲染组件，作为componentDisplayName
     draggable: true, // 组件是否可拖拽 默认 true
     isContainer: true, // 组件是否是容器，默认true，如果是容器，则可托放入子节点
     withWrapper: false, // 是否需要拖拽包裹元素，默认 false，有些组件拖拽无效，需要包裹一下
@@ -115,18 +116,20 @@ export function getComponentDisplayName(node, render) {
     if (!node) return '';
 
     const {__config, componentName} = node;
-    const {componentDisplayName} = __config;
+    const {componentDisplayName, renderAsDisplayName} = __config;
 
     let name = componentDisplayName || componentName;
 
     if (typeof name === 'function') name = name({node});
 
-    if (render && componentDisplayName === 'render') {
+    if (render && renderAsDisplayName) {
         name = (
-            <Element
-                config={node}
-                activeToolKey="preview"
-            />
+            <div style={{display: 'inline-block', maxWidth: 200}}>
+                <Element
+                    config={node}
+                    activeToolKey="preview"
+                />
+            </div>
         );
     }
 

@@ -2,12 +2,11 @@ export default [
     {
         label: '按钮类型', field: 'type', type: 'enum', defaultValue: 'default', version: '',
         options: [
-            {value: 'primary', label: 'primary'},
-            {value: 'ghost', label: 'ghost'},
-            {value: 'dashed', label: 'dashed'},
-            {value: 'link', label: 'link'},
-            {value: 'text', label: 'text'},
-            {value: 'default', label: 'default'},
+            {value: 'primary', label: '主按钮'},
+            {value: 'ghost', label: '幽灵按钮'},
+            {value: 'dashed', label: '虚线按钮'},
+            {value: 'link', label: '连接按钮'},
+            {value: 'text', label: '文本按钮'},
         ],
         desc: '设置按钮类型',
     },
@@ -23,17 +22,16 @@ export default [
     {
         label: '按钮形状', field: 'shape', type: 'enum', version: '',
         options: [
-            {value: 'circle', label: 'circle'},
-            {value: 'round', label: 'round'},
+            {value: 'circle', label: '原型'},
+            {value: 'round', label: '圆角'},
         ],
         desc: '设置按钮形状',
     },
     {
         label: '按钮大小', field: 'size', type: 'enum', defaultValue: 'middle', version: '',
         options: [
-            {value: 'large', label: 'large'},
-            {value: 'middle', label: 'middle'},
-            {value: 'small', label: 'small'},
+            {value: 'large', label: '大号'},
+            {value: 'small', label: '小号'},
         ],
         desc: '设置按钮大小',
     },

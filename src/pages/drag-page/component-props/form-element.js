@@ -4,26 +4,28 @@ import {Input, Select, Switch, InputNumber} from 'antd';
 
 export default {
     boolean: () => props => {
+        const {value} = props;
         return (
-            <Switch {...props}/>
+            <Switch checked={value} {...props}/>
         );
     },
     string: options => props => {
         const {field} = options;
         return (
-            <Input placeholder={field} {...props}/>
+            <Input allowClear placeholder={field} {...props}/>
         );
     },
     number: options => props => {
         const {field} = options;
         return (
-            <InputNumber placeholder={field} {...props}/>
+            <InputNumber allowClear placeholder={field} {...props}/>
         );
     },
     enum: options => props => {
         const {field, options: _options} = options;
         return (
             <Select
+                allowClear
                 placeholder={field}
                 options={_options}
                 {...props}
