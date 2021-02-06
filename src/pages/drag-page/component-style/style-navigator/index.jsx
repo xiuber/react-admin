@@ -8,6 +8,7 @@ const StyleNavigator = props => {
     const {
         dataSource,
         containerRef,
+        onClick,
         ...others
     } = props;
 
@@ -21,6 +22,7 @@ const StyleNavigator = props => {
                     <Tooltip placement="left" title={title}>
                         <div
                             onClick={() => {
+                                onClick && onClick(key);
                                 const element = document.getElementById(id);
                                 scrollElement(containerRef.current, element, true, true, -12);
                             }}

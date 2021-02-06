@@ -47,8 +47,18 @@ export default config({
     let currentName = componentDisplayName || componentName;
     if (typeof currentName === 'function') currentName = currentName({node: selectedNode});
 
+
+    const options = [
+        {key: 'layout', title: '布局', icon: <DesktopOutlined/>, Component: Layout},
+        {key: 'font', title: '文字', icon: <DesktopOutlined/>, Component: Font},
+        {key: 'position', title: '定位', icon: <DesktopOutlined/>, Component: Position},
+        {key: 'background', title: '背景', icon: <DesktopOutlined/>, Component: Background},
+        {key: 'border', title: '边框', icon: <DesktopOutlined/>, Component: Border},
+    ];
+
     const [styleEditorVisible, setStyleEditorVisible] = useState(false);
     const [, setRender] = useState('');
+    const [activeKey, setActiveKey] = useState(options.map(item => item.key));
     const boxRef = useRef(null);
 
     const [height] = useHeight(boxRef);
@@ -88,13 +98,6 @@ export default config({
         dragPageAction.setRightSideWidth(styleEditorVisible ? 440 : 385);
     }, [styleEditorVisible]);
 
-    const options = [
-        {key: 'layout', title: '布局', icon: <DesktopOutlined/>, Component: Layout},
-        {key: 'font', title: '文字', icon: <DesktopOutlined/>, Component: Font},
-        {key: 'position', title: '定位', icon: <DesktopOutlined/>, Component: Position},
-        {key: 'background', title: '背景', icon: <DesktopOutlined/>, Component: Background},
-        {key: 'border', title: '边框', icon: <DesktopOutlined/>, Component: Border},
-    ];
 
     return (
         <Pane
@@ -116,11 +119,19 @@ export default config({
                 onCancel={() => setStyleEditorVisible(false)}
             />
             <div styleName="root">
-                <StyleNavigator containerRef={boxRef} dataSource={options}/>
+                <StyleNavigator
+                    containerRef={boxRef}
+                    dataSource={options}
+                    onClick={key => {
+                        const nextActiveKey = Array.from(new Set([key, ...activeKey]));
+                        setActiveKey(nextActiveKey);
+                    }}
+                />
                 <div ref={boxRef} styleName="collapseBox" style={{height}}>
                     <Collapse
                         style={{border: 'none'}}
-                        defaultActiveKey={options.map(item => item.key)}
+                        activeKey={activeKey}
+                        onChange={activeKey => setActiveKey(activeKey)}
                     >
                         {options.map(item => {
                             const {key, title, Component} = item;
