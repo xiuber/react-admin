@@ -94,15 +94,17 @@ export default function Element(props) {
     };
 
     function onDragEnter(e) {
-        e.stopPropagation();
-        e.preventDefault();
+        // 不要做任何导致当前页面render的操作，否则元素多了会很卡
+        // e.stopPropagation();
+        // e.preventDefault();
 
-        const targetElement = getDroppableEle(e.target);
+        // const targetElement = getDroppableEle(e.target);
 
-        if (!targetElement) return;
+        // if (!targetElement) return;
 
-        const targetId = targetElement.getAttribute('data-componentId');
-        dragPageAction.setSelectedNodeId(targetId);
+        // const targetId = targetElement.getAttribute('data-componentId');
+        // 不要设置，否则会很卡
+        // dragPageAction.setSelectedNodeId(targetId);
     }
 
     function onDragLeave() {
@@ -119,6 +121,7 @@ export default function Element(props) {
     }
 
     function onDragOver(e) {
+        // 不要做任何导致当前页面render的操作，否则元素多了会很卡
         e.stopPropagation();
         e.preventDefault();
 

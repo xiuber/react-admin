@@ -36,6 +36,10 @@ const StyleNavigator = props => {
     );
 };
 
-StyleNavigator.propTypes = {};
+StyleNavigator.propTypes = {
+    dataSource: PropTypes.array,
+    containerRef: PropTypes.object,
+    onClick: PropTypes.func,
+};
 
 export default StyleNavigator;
