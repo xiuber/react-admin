@@ -105,7 +105,7 @@ export default function Font(props) {
                     name="textAlign"
                     colon={false}
                 >
-                    <RadioGroup options={textAlignOptions}/>
+                    <RadioGroup options={textAlignOptions} getPopupContainer={() => document.getElementById('styleCollapseBox')}/>
                 </Form.Item>
                 <Form.Item
                     labelCol={labelCol}

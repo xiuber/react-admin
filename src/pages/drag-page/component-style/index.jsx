@@ -110,7 +110,12 @@ export default config({
                         setActiveKey(nextActiveKey);
                     }}
                 />
-                <div ref={boxRef} styleName="collapseBox" style={{height}}>
+                <div
+                    ref={boxRef}
+                    styleName="collapseBox"
+                    id="styleCollapseBox"
+                    style={{height}}
+                >
                     <Collapse
                         style={{border: 'none'}}
                         activeKey={activeKey}
@@ -120,7 +125,7 @@ export default config({
                             const {key, title, Component} = item;
                             return (
                                 <Panel key={key} header={<div id={`style-${key}`}>{title}</div>}>
-                                    <Component value={style} onChange={handleChange}/>
+                                    <Component containerRef={boxRef} value={style} onChange={handleChange}/>
                                 </Panel>
                             );
                         })}

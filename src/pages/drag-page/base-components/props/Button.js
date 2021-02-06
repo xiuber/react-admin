@@ -1,3 +1,5 @@
+import {targetOptions} from '../index';
+
 export default [
     {
         label: '按钮类型', field: 'type', type: 'radio-group', defaultValue: 'default', version: '',
@@ -33,7 +35,10 @@ export default [
     {label: '幽灵', category: '选项', field: 'ghost', type: 'boolean', defaultValue: false, version: '', desc: '幽灵属性，使按钮背景透明'},
     {label: '撑满', category: '选项', field: 'block', type: 'boolean', defaultValue: false, version: '', desc: '将按钮宽度调整为其父宽度的选项'},
     {label: '跳转地址', field: 'href', type: 'string', version: '', desc: '点击跳转的地址，指定此属性 button 的行为和 a 链接一致'},
-    {label: '跳转目标', appendField: 'href', field: 'target', type: 'string', version: '', desc: '相当于 a 链接的 target 属性，href 存在时生效'},
+    {
+        label: '跳转目标', appendField: 'href', field: 'target', type: 'radio-group', version: '', desc: '相当于 a 链接的 target 属性，href 存在时生效',
+        options: targetOptions,
+    },
     {label: '原生htmlType', field: 'htmlType', type: 'string', defaultValue: 'button', version: '', desc: '设置 button 原生的 type 值，可选值请参考 HTML 标准'},
     // {label: '按钮事件', field: 'onClick', type: '(event) => void', version: '', desc: '点击按钮时的回调'},
 ];

@@ -144,6 +144,7 @@ export default function Background(props) {
                     <RadioGroup
                         placement="top"
                         allowClear={false}
+                        getPopupContainer={() => document.getElementById('styleCollapseBox')}
                         options={inputTypeOptions}
                         onChange={() => {
                             setTimeout(() => {
@@ -251,6 +252,7 @@ export default function Background(props) {
                     <RadioGroup
                         allowClear={false}
                         options={inputTypeOptions}
+                        getPopupContainer={() => document.getElementById('styleCollapseBox')}
                         onChange={() => {
                             setTimeout(() => {
                                 const allValues = form.getFieldsValue();

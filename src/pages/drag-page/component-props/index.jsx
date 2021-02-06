@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {Form, ConfigProvider} from 'antd';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
@@ -28,6 +28,7 @@ export default config({
 
     const [propFields, setPropFields] = useState([]);
     const [form] = Form.useForm();
+    const rootRef = useRef(null);
 
     function handleChange(changedValues, allValues) {
 
@@ -99,7 +100,7 @@ export default config({
                                     colon={false}
                                     noStyle
                                 >
-                                    <Element/>
+                                    <Element getPopupContainer={() => rootRef.current}/>
                                 </Form.Item>
                             );
                         })}
@@ -127,7 +128,7 @@ export default config({
                 name={field}
                 colon={false}
             >
-                <Element/>
+                <Element getPopupContainer={() => rootRef.current}/>
             </Form.Item>
         );
     }
@@ -141,7 +142,7 @@ export default config({
                 </div>
             )}
         >
-            <div styleName="root">
+            <div styleName="root" ref={rootRef}>
                 <ConfigProvider autoInsertSpaceInButton={false}>
                     <Form
                         form={form}

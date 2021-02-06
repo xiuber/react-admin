@@ -4,7 +4,7 @@ import {Radio, Tooltip} from 'antd';
 import './style.less';
 
 const RadioGroup = props => {
-    const {options, allowClear, onChange, placement, ...others} = props;
+    const {options, allowClear, onChange, placement, getPopupContainer, ...others} = props;
 
     function renderOptions(options) {
         return options.map((item, index) => {
@@ -41,6 +41,7 @@ const RadioGroup = props => {
                     placement={pl}
                     title={tooltipTitle}
                     mouseLeaveDelay={0}
+                    getPopupContainer={getPopupContainer}
                 >
                     <div style={{userSelect: 'none'}} onClick={handleClick}>
                         {la}

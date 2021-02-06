@@ -42,6 +42,7 @@ export default {
     },
     'radio-group': options => props => {
         const {options: _options} = options;
+        console.log(props);
         return (
             <RadioGroup
                 allowClear

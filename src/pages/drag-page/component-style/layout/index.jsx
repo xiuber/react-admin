@@ -87,7 +87,7 @@ export default function Layout(props) {
                     name="display"
                     colon={false}
                 >
-                    <RadioGroup options={displayOptions}/>
+                    <RadioGroup options={displayOptions} getPopupContainer={() => document.getElementById('styleCollapseBox')}/>
                 </Form.Item>
                 <Form.Item shouldUpdate noStyle>
                     {({getFieldValue}) => {
@@ -101,28 +101,28 @@ export default function Layout(props) {
                                     name="flexDirection"
                                     colon={false}
                                 >
-                                    <RadioGroup options={flexDirectionOptions}/>
+                                    <RadioGroup options={flexDirectionOptions} getPopupContainer={() => document.getElementById('styleCollapseBox')}/>
                                 </Form.Item>
                                 <Form.Item
                                     label="主轴对齐"
                                     name="justifyContent"
                                     colon={false}
                                 >
-                                    <RadioGroup options={justifyContentOptions}/>
+                                    <RadioGroup options={justifyContentOptions} getPopupContainer={() => document.getElementById('styleCollapseBox')}/>
                                 </Form.Item>
                                 <Form.Item
                                     label="辅轴对齐"
                                     name="alignItems"
                                     colon={false}
                                 >
-                                    <RadioGroup options={alignItemsOptions}/>
+                                    <RadioGroup options={alignItemsOptions} getPopupContainer={() => document.getElementById('styleCollapseBox')}/>
                                 </Form.Item>
                                 <Form.Item
                                     label="换行方式"
                                     name="flexWrap"
                                     colon={false}
                                 >
-                                    <RadioGroup options={flexWrapOptions}/>
+                                    <RadioGroup options={flexWrapOptions} getPopupContainer={() => document.getElementById('styleCollapseBox')}/>
                                 </Form.Item>
                                 <Form.Item
                                     label="放大比例"

@@ -112,6 +112,13 @@ baseComponents.forEach(item => {
 
 export default baseComponents;
 
+export const targetOptions = [
+    {value: '_blank', label: '新页'},
+    {value: '_self', label: '当前页'},
+    {value: '_parent', label: '父级页'},
+    {value: '_top', label: 'top'},
+]
+
 export function getComponentDisplayName(node, render) {
     if (!node) return '';
 

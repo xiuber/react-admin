@@ -252,7 +252,7 @@ export default function Position(props) {
                     name="float"
                     colon={false}
                 >
-                    <RadioGroup options={floatOptions}/>
+                    <RadioGroup options={floatOptions} getPopupContainer={() => document.getElementById('styleCollapseBox')}/>
                 </Form.Item>
 
                 <Form.Item
@@ -260,7 +260,7 @@ export default function Position(props) {
                     name="clear"
                     colon={false}
                 >
-                    <RadioGroup options={clearOptions}/>
+                    <RadioGroup options={clearOptions} getPopupContainer={() => document.getElementById('styleCollapseBox')}/>
                 </Form.Item>
             </Form>
         </div>

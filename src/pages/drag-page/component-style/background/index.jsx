@@ -154,7 +154,7 @@ export default function Background(props) {
                                     name="backgroundSize"
                                     colon={false}
                                 >
-                                    <RadioGroup options={backgroundSizeOptions}/>
+                                    <RadioGroup options={backgroundSizeOptions} getPopupContainer={() => document.getElementById('styleCollapseBox')}/>
                                 </Form.Item>
                                 <Form.Item shouldUpdate noStyle>
                                     {({getFieldValue}) => {
@@ -269,7 +269,7 @@ export default function Background(props) {
                                     name="backgroundRepeat"
                                     colon={false}
                                 >
-                                    <RadioGroup options={backgroundRepeatOptions}/>
+                                    <RadioGroup options={backgroundRepeatOptions} getPopupContainer={() => document.getElementById('styleCollapseBox')}/>
                                 </Form.Item>
                             </>
                         );
