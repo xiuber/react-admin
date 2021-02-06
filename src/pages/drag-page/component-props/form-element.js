@@ -34,6 +34,6 @@ export default {
     },
     IconReactNode: options => props => {
         // TODO
-        return '请选择图标';
+        return <span style={{color: 'red'}}>TODO 请选择图标</span>;
     },
 };

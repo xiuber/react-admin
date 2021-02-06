@@ -66,7 +66,7 @@ export default config({
             fitHeight
             header={(
                 <div>
-                    <CurrentSelectedNode />
+                    <CurrentSelectedNode/>
                 </div>
             )}
         >
@@ -80,7 +80,7 @@ export default config({
                         const {label, field, type} = item;
                         let Element = elementMap[type](item);
                         if (!Element) {
-                            Element = () => <span>${type} 对应的表单元素不存在</span>;
+                            Element = () => <span style={{color: 'red'}}>TODO ${type} 对应的表单元素不存在</span>;
                         }
                         return (
                             <Form.Item
