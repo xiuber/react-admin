@@ -266,26 +266,28 @@ export function findParentNodeById(root, id) {
 // 获取拖放提示位置
 export function getDropGuidePosition(options) {
     const {
-        event,
+        pageX,
+        pageY,
+        clientX,
+        clientY,
         targetElement,
-        triggerSize = TRIGGER_SIZE,
-        isContainer,
-        isInFrame = true,
+        frameDocument,
     } = options;
 
-    const targetIsContainer = isContainer === undefined ? targetElement.getAttribute('data-isContainer') === 'true' : isContainer;
+    const triggerSize = TRIGGER_SIZE;
+
+    const targetIsContainer = targetElement.getAttribute('data-isContainer') === 'true';
     const targetRect = targetElement.getBoundingClientRect();
 
-    const _document = isInFrame ? document.getElementById('dnd-iframe').contentDocument : document;
-    const documentElement = _document.documentElement || _document.body;
+    const documentElement = frameDocument.documentElement || frameDocument.body;
     const windowHeight = documentElement.clientHeight;
     const windowWidth = documentElement.clientWidth;
 
     const scrollX = documentElement.scrollLeft;
     const scrollY = documentElement.scrollTop;
 
-    const x = event.pageX || event.clientX + scrollX;
-    const y = event.pageY || event.clientY + scrollY;
+    const x = pageX || clientX + scrollX;
+    const y = pageY || clientY + scrollY;
 
     let {
         left: targetX,
@@ -319,15 +321,15 @@ export function getDropGuidePosition(options) {
 
     if (targetIsContainer) {
         isTop = y < targetY + triggerSize;
+        isRight = x > targetX + targetWidth - triggerSize;
         isBottom = y > targetY + targetHeight - triggerSize;
         isLeft = x < targetX + triggerSize;
-        isRight = x > targetX + targetWidth - triggerSize;
         isCenter = y >= targetY + triggerSize && y <= targetY + targetHeight - triggerSize;
     } else {
         isTop = y < halfY;
+        isRight = !isLeft;
         isBottom = !isTop;
         isLeft = x < halfX;
-        isRight = !isLeft;
     }
 
     let guidePosition;
@@ -353,18 +355,27 @@ export function getDropGuidePosition(options) {
         };
     }
 
-    return {
+    const position = {
         isTop,
-        isBottom,
-        isCenter,
-        isLeft,
         isRight,
-        ...guidePosition,
+        isBottom,
+        isLeft,
+        isCenter,
+    };
+
+
+    const target = {
         targetHeight,
         targetWidth,
         targetX,
         targetY,
         targetRect,
+    };
+
+    return {
+        position,
+        guideLine: guidePosition,
+        target,
     };
 }
 

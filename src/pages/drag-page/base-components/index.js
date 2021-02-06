@@ -72,6 +72,9 @@ baseComponents.forEach(item => {
         it.children.forEach(i => {
             const {title: t, config, icon} = i;
             const {__config = defaultConfig, componentName, children} = config;
+            if(componentConfigMap[componentName]) {
+                console.info(`${title} > ${subTitle} > ${t} componentName 已经被使用，不予许配置相同名称组件！`);
+            }
             componentConfigMap[componentName] = __config;
             componentIconMap[componentName] = icon;
             check__config(children, `${title} > ${subTitle} > ${t}`);
@@ -80,8 +83,9 @@ baseComponents.forEach(item => {
 });
 
 function check__config(children, position) {
-
     if (!children?.length) return;
+
+
     const loop = nodes => {
         for (let node of nodes) {
             if ('__config' in node) {

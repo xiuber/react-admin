@@ -2,6 +2,22 @@
 @guide-size: 2px;
 @large-size: 15px;
 
+.largeY {
+    padding: @large-size 0;
+}
+
+.largeX {
+    padding: 0 @large-size;
+}
+
+.dragOver {
+    outline: none !important;
+}
+
+.unAccept {
+    cursor: not-allowed;
+}
+
 :global {
     #drop-guide-line,
     #drop-guide-bg {

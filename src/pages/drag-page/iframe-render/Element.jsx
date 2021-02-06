@@ -2,7 +2,6 @@ import React, {createElement, useRef, useEffect} from 'react';
 import styles from './style.less';
 import {
     getDropGuidePosition,
-    TRIGGER_SIZE,
     isDropAccept,
     getComponent,
 } from '../util';
@@ -90,36 +89,36 @@ export default function Element(props) {
 
         dragPageAction.setActiveSideKey('componentTree');
 
+        // 拖拽携带的数据
         e.dataTransfer.setData('sourceComponentId', componentId);
     };
 
-    function getPosition(options) {
-        const position = getDropGuidePosition(options);
+    function onDragEnter(e) {
+        e.stopPropagation();
+        e.preventDefault();
 
-        if (!position) return;
+        const targetElement = getDroppableEle(e.target);
 
-        let {
-            isTop,
-            isLeft,
-            isBottom,
-            isRight,
-            isCenter: isChildren,
-            targetRect,
-        } = position;
+        if (!targetElement) return;
 
-        if (isLeft || isRight) {
-            isTop = false;
-            isBottom = false;
-            isChildren = false;
-        }
-
-        const isBefore = isTop || isLeft;
-        const isAfter = isBottom || isRight;
-
-        return {...position, isBefore, isAfter, isChildren, targetRect};
+        const targetId = targetElement.getAttribute('data-componentId');
+        dragPageAction.setSelectedNodeId(targetId);
     }
 
-    const onDragOver = function(e) {
+    function onDragLeave() {
+        dragPageAction.setDragOverInfo(null);
+    }
+
+    function onDragEnd() {
+        dragPageAction.setDragOverInfo(null);
+        dragPageAction.setDraggingNode(null);
+        if (prevSideKeyRef.current) {
+            dragPageAction.setActiveSideKey(prevSideKeyRef.current);
+            prevSideKeyRef.current = null;
+        }
+    }
+
+    function onDragOver(e) {
         e.stopPropagation();
         e.preventDefault();
 
@@ -129,11 +128,18 @@ export default function Element(props) {
 
         const targetComponentId = targetElement.getAttribute('data-componentId');
 
+        // 放在自身上
         if (draggingNode?.__config?.componentId === targetComponentId) return;
 
-        const position = getPosition({
-            event: e,
+        const {pageX, pageY, clientX, clientY} = e;
+
+        const position = getDropPosition({
+            pageX,
+            pageY,
+            clientX,
+            clientY,
             targetElement,
+            frameDocument: iframeDocument,
         });
 
         if (!position) return;
@@ -145,17 +151,11 @@ export default function Element(props) {
             ...position,
         });
 
-        if (!accept) return dragPageAction.setDragOverInfo(null);
-
-        if (position.targetRect.height < TRIGGER_SIZE * 3) {
-            targetElement.classList.add(styles.largeY);
+        if (!accept) {
+            // e.dataTransfer.dropEffect = 'move';
+            // e.dataTransfer.effectAllowed = 'copy';
+            return;
         }
-        if (position.targetRect.width < TRIGGER_SIZE * 3) {
-            targetElement.classList.add(styles.largeX);
-        }
-
-        targetElement.classList.add(styles.dragOver);
-        const {pageX, pageY, clientX, clientY} = e;
 
         dragPageAction.setDragOverInfo({
             targetElement,
@@ -163,9 +163,11 @@ export default function Element(props) {
             pageY,
             clientX,
             clientY,
+            guidePosition: position.guidePosition,
         });
-    };
-    const onDrop = function(e) {
+    }
+
+    function onDrop(e) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -183,9 +185,15 @@ export default function Element(props) {
 
         if (targetComponentId === sourceComponentId) return end();
 
-        const position = getPosition({
-            event: e,
+        const {pageX, pageY, clientX, clientY} = e;
+
+        const position = getDropPosition({
+            pageX,
+            pageY,
+            clientX,
+            clientY,
             targetElement,
+            frameDocument: iframeDocument,
         });
 
         if (!position) return end();
@@ -218,33 +226,7 @@ export default function Element(props) {
             dragPageAction.setSelectedNodeId(componentConfig.__config?.componentId);
         }
         end();
-    };
-
-    function onDragEnter(e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        const targetElement = getDroppableEle(e.target);
-
-        if (!targetElement) return;
-
-        const targetId = targetElement.getAttribute('data-componentId');
-        dragPageAction.setSelectedNodeId(targetId);
     }
-
-    function onDragLeave(e) {
-        dragPageAction.setDragOverInfo(null);
-        e.target.classList.remove(styles.largeY);
-        e.target.classList.remove(styles.largeX);
-        e.target.classList.remove(styles.dragOver);
-    }
-
-    function onDragEnd() {
-        dragPageAction.setDragOverInfo(null);
-        dragPageAction.setDraggingNode(null);
-        if (prevSideKeyRef.current) dragPageAction.setActiveSideKey(prevSideKeyRef.current);
-    }
-
 
     const dragProps = {
         draggable,
@@ -350,7 +332,6 @@ export default function Element(props) {
     });
 }
 
-
 // 可投放元素
 function getDroppableEle(target) {
     if (!target) return target;
@@ -370,4 +351,38 @@ function getDroppableEle(target) {
     if (draggable) return target;
 
     return getDroppableEle(target.parentNode);
+}
+
+// 获取组件投放位置
+function getDropPosition(options) {
+    const guidePosition = getDropGuidePosition(options);
+
+    const {position} = guidePosition;
+
+    if (!position) return;
+
+    let {
+        isTop,
+        isLeft,
+        isBottom,
+        isRight,
+        isCenter: isChildren,
+    } = position;
+
+    if (isLeft || isRight) {
+        isTop = false;
+        isBottom = false;
+        isChildren = false;
+    }
+
+    const isBefore = isTop || isLeft;
+    const isAfter = isBottom || isRight;
+
+    return {
+        ...position,
+        isBefore,
+        isAfter,
+        isChildren,
+        guidePosition,
+    };
 }

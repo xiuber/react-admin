@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef} from 'react';
 import config from 'src/commons/config-hoc';
-import { getDropGuidePosition, isDropAccept } from 'src/pages/drag-page/util';
-import { getComponentIcon } from '../base-components';
+import {getDropGuidePosition, isDropAccept} from 'src/pages/drag-page/util';
+import {getComponentIcon} from '../base-components';
 
 import './style.less';
 
@@ -20,10 +20,10 @@ export default config({
         pageConfig,
         draggingNode,
         componentTreeExpendedKeys,
-        action: { dragPage: dragPageAction },
+        action: {dragPage: dragPageAction},
     } = props;
 
-    let { key, title, isContainer, draggable, nodeData } = node;
+    let {key, title, isContainer, draggable, nodeData} = node;
 
     let icon = getComponentIcon(nodeData?.componentName, isContainer);
 
@@ -58,14 +58,17 @@ export default config({
                 }
             }, 500);
         }
-        const options = getDropGuidePosition({
-            event: e,
+        const {pageX, pageY, clientX, clientY} = e;
+
+        const {position} = getDropGuidePosition({
+            pageX,
+            pageY,
+            clientX,
+            clientY,
             targetElement: e.target,
-            isContainer,
-            isInFrame: false,
-            triggerSize: 10,
+            frameDocument: window.document,
         });
-        const { isTop, isBottom, isCenter } = options;
+        const {isTop, isBottom, isCenter} = position;
 
         const accept = isDropAccept({
             draggingNode,
@@ -111,14 +114,18 @@ export default config({
 
         if (key === sourceComponentId) return end();
 
-        const options = getDropGuidePosition({
-            event: e,
+        const {pageX, pageY, clientX, clientY} = e;
+
+        const {position} = getDropGuidePosition({
+            pageX,
+            pageY,
+            clientX,
+            clientY,
             targetElement: e.target,
-            isContainer,
-            isInFrame: false,
-            triggerSize: 10,
+            frameDocument: window.document,
         });
-        const { isTop, isBottom, isCenter } = options;
+
+        const {isTop, isBottom, isCenter} = position;
 
 
         const accept = isDropAccept({
@@ -196,7 +203,7 @@ export default config({
             onDragEnd={handleDragEnd}
         >
             {title}
-            <div styleName="dragGuide" style={{ display: dragIn && draggingNode ? 'flex' : 'none' }}>
+            <div styleName="dragGuide" style={{display: dragIn && draggingNode ? 'flex' : 'none'}}>
                 <span>{positionMap[dropPosition]}</span>
             </div>
         </div>

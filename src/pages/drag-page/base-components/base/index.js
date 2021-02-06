@@ -33,8 +33,8 @@ export default [
                 icon: <PicCenterOutlined/>,
                 config: {
                     __config: {
-                        componentDisplayName: 'PageContent',
                         withHolder: true,
+                        dropAccept: ['Text'],
                         holderProps: {
                             style: {
                                 position: 'absolute',
@@ -45,24 +45,7 @@ export default [
                             },
                         },
                     },
-                    componentName: 'div',
-                    props: {
-                        style: {
-                            flexGrow: 1,
-                            flexShrink: 1,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            paddingTop: 8,
-                            paddingRight: 8,
-                            paddingBottom: 8,
-                            paddingLeft: 8,
-                            marginTop: 8,
-                            marginRight: 8,
-                            marginBottom: 8,
-                            marginLeft: 8,
-                            backgroundColor: '#fff',
-                        },
-                    },
+                    componentName: 'PageContent',
                 },
             },
         ],

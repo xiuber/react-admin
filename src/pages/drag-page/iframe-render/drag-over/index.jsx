@@ -1,7 +1,7 @@
 import {useEffect, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import styles from './style.less';
-import {LINE_SIZE, TRIGGER_SIZE} from 'src/pages/drag-page/util';
+import {TRIGGER_SIZE, usePrevious} from 'src/pages/drag-page/util';
 
 export default config({
     connect: state => {
@@ -18,6 +18,7 @@ export default config({
     const guideLineRef = useRef(null);
     const guideBgRef = useRef(null);
     const timeRef = useRef(0);
+    const prevDragOverInfo = usePrevious(dragOverInfo);
 
     useEffect(() => {
         if (!frameDocument) return;
@@ -32,26 +33,18 @@ export default config({
         if (dragOverInfo) {
             const {
                 targetElement,
-                pageX,
-                pageY,
-                clientX,
-                clientY,
+                guidePosition,
             } = dragOverInfo;
 
-            // 获取位置
-            const position = getDropGuidePosition({
-                pageX,
-                pageY,
-                clientX,
-                clientY,
-                frameDocument,
-                targetElement,
-            });
-            // console.log(position.guideLine);
-
             clearTimeout(timeRef.current);
-            showDropGuideLine(position);
+            showDropGuideLine(guidePosition);
+            overElement({
+                targetElement,
+                targetRect: guidePosition.target.targetRect,
+            });
         } else {
+            const {targetElement} = prevDragOverInfo;
+            leaveElement(targetElement);
             timeRef.current = setTimeout(() => hideDropGuide(), 300);
         }
     }, [dragOverInfo]);
@@ -59,119 +52,27 @@ export default config({
     return null;
 });
 
-export function getDropGuidePosition(options) {
+function leaveElement(targetElement) {
+    targetElement.classList.remove(styles.largeY);
+    targetElement.classList.remove(styles.largeX);
+    targetElement.classList.remove(styles.dragOver);
+}
+
+function overElement(options) {
     const {
-        pageX,
-        pageY,
-        clientX,
-        clientY,
         targetElement,
-        frameDocument,
+        targetRect,
     } = options;
 
-    const triggerSize = TRIGGER_SIZE;
+    targetElement.classList.add(styles.dragOver);
 
-    const targetIsContainer = targetElement.getAttribute('data-isContainer') === 'true';
-    const targetRect = targetElement.getBoundingClientRect();
-
-    const documentElement = frameDocument.documentElement || frameDocument.body;
-    const windowHeight = documentElement.clientHeight;
-    const windowWidth = documentElement.clientWidth;
-
-    const scrollX = documentElement.scrollLeft;
-    const scrollY = documentElement.scrollTop;
-
-    const x = pageX || clientX + scrollX;
-    const y = pageY || clientY + scrollY;
-
-    let {
-        left: targetX,
-        top: targetY,
-        width: targetWidth,
-        height: targetHeight,
-    } = targetRect;
-
-    // 获取可视范围
-    if (targetY < 0) {
-        targetHeight = targetHeight + targetY;
-        targetY = 0;
+    // 鼠标悬停 放大
+    if (targetRect.height < TRIGGER_SIZE * 3) {
+        targetElement.classList.add(styles.largeY);
     }
-    if (targetHeight + targetY > windowHeight) targetHeight = windowHeight - targetY;
-
-    if (targetX < 0) {
-        targetWidth = targetWidth + targetX;
-        targetX = 0;
+    if (targetRect.width < TRIGGER_SIZE * 3) {
+        targetElement.classList.add(styles.largeX);
     }
-    if (targetWidth + targetX > windowWidth) targetWidth = windowWidth - targetX;
-
-
-    const halfY = targetY + targetHeight / 2;
-    const halfX = targetX + targetWidth / 2;
-
-    let isTop;
-    let isBottom;
-    let isLeft;
-    let isRight;
-    let isCenter = false;
-
-    if (targetIsContainer) {
-        isTop = y < targetY + triggerSize;
-        isRight = x > targetX + targetWidth - triggerSize;
-        isBottom = y > targetY + targetHeight - triggerSize;
-        isLeft = x < targetX + triggerSize;
-        isCenter = y >= targetY + triggerSize && y <= targetY + targetHeight - triggerSize;
-    } else {
-        isTop = y < halfY;
-        isRight = !isLeft;
-        isBottom = !isTop;
-        isLeft = x < halfX;
-    }
-
-    let guidePosition;
-    if (isLeft || isRight) {
-        const left = isLeft ? targetX : targetX + targetWidth - LINE_SIZE;
-
-        guidePosition = {
-            left,
-            top: targetY,
-            height: targetHeight,
-            width: LINE_SIZE,
-        };
-    } else {
-        let top = isTop ? targetY : null;
-        top = isBottom ? targetY + targetHeight - LINE_SIZE : top;
-        top = isCenter ? halfY - LINE_SIZE / 2 : top;
-
-        guidePosition = {
-            left: targetX,
-            top,
-            width: targetWidth,
-            height: LINE_SIZE,
-        };
-    }
-
-    const position = {
-        isTop,
-        isBottom,
-        isCenter,
-        isLeft,
-        isRight,
-    };
-
-
-    const target = {
-        targetHeight,
-        targetWidth,
-        targetX,
-        targetY,
-        targetRect,
-    };
-
-    return {
-        position,
-        guideLine: guidePosition,
-        target,
-    };
 }
 
 function showDropGuideLine(position) {
