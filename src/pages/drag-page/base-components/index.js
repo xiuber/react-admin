@@ -5,9 +5,7 @@ import {cloneDeep} from 'lodash';
 import base from './base';
 import common from './common';
 import dataInput from './data-input';
-import propsMap from './props';
-
-console.log('propsMap', propsMap['Button']);
+import Element from 'src/pages/drag-page/iframe-render/Element';
 
 let baseComponents = [
     {title: '默认', children: base},
@@ -20,6 +18,7 @@ const defaultConfig = {
     // componentId: undefined, // 渲染时组件id
     // componentDesc: undefined, // 组件描述
     // componentType: undefined, // 组件类型，详见 getComponent方法，默认 drag-page/components -> antd -> html
+    // componentDisplayName: '', // 组件展示名称，默认 componentName，string 字符串 || ReactNode 节点 || ({node, pageConfig}) => name 函数返回值|| 'render' 渲染节点
     draggable: true, // 组件是否可拖拽 默认 true
     isContainer: true, // 组件是否是容器，默认true，如果是容器，则可托放入子节点
     withWrapper: false, // 是否需要拖拽包裹元素，默认 false，有些组件拖拽无效，需要包裹一下
@@ -111,6 +110,28 @@ baseComponents.forEach(item => {
 });
 
 export default baseComponents;
+
+export function getComponentDisplayName(node, render) {
+    if (!node) return '';
+
+    const {__config, componentName} = node;
+    const {componentDisplayName} = __config;
+
+    let name = componentDisplayName || componentName;
+
+    if (typeof name === 'function') name = name({node});
+
+    if (render && componentDisplayName === 'render') {
+        name = (
+            <Element
+                config={node}
+                activeToolKey="preview"
+            />
+        );
+    }
+
+    return name;
+}
 
 // 获取组件配置 __config 并设置默认值
 export function getComponentConfig(node) {

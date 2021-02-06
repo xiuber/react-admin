@@ -42,7 +42,6 @@ export default config({
         setPropFields(propFields || []);
     }, [selectedNode]);
 
-    console.log(propFields);
     return (
         <Pane
             fitHeight

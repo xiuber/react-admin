@@ -8,6 +8,7 @@ import Pane from '../pane';
 
 import './style.less';
 import DragBar from 'src/pages/drag-page/drag-bar';
+import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
 
 export default config({
     connect: state => {
@@ -38,14 +39,13 @@ export default config({
         let nodeCount = 0;
         const allKeys = [];
         const loop = (prev, next) => {
-            const {__config = {}, componentName, children} = prev;
+            const {__config = {}, children} = prev;
             const {
                 componentId,
-                componentDisplayName,
                 isContainer = true,
                 draggable = true,
             } = __config;
-            next.title = componentDisplayName || componentName;
+            next.title = getComponentDisplayName(prev);
             if (typeof next.title === 'function') next.title = next.title({node: prev, pageConfig});
             next.isContainer = isContainer;
             next.key = componentId;

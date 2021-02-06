@@ -5,6 +5,7 @@ import {
     isDropAccept,
     getComponent,
 } from '../util';
+import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
 
 export default function Element(props) {
     const {
@@ -41,7 +42,6 @@ export default function Element(props) {
             componentId,
             componentType,
             componentDesc,
-            componentDisplayName,
             draggable = true,
             withWrapper,
             wrapperStyle,
@@ -55,8 +55,7 @@ export default function Element(props) {
     if (!componentName) return null;
 
     componentDesc = componentDesc || componentName;
-    componentDisplayName = componentDisplayName || componentName;
-    if (typeof componentDisplayName === 'function') componentDisplayName = componentDisplayName({node: config, pageConfig});
+    const componentDisplayName = getComponentDisplayName(config);
 
     let childrenEle = (children || []).map(item => (
         <Element

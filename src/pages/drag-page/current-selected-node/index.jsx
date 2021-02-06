@@ -1,5 +1,6 @@
 import React from 'react';
 import config from 'src/commons/config-hoc';
+import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
 
 export default config({
     connect: state => {
@@ -8,23 +9,9 @@ export default config({
         };
     },
 })(function(props) {
-    let {
-        selectedNode = {},
-    } = props;
+    const {selectedNode} = props;
 
-    // 有 null 的情况
-    if (!selectedNode) selectedNode = {};
+    const name = getComponentDisplayName(selectedNode, true);
 
-    const {
-        __config = {},
-        componentName,
-    } = selectedNode;
-    const {
-        componentDisplayName,
-    } = __config;
-
-    let currentName = componentDisplayName || componentName;
-    if (typeof currentName === 'function') currentName = currentName({node: selectedNode});
-
-    return <div>当前选中: {currentName}</div>;
+    return <div>当前选中: {name}</div>;
 });
