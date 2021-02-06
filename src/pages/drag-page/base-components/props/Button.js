@@ -12,7 +12,7 @@ export default [
         ],
         desc: '设置按钮类型',
     },
-    {label: '危险', category: '选项', categoryOrder: 2, field: 'danger', type: 'boolean', defaultValue: false, version: '', desc: '设置危险按钮'},
+    {label: '危险', category: '选项', categoryOrder: 1, field: 'danger', type: 'boolean', defaultValue: false, version: '', desc: '设置危险按钮'},
     {label: '禁用', category: '选项', field: 'disabled', type: 'boolean', defaultValue: false, version: '', desc: '按钮失效状态'},
     {label: '加载中', category: '选项', field: 'loading', type: 'boolean', defaultValue: false, version: '', desc: '设置按钮载入状态'},
     {

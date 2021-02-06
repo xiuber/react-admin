@@ -64,24 +64,30 @@ export default config({
     }, [selectedNode]);
 
     const categories = [];
-    let categoryOrder;
+
     propFields.forEach(item => {
-        const {category, categoryOrder: order} = item;
+        const {category, categoryOrder} = item;
         if (!category) return;
-        if (order && !categoryOrder) categoryOrder = order;
+
         let node = categories.find(it => it.category === category);
         if (!node) {
             node = {category, fields: []};
             categories.push(node);
         }
 
+        if (categoryOrder && !node.categoryOrder) node.categoryOrder = categoryOrder;
+
         node.fields.push(item);
     });
 
-    categoryOrder = categoryOrder === undefined ? 0 : categoryOrder;
+    function renderCategory(index) {
+        const _categories = categories.filter(item => {
+            const {categoryOrder = 0} = item;
 
-    function renderCategory() {
-        return categories.map(item => {
+            return categoryOrder === index;
+
+        });
+        return _categories.map(item => {
             const {category, fields} = item;
             return (
                 <div styleName="category">
@@ -111,8 +117,7 @@ export default config({
     }
 
     function renderField(item) {
-        const {label, field, type, category} = item;
-        if (category) return null;
+        const {label, field, type} = item;
         const getElement = elementMap[type];
 
         let Element = () => <span style={{color: 'red'}}>TODO {type} 对应的表单元素不存在</span>;
@@ -149,15 +154,13 @@ export default config({
                         onValuesChange={handleChange}
                         name="props"
                     >
-                        {propFields.map((item, index) => {
-                            let category = null;
-                            if (index === categoryOrder) {
-                                category = renderCategory();
-                            }
-                            const field = renderField(item);
+                        {propFields.filter(item => !item.category)
+                            .map((item, index) => {
+                                let category = renderCategory(index);
+                                const field = renderField(item);
 
-                            return [category, field];
-                        })}
+                                return [category, field];
+                            })}
                     </Form>
                 </ConfigProvider>
             </div>
