@@ -45,7 +45,7 @@ export default config({
         } else {
             const {targetElement} = prevDragOverInfo;
             leaveElement(targetElement);
-            timeRef.current = setTimeout(() => hideDropGuide(), 300);
+            timeRef.current = setTimeout(() => hideDropGuide(), 100);
         }
     }, [dragOverInfo]);
 

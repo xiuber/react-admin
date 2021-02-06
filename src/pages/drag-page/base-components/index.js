@@ -72,8 +72,8 @@ baseComponents.forEach(item => {
         it.children.forEach(i => {
             const {title: t, config, icon} = i;
             const {__config = defaultConfig, componentName, children} = config;
-            if(componentConfigMap[componentName]) {
-                console.info(`${title} > ${subTitle} > ${t} componentName 已经被使用，不予许配置相同名称组件！`);
+            if (componentConfigMap[componentName]) {
+                console.info(`${title} > ${subTitle} > ${t} componentName 已经被使用，注意，相同的componentName将使用同一的__config配置！`);
             }
             componentConfigMap[componentName] = __config;
             componentIconMap[componentName] = icon;
@@ -84,7 +84,6 @@ baseComponents.forEach(item => {
 
 function check__config(children, position) {
     if (!children?.length) return;
-
 
     const loop = nodes => {
         for (let node of nodes) {
@@ -109,7 +108,8 @@ baseComponents.forEach(item => {
 export default baseComponents;
 
 // 获取组件配置 __config 并设置默认值
-export function getComponentConfig(componentName) {
+export function getComponentConfig(node) {
+    const {componentName} = node;
     const config = componentConfigMap[componentName] || {};
 
     return {...defaultConfig, ...config};
@@ -141,7 +141,7 @@ export function setComponentDefaultOptions(componentNode) {
 
     const loop = nodes => {
         nodes.forEach(node => {
-            node.__config = getComponentConfig(node.componentName);
+            node.__config = getComponentConfig(node);
             node.__config.componentId = uuid();
 
             if (node.children?.length) {

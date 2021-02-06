@@ -34,7 +34,6 @@ export default [
                 config: {
                     __config: {
                         withHolder: true,
-                        dropAccept: ['Text'],
                         holderProps: {
                             style: {
                                 position: 'absolute',

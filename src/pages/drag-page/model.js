@@ -246,7 +246,7 @@ export default {
 
         // 拖拽节点 进行了 JSON.stringify, 会导致 actions hooks 函数丢失，重新设置一下
         const {componentId} = node.__config;
-        node.__config = getComponentConfig(node.componentName);
+        node.__config = getComponentConfig(node);
         node.__config.componentId = componentId;
 
         const {beforeAdd, afterAdd} = node.__config.hooks || {};
