@@ -248,7 +248,9 @@ export default function Element(props) {
 
             if (!ele) return;
 
-            const id = ele.getAttribute('data-componentId');
+            // 小写。。。
+            const id = ele.dataset.componentid;
+            // const id = ele.getAttribute('data-componentId');
             dragPageAction.setSelectedNodeId(id);
         },
     };
