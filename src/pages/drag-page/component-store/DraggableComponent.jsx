@@ -25,10 +25,7 @@ export default config({})(function DraggableComponent(props) {
         }
 
         let preview = renderPreview === true ? (
-            <Element
-                config={componentConfig}
-                activeToolKey="preview"
-            />
+            <Element config={componentConfig}/>
         ) : renderPreview;
 
         if (typeof preview === 'function') {

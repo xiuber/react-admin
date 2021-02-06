@@ -10,7 +10,7 @@ import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
 export default function Element(props) {
     const {
         config,
-        activeToolKey,
+        activeToolKey = 'preview',
         pageConfig,
         selectedNodeId,
         draggingNode,

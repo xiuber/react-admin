@@ -125,10 +125,7 @@ export function getComponentDisplayName(node, render) {
     if (render && renderAsDisplayName) {
         name = (
             <div style={{display: 'inline-block', maxWidth: 200}}>
-                <Element
-                    config={node}
-                    activeToolKey="preview"
-                />
+                <Element config={node}/>
             </div>
         );
     }
