@@ -12,6 +12,7 @@ import StyleEditor from './style-editor';
 import StyleNavigator from './style-navigator';
 import {v4 as uuid} from 'uuid';
 import {useHeight} from 'ra-lib';
+import CurrentSelectedNode from '../current-selected-node';
 import './style.less';
 
 const {Panel} = Collapse;
@@ -28,24 +29,7 @@ export default config({
         action: {dragPage: dragPageAction},
     } = props;
 
-    // 有 null 的情况
-    if (!selectedNode) selectedNode = {};
-
-    const {
-        __config = {},
-        componentName,
-        props: componentProps = {},
-    } = selectedNode;
-    const {
-        componentDisplayName,
-    } = __config;
-
-    const {
-        style = {},
-    } = componentProps;
-
-    let currentName = componentDisplayName || componentName;
-    if (typeof currentName === 'function') currentName = currentName({node: selectedNode});
+    const style = selectedNode?.props?.style || {};
 
     const options = [
         {key: 'layout', title: '布局', icon: <DesktopOutlined/>, Component: Layout},
@@ -103,7 +87,7 @@ export default config({
             fitHeight
             header={(
                 <div styleName="header">
-                    <div>当前选中: {currentName}</div>
+                    <CurrentSelectedNode/>
                     <DesktopOutlined
                         styleName="tool"
                         onClick={() => setStyleEditorVisible(!styleEditorVisible)}

@@ -11,7 +11,7 @@ export default [
         ],
         desc: '设置按钮类型',
     },
-    {label: '图标', field: 'icon', type: 'ReactNode', version: '', desc: '设置按钮的图标组件'},
+    {label: '图标', field: 'icon', type: 'IconReactNode', version: '', desc: '设置按钮的图标组件'},
     {label: '跳转地址', field: 'href', type: 'string', version: '', desc: '点击跳转的地址，指定此属性 button 的行为和 a 链接一致'},
     {label: '跳转目标', appendField: 'href', field: 'target', type: 'string', version: '', desc: '相当于 a 链接的 target 属性，href 存在时生效'},
     {label: '幽灵按钮', field: 'ghost', type: 'boolean', defaultValue: false, version: '', desc: '幽灵属性，使按钮背景透明'},
