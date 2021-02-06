@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {Collapse} from 'antd';
 import {DesktopOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
@@ -9,7 +9,9 @@ import Position from './position';
 import Background from './background';
 import Border from './border';
 import StyleEditor from './style-editor';
+import StyleNavigator from './style-navigator';
 import {v4 as uuid} from 'uuid';
+import {useHeight} from 'ra-lib';
 import './style.less';
 
 const {Panel} = Collapse;
@@ -47,6 +49,8 @@ export default config({
 
     const [styleEditorVisible, setStyleEditorVisible] = useState(false);
     const [, setRender] = useState('');
+    const boxRef = useRef(null);
+    const [height] = useHeight(boxRef);
 
     function handleChange(values, replace) {
         if (!selectedNode?.componentName) return;
@@ -83,6 +87,13 @@ export default config({
         dragPageAction.setRightSideWidth(styleEditorVisible ? 440 : 385);
     }, [styleEditorVisible]);
 
+    const options = [
+        {key: 'layout', title: '布局', icon: <DesktopOutlined/>, Component: Layout},
+        {key: 'font', title: '文字', icon: <DesktopOutlined/>, Component: Font},
+        {key: 'position', title: '定位', icon: <DesktopOutlined/>, Component: Position},
+        {key: 'background', title: '背景', icon: <DesktopOutlined/>, Component: Background},
+        {key: 'border', title: '边框', icon: <DesktopOutlined/>, Component: Border},
+    ];
     return (
         <Pane
             fitHeight
@@ -102,32 +113,25 @@ export default config({
                 visible={styleEditorVisible}
                 onCancel={() => setStyleEditorVisible(false)}
             />
-            <Collapse
-                style={{border: 'none'}}
-                defaultActiveKey={[
-                    // 'layout',
-                    'font',
-                    // 'position',
-                    // 'background',
-                    // 'border',
-                ]}
-            >
-                <Panel header="布局" key="layout">
-                    <Layout value={style} onChange={handleChange}/>
-                </Panel>
-                <Panel header="文字" key="font">
-                    <Font value={style} onChange={handleChange}/>
-                </Panel>
-                <Panel header="定位" key="position">
-                    <Position value={style} onChange={handleChange}/>
-                </Panel>
-                <Panel header="背景" key="background">
-                    <Background value={style} onChange={handleChange}/>
-                </Panel>
-                <Panel header="边框" key="border">
-                    <Border value={style} onChange={handleChange}/>
-                </Panel>
-            </Collapse>
+            <div styleName="root">
+                <StyleNavigator containerRef={boxRef} dataSource={options}/>
+                <div ref={boxRef} styleName="collapseBox" style={{height}}>
+                    <Collapse
+                        style={{border: 'none'}}
+                        defaultActiveKey={options.map(item => item.key)}
+                    >
+                        {options.map(item => {
+                            const {key, title, Component} = item;
+                            return (
+                                <Panel key={key} header={<div id={`style-${key}`}>{title}</div>}>
+                                    <Component value={style} onChange={handleChange}/>
+                                </Panel>
+                            );
+                        })}
+                    </Collapse>
+                    <div style={{height: height - 220}}/>
+                </div>
+            </div>
         </Pane>
     );
 });

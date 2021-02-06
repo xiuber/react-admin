@@ -152,7 +152,7 @@ export function elementIsVisible(containerEle, element) {
 }
 
 // 果冻元素到可视窗口内
-export function scrollElement(containerEle, element, toTop, force) {
+export function scrollElement(containerEle, element, toTop, force, offset) {
     if (!element) return;
 
     const {
@@ -164,10 +164,10 @@ export function scrollElement(containerEle, element, toTop, force) {
     const scroll = () => {
         if (toTop) {
             // 滚动到顶部
-            containerEle.scrollTop = elementTop;
+            containerEle.scrollTop = elementTop + offset;
         } else {
             // 滚动到中间
-            containerEle.scrollTop = elementTop - containerHeight / 2;
+            containerEle.scrollTop = elementTop - containerHeight / 2 + offset;
         }
     };
 
