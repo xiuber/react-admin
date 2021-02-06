@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Form} from 'antd';
+import {Form, ConfigProvider} from 'antd';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
 import propsMap from '../base-components/props';
@@ -61,6 +61,77 @@ export default config({
         form.setFieldsValue(fieldsValue);
 
     }, [selectedNode]);
+
+    const categories = [];
+    let categoryOrder;
+    propFields.forEach(item => {
+        const {category, categoryOrder: order} = item;
+        if (!category) return;
+        if (order && !categoryOrder) categoryOrder = order;
+        let node = categories.find(it => it.category === category);
+        if (!node) {
+            node = {category, fields: []};
+            categories.push(node);
+        }
+
+        node.fields.push(item);
+    });
+
+    categoryOrder = categoryOrder === undefined ? 0 : categoryOrder;
+
+    function renderCategory() {
+        return categories.map(item => {
+            const {category, fields} = item;
+            return (
+                <div styleName="category">
+                    <div styleName="label" style={{flex: `0 0 ${layout.labelCol.flex}`}}>
+                        {category}
+                    </div>
+                    <div styleName="wrapper">
+                        {fields.map(it => {
+                            const {field} = it;
+                            const Element = elementMap.button(it);
+
+                            return (
+                                <Form.Item
+                                    {...layout}
+                                    name={field}
+                                    colon={false}
+                                    noStyle
+                                >
+                                    <Element/>
+                                </Form.Item>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        });
+    }
+
+    function renderField(item) {
+        const {label, field, type, category} = item;
+        if (category) return null;
+        const getElement = elementMap[type];
+
+        let Element = () => <span style={{color: 'red'}}>TODO {type} 对应的表单元素不存在</span>;
+
+        if (getElement) {
+            Element = elementMap[type](item);
+        }
+
+        return (
+            <Form.Item
+                {...layout}
+                label={label}
+                name={field}
+                colon={false}
+            >
+                <Element/>
+            </Form.Item>
+        );
+    }
+
     return (
         <Pane
             fitHeight
@@ -71,29 +142,23 @@ export default config({
             )}
         >
             <div styleName="root">
-                <Form
-                    form={form}
-                    onValuesChange={handleChange}
-                    name="props"
-                >
-                    {propFields.map(item => {
-                        const {label, field, type} = item;
-                        let Element = elementMap[type](item);
-                        if (!Element) {
-                            Element = () => <span style={{color: 'red'}}>TODO ${type} 对应的表单元素不存在</span>;
-                        }
-                        return (
-                            <Form.Item
-                                {...layout}
-                                label={label}
-                                name={field}
-                                colon={false}
-                            >
-                                <Element/>
-                            </Form.Item>
-                        );
-                    })}
-                </Form>
+                <ConfigProvider autoInsertSpaceInButton={false}>
+                    <Form
+                        form={form}
+                        onValuesChange={handleChange}
+                        name="props"
+                    >
+                        {propFields.map((item, index) => {
+                            let category = null;
+                            if (index === categoryOrder) {
+                                category = renderCategory();
+                            }
+                            const field = renderField(item);
+
+                            return [category, field];
+                        })}
+                    </Form>
+                </ConfigProvider>
             </div>
         </Pane>
     );

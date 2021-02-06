@@ -143,7 +143,7 @@ export default function Background(props) {
                 >
                     <RadioGroup
                         placement="top"
-                        nullable={false}
+                        allowClear={false}
                         options={inputTypeOptions}
                         onChange={() => {
                             setTimeout(() => {
@@ -249,7 +249,7 @@ export default function Background(props) {
                     colon={false}
                 >
                     <RadioGroup
-                        nullable={false}
+                        allowClear={false}
                         options={inputTypeOptions}
                         onChange={() => {
                             setTimeout(() => {
