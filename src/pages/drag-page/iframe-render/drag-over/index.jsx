@@ -1,7 +1,7 @@
 import {useEffect, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import styles from './style.less';
-import {TRIGGER_SIZE, usePrevious} from 'src/pages/drag-page/util';
+import {getDropGuidePosition, LINE_SIZE, TRIGGER_SIZE, usePrevious} from 'src/pages/drag-page/util';
 
 export default config({
     connect: state => {
@@ -31,10 +31,43 @@ export default config({
         if (!guideLineRef.current) return;
 
         if (dragOverInfo) {
-            const {
+            let {
                 targetElement,
                 guidePosition,
+
+                isTree,
+                targetElementId,
+                isTop,
+                isBottom,
+                isCenter,
             } = dragOverInfo;
+
+            if (isTree) {
+                targetElement = frameDocument.querySelector(`[data-componentid="${targetElementId}"]`);
+                guidePosition = getDropGuidePosition({
+                    targetElement,
+                    frameDocument,
+                });
+                guidePosition.position = {
+                    isTop,
+                    isBottom,
+                    isCenter,
+                };
+
+                const {target: {targetY, targetX, targetWidth, targetHeight}} = guidePosition;
+
+                const halfY = targetY + targetHeight / 2;
+                let top = isTop ? targetY : null;
+                top = isBottom ? targetY + targetHeight - LINE_SIZE : top;
+                top = isCenter ? halfY - LINE_SIZE / 2 : top;
+
+                guidePosition.guideLine = {
+                    left: targetX,
+                    top,
+                    width: targetWidth,
+                    height: LINE_SIZE,
+                };
+            }
 
             clearTimeout(timeRef.current);
             showDropGuideLine(guidePosition);
@@ -43,7 +76,16 @@ export default config({
                 targetRect: guidePosition.target.targetRect,
             });
         } else {
-            const {targetElement} = prevDragOverInfo;
+            let {
+                targetElement,
+                isTree,
+                targetElementId,
+            } = prevDragOverInfo;
+
+            if (isTree) {
+                targetElement = frameDocument.querySelector(`[data-componentid="${targetElementId}"]`);
+            }
+
             leaveElement(targetElement);
             timeRef.current = setTimeout(() => hideDropGuide(), 100);
         }

@@ -87,6 +87,14 @@ export default config({
             return;
         }
 
+        dragPageAction.setDragOverInfo({
+            targetElementId: key,
+            isTree: true,
+            isTop,
+            isBottom,
+            isCenter,
+        });
+
         if (isTop) setDropPosition('top');
         if (isBottom) setDropPosition('bottom');
         if (accept && isCenter) setDropPosition('center');
@@ -94,6 +102,7 @@ export default config({
 
     function handleDragLeave(e) {
         setDragIn(false);
+        dragPageAction.setDragOverInfo(null);
 
         if (hoverRef.current) {
             clearTimeout(hoverRef.current);
@@ -171,6 +180,7 @@ export default config({
             hoverRef.current = 0;
         }
         dragPageAction.setDraggingNode(null);
+        dragPageAction.setDragOverInfo(null);
     }
 
     const isSelected = selectedKey === key;

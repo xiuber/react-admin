@@ -266,10 +266,10 @@ export function findParentNodeById(root, id) {
 // 获取拖放提示位置
 export function getDropGuidePosition(options) {
     const {
-        pageX,
-        pageY,
-        clientX,
-        clientY,
+        pageX = 0,
+        pageY = 0,
+        clientX = 0,
+        clientY = 0,
         targetElement,
         frameDocument,
     } = options;
@@ -362,7 +362,6 @@ export function getDropGuidePosition(options) {
         isLeft,
         isCenter,
     };
-
 
     const target = {
         targetHeight,
