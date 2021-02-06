@@ -4,7 +4,7 @@ import {Radio, Tooltip} from 'antd';
 import './style.less';
 
 const RadioGroup = props => {
-    const {options, nullable, onChange, ...others} = props;
+    const {options, nullable, onChange, placement, ...others} = props;
 
     function renderOptions(options) {
         return options.map((item, index) => {
@@ -33,8 +33,11 @@ const RadioGroup = props => {
 
             const tooltipTitle = ti || `${title} ${value}`;
 
+            let pl = placement;
+            if (!pl) pl = isLast ? 'topRight' : 'top';
+
             let labelNode = (
-                <Tooltip placement={isLast ? 'topRight' : 'top'} title={tooltipTitle}>
+                <Tooltip placement={pl} title={tooltipTitle}>
                     <div style={{userSelect: 'none'}} onClick={handleClick}>
                         {la}
                     </div>
@@ -63,6 +66,7 @@ const RadioGroup = props => {
 RadioGroup.propTypes = {
     options: PropTypes.array,
     nullable: PropTypes.bool,
+    placement: PropTypes.string,
 };
 RadioGroup.defaultProps = {
     nullable: true,

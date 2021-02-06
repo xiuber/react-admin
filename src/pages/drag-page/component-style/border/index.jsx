@@ -122,6 +122,7 @@ export default function Background(props) {
                     colon={false}
                 >
                     <RadioGroup
+                        placement="top"
                         nullable={false}
                         options={inputTypeOptions}
                         onChange={() => {
