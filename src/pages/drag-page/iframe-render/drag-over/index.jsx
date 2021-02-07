@@ -175,6 +175,7 @@ function showDropGuideLine(position) {
     guideLineEle.classList.add(styles.guideActive);
     guideLineEle.classList.remove(styles.gLeft);
     guideLineEle.classList.remove(styles.gRight);
+
     if (isLeft) {
         guildTipEle.innerHTML = '前';
         guideLineEle.classList.add(styles.gLeft);

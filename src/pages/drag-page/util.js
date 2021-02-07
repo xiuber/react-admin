@@ -327,9 +327,9 @@ export function getDropGuidePosition(options) {
         isCenter = y >= targetY + triggerSizeHeight && y <= targetY + targetHeight - triggerSizeHeight;
     } else {
         isTop = y < halfY;
-        isRight = !isLeft;
         isBottom = !isTop;
         isLeft = x < halfX;
+        isRight = !isLeft;
     }
 
     let guidePosition;
