@@ -56,6 +56,18 @@ export default function Background(props) {
 
         if (backgroundImage) {
             allValues.backgroundImage = `url('${backgroundImage}')`;
+        } else {
+            const fieldsValue = {
+                backgroundSize: undefined,
+                backgroundPositionX: undefined,
+                backgroundPositionY: undefined,
+                backgroundRepeat: undefined,
+            };
+            Object.entries(fieldsValue).forEach(([key, value]) => {
+                allValues[key] = value;
+            });
+
+            form.setFieldsValue(fieldsValue);
         }
 
         if (backgroundSize === 'width height') {
@@ -146,6 +158,7 @@ export default function Background(props) {
                     {({getFieldValue}) => {
                         const backgroundImage = getFieldValue('backgroundImage');
                         if (!backgroundImage) return null;
+
                         return (
                             <>
                                 <Form.Item
