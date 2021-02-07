@@ -56,6 +56,7 @@ export default function Font(props) {
                             <Select
                                 style={{width: '100%'}}
                                 placeholder="粗细 font-weight"
+                                getPopupContainer={() => document.getElementById('styleCollapseBox')}
                                 options={[
                                     {value: 'normal', label: '正常'},
                                     {value: 'bolder', label: '粗体'},

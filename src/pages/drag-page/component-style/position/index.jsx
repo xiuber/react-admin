@@ -52,7 +52,18 @@ export default function Position(props) {
     const [form] = Form.useForm();
 
     function handleChange(changedValues, allValues) {
-        const {translateY, translateX} = allValues;
+        const {translateY, translateX, position} = allValues;
+
+        if (position === 'static') {
+            const fields = ['top', 'right', 'bottom', 'left'];
+            const fieldsValue = fields.reduce((prev, curr) => {
+                allValues[curr] = prev[curr] = undefined;
+                return prev;
+            }, {});
+
+            form.setFieldsValue(fieldsValue);
+        }
+
         let {transform} = value;
 
         if (!transform) transform = '';
@@ -112,6 +123,7 @@ export default function Position(props) {
                 >
                     <Select
                         placeholder="position"
+                        getPopupContainer={() => document.getElementById('styleCollapseBox')}
                         options={positionOptions.map(item => {
                             const {value, label, icon} = item;
 
@@ -223,17 +235,6 @@ export default function Position(props) {
                     }}
                 </Form.Item>
                 <Form.Item
-                    label="层叠顺序"
-                    name="zIndex"
-                    colon={false}
-                >
-                    <InputNumber
-                        style={{width: '100%'}}
-                        step={1}
-                        placeholder="z-index"
-                    />
-                </Form.Item>
-                <Form.Item
                     label="水平移动"
                     name="translateX"
                     colon={false}
@@ -246,6 +247,17 @@ export default function Position(props) {
                     colon={false}
                 >
                     <UnitInput placeholder="translateY"/>
+                </Form.Item>
+                <Form.Item
+                    label="层叠顺序"
+                    name="zIndex"
+                    colon={false}
+                >
+                    <InputNumber
+                        style={{width: '100%'}}
+                        step={1}
+                        placeholder="z-index"
+                    />
                 </Form.Item>
                 <Form.Item
                     label="浮动方向"

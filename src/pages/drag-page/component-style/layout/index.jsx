@@ -85,7 +85,6 @@ export default function Layout(props) {
     useEffect(() => {
         // 先重置，否则会有字段不清空情况
         form.resetFields();
-        console.log(value);
         form.setFieldsValue(value);
     }, [value]);
 

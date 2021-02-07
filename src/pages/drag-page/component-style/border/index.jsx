@@ -300,6 +300,7 @@ export default function Background(props) {
                                                 style={{width: '100%'}}
                                                 placeholder="border-style"
                                                 options={borderStyleOptions}
+                                                getPopupContainer={() => document.getElementById('styleCollapseBox')}
                                                 onChange={value => {
                                                     const fieldsValue = {
                                                         borderTopStyle: value,
@@ -371,6 +372,7 @@ export default function Background(props) {
                                                 style={{width: '100%'}}
                                                 placeholder={`${placeholder}-style`}
                                                 options={borderStyleOptions}
+                                                getPopupContainer={() => document.getElementById('styleCollapseBox')}
                                             />
                                         </Form.Item>
                                     </Col>
