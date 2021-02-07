@@ -7,6 +7,8 @@ import {
 } from '../util';
 import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
 
+import {throttle} from 'lodash';
+
 export default function Element(props) {
     const {
         config,
@@ -119,11 +121,9 @@ export default function Element(props) {
         }
     }
 
-    function onDragOver(e) {
-        // 不要做任何导致当前页面render的操作，否则元素多了会很卡
-        e.stopPropagation();
-        e.preventDefault();
-
+    const THROTTLE_TIME = 100;
+    const throttleOver = throttle((e) => {
+        console.log(componentDesc);
         const targetElement = getDroppableEle(e.target);
 
         if (!targetElement) return;
@@ -167,6 +167,13 @@ export default function Element(props) {
             clientY,
             guidePosition: position.guidePosition,
         });
+    }, THROTTLE_TIME);
+
+    // 不要做任何导致当前页面render的操作，否则元素多了会很卡
+    function onDragOver(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        throttleOver(e);
     }
 
     function onDrop(e) {
