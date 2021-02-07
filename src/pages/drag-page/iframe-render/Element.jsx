@@ -121,7 +121,7 @@ export default function Element(props) {
         }
     }
 
-    const THROTTLE_TIME = 100;
+    const THROTTLE_TIME = 50; // 如果卡顿，可以调整大一些
     const throttleOver = throttle((e) => {
         const targetElement = getDroppableEle(e.target);
 

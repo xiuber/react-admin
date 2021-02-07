@@ -61,6 +61,7 @@ export default config({
     const iframeRootRef = useRef(null);
     const [scaleElement, setScaleElement] = useState(null);
     const [containerStyle, setContainerStyle] = useState({});
+    const [iframeSrcDoc, setIframeSrcDoc] = useState('<html></html>');
 
     // 渲染设计页面
     function renderDesignPage() {
@@ -83,14 +84,31 @@ export default config({
         );
     }
 
+    useEffect(() => {
+        const headHtml = document.head.innerHTML;
+        const iframeSrcDoc = `
+<!DOCTYPE html>
+<html lang="en">
+    <header>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+        ${headHtml}
+    </header>
+    <body style="scroll-behavior: smooth;overflow: auto">
+        <div id="dnd-container" style="display: flex; flex-direction: column; min-height: 100vh"></div>
+        <div id="drop-guide-line" style="display: none">
+            <span>前</span>
+        </div>
+        <div id="drop-guide-bg" style="display: none"></div>
+    </body>
+</html>
+`;
+
+        setIframeSrcDoc(iframeSrcDoc);
+    }, []);
+
     // iframe 加载完成后一些初始化工作
     const handleIframeLoad = useCallback(() => {
         const iframeDocument = iframeRef.current.contentDocument;
-        const head = document.head.cloneNode(true);
-        iframeDocument.head.remove();
-        iframeDocument.documentElement.insertBefore(head, iframeDocument.body);
-
-        iframeDocument.body.style.overflow = 'auto';
 
         iframeRootRef.current = iframeDocument.getElementById('dnd-container');
 
