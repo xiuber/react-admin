@@ -103,18 +103,24 @@ function leaveElement(targetElement) {
 function overElement(options) {
     const {
         targetElement,
-        targetRect,
+        // targetRect,
     } = options;
 
-    targetElement.classList.add(styles.dragOver);
+    if (!targetElement) return;
 
-    // 鼠标悬停 放大
-    if (targetRect.height < TRIGGER_SIZE * 3) {
-        targetElement.classList.add(styles.largeY);
+    targetElement.classList.add(styles.dragOver);
+    const isContainer = targetElement.getAttribute('data-isContainer') === 'true';
+
+    // 如果是容器 鼠标悬停 放大
+    if (isContainer) {
+        // if (targetRect.height < TRIGGER_SIZE * 3) {
+        //     targetElement.classList.add(styles.largeY);
+        // }
+        // if (targetRect.width < TRIGGER_SIZE * 3) {
+        //     targetElement.classList.add(styles.largeX);
+        // }
     }
-    if (targetRect.width < TRIGGER_SIZE * 3) {
-        targetElement.classList.add(styles.largeX);
-    }
+
 }
 
 function showDropGuideLine(position) {

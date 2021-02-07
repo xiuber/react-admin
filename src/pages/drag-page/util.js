@@ -274,8 +274,6 @@ export function getDropGuidePosition(options) {
         frameDocument,
     } = options;
 
-    const triggerSize = TRIGGER_SIZE;
-
     const targetIsContainer = targetElement.getAttribute('data-isContainer') === 'true';
     const targetRect = targetElement.getBoundingClientRect();
 
@@ -309,6 +307,8 @@ export function getDropGuidePosition(options) {
     }
     if (targetWidth + targetX > windowWidth) targetWidth = windowWidth - targetX;
 
+    const triggerSizeHeight = targetHeight > TRIGGER_SIZE * 3 ? TRIGGER_SIZE : targetHeight / 3;
+    const triggerSizeWidth = targetWidth > TRIGGER_SIZE * 3 ? TRIGGER_SIZE : targetWidth / 3;
 
     const halfY = targetY + targetHeight / 2;
     const halfX = targetX + targetWidth / 2;
@@ -320,11 +320,11 @@ export function getDropGuidePosition(options) {
     let isCenter = false;
 
     if (targetIsContainer) {
-        isTop = y < targetY + triggerSize;
-        isRight = x > targetX + targetWidth - triggerSize;
-        isBottom = y > targetY + targetHeight - triggerSize;
-        isLeft = x < targetX + triggerSize;
-        isCenter = y >= targetY + triggerSize && y <= targetY + targetHeight - triggerSize;
+        isTop = y < targetY + triggerSizeHeight;
+        isRight = x > targetX + targetWidth - triggerSizeWidth;
+        isBottom = y > targetY + targetHeight - triggerSizeHeight;
+        isLeft = x < targetX + triggerSizeWidth;
+        isCenter = y >= targetY + triggerSizeHeight && y <= targetY + targetHeight - triggerSizeHeight;
     } else {
         isTop = y < halfY;
         isRight = !isLeft;
