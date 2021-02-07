@@ -49,18 +49,23 @@ export default config({
     useEffect(() => {
         form.resetFields();
 
-        if (!selectedNode) return setPropFields([]);
-
-        const {componentName} = selectedNode;
+        const {componentName, props: nodeProps = {}} = selectedNode || {};
         const propFields = propsMap[componentName];
 
-        const {fields, labelWidth} = propFields || {};
+        const {fields = [], labelWidth} = propFields || {};
 
-        setPropFields(fields || []);
+        setPropFields(fields);
 
-        // 回显表单
-        const fieldsValue = selectedNode.props || {};
-        form.setFieldsValue(fieldsValue);
+        // 回显表单 设置默认值
+        const fieldValues = {...nodeProps};
+        fields.forEach(item => {
+            const {field, defaultValue} = item;
+            if (fieldValues[field] === undefined) {
+                fieldValues[field] = defaultValue;
+            }
+        });
+
+        form.setFieldsValue(fieldValues);
 
         // 设置label宽度
         if (labelWidth) {

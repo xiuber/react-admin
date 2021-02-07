@@ -29,8 +29,8 @@ const flexDirectionOptions = [
 ];
 
 const justifyContentOptions = [
-    {value: 'flex-start', label: '左对齐', icon: <PicCenterOutlined/>},
-    {value: 'flex-end', label: '右对齐', icon: <PicCenterOutlined/>},
+    {value: 'flex-start', label: '开始对齐', icon: <PicCenterOutlined/>},
+    {value: 'flex-end', label: '结束对齐', icon: <PicCenterOutlined/>},
     {value: 'center', label: '居中', icon: <PicCenterOutlined/>},
     {value: 'space-between', label: '两端对齐', icon: <PicCenterOutlined/>},
     {value: 'space-around', label: '横向平分', icon: <PicCenterOutlined/>},

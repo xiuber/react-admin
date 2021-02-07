@@ -15,7 +15,11 @@ export default {
     unit: (options) => props => {
         const {field} = options;
         return (
-            <UnitInput allowClear placeholder={field} {...props}/>
+            <UnitInput
+                allowClear
+                placeholder={field}
+                {...props}
+            />
         );
     },
     boolean: () => props => {
@@ -32,8 +36,14 @@ export default {
     },
     number: options => props => {
         const {field} = options;
+        const {style} = props;
         return (
-            <InputNumber allowClear placeholder={field} {...props}/>
+            <InputNumber
+                allowClear
+                placeholder={field}
+                style={{width: '100%', ...style}}
+                {...props}
+            />
         );
     },
     select: options => props => {

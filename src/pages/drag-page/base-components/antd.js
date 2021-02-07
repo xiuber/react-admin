@@ -58,7 +58,7 @@ document.querySelectorAll('.ant-menu-item-group')
 // 抓取属性
 
 let result = [];
-document.querySelectorAll('.api-container table tr')
+window.$('#Row').nextElementSibling.querySelectorAll('tr')
     .forEach(tr => {
         const tds = Array.from(tr.querySelectorAll('td'));
         const field = ['field', 'desc', 'type', 'defaultValue', 'version'];
@@ -114,6 +114,6 @@ propsStr = propsStr.replace(/"\{label/g, '{label');
 propsStr = propsStr.replace(/"}"/g, '"}');
 propsStr = propsStr.replace(/\\"/g, '\'');
 
-propsStr = `export default ${propsStr}`;
+propsStr = `${propsStr}`;
 
 console.log(propsStr);
