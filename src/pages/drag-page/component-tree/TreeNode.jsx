@@ -2,6 +2,7 @@ import React, {useState, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import {getDropGuidePosition, isDropAccept} from 'src/pages/drag-page/util';
 import {getComponentIcon} from '../base-components';
+import {throttle} from 'lodash';
 
 import './style.less';
 
@@ -37,6 +38,8 @@ export default config({
     function handleDragStart(e) {
         e.stopPropagation();
 
+        if (!draggable) return;
+
         dragPageAction.setDraggingNode(nodeData);
 
         e.dataTransfer.setData('sourceComponentId', key);
@@ -47,7 +50,12 @@ export default config({
         setDragIn(true);
     }
 
-    function handleDragOver(e) {
+    const THROTTLE_TIME = 100;
+    const throttleOver = throttle(e => {
+        const targetElement = e.target;
+
+        if (!targetElement) return;
+
         if (draggingNode?.__config?.componentId === key) return;
 
         // 1s 后展开节点
@@ -65,7 +73,7 @@ export default config({
             pageY,
             clientX,
             clientY,
-            targetElement: e.target,
+            targetElement,
             frameDocument: window.document,
         });
         const {isTop, isBottom, isCenter} = position;
@@ -98,6 +106,13 @@ export default config({
         if (isTop) setDropPosition('top');
         if (isBottom) setDropPosition('bottom');
         if (accept && isCenter) setDropPosition('center');
+    }, THROTTLE_TIME);
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        throttleOver(e);
     }
 
     function handleDragLeave(e) {
@@ -190,6 +205,7 @@ export default config({
     if (isSelected) styleNames.push('selected');
     if (isDragging) styleNames.push('dragging');
     if (dragIn && draggingNode) styleNames.push('dragIn');
+    if (!draggable) styleNames.push('unDraggable');
 
     styleNames.push(dropPosition);
 
@@ -204,7 +220,7 @@ export default config({
             key={key}
             id={`treeNode_${key}`}
             styleName={styleNames.join(' ')}
-            draggable={draggable}
+            draggable
             onDragStart={handleDragStart}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}

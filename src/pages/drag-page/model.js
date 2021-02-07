@@ -54,6 +54,7 @@ const test = setComponentDefaultOptions(
                                 componentName: 'Text',
                                 props: {
                                     text: '保存',
+                                    isDraggable: false,
                                 },
                             },
                         ],
@@ -65,6 +66,7 @@ const test = setComponentDefaultOptions(
                                 componentName: 'Text',
                                 props: {
                                     text: '重置',
+                                    isDraggable: false,
                                 },
                             },
                         ],

@@ -39,12 +39,17 @@ export default config({
         let nodeCount = 0;
         const allKeys = [];
         const loop = (prev, next) => {
-            const {__config = {}, children} = prev;
-            const {
+            const {__config = {}, componentName, props, children} = prev;
+            let {
                 componentId,
                 isContainer = true,
                 draggable = true,
             } = __config;
+
+            if (props?.isDraggable === false) {
+                draggable = false;
+            }
+
             next.title = getComponentDisplayName(prev);
             if (typeof next.title === 'function') next.title = next.title({node: prev, pageConfig});
             next.isContainer = isContainer;

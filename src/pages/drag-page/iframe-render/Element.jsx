@@ -123,7 +123,6 @@ export default function Element(props) {
 
     const THROTTLE_TIME = 100;
     const throttleOver = throttle((e) => {
-        console.log(componentDesc);
         const targetElement = getDroppableEle(e.target);
 
         if (!targetElement) return;
