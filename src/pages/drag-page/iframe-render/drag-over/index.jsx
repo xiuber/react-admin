@@ -183,8 +183,8 @@ function showDropGuideLine(position) {
         guildTipEle.innerHTML = '后';
         guideLineEle.classList.add(styles.gRight);
     }
-    if (isTop) guildTipEle.innerHTML = '上';
-    if (isBottom) guildTipEle.innerHTML = '下';
+    if (isTop) guildTipEle.innerHTML = '前';
+    if (isBottom) guildTipEle.innerHTML = '后';
     if (isCenter) guildTipEle.innerHTML = '内';
 
     Object.entries(guidePosition).forEach(([key, value]) => {

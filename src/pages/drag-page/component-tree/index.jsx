@@ -50,8 +50,9 @@ export default config({
                 draggable = false;
             }
 
-            next.title = getComponentDisplayName(prev);
-            if (typeof next.title === 'function') next.title = next.title({node: prev, pageConfig});
+            next.title = ''; // 为了鼠标悬停，不显示原生 html title
+            next.name = getComponentDisplayName(prev);
+            if (typeof next.name === 'function') next.name = next.name({node: prev, pageConfig});
             next.isContainer = isContainer;
             next.key = componentId;
             next.draggable = draggable;

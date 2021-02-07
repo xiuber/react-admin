@@ -24,11 +24,11 @@ export default config({
         action: {dragPage: dragPageAction},
     } = props;
 
-    let {key, title, isContainer, draggable, nodeData} = node;
+    let {key, name, isContainer, draggable, nodeData} = node;
 
     let icon = getComponentIcon(nodeData, isContainer);
 
-    title = <span>{icon}{title}</span>;
+    name = <span>{icon}{name}</span>;
 
     const hoverRef = useRef(0);
     const nodeRef = useRef(null);
@@ -210,8 +210,8 @@ export default config({
     styleNames.push(dropPosition);
 
     const positionMap = {
-        top: '上',
-        bottom: '下',
+        top: '前',
+        bottom: '后',
         center: '内',
     };
     return (
@@ -221,6 +221,8 @@ export default config({
             id={`treeNode_${key}`}
             styleName={styleNames.join(' ')}
             draggable
+            data-componentId={key}
+            data-isContainer={isContainer}
             onDragStart={handleDragStart}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}
@@ -228,7 +230,7 @@ export default config({
             onDrop={handleDrop}
             onDragEnd={handleDragEnd}
         >
-            {title}
+            {name}
             <div styleName="dragGuide" style={{display: dragIn && draggingNode ? 'flex' : 'none'}}>
                 <span>{positionMap[dropPosition]}</span>
             </div>
