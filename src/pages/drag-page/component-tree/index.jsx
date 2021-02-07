@@ -39,7 +39,7 @@ export default config({
         let nodeCount = 0;
         const allKeys = [];
         const loop = (prev, next) => {
-            const {__config = {}, componentName, props, children} = prev;
+            const {__config = {}, props, children} = prev;
             let {
                 componentId,
                 isContainer = true,

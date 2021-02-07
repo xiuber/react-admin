@@ -98,6 +98,8 @@ export default config({
 
         renderDesignPage();
 
+        dragPageAction.setIFrameDocument(iframeDocument);
+
     }, [iframeRef.current]);
 
     // 相关数据改变之后，重新渲染设计页面

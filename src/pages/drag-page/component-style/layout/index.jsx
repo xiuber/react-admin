@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Form,
     InputNumber,
@@ -61,19 +61,32 @@ const paddingFields = [
 
 
 export default function Layout(props) {
-    const {value, onChange = () => undefined} = props;
+    const {iFrameDocument, componentId, value, onChange = () => undefined} = props;
     const [form] = Form.useForm();
+    const [parentIsFlexBox, setParentIsFlexBox] = useState(false);
 
     function handleChange(changedValues, allValues) {
         console.log('allValues', JSON.stringify(allValues, null, 4));
         onChange(allValues);
     }
 
+
     useEffect(() => {
         // 先重置，否则会有字段不清空情况
         form.resetFields();
         form.setFieldsValue(value);
     }, [value]);
+
+    useEffect(() => {
+        if (!iFrameDocument || !componentId) return;
+
+        const ele = iFrameDocument.querySelector(`[data-componentId="${componentId}"]`);
+        if (!ele?.parentNode) return;
+
+        const display = window.getComputedStyle(ele.parentNode).display;
+        setParentIsFlexBox(display === 'flex' || display === 'inline-flex');
+    }, [componentId, iFrameDocument]);
+
     return (
         <div styleName="root">
             <Form
@@ -124,32 +137,11 @@ export default function Layout(props) {
                                 >
                                     <RadioGroup options={flexWrapOptions} getPopupContainer={() => document.getElementById('styleCollapseBox')}/>
                                 </Form.Item>
-                                <Form.Item
-                                    label="放大比例"
-                                    name="flexGrow"
-                                    colon={false}
-                                >
-                                    <InputNumber style={{width: '100%'}} placeholder="flex-grow" min={0} step={1}/>
-                                </Form.Item>
-                                <Form.Item
-                                    label="缩小比例"
-                                    name="flexShrink"
-                                    colon={false}
-                                >
-                                    <InputNumber style={{width: '100%'}} placeholder="flex-shrink" min={0} step={1}/>
-                                </Form.Item>
-                                <Form.Item
-                                    label="基础空间"
-                                    name="flexBasis"
-                                    colon={false}
-                                >
-                                    <UnitInput placeholder="flex-basis"/>
-                                </Form.Item>
                             </>
                         );
                     }}
                 </Form.Item>
-                <RectInputsWrapper tip="margin" style={{height: 180}}>
+                <RectInputsWrapper tip="margin" style={{height: 180, marginBottom: 8}}>
                     {marginFields.map(item => (
                         <Form.Item
                             name={item}
@@ -205,6 +197,31 @@ export default function Layout(props) {
                         </div>
                     </RectInputsWrapper>
                 </RectInputsWrapper>
+                {parentIsFlexBox ? (
+                    <>
+                        <Form.Item
+                            label="放大比例"
+                            name="flexGrow"
+                            colon={false}
+                        >
+                            <InputNumber style={{width: '100%'}} placeholder="flex-grow" min={0} step={1}/>
+                        </Form.Item>
+                        <Form.Item
+                            label="缩小比例"
+                            name="flexShrink"
+                            colon={false}
+                        >
+                            <InputNumber style={{width: '100%'}} placeholder="flex-shrink" min={0} step={1}/>
+                        </Form.Item>
+                        <Form.Item
+                            label="基础空间"
+                            name="flexBasis"
+                            colon={false}
+                        >
+                            <UnitInput placeholder="flex-basis"/>
+                        </Form.Item>
+                    </>
+                ) : null}
             </Form>
         </div>
     );

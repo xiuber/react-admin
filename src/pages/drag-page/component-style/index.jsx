@@ -21,15 +21,18 @@ export default config({
     connect: state => {
         return {
             selectedNode: state.dragPage.selectedNode,
+            iFrameDocument: state.dragPage.iFrameDocument,
         };
     },
 })(function ComponentStyle(props) {
     let {
         selectedNode = {},
+        iFrameDocument,
         action: {dragPage: dragPageAction},
     } = props;
 
     const style = selectedNode?.props?.style || {};
+    const componentId = selectedNode?.__config?.componentId;
 
     const options = [
         {key: 'layout', title: '布局', icon: <DesktopOutlined/>, Component: Layout},
@@ -125,7 +128,13 @@ export default config({
                             const {key, title, Component} = item;
                             return (
                                 <Panel key={key} header={<div id={`style-${key}`}>{title}</div>}>
-                                    <Component containerRef={boxRef} value={style} onChange={handleChange}/>
+                                    <Component
+                                        iFrameDocument={iFrameDocument}
+                                        componentId={componentId}
+                                        containerRef={boxRef}
+                                        value={style}
+                                        onChange={handleChange}
+                                    />
                                 </Panel>
                             );
                         })}

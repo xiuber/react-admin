@@ -130,6 +130,7 @@ const initialState = {
     canvasHeight: '100%',
 
     pageConfig: {...holderNode},
+    iFrameDocument: null,
 };
 
 const syncStorage = {
@@ -142,6 +143,7 @@ export default {
     initialState,
     syncStorage,
     init: () => cloneDeep(initialState),
+    setIFrameDocument: iFrameDocument => ({iFrameDocument}),
     setDragOverInfo: dragOverInfo => ({dragOverInfo}),
     setCanvasWidth: canvasWidth => ({canvasWidth}),
     setCanvasHeight: canvasHeight => ({canvasHeight}),
