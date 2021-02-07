@@ -1,5 +1,3 @@
-import {targetOptions} from '../../index';
-
 export default {
     labelWidth: '80px',
     fields: [

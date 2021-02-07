@@ -68,6 +68,9 @@ export default [
                             children: [
                                 {
                                     componentName: 'DragHolder',
+                                    props: {
+                                        style: {height: 45},
+                                    },
                                 },
                             ],
                         })),
@@ -94,6 +97,9 @@ export default [
                             children: [
                                 {
                                     componentName: 'DragHolder',
+                                    props: {
+                                        style: {height: 45},
+                                    },
                                 },
                             ],
                         })),

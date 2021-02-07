@@ -58,7 +58,7 @@ document.querySelectorAll('.ant-menu-item-group')
 // 抓取属性
 
 let result = [];
-window.$('#Row').nextElementSibling.querySelectorAll('tr')
+window.$('#API').nextElementSibling.querySelectorAll('tr')
     .forEach(tr => {
         const tds = Array.from(tr.querySelectorAll('td'));
         const field = ['field', 'desc', 'type', 'defaultValue', 'version'];
@@ -68,7 +68,7 @@ window.$('#Row').nextElementSibling.querySelectorAll('tr')
         field.forEach((key, index) => {
             obj[key] = tds[index].innerText;
         });
-        if (obj.type === 'boolean') {
+        if (obj.type === 'boolean' && obj.defaultValue !== '-') {
             obj.defaultValue = JSON.parse(obj.defaultValue);
         }
         if (obj.defaultValue === '-') {
@@ -87,7 +87,7 @@ window.$('#Row').nextElementSibling.querySelectorAll('tr')
 
         result.push(obj);
     });
-
+console.log(result);
 let keys = [
     'field',
     'desc',

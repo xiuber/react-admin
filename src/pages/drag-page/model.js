@@ -73,6 +73,26 @@ const test = setComponentDefaultOptions(
                     },
                 ],
             },
+            {
+                componentName: 'AutoComplete',
+                props: {
+                    style: {
+                        width: '100%',
+                    },
+                    placeholder: '请输入',
+                    options: [
+                        {
+                            value: '@qq.com',
+                        },
+                        {
+                            value: '@163.com',
+                        },
+                        {
+                            value: '@qiye.com',
+                        },
+                    ],
+                },
+            },
         ],
     },
 );
@@ -116,7 +136,8 @@ const initialState = {
     activeSideKey: 'componentStore',
     // activeSideKey: 'schemaEditor',
     // activeTabKey: 'attribute', // 右侧激活tab key
-    activeTabKey: 'style', // 右侧激活tab key
+    // activeTabKey: 'style', // 右侧激活tab key
+    activeTabKey: 'props',
 
     componentTreeExpendedKeys: [], // 组件树 展开节点
 

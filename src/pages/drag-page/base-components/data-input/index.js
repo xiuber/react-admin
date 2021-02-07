@@ -21,11 +21,14 @@ export default [
                                 } = args;
                                 if (!node.props) node.props = {};
 
-                                node.props.options = [
-                                    {value: `${value}@qq.com`},
-                                    {value: `${value}@163.com`},
-                                    {value: `${value}@qiye.com`},
-                                ];
+                                if (node?.props?.__options?.length !== node.props.options?.length) {
+
+                                    node.props.__options = node.props.options.map(item => ({...item}));
+                                }
+                                node.props.options = node.props.__options.map(item => {
+
+                                    return {value: `${value}${item.value}`};
+                                });
 
                                 dragPageAction.render();
                             },
@@ -117,7 +120,7 @@ export default [
                             const {componentName, props = {}} = node;
                             const {label} = props;
 
-                            if(!label) return componentName;
+                            if (!label) return componentName;
 
                             return `${componentName} ${label}`;
                         },

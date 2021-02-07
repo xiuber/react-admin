@@ -26,9 +26,10 @@ export default config({
     const rootRef = useRef(null);
     const [labelCol, setLabelCol] = useState({flex: '80px'});
 
+    const wrapperCol = {flex: '1 1 0%'};
+
     function handleChange(changedValues, allValues) {
 
-        console.log('props', JSON.stringify(allValues, null, 4));
 
         if (!selectedNode?.componentName) return;
 
@@ -40,6 +41,13 @@ export default config({
             key: uuid(),
         };
 
+        const options = selectedNode.props.options || [];
+
+        options.forEach(item => {
+            Reflect.deleteProperty(item, '_form');
+        });
+
+        console.log('props', JSON.stringify(selectedNode.props, null, 4));
         dragPageAction.render();
     }
 
@@ -98,28 +106,31 @@ export default config({
         return _categories.map(item => {
             const {category, fields} = item;
             return (
-                <div styleName="category">
-                    <div styleName="label" style={{flex: `0 0 ${labelCol.flex}`}}>
-                        {category}
-                    </div>
-                    <div styleName="wrapper">
-                        {fields.map(it => {
-                            const {field} = it;
-                            const Element = elementMap.button(it);
+                <Col span={24}>
+                    <div styleName="category">
+                        <div styleName="label" style={{flex: `0 0 ${labelCol.flex}`}}>
+                            {category}
+                        </div>
+                        <div styleName="wrapper">
+                            {fields.map(it => {
+                                const {field} = it;
+                                const Element = elementMap.button(it);
 
-                            return (
-                                <Form.Item
-                                    labelCol={labelCol}
-                                    name={field}
-                                    colon={false}
-                                    noStyle
-                                >
-                                    <Element getPopupContainer={() => rootRef.current}/>
-                                </Form.Item>
-                            );
-                        })}
+                                return (
+                                    <Form.Item
+                                        labelCol={labelCol}
+                                        wrapperCol={wrapperCol}
+                                        name={field}
+                                        colon={false}
+                                        noStyle
+                                    >
+                                        <Element getPopupContainer={() => rootRef.current}/>
+                                    </Form.Item>
+                                );
+                            })}
+                        </div>
                     </div>
-                </div>
+                </Col>
             );
         });
     }
@@ -138,6 +149,7 @@ export default config({
             <Col span={span}>
                 <Form.Item
                     labelCol={{flex: labelWidth}}
+                    wrapperCol={wrapperCol}
                     label={label}
                     name={field}
                     colon={false}

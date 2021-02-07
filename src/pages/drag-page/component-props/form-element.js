@@ -10,8 +10,15 @@ import {
 } from 'antd';
 import RadioGroup from 'src/pages/drag-page/component-style/radio-group';
 import UnitInput from 'src/pages/drag-page/component-style/unit-input';
+import OptionsEditor from 'src/pages/drag-page/component-props/options-editor';
 
 export default {
+    options: (options) => props => {
+        const {withLabel} = options;
+        return (
+            <OptionsEditor withLabel={withLabel} {...props}/>
+        );
+    },
     unit: (options) => props => {
         const {field} = options;
         return (
