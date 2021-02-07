@@ -1,5 +1,5 @@
 const result = {};
-const req = require.context('./', false, /\.js$/);
+const req = require.context('./', true, /\.js$/);
 
 req.keys().forEach(key => {
     if ([
@@ -7,7 +7,9 @@ req.keys().forEach(key => {
     ].includes(key)) return;
 
     const model = req(key);
-    let fileName = key.replace('./', '').replace('.js', '');
+    const keys = key.split('/');
+    let fileName = keys.pop().replace('.js', '');
+
     result[fileName] = model.default;
 });
 

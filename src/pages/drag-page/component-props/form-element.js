@@ -9,8 +9,15 @@ import {
     Tooltip,
 } from 'antd';
 import RadioGroup from 'src/pages/drag-page/component-style/radio-group';
+import UnitInput from 'src/pages/drag-page/component-style/unit-input';
 
 export default {
+    unit: (options) => props => {
+        const {field} = options;
+        return (
+            <UnitInput allowClear placeholder={field} {...props}/>
+        );
+    },
     boolean: () => props => {
         const {value} = props;
         return (
