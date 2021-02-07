@@ -152,7 +152,7 @@ export function elementIsVisible(containerEle, element) {
 }
 
 // 果冻元素到可视窗口内
-export function scrollElement(containerEle, element, toTop, force, offset) {
+export function scrollElement(containerEle, element, toTop, force, offset = 0) {
     if (!element) return;
 
     const {
