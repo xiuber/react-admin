@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {Form, ConfigProvider} from 'antd';
+import {Form, ConfigProvider, Row, Col} from 'antd';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
 import propsMap from '../base-components/props';
@@ -24,10 +24,7 @@ export default config({
     const [propFields, setPropFields] = useState([]);
     const [form] = Form.useForm();
     const rootRef = useRef(null);
-    const [layout, setLayout] = useState({
-        labelCol: {flex: '80px'},
-        wrapperCol: {flex: 1},
-    });
+    const [labelCol, setLabelCol] = useState({flex: '80px'});
 
     function handleChange(changedValues, allValues) {
 
@@ -69,12 +66,7 @@ export default config({
 
         // 设置label宽度
         if (labelWidth) {
-            setLayout(
-                {
-                    labelCol: {flex: labelWidth},
-                    wrapperCol: {flex: 1},
-                },
-            );
+            setLabelCol({flex: labelWidth});
         }
 
     }, [selectedNode]);
@@ -107,7 +99,7 @@ export default config({
             const {category, fields} = item;
             return (
                 <div styleName="category">
-                    <div styleName="label" style={{flex: `0 0 ${layout.labelCol.flex}`}}>
+                    <div styleName="label" style={{flex: `0 0 ${labelCol.flex}`}}>
                         {category}
                     </div>
                     <div styleName="wrapper">
@@ -117,7 +109,7 @@ export default config({
 
                             return (
                                 <Form.Item
-                                    {...layout}
+                                    labelCol={labelCol}
                                     name={field}
                                     colon={false}
                                     noStyle
@@ -133,7 +125,7 @@ export default config({
     }
 
     function renderField(item) {
-        const {label, field, type} = item;
+        const {label, labelWidth = labelCol.flex, field, type, span = 24} = item;
         const getElement = elementMap[type];
 
         let Element = () => <span style={{color: 'red'}}>TODO {type} 对应的表单元素不存在</span>;
@@ -143,14 +135,16 @@ export default config({
         }
 
         return (
-            <Form.Item
-                {...layout}
-                label={label}
-                name={field}
-                colon={false}
-            >
-                <Element getPopupContainer={() => rootRef.current}/>
-            </Form.Item>
+            <Col span={span}>
+                <Form.Item
+                    labelCol={{flex: labelWidth}}
+                    label={label}
+                    name={field}
+                    colon={false}
+                >
+                    <Element getPopupContainer={() => rootRef.current}/>
+                </Form.Item>
+            </Col>
         );
     }
 
@@ -170,13 +164,15 @@ export default config({
                         onValuesChange={handleChange}
                         name="props"
                     >
-                        {propFields.filter(item => !item.category)
-                            .map((item, index) => {
-                                let category = renderCategory(index);
-                                const field = renderField(item);
+                        <Row>
+                            {propFields.filter(item => !item.category)
+                                .map((item, index) => {
+                                    let category = renderCategory(index);
+                                    const field = renderField(item);
 
-                                return [category, field];
-                            })}
+                                    return [category, field];
+                                })}
+                        </Row>
                     </Form>
                 </ConfigProvider>
             </div>

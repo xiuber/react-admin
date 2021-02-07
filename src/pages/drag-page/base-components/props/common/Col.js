@@ -3,10 +3,10 @@ export default {
     fields: [
         {label: '占位格数', field: 'span', type: 'number', version: '', desc: '栅格占位格数，为 0 时相当于 display: none'},
         {label: '弹性布局属性', field: 'flex', type: 'unit', version: '', desc: 'flex 布局属性'},
-        {label: '左侧间隔格数', field: 'offset', type: 'number', defaultValue: '0', version: '', desc: '栅格左侧的间隔格数，间隔内不可以有栅格'},
-        {label: '栅格顺序', field: 'order', type: 'number', defaultValue: '0', version: '', desc: '栅格顺序'},
-        {label: '向左移动格数', field: 'pull', type: 'number', defaultValue: '0', version: '', desc: '栅格向左移动格数'},
-        {label: '向右移动格数', field: 'push', type: 'number', defaultValue: '0', version: '', desc: '栅格向右移动格数'},
+        {label: '左间隔格数', span: 12, field: 'offset', type: 'number', defaultValue: '0', version: '', desc: '栅格左侧的间隔格数，间隔内不可以有栅格'},
+        {label: '栅格顺序', span: 12, labelWidth: '80px', field: 'order', type: 'number', defaultValue: '0', version: '', desc: '栅格顺序'},
+        {label: '左移格数', span: 12, field: 'pull', type: 'number', defaultValue: '0', version: '', desc: '栅格向左移动格数'},
+        {label: '右移格数', span: 12, labelWidth: '80px', field: 'push', type: 'number', defaultValue: '0', version: '', desc: '栅格向右移动格数'},
 
         // TODO number 或 object {flex, offset, order, pull, push, span}
         {label: '屏幕 < 576px', field: 'xs', type: 'number', version: '', desc: '屏幕 < 576px 响应式栅格，可为栅格数或一个包含其他属性的对象'},
