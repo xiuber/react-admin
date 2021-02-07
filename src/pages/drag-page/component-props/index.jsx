@@ -54,15 +54,15 @@ export default config({
         const {componentName} = selectedNode;
         const propFields = propsMap[componentName];
 
-        if (!propFields) return;
+        const {fields, commonLabelWidth} = propFields || {};
 
-        setPropFields(propFields || []);
+        setPropFields(fields || []);
 
+        // 回显表单
         const fieldsValue = selectedNode.props || {};
-
         form.setFieldsValue(fieldsValue);
 
-        const commonLabelWidth = propFields.find(item => 'commonLabelWidth' in item)?.commonLabelWidth;
+        // 设置label宽度
         if (commonLabelWidth) {
             setLayout(
                 {
