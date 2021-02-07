@@ -15,6 +15,7 @@ import './style.less';
 const displayOptions = [
     {value: 'inline', label: '内联布局', icon: <PicCenterOutlined/>},
     {value: 'flex', label: '弹性布局', icon: <PicCenterOutlined/>},
+    {value: 'inline-flex', label: '内联弹性布局', icon: <PicCenterOutlined/>},
     {value: 'block', label: '块级布局', icon: <PicCenterOutlined/>},
     {value: 'inline-block', label: '内联块布局', icon: <PicCenterOutlined/>},
     {value: 'none', label: '内联块布局', icon: <PicCenterOutlined/>},
@@ -66,7 +67,17 @@ export default function Layout(props) {
     const [parentIsFlexBox, setParentIsFlexBox] = useState(false);
 
     function handleChange(changedValues, allValues) {
-        console.log('allValues', JSON.stringify(allValues, null, 4));
+        const {display} = allValues;
+
+        if (display !== 'flex' && display !== 'inline-flex') {
+            allValues.flexDirection = undefined;
+            allValues.justifyContent = undefined;
+            allValues.alignItems = undefined;
+            allValues.flexWrap = undefined;
+        }
+
+        // 同步表单数据
+        form.setFieldsValue(allValues);
         onChange(allValues);
     }
 
@@ -74,6 +85,7 @@ export default function Layout(props) {
     useEffect(() => {
         // 先重置，否则会有字段不清空情况
         form.resetFields();
+        console.log(value);
         form.setFieldsValue(value);
     }, [value]);
 
@@ -105,7 +117,7 @@ export default function Layout(props) {
                 <Form.Item shouldUpdate noStyle>
                     {({getFieldValue}) => {
                         const display = getFieldValue('display');
-                        if (display !== 'flex') return null;
+                        if (display !== 'flex' && display !== 'inline-flex') return null;
 
                         return (
                             <>
