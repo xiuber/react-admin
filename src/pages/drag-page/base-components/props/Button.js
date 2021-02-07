@@ -2,6 +2,7 @@ import {targetOptions} from '../index';
 
 export default [
     {
+        commonLabelWidth: '80px',
         label: '按钮类型', field: 'type', type: 'radio-group', defaultValue: 'default', version: '',
         options: [
             {value: 'primary', label: '主要'},
@@ -39,6 +40,6 @@ export default [
         label: '跳转目标', appendField: 'href', field: 'target', type: 'radio-group', version: '', desc: '相当于 a 链接的 target 属性，href 存在时生效',
         options: targetOptions,
     },
-    {label: '原生htmlType', field: 'htmlType', type: 'string', defaultValue: 'button', version: '', desc: '设置 button 原生的 type 值，可选值请参考 HTML 标准'},
+    {label: 'htmlType', field: 'htmlType', type: 'string', defaultValue: 'button', version: '', desc: '设置 button 原生的 type 值，可选值请参考 HTML 标准'},
     // {label: '按钮事件', field: 'onClick', type: '(event) => void', version: '', desc: '点击按钮时的回调'},
 ];

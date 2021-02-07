@@ -8,11 +8,6 @@ import CurrentSelectedNode from '../current-selected-node';
 import './style.less';
 import {v4 as uuid} from 'uuid';
 
-const layout = {
-    labelCol: {flex: '100px'},
-    wrapperCol: {flex: 1},
-};
-
 export default config({
     connect: state => {
 
@@ -29,6 +24,10 @@ export default config({
     const [propFields, setPropFields] = useState([]);
     const [form] = Form.useForm();
     const rootRef = useRef(null);
+    const [layout, setLayout] = useState({
+        labelCol: {flex: '80px'},
+        wrapperCol: {flex: 1},
+    });
 
     function handleChange(changedValues, allValues) {
 
@@ -55,11 +54,23 @@ export default config({
         const {componentName} = selectedNode;
         const propFields = propsMap[componentName];
 
+        if (!propFields) return;
+
         setPropFields(propFields || []);
 
         const fieldsValue = selectedNode.props || {};
 
         form.setFieldsValue(fieldsValue);
+
+        const commonLabelWidth = propFields.find(item => 'commonLabelWidth' in item)?.commonLabelWidth;
+        if (commonLabelWidth) {
+            setLayout(
+                {
+                    labelCol: {flex: commonLabelWidth},
+                    wrapperCol: {flex: 1},
+                },
+            );
+        }
 
     }, [selectedNode]);
 
