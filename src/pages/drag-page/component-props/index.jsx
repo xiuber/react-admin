@@ -54,7 +54,7 @@ export default config({
         const {componentName} = selectedNode;
         const propFields = propsMap[componentName];
 
-        const {fields, commonLabelWidth} = propFields || {};
+        const {fields, labelWidth} = propFields || {};
 
         setPropFields(fields || []);
 
@@ -63,10 +63,10 @@ export default config({
         form.setFieldsValue(fieldsValue);
 
         // 设置label宽度
-        if (commonLabelWidth) {
+        if (labelWidth) {
             setLayout(
                 {
-                    labelCol: {flex: commonLabelWidth},
+                    labelCol: {flex: labelWidth},
                     wrapperCol: {flex: 1},
                 },
             );

@@ -1,7 +1,7 @@
 import {targetOptions} from '../index';
 
 export default {
-    commonLabelWidth: '80px',
+    labelWidth: '80px',
     fields: [
         {
             label: '按钮类型', field: 'type', type: 'radio-group', defaultValue: 'default', version: '',
