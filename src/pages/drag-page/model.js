@@ -342,7 +342,7 @@ export default {
         // 添加占位符
         addDragHolder(node);
 
-        const result = modifyPageConfig({
+        const result = addOrMoveNode({
             isAdd: true,
             pageConfig,
             isAfter,
@@ -350,6 +350,7 @@ export default {
             isChildren,
             targetId,
             node,
+            state,
         });
 
         if (afterAdd) afterAdd(args);
@@ -378,7 +379,7 @@ export default {
         // 添加占位符
         addDragHolder(parentNode);
 
-        const result = modifyPageConfig({
+        const result = addOrMoveNode({
             isMove: true,
             pageConfig,
             isAfter,
@@ -386,6 +387,7 @@ export default {
             isChildren,
             targetId,
             node,
+            state,
         });
 
         afterMove && afterMove(args);
@@ -394,7 +396,8 @@ export default {
     },
 };
 
-function modifyPageConfig(options) {
+
+function addOrMoveNode(options) {
     const {
         pageConfig,
         targetId,
