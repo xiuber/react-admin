@@ -306,18 +306,23 @@ export default function NodeRenderDraggable(props) {
     };
 
     const onNodeClick = (e) => {
-        // 按住 meta 或 ctrl 进行点击时，才选中
-        if ((e.metaKey || e.ctrlKey) && nodeSelectType === 'meta') {
-            // 单纯选中节点，不进行其他操作
-            e.stopPropagation && e.stopPropagation();
-            e.preventDefault && e.preventDefault();
+        e.stopPropagation && e.stopPropagation();
+        e.preventDefault && e.preventDefault();
 
-            dragPageAction.setSelectedNodeId(componentId);
-
-            return;
+        if (nodeSelectType === 'meta') {
+            if ((e.metaKey || e.ctrlKey)) {
+                // 单纯选中节点，不进行其他操作
+                dragPageAction.setSelectedNodeId(componentId);
+            } else {
+                propsActions.onClick && propsActions.onClick(e);
+            }
         }
-        propsActions.onClick && propsActions.onClick(e);
-        dragPageAction.setSelectedNodeId(componentId);
+
+        // 单击模式
+        if (nodeSelectType === 'click') {
+            propsActions.onClick && propsActions.onClick(e);
+            dragPageAction.setSelectedNodeId(componentId);
+        }
     };
 
     if (withWrapper) {
