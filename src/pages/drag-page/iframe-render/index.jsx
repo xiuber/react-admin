@@ -1,5 +1,6 @@
 import React, {useCallback, useRef, useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
+import {ConfigProvider} from 'antd';
 import config from 'src/commons/config-hoc';
 import NodeRender from './node-render/NodeRender';
 import {scrollElement} from 'src/pages/drag-page/util';
@@ -109,7 +110,9 @@ export default config({
         if (!iframeRootEle) return;
 
         ReactDOM.render(
-            <NodeRender{...draggableNodeProps}/>,
+            <ConfigProvider getPopupContainer={() => iframeRootRef.current}>
+                <NodeRender{...draggableNodeProps}/>
+            </ConfigProvider>,
             iframeRootEle,
         );
     }, [

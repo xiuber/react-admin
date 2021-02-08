@@ -10,7 +10,6 @@ const RadioGroup = props => {
         onChange,
         showTooltip,
         placement,
-        getPopupContainer,
         ...others
     } = props;
 
@@ -56,7 +55,6 @@ const RadioGroup = props => {
                         placement={pl}
                         title={tooltipTitle}
                         mouseLeaveDelay={0}
-                        getPopupContainer={getPopupContainer}
                     >
                         {labelNode}
                     </Tooltip>

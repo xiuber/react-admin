@@ -55,7 +55,51 @@ export default [
                 title: '级联选择',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        withWrapper: true,
+                        wrapperStyle: {
+                            display: 'inline-block',
+                            position: 'relative',
+                        },
+                    },
                     componentName: 'Cascader',
+                    props: {
+                        placeholder: '请选择',
+                        options: [
+                            {
+                                label: '北京',
+                                value: 'beijing',
+                                children: [
+                                    {
+                                        label: '石景山',
+                                        value: 'shijingshan',
+                                        children: [
+                                            {
+                                                label: '苹果园',
+                                                value: 'pingguoyuan',
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                            {
+                                label: '江苏',
+                                value: 'jiangsu',
+                                children: [
+                                    {
+                                        label: '南京',
+                                        value: 'nanjing',
+                                        children: [
+                                            {
+                                                label: '中华门',
+                                                value: 'zhonghuamen',
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
                 },
             },
         ],
@@ -67,6 +111,7 @@ export default [
             {
                 title: '多选框',
                 renderPreview: true,
+                previewProps: {checked: true},
                 config: {
                     componentName: 'Checkbox',
                 },
@@ -95,6 +140,9 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Input',
+                    props: {
+                        placeholder: '请输入',
+                    },
                 },
             },
             {
@@ -107,6 +155,10 @@ export default [
                         wrapperStyle: {display: 'inline-block'},
                     },
                     componentName: 'InputNumber',
+                    props: {
+                        style: {width: '100%'},
+                        placeholder: '请输入数字',
+                    },
                 },
             },
         ],
@@ -120,6 +172,9 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Mentions',
+                    props: {
+                        placeholder: '请输入',
+                    },
                 },
             },
         ],
@@ -131,6 +186,7 @@ export default [
             {
                 title: '单选框',
                 renderPreview: true,
+                previewProps: {checked: true},
                 config: {
                     componentName: 'Radio',
                 },
@@ -144,6 +200,7 @@ export default [
             {
                 title: '评分',
                 renderPreview: true,
+                previewProps: {allowHalf: true, value: 2.5},
                 previewZoom: .7,
                 config: {
                     componentName: 'Rate',
@@ -263,6 +320,10 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'TreeSelect',
+                    props: {
+                        style: {width: '100%'},
+                        placeholder: '请选择',
+                    },
                 },
             },
         ],
@@ -275,7 +336,31 @@ export default [
                 title: '上传',
                 renderPreview: true,
                 config: {
+                    __config: {
+                        childrenDraggable: false,
+                    },
                     componentName: 'Upload',
+                    children: [
+                        {
+                            componentName: 'Button',
+                            children: [
+                                {
+                                    componentName: 'UploadOutlined',
+                                    props: {
+                                        style: {
+                                            marginRight: 8,
+                                        },
+                                    },
+                                },
+                                {
+                                    componentName: 'Text',
+                                    props: {
+                                        text: '请选择文件',
+                                    },
+                                },
+                            ],
+                        },
+                    ],
                 },
             },
         ],

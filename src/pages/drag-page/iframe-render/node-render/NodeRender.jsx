@@ -83,7 +83,6 @@ export default function NodeRenderDraggable(props) {
         }, {});
 
     const commonProps = {
-        getPopupContainer: () => iframeDocument.body,
         children: childrenEle,
         ...componentActions,
     };
@@ -281,8 +280,8 @@ export default function NodeRenderDraggable(props) {
                 if (!e.metaKey && !e.ctrlKey) return;
             }
 
-            e.stopPropagation && e.stopPropagation();
-            e.preventDefault && e.preventDefault();
+            // e.stopPropagation && e.stopPropagation();
+            // e.preventDefault && e.preventDefault();
 
             // 竟然没有被 componentActions中的oClick覆盖 ？？？？
             const ele = getDroppableEle(e.target);

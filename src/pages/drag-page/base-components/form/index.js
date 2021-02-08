@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default [
     {
         title: '表单',
@@ -19,6 +17,9 @@ export default [
                             children: [
                                 {
                                     componentName: 'Input',
+                                    props: {
+                                        placeholder: '请输入姓名',
+                                    },
                                 },
                             ],
                         },
@@ -32,6 +33,9 @@ export default [
                                     componentName: 'InputNumber',
                                     props: {
                                         style: {width: '100%'},
+                                        placeholder: '请输入年龄',
+                                        min: 0,
+                                        step: 1,
                                     },
                                 },
                             ],
@@ -46,7 +50,6 @@ export default [
                     __config: {
                         withHolder: true,
                         holderProps: {
-                            style: {height: 50},
                             tip: '请拖入表单元素',
                         },
                         childrenDraggable: false, // 子节点不可拖拽
@@ -55,12 +58,23 @@ export default [
 
                             return draggingNode?.__config?.isFormElement;
                         },
-                        // hooks: {
-                        //     beforeAdd: (options) => {
-                        //         const {node} = options;
-                        //         if (!node) return;
-                        //     },
-                        // },
+                        hooks: {
+                            beforeAddChildren: (options) => {
+                                const {node, targetNode} = options;
+
+                                if (!node) return;
+
+                                // 清空 相当于替换元素了
+                                node.children = [];
+
+                                if (targetNode?.componentName === 'Switch') {
+                                    if (!node.props) node.props = {};
+
+                                    node.props.valuePropName = 'checked';
+                                }
+
+                            },
+                        },
                         componentDisplayName: ({node, pageConfig}) => {
                             const {componentName, props = {}} = node;
                             const {label} = props;
@@ -71,6 +85,9 @@ export default [
                         },
                     },
                     componentName: 'Form.Item',
+                    props: {
+                        label: '表单项',
+                    },
                 },
             },
         ],

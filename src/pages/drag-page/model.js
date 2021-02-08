@@ -262,6 +262,7 @@ export default {
         if (id === pageConfig.__config.componentId) {
             return {pageConfig: {...holderNode}, selectedNodeId, selectedNode};
         }
+
         const node = findNodeById(pageConfig, id);
 
         if (!node) return {selectedNode: null, selectedNodeId: null};
@@ -278,7 +279,7 @@ export default {
 
         if (result === false) return {pageConfig};
 
-        const pargs = {node: parentNode, pageConfig};
+        const pargs = {node: parentNode, targetNode: node, pageConfig};
 
         const res = beforeDeleteChildren && beforeDeleteChildren(pargs);
 
@@ -291,7 +292,7 @@ export default {
         addDragHolder(parentNode);
 
         afterDelete && afterDelete(args);
-        afterDeleteChildren && afterDeleteChildren();
+        afterDeleteChildren && afterDeleteChildren({node: parentNode, targetNode: node});
 
         return {pageConfig: {...pageConfig}, selectedNodeId, selectedNode};
     },
@@ -306,9 +307,13 @@ export default {
 
         const {beforeAdd, afterAdd} = node.__config.hooks || {};
 
-        const res = beforeAdd && beforeAdd(options);
+        const args = {
+            node: findNodeById(pageConfig, targetId),
+            targetNode: node,
+            pageConfig,
+        };
+        const res = beforeAdd && beforeAdd(args);
         if (res === false) return {pageConfig};
-
 
         // 添加占位符
         addDragHolder(node);
@@ -323,7 +328,7 @@ export default {
             node,
         });
 
-        if (afterAdd) afterAdd(options);
+        if (afterAdd) afterAdd(args);
 
         return result;
     },

@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {Collapse} from 'antd';
+import {Collapse, ConfigProvider} from 'antd';
 import {DesktopOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
@@ -86,62 +86,64 @@ export default config({
 
 
     return (
-        <Pane
-            fitHeight
-            header={(
-                <div styleName="header">
-                    <CurrentSelectedNode/>
-                    <DesktopOutlined
-                        styleName="tool"
-                        onClick={() => setStyleEditorVisible(!styleEditorVisible)}
-                    />
-                </div>
-            )}
-        >
-            <StyleEditor
-                value={style}
-                onChange={values => handleChange(values, true)}
-                visible={styleEditorVisible}
-                onCancel={() => setStyleEditorVisible(false)}
-            />
-            <div styleName="root">
-                <StyleNavigator
-                    containerRef={boxRef}
-                    dataSource={options}
-                    onClick={key => {
-                        const nextActiveKey = Array.from(new Set([key, ...activeKey]));
-                        setActiveKey(nextActiveKey);
-                    }}
+        <ConfigProvider getPopupContainer={() => boxRef.current}>
+            <Pane
+                fitHeight
+                header={(
+                    <div styleName="header">
+                        <CurrentSelectedNode/>
+                        <DesktopOutlined
+                            styleName="tool"
+                            onClick={() => setStyleEditorVisible(!styleEditorVisible)}
+                        />
+                    </div>
+                )}
+            >
+                <StyleEditor
+                    value={style}
+                    onChange={values => handleChange(values, true)}
+                    visible={styleEditorVisible}
+                    onCancel={() => setStyleEditorVisible(false)}
                 />
-                <div
-                    ref={boxRef}
-                    styleName="collapseBox"
-                    id="styleCollapseBox"
-                    style={{height}}
-                >
-                    <Collapse
-                        style={{border: 'none'}}
-                        activeKey={activeKey}
-                        onChange={activeKey => setActiveKey(activeKey)}
+                <div styleName="root">
+                    <StyleNavigator
+                        containerRef={boxRef}
+                        dataSource={options}
+                        onClick={key => {
+                            const nextActiveKey = Array.from(new Set([key, ...activeKey]));
+                            setActiveKey(nextActiveKey);
+                        }}
+                    />
+                    <div
+                        ref={boxRef}
+                        styleName="collapseBox"
+                        id="styleCollapseBox"
+                        style={{height}}
                     >
-                        {options.map(item => {
-                            const {key, title, Component} = item;
-                            return (
-                                <Panel key={key} header={<div id={`style-${key}`}>{title}</div>}>
-                                    <Component
-                                        iFrameDocument={iFrameDocument}
-                                        componentId={componentId}
-                                        containerRef={boxRef}
-                                        value={style}
-                                        onChange={handleChange}
-                                    />
-                                </Panel>
-                            );
-                        })}
-                    </Collapse>
-                    <div style={{height: height - 220}}/>
+                        <Collapse
+                            style={{border: 'none'}}
+                            activeKey={activeKey}
+                            onChange={activeKey => setActiveKey(activeKey)}
+                        >
+                            {options.map(item => {
+                                const {key, title, Component} = item;
+                                return (
+                                    <Panel key={key} header={<div id={`style-${key}`}>{title}</div>}>
+                                        <Component
+                                            iFrameDocument={iFrameDocument}
+                                            componentId={componentId}
+                                            containerRef={boxRef}
+                                            value={style}
+                                            onChange={handleChange}
+                                        />
+                                    </Panel>
+                                );
+                            })}
+                        </Collapse>
+                        <div style={{height: height - 220}}/>
+                    </div>
                 </div>
-            </div>
-        </Pane>
+            </Pane>
+        </ConfigProvider>
     );
 });

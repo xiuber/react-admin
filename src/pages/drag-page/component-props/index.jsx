@@ -124,7 +124,7 @@ export default config({
                                         colon={false}
                                         noStyle
                                     >
-                                        <FormElement getPopupContainer={() => rootRef.current}/>
+                                        <FormElement/>
                                     </Form.Item>
                                 );
                             })}
@@ -154,7 +154,7 @@ export default config({
                     name={field}
                     colon={false}
                 >
-                    <FormElement getPopupContainer={() => rootRef.current}/>
+                    <FormElement/>
                 </Form.Item>
             </Col>
         );
@@ -170,7 +170,7 @@ export default config({
             )}
         >
             <div styleName="root" ref={rootRef}>
-                <ConfigProvider autoInsertSpaceInButton={false}>
+                <ConfigProvider autoInsertSpaceInButton={false} getPopupContainer={() => rootRef.current}>
                     <Form
                         form={form}
                         onValuesChange={handleChange}

@@ -53,10 +53,10 @@ export default function Font(props) {
                             labelCol={labelCol}
                             colon={false}
                         >
+
                             <Select
                                 style={{width: '100%'}}
                                 placeholder="粗细 font-weight"
-                                getPopupContainer={() => document.getElementById('styleCollapseBox')}
                                 options={[
                                     {value: 'normal', label: '正常'},
                                     {value: 'bolder', label: '粗体'},
@@ -106,7 +106,7 @@ export default function Font(props) {
                     name="textAlign"
                     colon={false}
                 >
-                    <RadioGroup options={textAlignOptions} getPopupContainer={() => document.getElementById('styleCollapseBox')}/>
+                    <RadioGroup options={textAlignOptions}/>
                 </Form.Item>
                 <Form.Item
                     labelCol={labelCol}

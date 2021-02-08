@@ -56,9 +56,8 @@ document.querySelectorAll('.ant-menu-item-group')
     });
 
 // 抓取属性
-
 let result = [];
-window.$('#API').nextElementSibling.querySelectorAll('tr')
+document.getElementById('Form.Item').nextElementSibling.querySelectorAll('tr')
     .forEach(tr => {
         const tds = Array.from(tr.querySelectorAll('td'));
         const field = ['field', 'desc', 'type', 'defaultValue', 'version'];

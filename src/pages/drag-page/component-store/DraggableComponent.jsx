@@ -2,20 +2,35 @@ import React from 'react';
 import config from 'src/commons/config-hoc';
 import './DraggableComponent.less';
 import NodeRender from '../iframe-render/node-render/NodeRender';
-import { cloneDeep } from 'lodash';
+import {cloneDeep} from 'lodash';
 import Draggable from './Draggable';
 
 export default config({})(function DraggableComponent(props) {
-    const { data } = props;
+    const {data} = props;
 
     function _renderPreview() {
-        const { renderPreview, previewZoom, previewStyle, previewWrapperStyle, config } = data;
+        const {
+            renderPreview,
+            previewProps,
+            previewZoom,
+            previewStyle,
+            previewWrapperStyle,
+            config,
+        } = data;
 
         if (!renderPreview) return null;
 
         const componentConfig = cloneDeep(config);
+        if (!componentConfig.props) componentConfig.props = {};
+
+        if (previewProps) {
+            componentConfig.props = {
+                ...componentConfig.props,
+                ...previewProps,
+            };
+        }
+
         if (previewStyle) {
-            if (!componentConfig.props) componentConfig.props = {};
             if (!componentConfig.props.style) componentConfig.props.style = {};
 
             componentConfig.props.style = {
@@ -35,7 +50,7 @@ export default config({})(function DraggableComponent(props) {
         return (
             <div styleName="preview" style={previewWrapperStyle}>
                 {previewZoom ? (
-                    <div styleName="previewZoom" style={{ zoom: previewZoom || 1 }}>
+                    <div styleName="previewZoom" style={{zoom: previewZoom || 1}}>
                         {preview}
                     </div>
                 ) : preview}

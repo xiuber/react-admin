@@ -4,6 +4,7 @@ import inflection from 'inflection';
 import * as raLibComponent from 'ra-lib';
 import * as components from './components';
 import * as antdComponent from 'antd/es';
+import * as antdIcon from '@ant-design/icons';
 
 export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
@@ -391,16 +392,17 @@ export function getComponent(componentName, componentType) {
 
     if (componentType === 'ra-lib') {
         const raCom = raLibComponent[name];
-
         if (raCom) return com(raCom);
     }
-    const Com = components[name];
 
+    const Com = components[name];
     if (Com) return com(Com);
 
     const AntdCom = antdComponent[name];
-
     if (AntdCom) return com(AntdCom);
+
+    const AntdIcon = antdIcon[name];
+    if (AntdIcon) return com(AntdIcon);
 
     return name;
 }

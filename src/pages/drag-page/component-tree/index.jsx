@@ -5,15 +5,17 @@ import config from 'src/commons/config-hoc';
 import TreeNode from './TreeNode';
 import {scrollElement} from '../util';
 import Pane from '../pane';
-
-import './style.less';
+import classNames from 'classnames';
 import DragBar from 'src/pages/drag-page/drag-bar';
 import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
+
+import './style.less';
 
 export default config({
     connect: state => {
         return {
             pageConfig: state.dragPage.pageConfig,
+            draggingNode: state.dragPage.draggingNode,
             selectedNodeId: state.dragPage.selectedNodeId,
             componentTreeExpendedKeys: state.dragPage.componentTreeExpendedKeys,
             componentTreeWidth: state.dragPage.componentTreeWidth,
@@ -25,6 +27,7 @@ export default config({
         selectedNodeId,
         componentTreeExpendedKeys,
         componentTreeWidth,
+        draggingNode,
         action: {dragPage: dragPageAction},
     } = props;
     const [treeData, setTreeData] = useState([]);
@@ -123,6 +126,10 @@ export default config({
         dragPageAction.setComponentTreeWidth(clientX - 56);
     }
 
+    const styleName = classNames({
+        root: true,
+        hasDraggingNode: !!draggingNode,
+    });
     return (
         <Pane
             header={
@@ -132,7 +139,7 @@ export default config({
                 </div>
             }
         >
-            <div styleName="root" ref={mainRef} style={{width: componentTreeWidth}}>
+            <div styleName={styleName} ref={mainRef} style={{width: componentTreeWidth}}>
                 <DragBar onDragging={handleDragging}/>
                 <Tree
                     expandedKeys={componentTreeExpendedKeys}
@@ -147,7 +154,6 @@ export default config({
                     selectedKeys={[selectedNodeId]}
                     onSelect={handleSelected}
                 />
-                {/*<div style={{height: 1000, background: 'green'}}></div>*/}
             </div>
         </Pane>
     );

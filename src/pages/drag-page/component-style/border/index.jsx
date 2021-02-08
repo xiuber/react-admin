@@ -144,7 +144,6 @@ export default function Background(props) {
                     <RadioGroup
                         placement="top"
                         allowClear={false}
-                        getPopupContainer={() => document.getElementById('styleCollapseBox')}
                         options={inputTypeOptions}
                         onChange={() => {
                             setTimeout(() => {
@@ -252,7 +251,6 @@ export default function Background(props) {
                     <RadioGroup
                         allowClear={false}
                         options={inputTypeOptions}
-                        getPopupContainer={() => document.getElementById('styleCollapseBox')}
                         onChange={() => {
                             setTimeout(() => {
                                 const allValues = form.getFieldsValue();
@@ -300,7 +298,6 @@ export default function Background(props) {
                                                 style={{width: '100%'}}
                                                 placeholder="border-style"
                                                 options={borderStyleOptions}
-                                                getPopupContainer={() => document.getElementById('styleCollapseBox')}
                                                 onChange={value => {
                                                     const fieldsValue = {
                                                         borderTopStyle: value,
@@ -372,7 +369,6 @@ export default function Background(props) {
                                                 style={{width: '100%'}}
                                                 placeholder={`${placeholder}-style`}
                                                 options={borderStyleOptions}
-                                                getPopupContainer={() => document.getElementById('styleCollapseBox')}
                                             />
                                         </Form.Item>
                                     </Col>
