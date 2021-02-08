@@ -36,7 +36,7 @@ export default function NodeRenderDraggable(props) {
             componentType,
             componentDesc,
             withWrapper,
-            wrapperStyle,
+            wrapperStyle = {},
             actions = {},
             childrenDraggable,
         },
@@ -337,14 +337,13 @@ export default function NodeRenderDraggable(props) {
             'width',
             'height',
         ];
-        // 移动到 wrapper 的样式
 
+        // 移动到 wrapper上的样式
         const removeTopWStyle = [
             'marginTop',
             'marginRight',
             'marginBottom',
             'marginLeft',
-
         ];
 
         syncTopWStyle.forEach(key => {
@@ -362,7 +361,7 @@ export default function NodeRenderDraggable(props) {
 
         return createElement('div', {
             ...dragProps,
-            className: dragClassName,
+            className: dragClassName + ' dragWrapper',
             style: wStyle,
             children: [
                 createElement(component, {

@@ -150,7 +150,6 @@ export default [
                 renderPreview: true,
                 config: {
                     __config: {
-                        isContainer: false,
                         withWrapper: true,
                         wrapperStyle: {display: 'inline-block'},
                     },
@@ -231,9 +230,15 @@ export default [
                 },
                 // previewStyle: {width: '100%'},
                 config: {
+                    __config: {
+                        // 无论是否添加wrapper，下拉选择项了之后，就无法拖拽了
+                        // withWrapper: true,
+                        // wrapperStyle: {display: 'inline-block'},
+                    },
                     componentName: 'Select',
                     props: {
                         placeholder: '请选择',
+                        allowClear: true,
                         options: [
                             {value: '1', label: '下拉项1'},
                             {value: '2', label: '下拉项2'},
@@ -284,7 +289,6 @@ export default [
                 renderPreview: true,
                 config: {
                     __config: {
-                        isContainer: false,
                         withWrapper: true,
                         wrapperStyle: {display: 'inline-block'},
                     },
@@ -303,7 +307,6 @@ export default [
                 previewZoom: .28,
                 config: {
                     __config: {
-                        isContainer: false,
                         withWrapper: true,
                     },
                     componentName: 'Transfer',
