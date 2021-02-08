@@ -4,6 +4,7 @@ import {ConfigProvider} from 'antd';
 import config from 'src/commons/config-hoc';
 import NodeRender from './node-render/NodeRender';
 import {scrollElement} from 'src/pages/drag-page/util';
+import {setComponentDefaultOptions} from 'src/pages/drag-page/base-components';
 import KeyMap from 'src/pages/drag-page/KeyMap';
 import Scale from './scale';
 import DragOver from './drag-over';
@@ -91,6 +92,11 @@ export default config({
         const iframeSrcDoc = getIframeSrcDoc();
 
         setIframeSrcDoc(iframeSrcDoc);
+
+        // pageConfig 会保存到 localStorage中，会导致 __config 中一些函数丢失，重新设置一下
+        const nextPageConfig = setComponentDefaultOptions(pageConfig);
+        dragPageAction.setPageConfig({...nextPageConfig});
+
     }, []);
 
     const draggableNodeProps = {

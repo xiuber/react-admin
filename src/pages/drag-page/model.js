@@ -164,6 +164,7 @@ const syncStorage = {
     // rightSideWidth: true,
     schemaEditorWidth: true,
     componentTreeWidth: true,
+    pageConfig: true,
 };
 
 export default {

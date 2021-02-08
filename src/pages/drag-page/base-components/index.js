@@ -179,7 +179,7 @@ export function removeComponentConfig(nodes) {
 }
 
 
-// 设置组件配置
+// 设置组件配置 __config 重新设置 node.__config.componentId
 export function setComponentDefaultOptions(componentNode) {
     const dataSource = !Array.isArray(componentNode) ? [componentNode] : componentNode;
 
@@ -199,6 +199,7 @@ export function setComponentDefaultOptions(componentNode) {
     return componentNode;
 }
 
+// 组件库 设置默认值
 export function setDefaultOptions(nodes) {
     if (!nodes?.length) return nodes;
 
