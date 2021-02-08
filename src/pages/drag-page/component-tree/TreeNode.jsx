@@ -39,7 +39,12 @@ export default config({
     function handleDragStart(e) {
         e.stopPropagation();
 
-        if (!draggable) return;
+        if (!draggable) {
+            const img = new Image();
+            e.dataTransfer.setDragImage(img, 10, 10);
+
+            return;
+        }
 
         dragPageAction.setDraggingNode(nodeData);
 
