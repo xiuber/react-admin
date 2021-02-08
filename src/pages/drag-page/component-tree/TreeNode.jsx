@@ -221,6 +221,7 @@ export default config({
         dragging: isDragging,
         dragIn: dragIn && draggingNode,
         unDraggable: !draggable,
+        hasDraggingNode: !!draggingNode,
     });
 
     const positionMap = {

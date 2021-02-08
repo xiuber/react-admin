@@ -8,14 +8,6 @@
         .ant-tree-node-content-wrapper {
             padding: 0;
         }
-
-        .ant-tree-node-content-wrapper.draggable {
-            cursor: move;
-        }
-
-        .ant-tree-node-content-wrapper:not(.draggable) {
-            cursor: no-drop;
-        }
     }
 }
 
@@ -42,6 +34,10 @@
 
     &.unDraggable {
         cursor: no-drop;
+
+        &.hasDraggingNode {
+            cursor: default;
+        }
     }
 
     &.selected {
