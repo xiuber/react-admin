@@ -12,6 +12,14 @@ import RadioGroup from 'src/pages/drag-page/component-style/radio-group';
 import UnitInput from 'src/pages/drag-page/component-style/unit-input';
 import OptionsEditor from 'src/pages/drag-page/component-props/options-editor';
 
+function getPlaceholder(options, props) {
+    const {field, placeholder} = options;
+    if (placeholder) return placeholder;
+    if (Array.isArray(field)) return field.join('.');
+
+    return field;
+}
+
 export default {
     options: (options) => props => {
         const {withLabel} = options;
@@ -20,11 +28,10 @@ export default {
         );
     },
     unit: (options) => props => {
-        const {field} = options;
         return (
             <UnitInput
                 allowClear
-                placeholder={field}
+                placeholder={getPlaceholder(options, props)}
                 {...props}
             />
         );
@@ -36,29 +43,27 @@ export default {
         );
     },
     string: options => props => {
-        const {field} = options;
         return (
-            <Input allowClear placeholder={field} {...props}/>
+            <Input allowClear placeholder={getPlaceholder(options, props)} {...props}/>
         );
     },
     number: options => props => {
-        const {field} = options;
         const {style} = props;
         return (
             <InputNumber
                 allowClear
-                placeholder={field}
+                placeholder={getPlaceholder(options, props)}
                 style={{width: '100%', ...style}}
                 {...props}
             />
         );
     },
     select: options => props => {
-        const {field, options: _options} = options;
+        const {options: _options} = options;
         return (
             <Select
                 allowClear
-                placeholder={field}
+                placeholder={getPlaceholder(options, props)}
                 options={_options}
                 {...props}
             />

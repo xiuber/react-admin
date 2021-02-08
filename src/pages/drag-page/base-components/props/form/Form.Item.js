@@ -1,3 +1,5 @@
+import {isMac} from 'src/pages/drag-page/util';
+
 export default {
     fields: [
         {label: '必填', category: '选项', field: 'required', type: 'boolean', defaultValue: false, version: '', desc: '必填样式设置。如不设置，则会根据校验规则自动生成'},
@@ -16,7 +18,20 @@ export default {
             desc: '标签文本对齐方式',
         },
         // TODO  怎么支持更多情况
-        {label: '标签宽度', field: 'labelCol.flex', type: 'unit', version: ''},
+        {
+            label: '标签宽度', field: ['labelCol', 'flex'], type: 'unit', version: '',
+            placeholder: `labelCol.flex    ${isMac ? '⌘' : 'ctrl'}+Enter 同步所有标签`,
+            onKeyDown: (e, options) => {
+                const {metaKey, ctrlKey, key, target: {value}} = e;
+                const isEnter = key === 'Enter';
+                const {node, dragPageAction} = options;
+
+                if ((metaKey || ctrlKey) && isEnter) {
+                    dragPageAction.syncFormItemLabelColFlex({node, flex: value});
+                }
+            },
+            title: `标签宽度，${isMac ? '⌘' : 'ctrl'}+Enter 同步同表单下所有标签`
+        },
         {label: '字段名', field: 'name', type: 'string', version: '', desc: '字段名，支持数组'},
         {label: '默认值', field: 'initialValue', type: 'string', version: '4.2.0', desc: '设置子元素默认值，如果与 Form 的 initialValues 冲突则以 Form 为准'},
 

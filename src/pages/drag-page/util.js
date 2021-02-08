@@ -267,6 +267,35 @@ export function findParentNodeById(root, id) {
     }
 }
 
+
+// 根据id查找具体名称对应的祖先节点
+export function findParentNodeByParentName(node, name, id) {
+    const child = findNodeById(node, id);
+    if (node.componentName === name && child) return node;
+    if (node?.children?.length) {
+        for (let n of node.children) {
+            const result = findParentNodeByParentName(n, name, id);
+            if (result) return result;
+        }
+    }
+}
+
+export function getAllNodesByName(node, name) {
+    const nodes = [];
+    const loop = n => {
+        if (n.componentName === name) {
+            nodes.push(n);
+        }
+
+        if (n?.children?.length) {
+            n.children.forEach(i => loop(i));
+        }
+    };
+    loop(node);
+
+    return nodes;
+}
+
 // 获取拖放提示位置
 export function getDropGuidePosition(options) {
     const {

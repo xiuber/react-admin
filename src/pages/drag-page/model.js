@@ -1,4 +1,9 @@
-import {findNodeById, findParentNodeById} from './util';
+import {
+    findNodeById,
+    findParentNodeById,
+    findParentNodeByParentName,
+    getAllNodesByName,
+} from './util';
 import {v4 as uuid} from 'uuid';
 import {cloneDeep} from 'lodash';
 import {getComponentConfig, setComponentDefaultOptions} from './base-components';
@@ -189,6 +194,25 @@ export default {
     },
     showCode: (showCode) => {
         return {showCode};
+    },
+    syncFormItemLabelColFlex: ({node, flex}, state) => {
+        const {pageConfig} = state;
+        // 获取父级Form
+        let formNode = findParentNodeByParentName(pageConfig, 'Form', node.__config.componentId);
+
+        // 不存在，就从根节点开始
+        if (!formNode) formNode = pageConfig;
+
+        // 获取Form下所有的Form.Item
+        const fromItems = getAllNodesByName(formNode, 'Form.Item');
+
+        // 设置labelCol.flex
+        fromItems.forEach(item => {
+            if (!item.props) item.props = {};
+            if (!item.props.labelCol) item.props.labelCol = {};
+            item.props.labelCol.flex = flex;
+        });
+        return {pageConfig: {...pageConfig}};
     },
     saveSchema: () => {
         // TODO

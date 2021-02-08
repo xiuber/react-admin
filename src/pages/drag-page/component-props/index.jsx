@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {Form, ConfigProvider, Row, Col} from 'antd';
+import {Form, ConfigProvider, Row, Col, Tooltip} from 'antd';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
 import propsMap from '../base-components/props';
@@ -29,8 +29,6 @@ export default config({
     const wrapperCol = {flex: '1 1 0%'};
 
     function handleChange(changedValues, allValues) {
-
-
         if (!selectedNode?.componentName) return;
 
         if (!selectedNode?.props) selectedNode.props = {};
@@ -47,7 +45,7 @@ export default config({
             Reflect.deleteProperty(item, '_form');
         });
 
-        console.log('props', JSON.stringify(selectedNode.props, null, 4));
+        // console.log('props', JSON.stringify(selectedNode.props, null, 4));
         dragPageAction.render();
     }
 
@@ -136,8 +134,19 @@ export default config({
     }
 
     function renderField(item) {
-        const {label, labelWidth = labelCol.flex, field, type, span = 24} = item;
+        const {
+            label,
+            desc,
+            title: tip,
+            labelWidth = labelCol.flex,
+            field,
+            appendField,
+            type,
+            span = 24,
+            onKeyDown,
+        } = item;
         const getElement = elementMap[type];
+        const title = tip || desc || label;
 
         let FormElement = () => <span style={{color: 'red'}}>TODO {type} 对应的表单元素不存在</span>;
 
@@ -145,19 +154,45 @@ export default config({
             FormElement = elementMap[type](item);
         }
 
-        return (
+        const labelEle = (
+            <Tooltip placement="topRight" title={title} mouseLeaveDelay={0}>
+                {label}
+            </Tooltip>
+        );
+
+        function handleKeyDown(e) {
+            onKeyDown && onKeyDown(e, {
+                node: selectedNode,
+                dragPageAction,
+            });
+        }
+
+        const element = (
             <Col span={span}>
                 <Form.Item
                     labelCol={{flex: labelWidth}}
                     wrapperCol={wrapperCol}
-                    label={label}
+                    label={labelEle}
                     name={field}
                     colon={false}
                 >
-                    <FormElement/>
+                    <FormElement onKeyDown={handleKeyDown}/>
                 </Form.Item>
             </Col>
         );
+        if (appendField) {
+            return (
+                <Form.Item shouldUpdate noStyle>
+                    {({getFieldValue}) => {
+                        const value = getFieldValue(appendField);
+                        if (!value) return null;
+
+                        return element;
+                    }}
+                </Form.Item>
+            );
+        }
+        return element;
     }
 
     return (
