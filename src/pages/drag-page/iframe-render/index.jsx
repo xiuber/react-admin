@@ -1,7 +1,6 @@
 import React, {useCallback, useRef, useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 import config from 'src/commons/config-hoc';
-import NodeRenderDraggable from './node-render/NodeRenderDraggable';
 import NodeRender from './node-render/NodeRender';
 import {scrollElement} from 'src/pages/drag-page/util';
 import KeyMap from 'src/pages/drag-page/KeyMap';
@@ -93,51 +92,30 @@ export default config({
         setIframeSrcDoc(iframeSrcDoc);
     }, []);
 
-    // 相关数据改变之后，重新渲染设计页面
+    const draggableNodeProps = {
+        config: pageConfig,
+        pageConfig,
+        selectedNodeId,
+        nodeSelectType,
+        draggingNode,
+        activeSideKey,
+        dragPageAction,
+        isPreview: activeToolKey === 'preview',
+        iframeDocument: iframeRef.current?.contentDocument,
+    };
     useEffect(() => {
         const iframeRootEle = iframeRootRef.current;
 
         if (!iframeRootEle) return;
 
-        const iframeDocument = iframeRef.current.contentDocument;
-
-        if (activeToolKey === 'preview') {
-            return ReactDOM.render(
-                <NodeRender
-                    config={pageConfig}
-                    pageConfig={pageConfig}
-                    dragPageAction={dragPageAction}
-                    iframeDocument={iframeDocument}
-                />,
-                iframeRootEle,
-            );
-        }
-
         ReactDOM.render(
-            <NodeRenderDraggable
-                config={pageConfig}
-                pageConfig={pageConfig}
-                selectedNodeId={selectedNodeId}
-                nodeSelectType={nodeSelectType}
-                draggingNode={draggingNode}
-                activeSideKey={activeSideKey}
-                dragPageAction={dragPageAction}
-                iframeDocument={iframeDocument}
-            />,
+            <NodeRender{...draggableNodeProps}/>,
             iframeRootEle,
         );
-
     }, [
-        pageConfig,
-        activeToolKey,
-        selectedNodeId,
-        nodeSelectType,
-        activeSideKey,
-        draggingNode,
-        iframeRef.current,
+        ...Object.values(draggableNodeProps),
         iframeRootRef.current,
     ]);
-
 
     // 选中组件之后，调整左侧组件树滚动
     useEffect(() => {
