@@ -5,7 +5,10 @@ import {cloneDeep} from 'lodash';
 import base from './base';
 import common from './common';
 import dataInput from './data-input';
+import dataShow from './data-show';
 import form from './form';
+import feedback from './feedback';
+import other from './other';
 import NodeRender from 'src/pages/drag-page/iframe-render/node-render/NodeRender';
 
 let baseComponents = [
@@ -13,6 +16,9 @@ let baseComponents = [
     {title: '通用', children: common},
     {title: '表单', children: form},
     {title: '数据输入', children: dataInput},
+    {title: '数据展示', children: dataShow},
+    {title: '反馈', children: feedback},
+    {title: '其他', children: other},
 ];
 
 // __config 说明
@@ -120,7 +126,7 @@ export const targetOptions = [
     {value: '_self', label: '当前页'},
     {value: '_parent', label: '父级页'},
     {value: '_top', label: 'top'},
-]
+];
 
 export function getComponentDisplayName(node, render) {
     if (!node) return '';
