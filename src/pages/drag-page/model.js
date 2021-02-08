@@ -196,6 +196,30 @@ export default {
     showCode: (showCode) => {
         return {showCode};
     },
+    setNewProps: ({componentId, newProps = {}}, state) => {
+        const {pageConfig} = state;
+
+        const node = findNodeById(pageConfig, componentId);
+        if (node) {
+            if (!node.props) node.props = {};
+            node.props = {
+                ...node.props,
+                ...newProps,
+            };
+        }
+        return {pageConfig: {...pageConfig}};
+    },
+    showModal: (componentId, state) => {
+        const {pageConfig} = state;
+
+        const node = findNodeById(pageConfig, componentId);
+        if (node) {
+            if (!node.props) node.props = {};
+            node.props.visible = true;
+        }
+
+        return {pageConfig: {...pageConfig}};
+    },
     syncFormItemLabelColFlex: ({node, flex}, state) => {
         const {pageConfig} = state;
         // 获取父级Form

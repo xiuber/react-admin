@@ -306,6 +306,30 @@ export function getDropGuidePosition(options) {
         targetElement,
         frameDocument,
     } = options;
+
+    if (!targetElement) return {
+        position: {
+            isTop: false,
+            isRight: false,
+            isBottom: false,
+            isLeft: false,
+            isCenter: false,
+        },
+        guideLine: {
+            left: 0,
+            top: 0,
+            width: 0,
+            height: 0,
+        },
+        target: {
+            targetHeight: 0,
+            targetWidth: 0,
+            targetX: 0,
+            targetY: 0,
+            targetRect: {},
+        },
+    };
+
     const targetIsContainer = targetElement.getAttribute('data-isContainer') === 'true';
     const targetRect = targetElement.getBoundingClientRect();
 

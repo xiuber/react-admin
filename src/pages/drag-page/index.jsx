@@ -7,12 +7,10 @@ import Right from './right';
 import './style.less';
 import IframeRender from './iframe-render';
 
-
 export default config({
     path: '/drag-page',
     side: false,
 })(function DragPage(props) {
-
     return (
         <PageContent fitHeight styleName="root">
             <div styleName="top">

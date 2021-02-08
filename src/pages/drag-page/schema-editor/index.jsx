@@ -49,6 +49,7 @@ export default config({
 
                 setComponentDefaultOptions(pageConfig);
             } catch (e) {
+                console.error(e);
                 return message.error('语法错误，请修改后保存！');
             }
         }

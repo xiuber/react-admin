@@ -8,12 +8,14 @@ export default config({
 
         return {
             dragOverInfo: state.dragPage.dragOverInfo,
+            draggingNode: state.dragPage.draggingNode,
         };
     },
 })(function DragOver(props) {
     const {
         frameDocument,
         dragOverInfo,
+        draggingNode,
     } = props;
     const guideLineRef = useRef(null);
     const guideBgRef = useRef(null);
@@ -42,6 +44,8 @@ export default config({
                 isCenter,
             } = dragOverInfo;
 
+            const isPropsToSet = draggingNode?.propsToSet;
+
             if (isTree) {
                 targetElement = frameDocument.querySelector(`[data-componentid="${targetElementId}"]`);
                 guidePosition = getDropGuidePosition({
@@ -69,13 +73,15 @@ export default config({
                 };
             }
 
+            if (isPropsToSet) guidePosition.guideLine = false;
+
             clearTimeout(timeRef.current);
             showDropGuideLine(guidePosition);
             overElement({
                 targetElement,
                 targetRect: guidePosition.target.targetRect,
             });
-        } else {
+        } else if (prevDragOverInfo) {
             let {
                 targetElement,
                 isTree,
@@ -89,12 +95,13 @@ export default config({
             leaveElement(targetElement);
             timeRef.current = setTimeout(() => hideDropGuide(), 100);
         }
-    }, [dragOverInfo]);
+    }, [dragOverInfo, draggingNode]);
 
     return null;
 });
 
 function leaveElement(targetElement) {
+    if (!targetElement) return;
     targetElement.classList.remove(styles.largeY);
     targetElement.classList.remove(styles.largeX);
     targetElement.classList.remove(styles.dragOver);
@@ -125,12 +132,7 @@ function overElement(options) {
 
 function showDropGuideLine(position) {
     let {
-        guideLine: {
-            top,
-            left,
-            width,
-            height,
-        },
+        guideLine,
         position: {
             isCenter,
             isLeft,
@@ -152,13 +154,6 @@ function showDropGuideLine(position) {
         isBottom = false;
     }
 
-    const guidePosition = {
-        top,
-        width,
-        height,
-        left,
-    };
-
     const frameDocument = document.getElementById('dnd-iframe').contentDocument;
     const guideLineEle = frameDocument.getElementById('drop-guide-line');
 
@@ -170,6 +165,9 @@ function showDropGuideLine(position) {
     guideBgEle.style.left = `${targetX}px`;
     guideBgEle.style.width = `${targetWidth}px`;
     guideBgEle.style.height = `${targetHeight}px`;
+
+
+    if (!guideLine) return;
 
     const guildTipEle = guideLineEle.querySelector('span');
     guideLineEle.classList.add(styles.guideActive);
@@ -188,7 +186,7 @@ function showDropGuideLine(position) {
     if (isBottom) guildTipEle.innerHTML = '后';
     if (isCenter) guildTipEle.innerHTML = '内';
 
-    Object.entries(guidePosition).forEach(([key, value]) => {
+    Object.entries(guideLine).forEach(([key, value]) => {
         guideLineEle.style[key] = `${value}px`;
     });
 }

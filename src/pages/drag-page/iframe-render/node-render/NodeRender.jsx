@@ -82,6 +82,16 @@ export default function NodeRenderDraggable(props) {
             return prev;
         }, {});
 
+
+    const propsActions = {};
+    ['onClick'].forEach(key => {
+        const value = componentProps[key];
+        if (typeof value === 'string') {
+            // eslint-disable-next-line
+            propsActions[key] = eval(value);
+        }
+    });
+
     const commonProps = {
         children: childrenEle,
         ...componentActions,
@@ -91,6 +101,7 @@ export default function NodeRenderDraggable(props) {
         return createElement(component, {
             ...commonProps,
             ...componentProps,
+            ...propsActions,
         });
     }
 
@@ -194,9 +205,16 @@ export default function NodeRenderDraggable(props) {
         e.stopPropagation();
         e.preventDefault();
 
-        const isCopy = draggingNode?.__config?.__fromStore;
+        let cursor = 'move';
 
-        e.dataTransfer.dropEffect = isCopy ? 'copy' : 'move';
+        const isCopy = draggingNode?.__config?.__fromStore;
+        if (isCopy) cursor = 'copy';
+
+        const isPropsToSet = draggingNode?.propsToSet;
+        if (isPropsToSet) cursor = 'link';
+
+        e.dataTransfer.dropEffect = cursor;
+
         throttleOver(e);
     }
 
@@ -337,6 +355,7 @@ export default function NodeRenderDraggable(props) {
                 createElement(component, {
                     ...commonProps,
                     ...componentProps,
+                    ...propsActions,
                     style,
                 }),
             ],
@@ -347,6 +366,7 @@ export default function NodeRenderDraggable(props) {
         ...dragProps,
         ...commonProps,
         ...componentProps,
+        ...propsActions,
     });
 }
 

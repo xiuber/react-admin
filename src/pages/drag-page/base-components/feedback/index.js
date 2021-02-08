@@ -1,5 +1,7 @@
 import React from 'react';
 import modalImage from './modal.png';
+import FontIcon from 'src/pages/drag-page/font-icon';
+import DraggableNode from 'src/pages/drag-page/draggable-node';
 
 export default [
     {
@@ -61,10 +63,45 @@ export default [
                 config: {
                     __config: {
                         draggable: false,
+                        componentDisplayName: ({node}) => {
+                            const {componentName, props = {}, __config = {}} = node;
+                            const {componentId} = __config;
+                            const {title} = props;
+
+                            if (!title) return componentName;
+
+                            const linkIcon = (
+                                <DraggableNode
+                                    style={{
+                                        display: 'inline-block',
+                                        cursor: 'link',
+                                    }}
+                                    dataTransfer={{
+                                        key: 'propsToSet',
+                                        value: JSON.stringify({
+                                            onClick: `e => dragPageAction.showModal("${componentId}")`,
+                                        }),
+                                    }}
+                                    draggingNode={{
+                                        propsToSet: true,
+                                    }}
+                                >
+                                    <FontIcon type="icon-kafka"/>
+                                </DraggableNode>
+                            );
+
+                            return (
+                                <>
+                                    {componentName}
+                                    {title}
+                                    {linkIcon}
+                                </>
+                            );
+                        },
                         actions: {
                             onCancel: event => options => {
                                 const {
-                                    pageConfig, // 页面整体配置
+                                    // pageConfig, // 页面整体配置
                                     dragPageAction, // 页面action
                                     node, // 当前组件配置
                                 } = options;

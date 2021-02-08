@@ -111,24 +111,37 @@ export default config({
         if (isTop) setDropPosition('top');
         if (isBottom) setDropPosition('bottom');
         if (accept && isCenter) setDropPosition('center');
+
+        const isPropsToSet = draggingNode?.propsToSet;
+        if (isPropsToSet) {
+            setDropPosition(false);
+        }
     }, THROTTLE_TIME);
 
     function handleDragOver(e) {
         e.preventDefault();
         e.stopPropagation();
+
+        let cursor = 'move';
+
         const isCopy = draggingNode?.__config?.__fromStore;
+        if (isCopy) cursor = 'copy';
 
-        e.dataTransfer.dropEffect = isCopy ? 'copy' : 'move';
+        const isPropsToSet = draggingNode?.propsToSet;
+        if (isPropsToSet) cursor = 'link';
 
-        if (!draggable) return;
+        e.dataTransfer.dropEffect = cursor;
+
+        if (!isPropsToSet && !draggable) return;
 
         throttleOver(e);
     }
 
     function handleDragLeave(e) {
+        setDragIn(false);
+
         if (!draggable) return;
 
-        setDragIn(false);
         dragPageAction.setDragOverInfo(null);
 
         if (hoverRef.current) {
@@ -138,14 +151,25 @@ export default config({
     }
 
     function handleDrop(e) {
-        if (!draggable) return;
-
-        e.preventDefault();
-        e.stopPropagation();
         const end = () => {
             handleDragLeave(e);
             handleDragEnd();
         };
+
+        if (!draggable) return end();
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const propsToSet = e.dataTransfer.getData('propsToSet');
+
+        if (propsToSet) {
+            const newProps = JSON.parse(propsToSet);
+
+            dragPageAction.setNewProps({componentId: key, newProps});
+
+            return end();
+        }
 
         const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
         let componentConfig = e.dataTransfer.getData('componentConfig');
@@ -246,9 +270,11 @@ export default config({
             onDragEnd={handleDragEnd}
         >
             {name}
-            <div styleName="dragGuide" style={{display: dragIn && draggingNode ? 'flex' : 'none'}}>
-                <span>{positionMap[dropPosition]}</span>
-            </div>
+            {dropPosition ? (
+                <div styleName="dragGuide" style={{display: dragIn && draggingNode ? 'flex' : 'none'}}>
+                    <span>{positionMap[dropPosition]}</span>
+                </div>
+            ) : null}
         </div>
     );
 });
