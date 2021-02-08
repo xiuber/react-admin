@@ -4,7 +4,15 @@ import {Radio, Tooltip} from 'antd';
 import './style.less';
 
 const RadioGroup = props => {
-    const {options, allowClear, onChange, placement, getPopupContainer, ...others} = props;
+    const {
+        options,
+        allowClear,
+        onChange,
+        showTooltip,
+        placement,
+        getPopupContainer,
+        ...others
+    } = props;
 
     function renderOptions(options) {
         return options.map((item, index) => {
@@ -37,17 +45,23 @@ const RadioGroup = props => {
             if (!pl) pl = isLast ? 'topRight' : 'top';
 
             let labelNode = (
-                <Tooltip
-                    placement={pl}
-                    title={tooltipTitle}
-                    mouseLeaveDelay={0}
-                    getPopupContainer={getPopupContainer}
-                >
-                    <div style={{userSelect: 'none'}} onClick={handleClick}>
-                        {la}
-                    </div>
-                </Tooltip>
+                <div style={{userSelect: 'none'}} onClick={handleClick}>
+                    {la}
+                </div>
             );
+
+            if (showTooltip) {
+                labelNode = (
+                    <Tooltip
+                        placement={pl}
+                        title={tooltipTitle}
+                        mouseLeaveDelay={0}
+                        getPopupContainer={getPopupContainer}
+                    >
+                        {labelNode}
+                    </Tooltip>
+                );
+            }
 
             return {
                 value,
@@ -57,14 +71,16 @@ const RadioGroup = props => {
     }
 
     return (
-        <Radio.Group
-            styleName="root"
-            options={renderOptions(options)}
-            optionType="button"
-            buttonStyle="solid"
-            onChange={onChange}
-            {...others}
-        />
+        <div styleName="root">
+            <Radio.Group
+                styleName="root"
+                options={renderOptions(options)}
+                optionType="button"
+                buttonStyle="solid"
+                onChange={onChange}
+                {...others}
+            />
+        </div>
     );
 };
 
@@ -75,6 +91,7 @@ RadioGroup.propTypes = {
 };
 RadioGroup.defaultProps = {
     allowClear: true,
+    showTooltip: true,
 };
 
 export default RadioGroup;

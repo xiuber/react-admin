@@ -4,9 +4,9 @@ import {
     MinusCircleOutlined,
     RetweetOutlined,
 } from '@ant-design/icons';
-import './Scale.less';
+import './style.less';
 
-export default function Scale(props) {
+export default function Index(props) {
     const {element} = props;
 
     const init = 100;

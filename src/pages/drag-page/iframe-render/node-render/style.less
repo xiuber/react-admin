@@ -1,0 +1,42 @@
+@guide-color: green;
+
+.draggableElement {
+    position: relative;
+    outline: 1px dashed #d8d8d8;
+
+    &.dragOver {
+        outline: none !important;
+    }
+
+    &.dragging {
+        filter: blur(2px);
+    }
+
+    &.unDraggable {
+        outline: none !important;
+    }
+
+    &:hover {
+        outline: 1px dashed @guide-color;
+    }
+
+    &.selected {
+        outline: 1px solid @guide-color;
+
+        &::before {
+            content: attr(data-componentDisplayName);
+            font-size: 12px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 0 4px;
+            background: @guide-color;
+            color: #fff;
+            word-break: keep-all;
+            z-index: 999;
+            transform-origin: 0 0;
+            transform: scale(.8);
+            //opacity: .5;
+        }
+    }
+}

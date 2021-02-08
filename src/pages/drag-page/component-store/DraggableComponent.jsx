@@ -1,7 +1,7 @@
 import React from 'react';
 import config from 'src/commons/config-hoc';
 import './DraggableComponent.less';
-import Element from '../iframe-render/Element';
+import NodeRender from '../iframe-render/node-render/NodeRender';
 import { cloneDeep } from 'lodash';
 import Draggable from './Draggable';
 
@@ -25,7 +25,7 @@ export default config({})(function DraggableComponent(props) {
         }
 
         let preview = renderPreview === true ? (
-            <Element config={componentConfig}/>
+            <NodeRender config={componentConfig}/>
         ) : renderPreview;
 
         if (typeof preview === 'function') {

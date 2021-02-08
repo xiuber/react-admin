@@ -114,7 +114,7 @@ export default config({
                         <div styleName="wrapper">
                             {fields.map(it => {
                                 const {field} = it;
-                                const Element = elementMap.button(it);
+                                const FormElement = elementMap.button(it);
 
                                 return (
                                     <Form.Item
@@ -124,7 +124,7 @@ export default config({
                                         colon={false}
                                         noStyle
                                     >
-                                        <Element getPopupContainer={() => rootRef.current}/>
+                                        <FormElement getPopupContainer={() => rootRef.current}/>
                                     </Form.Item>
                                 );
                             })}
@@ -139,10 +139,10 @@ export default config({
         const {label, labelWidth = labelCol.flex, field, type, span = 24} = item;
         const getElement = elementMap[type];
 
-        let Element = () => <span style={{color: 'red'}}>TODO {type} 对应的表单元素不存在</span>;
+        let FormElement = () => <span style={{color: 'red'}}>TODO {type} 对应的表单元素不存在</span>;
 
         if (getElement) {
-            Element = elementMap[type](item);
+            FormElement = elementMap[type](item);
         }
 
         return (
@@ -154,7 +154,7 @@ export default config({
                     name={field}
                     colon={false}
                 >
-                    <Element getPopupContainer={() => rootRef.current}/>
+                    <FormElement getPopupContainer={() => rootRef.current}/>
                 </Form.Item>
             </Col>
         );

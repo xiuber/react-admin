@@ -1,25 +1,35 @@
 import React, {useCallback, useRef, useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 import config from 'src/commons/config-hoc';
-import Element from './Element';
+import NodeRenderDraggable from './node-render/NodeRenderDraggable';
+import NodeRender from './node-render/NodeRender';
 import {scrollElement} from 'src/pages/drag-page/util';
 import KeyMap from 'src/pages/drag-page/KeyMap';
-import Scale from './Scale';
+import Scale from './scale';
 import DragOver from './drag-over';
+import './style.less';
 
-const iframeSrcDoc = `
-<!DOCTYPE html>
-<html lang="en">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
-    <body style="scroll-behavior: smooth;">
-        <div id="dnd-container" style="display: flex; flex-direction: column; min-height: 100vh"></div>
-        <div id="drop-guide-line" style="display: none">
-            <span>前</span>
-        </div>
-        <div id="drop-guide-bg" style="display: none"></div>
-    </body>
-</html>
-`;
+// 构建iframe内容
+function getIframeSrcDoc() {
+    const headHtml = document.head.innerHTML;
+    return `
+        <!DOCTYPE html>
+        <html lang="en">
+            <header>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
+                ${headHtml}
+            </header>
+            <body style="scroll-behavior: smooth;overflow: auto">
+                <div id="dnd-container" style="display: flex; flex-direction: column; min-height: 100vh"></div>
+                <div id="drop-guide-line" style="display: none">
+                    <span>前</span>
+                </div>
+                <div id="drop-guide-bg" style="display: none"></div>
+            </body>
+        </html>
+    `;
+}
+
 
 export default config({
     side: false,
@@ -28,6 +38,7 @@ export default config({
             pageConfig: state.dragPage.pageConfig,
             activeToolKey: state.dragPage.activeToolKey,
             selectedNodeId: state.dragPage.selectedNodeId,
+            nodeSelectType: state.dragPage.nodeSelectType,
             activeSideKey: state.dragPage.activeSideKey,
             draggingNode: state.dragPage.draggingNode,
             canvasWidth: state.dragPage.canvasWidth,
@@ -44,6 +55,7 @@ export default config({
         pageConfig,
         activeToolKey,
         selectedNodeId,
+        nodeSelectType,
         activeSideKey,
         draggingNode,
         canvasWidth,
@@ -61,50 +73,7 @@ export default config({
     const iframeRootRef = useRef(null);
     const [scaleElement, setScaleElement] = useState(null);
     const [containerStyle, setContainerStyle] = useState({});
-    const [iframeSrcDoc, setIframeSrcDoc] = useState('<html></html>');
-
-    // 渲染设计页面
-    function renderDesignPage() {
-        const iframeDocument = iframeRef.current.contentDocument;
-        const iframeRootEle = iframeRootRef.current;
-        if (!iframeRootEle) return;
-
-        ReactDOM.render(
-            <Element
-                config={pageConfig}
-                pageConfig={pageConfig}
-                selectedNodeId={selectedNodeId}
-                draggingNode={draggingNode}
-                activeSideKey={activeSideKey}
-                activeToolKey={activeToolKey}
-                dragPageAction={dragPageAction}
-                iframeDocument={iframeDocument}
-            />,
-            iframeRootEle,
-        );
-    }
-
-    useEffect(() => {
-        const headHtml = document.head.innerHTML;
-        const iframeSrcDoc = `
-<!DOCTYPE html>
-<html lang="en">
-    <header>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
-        ${headHtml}
-    </header>
-    <body style="scroll-behavior: smooth;overflow: auto">
-        <div id="dnd-container" style="display: flex; flex-direction: column; min-height: 100vh"></div>
-        <div id="drop-guide-line" style="display: none">
-            <span>前</span>
-        </div>
-        <div id="drop-guide-bg" style="display: none"></div>
-    </body>
-</html>
-`;
-
-        setIframeSrcDoc(iframeSrcDoc);
-    }, []);
+    const [iframeSrcDoc, setIframeSrcDoc] = useState('<html lang="cn"/>');
 
     // iframe 加载完成后一些初始化工作
     const handleIframeLoad = useCallback(() => {
@@ -114,22 +83,59 @@ export default config({
 
         setScaleElement(iframeRootRef.current);
 
-        renderDesignPage();
-
         dragPageAction.setIFrameDocument(iframeDocument);
 
     }, [iframeRef.current]);
 
+    useEffect(() => {
+        const iframeSrcDoc = getIframeSrcDoc();
+
+        setIframeSrcDoc(iframeSrcDoc);
+    }, []);
+
     // 相关数据改变之后，重新渲染设计页面
     useEffect(() => {
-        renderDesignPage();
+        const iframeRootEle = iframeRootRef.current;
+
+        if (!iframeRootEle) return;
+
+        const iframeDocument = iframeRef.current.contentDocument;
+
+        if (activeToolKey === 'preview') {
+            return ReactDOM.render(
+                <NodeRender
+                    config={pageConfig}
+                    pageConfig={pageConfig}
+                    dragPageAction={dragPageAction}
+                    iframeDocument={iframeDocument}
+                />,
+                iframeRootEle,
+            );
+        }
+
+        ReactDOM.render(
+            <NodeRenderDraggable
+                config={pageConfig}
+                pageConfig={pageConfig}
+                selectedNodeId={selectedNodeId}
+                nodeSelectType={nodeSelectType}
+                draggingNode={draggingNode}
+                activeSideKey={activeSideKey}
+                dragPageAction={dragPageAction}
+                iframeDocument={iframeDocument}
+            />,
+            iframeRootEle,
+        );
+
     }, [
         pageConfig,
         activeToolKey,
         selectedNodeId,
+        nodeSelectType,
         activeSideKey,
         draggingNode,
         iframeRef.current,
+        iframeRootRef.current,
     ]);
 
 
@@ -148,7 +154,7 @@ export default config({
 
     }, [selectedNodeId, iframeRef.current]);
 
-    // 设置居中
+    // 缩放时设置设计页面居中
     useEffect(() => {
         if (!containerRef.current) return;
 
@@ -170,7 +176,7 @@ export default config({
         setContainerStyle(style);
 
     }, [
-        // 所有可能影响到中间部分尺寸变化的操作，都要添加
+        // 所有可能影响到中间部分尺寸变化的操作，都要添加！！！
         rightSideExpended,
         showSide,
         rightSideWidth,
@@ -182,47 +188,28 @@ export default config({
     ]);
 
     return (
-        <div
-            style={{
-                position: 'relative',
-                width: '100%',
-                height: '100%',
-                overflow: 'auto',
-            }}
-        >
+        <div styleName="root">
             <div
+                styleName="container"
                 ref={containerRef}
-                style={{
-                    display: 'flex',
-                    position: 'relative',
-                    width: '100%',
-                    height: '100%',
-                    overflow: 'auto',
-                    ...containerStyle,
-                }}
+                style={containerStyle}
             >
                 <KeyMap iframe={iframeRef.current}/>
                 <iframe
+                    styleName="dndIframe"
                     id="dnd-iframe"
-                    title="dnd-iframe"
+                    title="页面设计"
                     ref={iframeRef}
                     srcDoc={iframeSrcDoc}
                     onLoad={() => handleIframeLoad()}
                     style={{
-                        border: 0,
-                        position: 'absolute',
                         width: canvasWidth,
                         height: canvasHeight,
                     }}
                 />
             </div>
 
-
-            <div style={{
-                position: 'absolute',
-                left: 10,
-                bottom: 10,
-            }}>
+            <div styleName="scale">
                 <Scale element={scaleElement}/>
             </div>
             <DragOver frameDocument={iframeRef.current?.contentDocument}/>

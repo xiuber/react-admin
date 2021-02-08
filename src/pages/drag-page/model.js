@@ -127,6 +127,7 @@ const initialState = {
     activeToolKey: 'layout', // 头部激活 key
     selectedNodeId: null,
     selectedNode: null,
+    nodeSelectType: 'meta', // 画布上节点选中方式 click: 单击 or  meta: mate(ctrl) + 单击
     draggingNode: null, // 正在拖动的节点 key
     dragOverInfo: null, // 悬停节点信息
     showCode: false, // 显示代码
@@ -164,6 +165,7 @@ export default {
     initialState,
     syncStorage,
     init: () => cloneDeep(initialState),
+    setNodeSelectType: nodeSelectType => ({nodeSelectType}),
     setIFrameDocument: iFrameDocument => ({iFrameDocument}),
     setDragOverInfo: dragOverInfo => ({dragOverInfo}),
     setCanvasWidth: canvasWidth => ({canvasWidth}),

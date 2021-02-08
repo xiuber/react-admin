@@ -5,7 +5,7 @@ import {cloneDeep} from 'lodash';
 import base from './base';
 import common from './common';
 import dataInput from './data-input';
-import Element from 'src/pages/drag-page/iframe-render/Element';
+import NodeRender from 'src/pages/drag-page/iframe-render/node-render/NodeRender';
 
 let baseComponents = [
     {title: '默认', children: base},
@@ -132,7 +132,7 @@ export function getComponentDisplayName(node, render) {
     if (render && renderAsDisplayName) {
         name = (
             <div style={{display: 'inline-block', maxWidth: 200}}>
-                <Element config={node}/>
+                <NodeRender config={node}/>
             </div>
         );
     }

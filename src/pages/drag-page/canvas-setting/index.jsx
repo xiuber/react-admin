@@ -4,20 +4,29 @@ import {AppstoreOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
 import UnitInput from 'src/pages/drag-page/component-style/unit-input';
+import RadioGroup from 'src/pages/drag-page/component-style/radio-group';
+import {isMac} from 'src/pages/drag-page/util';
 
 import './style.less';
+
+const layout = {
+    labelCol: {flex: '60px'},
+    wrapperCol: {flex: '1 1 0%'},
+};
 
 export default config({
     connect: state => {
         return {
             canvasWidth: state.dragPage.canvasWidth,
             canvasHeight: state.dragPage.canvasHeight,
+            nodeSelectType: state.dragPage.nodeSelectType,
         };
     },
 })(function ComponentTree(props) {
     const {
         canvasWidth,
         canvasHeight,
+        nodeSelectType,
         action: {dragPage: dragPageAction},
     } = props;
     const [form] = Form.useForm();
@@ -26,10 +35,16 @@ export default config({
         const {
             canvasWidth,
             canvasHeight,
+            nodeSelectType,
         } = allValues;
         dragPageAction.setCanvasWidth(canvasWidth);
         dragPageAction.setCanvasHeight(canvasHeight);
+        dragPageAction.setNodeSelectType(nodeSelectType);
     }
+
+    useEffect(() => {
+        form.setFieldsValue({nodeSelectType});
+    }, [nodeSelectType]);
 
     useEffect(() => {
         form.setFieldsValue({canvasWidth});
@@ -57,6 +72,7 @@ export default config({
                     name="canvasSetting"
                 >
                     <Form.Item
+                        {...layout}
                         label="宽度"
                         name="canvasWidth"
                         colon={false}
@@ -64,11 +80,28 @@ export default config({
                         <UnitInput/>
                     </Form.Item>
                     <Form.Item
+                        {...layout}
                         label="高度"
                         name="canvasHeight"
                         colon={false}
                     >
                         <UnitInput/>
+                    </Form.Item>
+                    <Form.Item
+                        {...layout}
+                        label="选中元素"
+                        name="nodeSelectType"
+                        colon={false}
+                    >
+                        <RadioGroup
+                            showTooltip={false}
+                            allowClear={false}
+                            style={{width: '100%'}}
+                            options={[
+                                {value: 'click', label: '左键'},
+                                {value: 'meta', label: `${isMac ? '⌘' : 'ctrl'}+左键`},
+                            ]}
+                        />
                     </Form.Item>
                 </Form>
             </div>

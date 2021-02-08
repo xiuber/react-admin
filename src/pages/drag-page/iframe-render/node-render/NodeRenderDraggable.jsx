@@ -1,38 +1,27 @@
-import React, {createElement, useRef, useEffect} from 'react';
-import styles from './style.less';
+import React, {createElement, useRef} from 'react';
+import {throttle} from 'lodash';
+import classNames from 'classnames';
 import {
     getDropGuidePosition,
     isDropAccept,
     getComponent,
-} from '../util';
+} from '../../util';
 import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
+import styles from './style.less';
 
-import {throttle} from 'lodash';
-
-export default function Element(props) {
+export default function NodeRenderDraggable(props) {
     const {
         config,
-        activeToolKey = 'preview',
         pageConfig,
         selectedNodeId,
         draggingNode,
         dragPageAction,
-        activeSideKey,
+        activeSideKey, // 左侧激活面板
+        nodeSelectType, // 节点选中方式
         iframeDocument,
     } = props;
 
-    const isPreview = activeToolKey === 'preview';
-
     const prevSideKeyRef = useRef(null);
-
-    // 预览时，不显示 DragHolder
-    useEffect(() => {
-        if (!iframeDocument) return;
-        const holders = iframeDocument.querySelectorAll('.DragHolder');
-        Array.from(holders).forEach(ele => {
-            ele.style.display = isPreview ? 'none' : 'flex';
-        });
-    }, [isPreview, iframeDocument]);
 
     if (!config) return null;
 
@@ -41,10 +30,10 @@ export default function Element(props) {
     let {
         __config: {
             isContainer = true,
+            draggable = true,
             componentId,
             componentType,
             componentDesc,
-            draggable = true,
             withWrapper,
             wrapperStyle,
             actions = {},
@@ -59,28 +48,27 @@ export default function Element(props) {
     componentDesc = componentDesc || componentName;
     const componentDisplayName = getComponentDisplayName(config);
 
-    let childrenEle = (children || []).map(item => (
-        <Element
+    let childrenEle = children?.length ? children.map(item => (
+        <NodeRenderDraggable
             config={item}
-            activeToolKey={activeToolKey}
             pageConfig={pageConfig}
             draggingNode={draggingNode}
             selectedNodeId={selectedNodeId}
             dragPageAction={dragPageAction}
             activeSideKey={activeSideKey}
+            nodeSelectType={nodeSelectType}
             iframeDocument={iframeDocument}
         />
-    ));
+    )) : undefined;
 
-    if (!childrenEle?.length) childrenEle = undefined;
+    const dragClassName = classNames({
+        [styles.draggableElement]: true,
+        [styles.selected]: selectedNodeId === componentId,
+        [styles.dragging]: draggingNode?.__config?.componentId === componentId,
+        [styles.unDraggable]: !draggable,
 
-    const dragClassName = [styles.element];
+    });
 
-    if (selectedNodeId === componentId) dragClassName.push(styles.selected);
-    if (draggingNode?.__config?.componentId === componentId) dragClassName.push(styles.dragging);
-    if (!draggable) dragClassName.push(styles.unDraggable);
-
-    const component = getComponent(componentName, componentType);
 
     const onDragStart = function(e) {
         e.stopPropagation();
@@ -236,6 +224,8 @@ export default function Element(props) {
         end();
     }
 
+    const component = getComponent(componentName, componentType);
+
     const dragProps = {
         draggable,
         onDragStart,
@@ -244,14 +234,21 @@ export default function Element(props) {
         onDragLeave,
         onDrop,
         onDragEnd,
-        className: dragClassName.join(' '),
+        className: dragClassName,
         'data-componentDesc': componentDesc,
         'data-componentDisplayName': componentDisplayName,
         'data-componentId': componentId,
         'data-isContainer': isContainer,
         onClick: (e) => {
-            // 竟然没有被 componentActions中的oClick覆盖 ？？？？
+            // 按住 meta 或 ctrl 进行点击时，才选中
+            if (nodeSelectType === 'meta') {
+                if (!e.metaKey && !e.ctrlKey) return;
+            }
+
             e.stopPropagation && e.stopPropagation();
+            e.preventDefault && e.preventDefault();
+
+            // 竟然没有被 componentActions中的oClick覆盖 ？？？？
             const ele = getDroppableEle(e.target);
 
             if (!ele) return;
@@ -279,13 +276,6 @@ export default function Element(props) {
         children: childrenEle,
         ...componentActions,
     };
-
-    if (isPreview) {
-        return createElement(component, {
-            ...commonProps,
-            ...componentProps,
-        });
-    }
 
     if (withWrapper) {
         let {style = {}} = componentProps;
