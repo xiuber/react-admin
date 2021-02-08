@@ -230,9 +230,21 @@ export default function NodeRenderDraggable(props) {
         const targetElement = getDroppableEle(e.target);
         if (!targetElement) return end();
 
+        const targetComponentId = targetElement.getAttribute('data-componentId');
+
+        const propsToSet = e.dataTransfer.getData('propsToSet');
+
+        if (propsToSet) {
+            const newProps = JSON.parse(propsToSet);
+
+            dragPageAction.setNewProps({componentId, newProps});
+
+            return end();
+        }
+
+
         const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
         let componentConfig = e.dataTransfer.getData('componentConfig');
-        const targetComponentId = targetElement.getAttribute('data-componentId');
 
         if (targetComponentId === sourceComponentId) return end();
 
@@ -287,30 +299,25 @@ export default function NodeRenderDraggable(props) {
         onDragLeave,
         onDrop,
         onDragEnd,
-        className: dragClassName,
         'data-componentDesc': componentDesc,
         'data-componentDisplayName': componentDisplayName,
         'data-componentId': componentId,
         'data-isContainer': isContainer,
-        onClick: (e) => {
-            // 按住 meta 或 ctrl 进行点击时，才选中
-            if (nodeSelectType === 'meta') {
-                if (!e.metaKey && !e.ctrlKey) return;
-            }
+    };
 
-            // e.stopPropagation && e.stopPropagation();
-            // e.preventDefault && e.preventDefault();
+    const onNodeClick = (e) => {
+        // 按住 meta 或 ctrl 进行点击时，才选中
+        if ((e.metaKey || e.ctrlKey) && nodeSelectType === 'meta') {
+            // 单纯选中节点，不进行其他操作
+            e.stopPropagation && e.stopPropagation();
+            e.preventDefault && e.preventDefault();
 
-            // 竟然没有被 componentActions中的oClick覆盖 ？？？？
-            const ele = getDroppableEle(e.target);
+            dragPageAction.setSelectedNodeId(componentId);
 
-            if (!ele) return;
-
-            // 小写。。。
-            const id = ele.dataset.componentid;
-            // const id = ele.getAttribute('data-componentId');
-            dragPageAction.setSelectedNodeId(id);
-        },
+            return;
+        }
+        propsActions.onClick && propsActions.onClick(e);
+        dragPageAction.setSelectedNodeId(componentId);
     };
 
     if (withWrapper) {
@@ -350,12 +357,14 @@ export default function NodeRenderDraggable(props) {
 
         return createElement('div', {
             ...dragProps,
+            className: dragClassName,
             style: wStyle,
             children: [
                 createElement(component, {
                     ...commonProps,
                     ...componentProps,
                     ...propsActions,
+                    onClick: onNodeClick,
                     style,
                 }),
             ],
@@ -363,10 +372,12 @@ export default function NodeRenderDraggable(props) {
     }
 
     return createElement(component, {
-        ...dragProps,
         ...commonProps,
         ...componentProps,
         ...propsActions,
+        ...dragProps,
+        className: [dragClassName, componentProps.className].join(' '),
+        onClick: onNodeClick,
     });
 }
 

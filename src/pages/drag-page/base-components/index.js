@@ -185,8 +185,12 @@ export function setComponentDefaultOptions(componentNode) {
 
     const loop = nodes => {
         nodes.forEach(node => {
+            const componentId = node?.__config?.componentId;
+
             node.__config = getComponentConfig(node);
-            node.__config.componentId = uuid();
+
+            // componentId 不要替换，modal 连接 需要稳定id
+            node.__config.componentId = componentId || uuid();
 
             if (node.children?.length) {
                 loop(node.children);

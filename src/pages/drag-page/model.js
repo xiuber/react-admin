@@ -165,6 +165,7 @@ const syncStorage = {
     schemaEditorWidth: true,
     componentTreeWidth: true,
     pageConfig: true,
+    nodeSelectType: true,
 };
 
 export default {
