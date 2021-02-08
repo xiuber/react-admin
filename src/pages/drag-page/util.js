@@ -216,7 +216,10 @@ export function isDropAccept(options) {
         pageConfig,
     };
 
-    dropAccept = typeof dropAccept === 'function' ? dropAccept(args) : dropAccept;
+    if (typeof dropAccept === 'function') {
+
+        return dropAccept(args);
+    }
 
     if (!Array.isArray(dropAccept)) return true;
 
@@ -273,7 +276,6 @@ export function getDropGuidePosition(options) {
         targetElement,
         frameDocument,
     } = options;
-
     const targetIsContainer = targetElement.getAttribute('data-isContainer') === 'true';
     const targetRect = targetElement.getBoundingClientRect();
 

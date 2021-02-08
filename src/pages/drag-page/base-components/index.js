@@ -5,11 +5,13 @@ import {cloneDeep} from 'lodash';
 import base from './base';
 import common from './common';
 import dataInput from './data-input';
+import form from './form';
 import NodeRender from 'src/pages/drag-page/iframe-render/node-render/NodeRender';
 
 let baseComponents = [
     {title: '默认', children: base},
     {title: '通用', children: common},
+    {title: '表单', children: form},
     {title: '数据输入', children: dataInput},
 ];
 
@@ -28,6 +30,7 @@ const defaultConfig = {
     // 如果某个组件必须存在子元素，可以添加 withHolder: true, 提示用户必须拖入子元素，比如 Form.Item，但是div不要设置true，有些情况div不需要子元素
     withHolder: false, // 当没有子组件的时候，是否显示holder 默认 false ，true && isContainer 显示
     // holderProps: {}, //
+    childrenDraggable: true, // 子节点是否可拖拽，
     // actions: { // 事件 event:组件事件原始数据 options: 自定义数据
     //     onSearch: event => options => {
     //

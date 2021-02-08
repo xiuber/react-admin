@@ -30,14 +30,15 @@ export default function NodeRenderDraggable(props) {
 
     let {
         __config: {
-            isContainer = true,
-            draggable = true,
+            isContainer,
+            draggable,
             componentId,
             componentType,
             componentDesc,
             withWrapper,
             wrapperStyle,
             actions = {},
+            childrenDraggable,
         },
         componentName,
         children,
@@ -49,19 +50,22 @@ export default function NodeRenderDraggable(props) {
     componentDesc = componentDesc || componentName;
     const componentDisplayName = getComponentDisplayName(config);
 
-    let childrenEle = children?.length ? children.map(item => (
-        <NodeRenderDraggable
-            config={item}
-            pageConfig={pageConfig}
-            draggingNode={draggingNode}
-            selectedNodeId={selectedNodeId}
-            dragPageAction={dragPageAction}
-            activeSideKey={activeSideKey}
-            isPreview={isPreview}
-            nodeSelectType={nodeSelectType}
-            iframeDocument={iframeDocument}
-        />
-    )) : undefined;
+    let childrenEle = children?.length ? children.map(item => {
+
+        return (
+            <NodeRenderDraggable
+                config={item}
+                pageConfig={pageConfig}
+                draggingNode={draggingNode}
+                selectedNodeId={selectedNodeId}
+                dragPageAction={dragPageAction}
+                activeSideKey={activeSideKey}
+                isPreview={isPreview || !childrenDraggable}
+                nodeSelectType={nodeSelectType}
+                iframeDocument={iframeDocument}
+            />
+        );
+    }) : undefined;
 
 
     const component = getComponent(componentName, componentType);
@@ -190,6 +194,10 @@ export default function NodeRenderDraggable(props) {
     function onDragOver(e) {
         e.stopPropagation();
         e.preventDefault();
+
+        const isCopy = draggingNode?.__config?.__fromStore;
+
+        e.dataTransfer.dropEffect = isCopy ? 'copy' : 'move';
         throttleOver(e);
     }
 

@@ -3,6 +3,7 @@ import config from 'src/commons/config-hoc';
 import {getDropGuidePosition, isDropAccept} from 'src/pages/drag-page/util';
 import {getComponentIcon} from '../base-components';
 import {throttle} from 'lodash';
+import classNames from 'classnames';
 
 import './style.less';
 
@@ -46,6 +47,8 @@ export default config({
     }
 
     function handleDragEnter(e) {
+        if (!draggable) return;
+
         if (draggingNode?.__config?.componentId === key) return;
         setDragIn(true);
     }
@@ -90,10 +93,7 @@ export default config({
         setDropPosition('');
         setDragIn(true);
 
-        if (!accept) {
-            setDragIn(false);
-            return;
-        }
+        if (!accept) return;
 
         dragPageAction.setDragOverInfo({
             targetElementId: key,
@@ -111,11 +111,18 @@ export default config({
     function handleDragOver(e) {
         e.preventDefault();
         e.stopPropagation();
+        const isCopy = draggingNode?.__config?.__fromStore;
+
+        e.dataTransfer.dropEffect = isCopy ? 'copy' : 'move';
+
+        if (!draggable) return;
 
         throttleOver(e);
     }
 
     function handleDragLeave(e) {
+        if (!draggable) return;
+
         setDragIn(false);
         dragPageAction.setDragOverInfo(null);
 
@@ -126,6 +133,8 @@ export default config({
     }
 
     function handleDrop(e) {
+        if (!draggable) return;
+
         e.preventDefault();
         e.stopPropagation();
         const end = () => {
@@ -150,7 +159,6 @@ export default config({
         });
 
         const {isTop, isBottom, isCenter} = position;
-
 
         const accept = isDropAccept({
             draggingNode,
@@ -190,6 +198,7 @@ export default config({
     }
 
     function handleDragEnd() {
+        if (!draggable) return;
         if (hoverRef.current) {
             clearTimeout(hoverRef.current);
             hoverRef.current = 0;
@@ -200,14 +209,14 @@ export default config({
 
     const isSelected = selectedKey === key;
     const isDragging = draggingNode?.__config?.componentId === key;
-    const styleNames = ['treeNode'];
 
-    if (isSelected) styleNames.push('selected');
-    if (isDragging) styleNames.push('dragging');
-    if (dragIn && draggingNode) styleNames.push('dragIn');
-    if (!draggable) styleNames.push('unDraggable');
-
-    styleNames.push(dropPosition);
+    const styleNames = classNames(dropPosition, {
+        treeNode: true,
+        selected: isSelected,
+        dragging: isDragging,
+        dragIn: dragIn && draggingNode,
+        unDraggable: !draggable,
+    });
 
     const positionMap = {
         top: '前',
@@ -219,7 +228,7 @@ export default config({
             ref={nodeRef}
             key={key}
             id={`treeNode_${key}`}
-            styleName={styleNames.join(' ')}
+            styleName={styleNames}
             draggable
             data-componentId={key}
             data-isContainer={isContainer}

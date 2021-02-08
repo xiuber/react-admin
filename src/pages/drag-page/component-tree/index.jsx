@@ -42,8 +42,9 @@ export default config({
             const {__config = {}, props, children} = prev;
             let {
                 componentId,
-                isContainer = true,
-                draggable = true,
+                isContainer,
+                draggable,
+                childrenDraggable,
             } = __config;
 
             if (props?.isDraggable === false) {
@@ -65,6 +66,11 @@ export default config({
                 next.children = children.map(() => ({}));
 
                 children.forEach((item, index) => {
+
+                    if (!childrenDraggable) {
+                        item.__config.draggable = false;
+                    }
+
                     loop(item, next.children[index]);
                 });
             }

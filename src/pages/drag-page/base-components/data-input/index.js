@@ -11,7 +11,6 @@ export default [
                 renderPreview: true,
                 config: {
                     __config: {
-                        isContainer: false,
                         actions: {
                             onSearch: value => args => {
                                 const {
@@ -56,9 +55,6 @@ export default [
                 title: '级联选择',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Cascader',
                 },
             },
@@ -72,9 +68,6 @@ export default [
                 title: '多选框',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Checkbox',
                 },
             },
@@ -88,78 +81,7 @@ export default [
                 title: '日期选择框',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'DatePicker',
-                },
-            },
-        ],
-    },
-    {
-        title: '表单',
-        subTitle: '表单 Form',
-        children: [
-            {
-                title: '表单项',
-                // hiddenInStore: true,
-                config: {
-                    __config: {
-                        withHolder: true,
-                        holderProps: {
-                            style: {height: 50},
-                            tip: '请拖入表单元素',
-                        },
-                        // hooks: {
-                        //     beforeAdd: (options) => {
-                        //         const {node} = options;
-                        //         if (!node) return;
-                        //     },
-                        // },
-                        componentDisplayName: ({node, pageConfig}) => {
-                            const {componentName, props = {}} = node;
-                            const {label} = props;
-
-                            if (!label) return componentName;
-
-                            return `${componentName} ${label}`;
-                        },
-                    },
-                    componentName: 'Form.Item',
-                },
-            },
-            {
-                title: '垂直表单',
-                renderPreview: true,
-                config: {
-                    componentName: 'Form',
-                    children: [
-                        {
-                            componentName: 'Form.Item',
-                            props: {
-                                label: '姓名',
-                            },
-                            children: [
-                                {
-                                    componentName: 'Input',
-                                },
-                            ],
-                        },
-                        {
-                            componentName: 'Form.Item',
-                            props: {
-                                label: '年龄',
-                            },
-                            children: [
-                                {
-                                    componentName: 'InputNumber',
-                                    props: {
-                                        style: {width: '100%'},
-                                    },
-                                },
-                            ],
-                        },
-                    ],
                 },
             },
         ],
@@ -172,9 +94,6 @@ export default [
                 title: '输入框',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Input',
                 },
             },
@@ -200,9 +119,6 @@ export default [
                 title: '提及',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Mentions',
                 },
             },
@@ -216,9 +132,6 @@ export default [
                 title: '单选框',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Radio',
                 },
             },
@@ -233,9 +146,6 @@ export default [
                 renderPreview: true,
                 previewZoom: .7,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Rate',
                 },
             },
@@ -264,9 +174,6 @@ export default [
                 },
                 // previewStyle: {width: '100%'},
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Select',
                     props: {
                         placeholder: '请选择',
@@ -290,9 +197,6 @@ export default [
                 previewStyle: {width: '100%'},
                 // previewWrapperStyle: {background: 'red'},
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Slider',
                     props: {
                         value: 50,
@@ -309,9 +213,6 @@ export default [
                 title: '开关',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Switch',
                 },
             },
@@ -361,9 +262,6 @@ export default [
                 title: '树选择',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'TreeSelect',
                 },
             },
@@ -377,12 +275,22 @@ export default [
                 title: '上传',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Upload',
                 },
             },
         ],
     },
-];
+].map(item => {
+    const {children} = item;
+    children.forEach(node => {
+        const {config} = node;
+        if (!config.__config) config.__config = {};
+
+        // 都为表单元素，可放入 Form.Item 中
+        config.__config.isFormElement = true;
+
+        // 默认 isContainer = false
+        if (!('isContainer' in config.__config)) config.__config.isContainer = false;
+    });
+    return item;
+});

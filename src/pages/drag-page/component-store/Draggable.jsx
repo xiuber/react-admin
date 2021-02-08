@@ -42,6 +42,8 @@ export default config({
         };
 
         loop(config);
+        config.__config.__fromStore = true;
+
 
         e.dataTransfer.setData('componentConfig', JSON.stringify(config));
         dragPageAction.setDraggingNode(config);
