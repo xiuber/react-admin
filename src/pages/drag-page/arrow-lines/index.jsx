@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import config from 'src/commons/config-hoc';
 import styles from './style.less';
 
@@ -47,10 +47,13 @@ export default config({
         // 左下
         if (endX < startX && endY > startY) deg = 180 - deg;
 
-        ele.style.width = `${width}px`;
+
         ele.style.top = `${startY}px`;
         ele.style.left = `${startX}px`;
         ele.style.transform = `rotate(${deg}deg) scaleY(.5)`;
+
+        // 为了显示动画
+        setTimeout(() => ele.style.width = `${width}px`, 10);
     }
 
     useEffect(() => {

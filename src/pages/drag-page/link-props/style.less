@@ -5,3 +5,43 @@
     align-items: center;
     width: 30px;
 }
+
+@linkPointColor: green;
+
+.point {
+    width: 20px;
+    height: 20px;
+    border: 1px solid @linkPointColor;
+
+    position: absolute;
+    z-index: 99999;
+    border-radius: 50%;
+    cursor: move;
+
+    &:before {
+        content: '';
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 1px solid @linkPointColor;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: @linkPointColor;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+}

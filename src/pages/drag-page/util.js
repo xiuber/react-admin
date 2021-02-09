@@ -9,6 +9,8 @@ import * as antdIcon from '@ant-design/icons';
 export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+
+// eslint-disable-next-line
 export const SHOW_MODAL_FUNCTION = 'e => dragPageAction.showModal("${componentId}")';
 
 // css 样式字符串 转 js 样式对象

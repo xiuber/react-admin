@@ -1,21 +1,23 @@
 import React, {useEffect, useRef} from 'react';
 import config from 'src/commons/config-hoc';
-import LinkPoint from 'src/pages/drag-page/link-props/LinkPoint';
 import {getEleCenterInWindow} from 'src/pages/drag-page/util';
 
 import './style.less';
+
 
 export default config({
     connect: state => {
         return {
             pageConfig: state.dragPage.pageConfig,
             selectedNode: state.dragPage.selectedNode,
+            selectedNodeId: state.dragPage.selectedNodeId,
             iFrameDocument: state.dragPage.iFrameDocument,
         };
     },
 })(function LinkProps(props) {
     const {
         selectedNode,
+        selectedNodeId,
         iFrameDocument,
         action: {dragPage: dragPageAction},
         pageConfig,
@@ -173,6 +175,12 @@ export default config({
         return result;
     }
 
+    // 选中节点更改，清空line
+    useEffect(() => {
+        dragPageAction.setArrowLines([]);
+        arrowLinesRef.current = null;
+    }, [selectedNodeId]);
+
     useEffect(() => {
         if (!iFrameDocument) return;
 
@@ -197,7 +205,7 @@ export default config({
         >
             <img ref={dragImgRef} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=" alt=""/>
 
-            <LinkPoint/>
+            <div styleName="point"/>
         </div>
     );
 });
