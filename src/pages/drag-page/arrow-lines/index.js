@@ -13,6 +13,46 @@ export default config({
         arrowLines,
         action: {dragPage: dragPageAction},
     } = props;
+
+    function showArrowLine(ele, item) {
+        const {
+            startX,
+            startY,
+            endX,
+            endY,
+            showEndPoint,
+            remove,
+            dragging,
+        } = item;
+
+        ele.classList.add(styles.root);
+        if (showEndPoint) ele.classList.add(styles.showEndPoint);
+        if (remove) ele.classList.add(styles.remove);
+        if (dragging) ele.classList.add(styles.dragging);
+
+        const w = Math.abs(startX - endX);
+        const h = Math.abs(startY - endY);
+
+        // 勾股定理算长度
+        const width = Math.sqrt(w * w + h * h);
+
+        // 计算旋转角度
+
+        // 右下
+        let deg = Math.atan(h / w) * 180 / Math.PI;
+        // 右上
+        if (endX > startX && endY < startY) deg = -deg;
+        // 左上
+        if (endX < startX && endY < startY) deg = -(180 - deg);
+        // 左下
+        if (endX < startX && endY > startY) deg = 180 - deg;
+
+        ele.style.width = `${width}px`;
+        ele.style.top = `${startY}px`;
+        ele.style.left = `${startX}px`;
+        ele.style.transform = `rotate(${deg}deg) scaleY(.5)`;
+    }
+
     useEffect(() => {
         // 清除
         if (!arrowLines?.length) {
@@ -21,16 +61,6 @@ export default config({
         }
 
         arrowLines.forEach((item, index) => {
-            // [{startX: 1000, startY: 100, endX: 500, endY: 300}].forEach(item => {
-            const {
-                startX,
-                startY,
-                endX,
-                endY,
-                showEndPoint,
-                remove,
-            } = item;
-
             const allEle = document.querySelectorAll(`.${styles.root}`);
             let ele = allEle[index];
 
@@ -39,33 +69,10 @@ export default config({
                 document.body.append(ele);
             }
 
-            ele.classList.add(styles.root);
-            if (showEndPoint) ele.classList.add(styles.showEndPoint);
-            if (remove) ele.classList.add(styles.remove);
-
-            const w = Math.abs(startX - endX);
-            const h = Math.abs(startY - endY);
-
-            // 勾股定理算长度
-            const width = Math.sqrt(w * w + h * h);
-
-            // 计算旋转角度
-
-            // 右下
-            let deg = Math.atan(h / w) * 180 / Math.PI;
-            // 右上
-            if (endX > startX && endY < startY) deg = -deg;
-            // 左上
-            if (endX < startX && endY < startY) deg = -(180 - deg);
-            // 左下
-            if (endX < startX && endY > startY) deg = 180 - deg;
-
-            ele.style.width = `${width}px`;
-            ele.style.top = `${startY}px`;
-            ele.style.left = `${startX}px`;
-            ele.style.transform = `rotate(${deg}deg) scaleY(.5)`;
+            showArrowLine(ele, item);
         });
 
+        // 删除
         const st = setTimeout(() => {
             if (arrowLines.some(item => item.remove)) {
                 const allEle = document.querySelectorAll(`.${styles.root}`);

@@ -182,6 +182,17 @@ export default {
     syncStorage,
     init: () => cloneDeep(initialState),
     setArrowLines: arrowLines => ({arrowLines}),
+    showDraggingArrowLine: (options, state) => {
+        const {arrowLines = []} = state;
+        const index = arrowLines.findIndex(item => item.dragging);
+
+        if (index > -1) arrowLines.splice(index, 1);
+
+        options.dragging = true;
+        arrowLines.push(options);
+
+        return {arrowLines: [...arrowLines]};
+    },
     setNodeSelectType: nodeSelectType => ({nodeSelectType}),
     setIFrameDocument: iFrameDocument => ({iFrameDocument}),
     setDragOverInfo: dragOverInfo => ({dragOverInfo}),

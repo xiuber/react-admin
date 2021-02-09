@@ -1,6 +1,5 @@
 import React, {useEffect, useRef} from 'react';
 import config from 'src/commons/config-hoc';
-import {throttle} from 'lodash';
 import LinkPoint from 'src/pages/drag-page/link-props/LinkPoint';
 import {getEleCenterInWindow} from 'src/pages/drag-page/util';
 
@@ -9,6 +8,7 @@ import './style.less';
 export default config({
     connect: state => {
         return {
+            pageConfig: state.dragPage.pageConfig,
             selectedNode: state.dragPage.selectedNode,
             iFrameDocument: state.dragPage.iFrameDocument,
         };
@@ -18,6 +18,7 @@ export default config({
         selectedNode,
         iFrameDocument,
         action: {dragPage: dragPageAction},
+        pageConfig,
     } = props;
 
     const propsToSet = selectedNode?.__config?.propsToSet;
@@ -25,10 +26,10 @@ export default config({
     const startRef = useRef(null);
     const lineRef = useRef(null);
     const dragImgRef = useRef(null);
+    const arrowLinesRef = useRef(null);
 
 
     function handleDragStart(e) {
-        console.log('handleDragStart');
         e.stopPropagation();
         // e.preventDefault();
         const componentId = selectedNode?.__config?.componentId;
@@ -58,7 +59,7 @@ export default config({
 
         options.remove = true;
 
-        dragPageAction.setArrowLines([options]);
+        dragPageAction.showDraggingArrowLine(options);
     }
 
     // const handleHoverMouseMove = throttle(e => {}, 100);
@@ -71,7 +72,7 @@ export default config({
         const endX = pageX || clientX;
         const endY = pageY || clientY;
 
-        showArrowLine({endX, endY});
+        showDraggingArrowLine({endX, endY});
     }
 
     function handleIframeOver(e) {
@@ -86,10 +87,10 @@ export default config({
         endX = endX + x;
         endY = endY + y;
 
-        showArrowLine({endX, endY});
+        showDraggingArrowLine({endX, endY});
     }
 
-    function showArrowLine({endX, endY}) {
+    function showDraggingArrowLine({endX, endY}) {
         const options = {
             ...startRef.current,
             endX,
@@ -97,11 +98,79 @@ export default config({
         };
 
         lineRef.ref = options;
-        dragPageAction.setArrowLines([options]);
+        dragPageAction.showDraggingArrowLine(options);
     }
 
     function handleClick(e) {
-        console.log('click');
+        // 隐藏
+        if (arrowLinesRef.current) {
+            const all = arrowLinesRef.current;
+            all.forEach(item => item.remove = true);
+
+            dragPageAction.setArrowLines([...all]);
+            arrowLinesRef.current = null;
+
+            return;
+        }
+
+        // 显示
+
+        // 获取所有关联元素
+        const componentId = selectedNode?.__config?.componentId;
+
+        if (!propsToSet) return;
+
+        const center = getEleCenterInWindow(e.target);
+        const {x: startX, y: startY} = center;
+
+        let all = [];
+        Object.entries(propsToSet).forEach(([key, value]) => {
+            const str = value.replace(/\$\{componentId}/g, componentId);
+            const result = findLinkElementPosition(key, str);
+            all = all.concat(result);
+        });
+
+        const iframe = document.getElementById('dnd-iframe');
+        const rect = iframe.getBoundingClientRect();
+        const {x, y} = rect;
+
+        all.forEach(item => {
+            item.endX = item.endX + x;
+            item.endY = item.endY + y;
+            item.startX = startX;
+            item.startY = startY;
+        });
+        arrowLinesRef.current = all;
+
+        dragPageAction.setArrowLines(all);
+    }
+
+    function findLinkElementPosition(key, value) {
+        const result = [];
+        const loop = (node) => {
+            let {props} = node;
+            if (!props) props = {};
+
+            if (props[key] === value) {
+                const componentId = node?.__config?.componentId;
+                const ele = iFrameDocument.querySelector(`[data-componentId="${componentId}"]`);
+                if (ele) {
+                    const {x, y, width, height} = ele.getBoundingClientRect();
+
+                    result.push({
+                        endX: x + width / 2,
+                        endY: y + height / 2,
+                    });
+                }
+            }
+            if (node.children?.length) {
+                node.children.forEach(item => loop(item));
+            }
+        };
+
+        loop(pageConfig);
+
+        return result;
     }
 
     useEffect(() => {
