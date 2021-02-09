@@ -9,6 +9,7 @@ import * as antdIcon from '@ant-design/icons';
 export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+export const SHOW_MODAL_FUNCTION = (componentId) => `e => dragPageAction.showModal("${componentId}")`;
 
 // css 样式字符串 转 js 样式对象
 export function cssToObject(css) {
@@ -182,6 +183,82 @@ export function scrollElement(containerEle, element, toTop, force, offset = 0) {
     }
 }
 
+
+// 获取节点元素
+export function getNodeEle(target) {
+    if (!target) return target;
+
+    if (typeof target.getAttribute !== 'function') return null;
+
+    // 当前是组件节点
+    let isNodeEle = target.getAttribute('data-componentId');
+
+    // 父级是容器
+    if (!isNodeEle && target.parentNode?.getAttribute) {
+        isNodeEle = target.getAttribute('data-componentId');
+    }
+
+    if (isNodeEle) return target;
+
+    return getDroppableEle(target.parentNode);
+}
+
+// 可投放元素
+export function getDroppableEle(target) {
+    if (!target) return target;
+
+    if (typeof target.getAttribute !== 'function') return null;
+
+    // 当前是容器
+    let draggable = target.getAttribute('data-isContainer') === 'true';
+
+    // 父级是容器
+    if (!draggable && target.parentNode?.getAttribute) {
+        draggable =
+            target.parentNode.getAttribute('data-isContainer') === 'true'
+            && target.getAttribute('data-componentId');
+    }
+
+    if (draggable) return target;
+
+    return getDroppableEle(target.parentNode);
+}
+
+// 获取组件投放位置
+export function getDropPosition(options) {
+    const guidePosition = getDropGuidePosition(options);
+
+    const {position} = guidePosition;
+
+    if (!position) return;
+
+    let {
+        isTop,
+        isLeft,
+        isBottom,
+        isRight,
+        isCenter: isChildren,
+    } = position;
+
+    if (isLeft || isRight) {
+        isTop = false;
+        isBottom = false;
+        isChildren = false;
+    }
+
+    const isBefore = isTop || isLeft;
+    const isAfter = isBottom || isRight;
+
+    return {
+        ...position,
+        isBefore,
+        isAfter,
+        isChildren,
+        guidePosition,
+    };
+}
+
+
 // 是否接受放入
 export function isDropAccept(options) {
     const {
@@ -194,6 +271,8 @@ export function isDropAccept(options) {
     } = options;
 
     if (!draggingNode) return false;
+
+    if (draggingNode.propsToSet) return true;
 
     let targetNode;
     if (isChildren) targetNode = findNodeById(pageConfig, targetComponentId);

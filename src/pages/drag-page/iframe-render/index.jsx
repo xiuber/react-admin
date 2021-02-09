@@ -8,6 +8,7 @@ import {setComponentDefaultOptions} from 'src/pages/drag-page/base-components';
 import KeyMap from 'src/pages/drag-page/KeyMap';
 import Scale from './scale';
 import DragOver from './drag-over';
+import DragAction from './drag-action';
 import './style.less';
 
 // 构建iframe内容
@@ -117,7 +118,9 @@ export default config({
 
         ReactDOM.render(
             <ConfigProvider getPopupContainer={() => iframeRootRef.current}>
-                <NodeRender{...draggableNodeProps}/>
+                <DragAction {...draggableNodeProps}>
+                    <NodeRender {...draggableNodeProps}/>
+                </DragAction>
             </ConfigProvider>,
             iframeRootEle,
         );

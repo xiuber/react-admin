@@ -139,7 +139,11 @@ export default config({
                 </div>
             }
         >
-            <div styleName={styleName} ref={mainRef} style={{width: componentTreeWidth}}>
+            <div
+                styleName={styleName}
+                ref={mainRef}
+                style={{width: componentTreeWidth}}
+            >
                 <DragBar onDragging={handleDragging}/>
                 <Tree
                     expandedKeys={componentTreeExpendedKeys}

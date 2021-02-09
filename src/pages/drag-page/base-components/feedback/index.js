@@ -2,6 +2,7 @@ import React from 'react';
 import modalImage from './modal.png';
 import FontIcon from 'src/pages/drag-page/font-icon';
 import DraggableNode from 'src/pages/drag-page/draggable-node';
+import {SHOW_MODAL_FUNCTION} from 'src/pages/drag-page/util';
 
 export default [
     {
@@ -79,7 +80,7 @@ export default [
                                     dataTransfer={{
                                         key: 'propsToSet',
                                         value: JSON.stringify({
-                                            onClick: `e => dragPageAction.showModal("${componentId}")`,
+                                            onClick: SHOW_MODAL_FUNCTION(componentId),
                                         }),
                                     }}
                                     draggingNode={{
