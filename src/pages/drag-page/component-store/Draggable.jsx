@@ -27,6 +27,8 @@ export default config({
             dragPageAction.setActiveSideKey('componentTree');
         });
 
+        // TODO 处理componentId，删除存在的componentId，替换相关联的componentId，比如modal关联的
+
         const config = cloneDeep(data.config);
         config.__config.__fromStore = true;
 
