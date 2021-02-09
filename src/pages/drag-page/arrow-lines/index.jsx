@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import config from 'src/commons/config-hoc';
 import LinkPoint from 'src/pages/drag-page/link-point';
 import styles from './style.less';
-import {getEleCenterInWindow, findNodeById} from 'src/pages/drag-page/util';
+import {getEleCenterInWindow} from 'src/pages/drag-page/util';
 
 export default config({
     connect: state => {
@@ -130,24 +130,6 @@ export default config({
         return result;
     }
 
-    function handleDragStart(e, item) {
-        // const {targetComponentId, propsKey, propsValue} = item;
-        // const node = findNodeById(pageConfig, targetComponentId);
-        //
-        // if (!node) return;
-        //
-        // const props = node.props || {};
-        //
-        // Object.entries(props)
-        //     .forEach(([key, value]) => {
-        //         if (key === propsKey && value === propsValue) {
-        //             Reflect.deleteProperty(props, key);
-        //         }
-        //     });
-        //
-        // dragPageAction.setSelectedNode({...selectedNode});
-    }
-
     // 显示隐藏
     useEffect(() => {
         if (!selectedNode) return;
@@ -205,8 +187,6 @@ export default config({
                     <div key={key} className={styleNames} style={style}>
                         <LinkPoint
                             className={styles.point}
-                            // sourcePointEle={sourceLinkPointEle}
-                            // onDragStart={e => handleDragStart(e, item)}
                             movingPoint={item}
                             onClick={() => undefined} // 覆盖默认click事件
                         />

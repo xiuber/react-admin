@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import config from 'src/commons/config-hoc';
 import {getEleCenterInWindow, findNodeById} from 'src/pages/drag-page/util';
 import {v4 as uuid} from 'uuid';
@@ -20,7 +20,6 @@ export default config({
         iFrameDocument,
         action: {dragPage: dragPageAction},
         className,
-        sourcePointEle,
         onDragStart,
         movingPoint,
         pageConfig,
@@ -33,6 +32,7 @@ export default config({
     const lineRef = useRef(null);
     const dragImgRef = useRef(null);
     const pointRef = useRef(null);
+    const [dragging, setDragging] = useState(false);
 
 
     const showDraggingArrowLine = throttle(({endX, endY}) => {
@@ -45,20 +45,7 @@ export default config({
 
         lineRef.ref = options;
         dragPageAction.showDraggingArrowLine(options);
-    }, 10, {trailing: false}); // 最后一次不触发
-
-    function showDraggingArrowLine2({endX, endY}) {
-        const options = {
-            ...startRef.current,
-            endX,
-            endY,
-            key: 'dragging',
-        };
-
-        lineRef.ref = options;
-        dragPageAction.showDraggingArrowLine(options);
-    }
-
+    }, 1000 / 70, {trailing: false}); // 最后一次不触发
 
     function handleDragStart(e) {
         onDragStart && onDragStart(e);
@@ -67,6 +54,7 @@ export default config({
         const componentId = selectedNode?.__config?.componentId;
 
         if (!propsToSet) return;
+        setDragging(true);
         let str = JSON.stringify(propsToSet);
 
         str = str.replace(/\$\{componentId}/g, componentId);
@@ -75,7 +63,7 @@ export default config({
 
         dragPageAction.setDraggingNode({propsToSet: true});
 
-        const center = getEleCenterInWindow(sourcePointEle || e.target);
+        const center = getEleCenterInWindow(e.target);
         if (center) {
             const {x: startX, y: startY} = center;
             startRef.current = {startX, startY};
@@ -91,6 +79,7 @@ export default config({
     function handleDragEnd(e) {
         e.preventDefault();
         e.stopPropagation();
+        setDragging(false);
 
         if (movingPoint) {
             const {targetComponentId, propsKey, propsValue} = movingPoint;
@@ -149,6 +138,7 @@ export default config({
 
     useEffect(() => {
         if (!iFrameDocument) return;
+        if (!dragging) return;
 
         // 捕获方式
         iFrameDocument.addEventListener('dragover', handleIframeOver, true);
@@ -157,7 +147,7 @@ export default config({
             iFrameDocument.removeEventListener('dragover', handleIframeOver, true);
             window.removeEventListener('dragover', handleOver, true);
         };
-    }, [iFrameDocument]);
+    }, [iFrameDocument, dragging]);
 
     return (
         <div

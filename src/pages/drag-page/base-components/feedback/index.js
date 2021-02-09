@@ -72,7 +72,7 @@ export default [
                             return (
                                 <>
                                     {componentName}
-                                    {title}
+                                    <span style={{marginLeft: 4}}>{title}</span>
                                 </>
                             );
                         },
