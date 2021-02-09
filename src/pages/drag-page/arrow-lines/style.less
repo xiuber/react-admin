@@ -1,0 +1,21 @@
+@arrowLineColor: green;
+@arrowLineSize: 2px;
+@arrowLineArrowSize: 8px;
+.root {
+    position: fixed;
+    height: @arrowLineSize;
+    background-color: @arrowLineColor;
+
+    transform-origin: left top;
+    z-index: 99999;
+    pointer-events: none;
+
+    &:after {
+        content: ' ';
+        position: absolute;
+        top: -@arrowLineArrowSize + @arrowLineSize/2;
+        right: -@arrowLineSize - @arrowLineArrowSize;
+        border: @arrowLineArrowSize solid transparent;
+        border-left: @arrowLineArrowSize * 1.2 solid @arrowLineColor;
+    }
+}

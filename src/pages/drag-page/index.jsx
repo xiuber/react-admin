@@ -4,8 +4,10 @@ import {PageContent} from 'ra-lib';
 import Top from './top';
 import Left from './left';
 import Right from './right';
-import './style.less';
 import IframeRender from './iframe-render';
+import ArrowLines from './arrow-lines';
+
+import './style.less';
 
 export default config({
     path: '/drag-page',
@@ -27,6 +29,7 @@ export default config({
                     <Right/>
                 </div>
             </div>
+            <ArrowLines/>
         </PageContent>
     );
 });

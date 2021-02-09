@@ -1,6 +1,7 @@
 import React from 'react';
 import config from 'src/commons/config-hoc';
 import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
+import LinkProps from '../link-props';
 
 export default config({
     connect: state => {
@@ -15,5 +16,10 @@ export default config({
 
     const name = getComponentDisplayName(selectedNode, true);
 
-    return <div>当前选中: {name}</div>;
+    return (
+        <div style={{display: 'flex', alignItems: 'center'}}>
+            <LinkProps/>
+            当前选中: {name}
+        </div>
+    );
 });

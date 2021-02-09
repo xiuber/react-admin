@@ -129,6 +129,15 @@ const holderNode = test || {
 };
 
 const initialState = {
+    arrowLines: [
+        {
+            startX: 0,
+            startY: 0,
+            endX: 0,
+            endY: 0,
+            showEndPoint: false, // 显示结束点
+        },
+    ],
     activeToolKey: 'layout', // 头部激活 key
     selectedNodeId: null,
     selectedNode: null,
@@ -172,6 +181,7 @@ export default {
     initialState,
     syncStorage,
     init: () => cloneDeep(initialState),
+    setArrowLines: arrowLines => ({arrowLines}),
     setNodeSelectType: nodeSelectType => ({nodeSelectType}),
     setIFrameDocument: iFrameDocument => ({iFrameDocument}),
     setDragOverInfo: dragOverInfo => ({dragOverInfo}),

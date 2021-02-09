@@ -1,7 +1,6 @@
 import React from 'react';
+import {v4 as uuid} from 'uuid';
 import modalImage from './modal.png';
-import FontIcon from 'src/pages/drag-page/font-icon';
-import DraggableNode from 'src/pages/drag-page/draggable-node';
 import {SHOW_MODAL_FUNCTION} from 'src/pages/drag-page/util';
 
 export default [
@@ -65,39 +64,21 @@ export default [
                     __config: {
                         // draggable: false,
                         componentDisplayName: ({node}) => {
-                            const {componentName, props = {}, __config = {}} = node;
-                            const {componentId} = __config;
+                            const {componentName, props = {}} = node;
                             const {title} = props;
 
                             if (!title) return componentName;
-
-                            const linkIcon = (
-                                <DraggableNode
-                                    style={{
-                                        display: 'inline-block',
-                                        cursor: 'link',
-                                    }}
-                                    dataTransfer={{
-                                        key: 'propsToSet',
-                                        value: JSON.stringify({
-                                            onClick: SHOW_MODAL_FUNCTION(componentId),
-                                        }),
-                                    }}
-                                    draggingNode={{
-                                        propsToSet: true,
-                                    }}
-                                >
-                                    <FontIcon type="icon-kafka"/>
-                                </DraggableNode>
-                            );
 
                             return (
                                 <>
                                     {componentName}
                                     {title}
-                                    {linkIcon}
                                 </>
                             );
+                        },
+
+                        propsToSet: {
+                            onClick: SHOW_MODAL_FUNCTION,
                         },
                         actions: {
                             onCancel: event => options => {
@@ -109,6 +90,9 @@ export default [
                                 if (!node.props) node.props = {};
 
                                 node.props.visible = false;
+
+                                // props 改之后，重新设置key，使组件重新渲染
+                                node.props.key = uuid();
 
                                 dragPageAction.render(); // props改变了，重新出发页面渲染
                             },

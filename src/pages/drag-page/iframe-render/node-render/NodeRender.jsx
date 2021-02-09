@@ -35,8 +35,10 @@ export default function NodeRenderDraggable(props) {
         },
         componentName,
         children,
-        props: componentProps = {},
+        props: componentProps,
     } = config;
+
+    if (!componentProps) componentProps = {};
 
     if (!componentName) return null;
 

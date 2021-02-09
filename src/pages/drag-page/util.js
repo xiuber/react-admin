@@ -9,7 +9,7 @@ import * as antdIcon from '@ant-design/icons';
 export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
-export const SHOW_MODAL_FUNCTION = (componentId) => `e => dragPageAction.showModal("${componentId}")`;
+export const SHOW_MODAL_FUNCTION = 'e => dragPageAction.showModal("${componentId}")';
 
 // css 样式字符串 转 js 样式对象
 export function cssToObject(css) {
@@ -122,6 +122,17 @@ export function usePrevious(value) {
         ref.current = value;
     });
     return ref.current;
+}
+
+export function getEleCenterInWindow(element) {
+    if (!element) return null;
+
+    const {x, y, width, height} = element.getBoundingClientRect();
+
+    return {
+        x: x + width / 2,
+        y: y + height / 2,
+    };
 }
 
 // 元素是否在可视窗口内
