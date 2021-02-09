@@ -1,7 +1,7 @@
 import React, {useState, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import {getDropGuidePosition, isDropAccept} from 'src/pages/drag-page/util';
-import {getComponentIcon} from '../base-components';
+import {getComponentIcon, setComponentDefaultOptions} from '../base-components';
 import {throttle} from 'lodash';
 import classNames from 'classnames';
 
@@ -210,7 +210,7 @@ export default config({
         }
 
         if (componentConfig) {
-            componentConfig = JSON.parse(componentConfig);
+            componentConfig = setComponentDefaultOptions(JSON.parse(componentConfig));
             dragPageAction.addNode({
                 targetId: key,
                 isBefore: isTop,

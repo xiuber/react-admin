@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
+import {Tooltip} from 'antd';
 import config from 'src/commons/config-hoc';
-import {getEleCenterInWindow, findNodeById} from 'src/pages/drag-page/util';
+import {getEleCenterInWindow, findNodeById, findLinkElementsPosition} from 'src/pages/drag-page/util';
 import {v4 as uuid} from 'uuid';
 import {throttle} from 'lodash';
 
@@ -33,7 +34,6 @@ export default config({
     const dragImgRef = useRef(null);
     const pointRef = useRef(null);
     const [dragging, setDragging] = useState(false);
-
 
     const showDraggingArrowLine = throttle(({endX, endY}) => {
         const options = {
@@ -149,7 +149,7 @@ export default config({
         };
     }, [iFrameDocument, dragging]);
 
-    return (
+    const pointElement = (
         <div
             className={[className, styles.root].join(' ')}
             draggable
@@ -162,5 +162,20 @@ export default config({
 
             <div className={styles.point} ref={pointRef}/>
         </div>
+    );
+
+    if (movingPoint) return pointElement;
+
+
+    const links = findLinkElementsPosition({
+        pageConfig,
+        selectedNode,
+        iFrameDocument,
+    });
+
+    return (
+        <Tooltip placement="top" title={`已关联(${links?.length || 0})，点击查看所有，拖拽指定关联`}>
+            {pointElement}
+        </Tooltip>
     );
 });

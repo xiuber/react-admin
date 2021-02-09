@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import config from 'src/commons/config-hoc';
 import LinkPoint from 'src/pages/drag-page/link-point';
 import styles from './style.less';
-import {getEleCenterInWindow} from 'src/pages/drag-page/util';
+import {getEleCenterInWindow, findLinkElementsPosition} from 'src/pages/drag-page/util';
 
 export default config({
     connect: state => {
@@ -63,8 +63,6 @@ export default config({
 
     function showAllArrowLines() {
         // 获取所有关联元素
-        const componentId = selectedNode?.__config?.componentId;
-
         if (!propsToSet) return;
 
         const center = getEleCenterInWindow(sourceLinkPointEle);
@@ -73,11 +71,10 @@ export default config({
 
         const {x: startX, y: startY} = center;
 
-        let all = [];
-        Object.entries(propsToSet).forEach(([key, value]) => {
-            const str = value.replace(/\$\{componentId}/g, componentId);
-            const result = findLinkElementPosition(key, str);
-            all = all.concat(result);
+        const all = findLinkElementsPosition({
+            pageConfig,
+            selectedNode,
+            iFrameDocument,
         });
 
         const iframe = document.getElementById('dnd-iframe');
@@ -93,41 +90,6 @@ export default config({
         });
 
         dragPageAction.setArrowLines(all);
-    }
-
-    function findLinkElementPosition(key, value) {
-        const sourceComponentId = selectedNode?.__config?.componentId;
-
-        const result = [];
-        const loop = (node) => {
-            let {props} = node;
-            if (!props) props = {};
-
-            if (props[key] === value) {
-                const componentId = node?.__config?.componentId;
-                const ele = iFrameDocument.querySelector(`[data-componentId="${componentId}"]`);
-                if (ele) {
-                    const {x, y, width, height} = ele.getBoundingClientRect();
-
-                    result.push({
-                        key: `${value}__${componentId}`,
-                        propsKey: key,
-                        propsValue: value,
-                        endX: x + width / 2,
-                        endY: y + height / 2,
-                        targetComponentId: componentId,
-                        sourceComponentId,
-                    });
-                }
-            }
-            if (node.children?.length) {
-                node.children.forEach(item => loop(item));
-            }
-        };
-
-        loop(pageConfig);
-
-        return result;
     }
 
     // 显示隐藏

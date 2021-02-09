@@ -1,6 +1,5 @@
 import React from 'react';
 import config from 'src/commons/config-hoc';
-import {v4 as uuid} from 'uuid';
 import './DraggableComponent.less';
 import {cloneDeep} from 'lodash';
 
@@ -29,21 +28,7 @@ export default config({
         });
 
         const config = cloneDeep(data.config);
-
-        // 设置 componentId
-        const loop = (node) => {
-            if (!node.__config) node.__config = {};
-
-            node.__config.componentId = uuid();
-
-            if (node.children?.length) {
-                node.children.forEach(n => loop(n));
-            }
-        };
-
-        loop(config);
         config.__config.__fromStore = true;
-
 
         e.dataTransfer.setData('componentConfig', JSON.stringify(config));
         dragPageAction.setDraggingNode(config);

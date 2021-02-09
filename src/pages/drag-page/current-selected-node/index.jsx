@@ -13,12 +13,18 @@ export default config({
     },
 })(function(props) {
     const {selectedNode} = props;
+    const hasPropsToSet = selectedNode?.__config?.propsToSet;
 
     const name = getComponentDisplayName(selectedNode, true);
 
     return (
         <div style={{display: 'flex', alignItems: 'center'}}>
-            {selectedNode?.__config?.propsToSet ? <LinkPoint id="sourceLinkPoint"/> : null}
+            {hasPropsToSet ? (
+                <LinkPoint
+                    id="sourceLinkPoint"
+                    style={{marginRight: 4}}
+                />
+            ) : null}
             当前选中: {name}
         </div>
     );

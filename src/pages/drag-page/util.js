@@ -13,6 +13,70 @@ export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 // eslint-disable-next-line
 export const SHOW_MODAL_FUNCTION = 'e => dragPageAction.showModal("${componentId}")';
 
+
+export function findLinkElementsPosition(options) {
+    const {pageConfig, selectedNode, iFrameDocument} = options;
+
+    const componentId = selectedNode?.__config?.componentId;
+    const propsToSet = selectedNode?.__config?.propsToSet;
+
+    if (!propsToSet) return;
+
+    return Object.entries(propsToSet)
+        .map(([key, value]) => {
+            const str = value.replace(/\$\{componentId}/g, componentId);
+            return findLinkElementPosition({
+                pageConfig,
+                key,
+                value: str,
+                componentId,
+                iFrameDocument,
+            }) || [];
+        }).flat();
+}
+
+function findLinkElementPosition(options) {
+    const {
+        key,
+        value,
+        componentId: sourceComponentId,
+        iFrameDocument,
+        pageConfig,
+    } = options;
+
+    const result = [];
+    const loop = (node) => {
+        let {props} = node;
+        if (!props) props = {};
+
+        if (props[key] === value) {
+            const targetComponentId = node?.__config?.componentId;
+            const ele = iFrameDocument.querySelector(`[data-componentId="${targetComponentId}"]`);
+            if (ele) {
+                const {x, y, width, height} = ele.getBoundingClientRect();
+
+                result.push({
+                    key: `${value}__${targetComponentId}`,
+                    propsKey: key,
+                    propsValue: value,
+                    endX: x + width / 2,
+                    endY: y + height / 2,
+                    targetComponentId,
+                    sourceComponentId,
+                });
+            }
+        }
+        if (node.children?.length) {
+            node.children.forEach(item => loop(item));
+        }
+    };
+
+    loop(pageConfig);
+
+    return result;
+}
+
+
 // css 样式字符串 转 js 样式对象
 export function cssToObject(css) {
     if (!css) return {};

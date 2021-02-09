@@ -7,6 +7,8 @@ import {
     getNodeEle,
     getDroppableEle,
 } from 'src/pages/drag-page/util';
+import {setComponentDefaultOptions} from 'src/pages/drag-page/base-components';
+
 
 /**
  * 事件委托，统一添加事件，不给每个元素添加事件，提高性能
@@ -193,7 +195,8 @@ export default function DragAction(props) {
         }
 
         if (componentConfig) {
-            componentConfig = JSON.parse(componentConfig);
+            componentConfig = setComponentDefaultOptions(JSON.parse(componentConfig));
+
             dragPageAction.addNode({
                 targetId: targetComponentId,
                 node: componentConfig,
