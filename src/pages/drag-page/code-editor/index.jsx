@@ -135,7 +135,7 @@ function CodeEditor(props) {
             <Pane
                 header={
                     <div styleName="header">
-                        <div>
+                        <div styleName="title">
                             <DesktopOutlined style={{marginRight: 4}}/> {title}
                         </div>
                         <div styleName="tool">

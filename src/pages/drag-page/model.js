@@ -8,17 +8,15 @@ import {v4 as uuid} from 'uuid';
 import {cloneDeep} from 'lodash';
 import {getComponentConfig, setComponentDefaultOptions} from './base-components';
 
-const holderNode = {
+const holderNode = () => setComponentDefaultOptions({
     __config: {
         draggable: false,
-        componentId: uuid(),
         isRootHolder: true,
     },
     componentName: 'div',
     children: [
         {
             __config: {
-                componentId: uuid(),
                 isContainer: false,
                 isRootHolder: true,
             },
@@ -32,7 +30,7 @@ const holderNode = {
             },
         },
     ],
-};
+});
 
 const initialState = {
     arrowLines: [
@@ -74,7 +72,7 @@ const initialState = {
     canvasWidth: '100%',
     canvasHeight: '100%',
 
-    pageConfig: {...holderNode},
+    pageConfig: {...holderNode()},
     iFrameDocument: null,
 };
 
@@ -226,7 +224,7 @@ export default {
     refreshProps: () => ({refreshProps: {}}),
     setPageConfig: pageConfig => {
         if (!pageConfig) {
-            return {pageConfig: {...holderNode}};
+            return {pageConfig: {...holderNode()}};
         }
 
         return {pageConfig};
@@ -243,7 +241,7 @@ export default {
 
         // 删除的是根节点
         if (id === pageConfig.__config.componentId) {
-            return {pageConfig: {...holderNode}, selectedNodeId, selectedNode};
+            return {pageConfig: {...holderNode()}, selectedNodeId, selectedNode};
         }
 
         const node = findNodeById(pageConfig, id);
@@ -371,6 +369,7 @@ function addOrMoveNode(options) {
 
     const targetNode = findNodeById(pageConfig, targetId);
 
+    console.log(targetNode);
     // 目标节点为 根占位
     if (targetNode?.__config?.isRootHolder) {
         return {pageConfig: {...node}};

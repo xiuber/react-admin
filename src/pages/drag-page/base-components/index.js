@@ -182,7 +182,13 @@ export function removeComponentConfig(nodes, leaveComponentId) {
                 node[key] = value;
             });
         }
+
+        // 删除__config
         Reflect.deleteProperty(node, '__config');
+
+        // 删除 props.key
+        if (node?.props?.key) Reflect.deleteProperty(node.props, 'key');
+
         if (node.children) loop(node.children);
     });
 
@@ -201,6 +207,8 @@ export function setComponentDefaultOptions(componentNode) {
             const componentId = node?.__config?.componentId || node.__id;
 
             Reflect.deleteProperty(node, '__id');
+
+            // 直接覆盖__config
             node.__config = getComponentConfig(node);
 
             // componentId 不要替换，modal 连接 需要稳定id
