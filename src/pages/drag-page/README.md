@@ -10,3 +10,4 @@
 1. [ ] component store 中深层组件不要写__config，源码编辑之后，会被干掉，可以编写特殊组件，放入drag-page/components中 或者通过props控制行为
 1. [ ] 组件库中配置的组件，尽量只是用原生html 和 antd 组件库，不要引入ra-lib
 1. [ ] schema 转 源码的时候，可以考虑使用 html + antd + 其他组件库方式
+1. [ ] 拖拽用户自定义模块时，替换componentId，但是要注意 modal类型id的同步问题

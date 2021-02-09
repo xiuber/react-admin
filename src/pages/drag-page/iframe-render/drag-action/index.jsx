@@ -214,6 +214,7 @@ export default function DragAction(props) {
                 display: 'flex',
                 flexDirection: 'column',
                 height: '100%',
+                padding: 1,
             }}
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}
