@@ -6,7 +6,6 @@ import Left from './left';
 import Right from './right';
 import IframeRender from './iframe-render';
 import ArrowLines from './arrow-lines';
-
 import './style.less';
 
 export default config({

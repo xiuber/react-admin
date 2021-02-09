@@ -47,8 +47,6 @@ export default config({
         };
     }
 
-    console.log(arrowLines);
-
     return (
         <div>
             {arrowLines.map(item => {
