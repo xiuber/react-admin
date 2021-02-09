@@ -1,8 +1,7 @@
 import React from 'react';
+import classNames from 'classnames';
 import config from 'src/commons/config-hoc';
 import styles from './style.less';
-import classNames from 'classnames';
-
 
 export default config({
     connect: state => {
@@ -48,26 +47,33 @@ export default config({
         };
     }
 
-    return arrowLines.map(item => {
-        const {
-            showEndPoint,
-            remove,
-            dragging,
-        } = item;
+    console.log(arrowLines);
 
-        const styleNames = classNames({
-            [styles.root]: true,
-            [styles.showEndPoint]: showEndPoint,
-            [styles.remove]: remove,
-            [styles.dragging]: dragging,
-        });
+    return (
+        <div>
+            {arrowLines.map(item => {
+                const {
+                    showEndPoint,
+                    remove,
+                    dragging,
+                    key,
+                } = item;
 
-        const style = getStyle(item);
+                const styleNames = classNames({
+                    [styles.root]: true,
+                    [styles.showEndPoint]: showEndPoint,
+                    [styles.remove]: remove,
+                    [styles.dragging]: dragging,
+                });
 
-        return (
-            <div className={styleNames} style={style}>
-                <div className={styles.point}/>
-            </div>
-        );
-    });
+                const style = getStyle(item);
+
+                return (
+                    <div key={key} className={styleNames} style={style}>
+                        <div className={styles.point}/>
+                    </div>
+                );
+            })}
+        </div>
+    );
 });

@@ -58,8 +58,8 @@ export default config({
         e.preventDefault();
         e.stopPropagation();
 
-        dragPageAction.showDraggingArrowLine(null);
-        showAllArrowLines();
+        selectedNode.__config.showLink = true;
+        dragPageAction.setSelectedNode({...selectedNode});
     }
 
     function handleOver(e) {
@@ -93,6 +93,7 @@ export default config({
             ...startRef.current,
             endX,
             endY,
+            key: 'dragging',
         };
 
         lineRef.ref = options;
@@ -148,6 +149,7 @@ export default config({
                     const {x, y, width, height} = ele.getBoundingClientRect();
 
                     result.push({
+                        key: `${value}__${componentId}`,
                         endX: x + width / 2,
                         endY: y + height / 2,
                     });
