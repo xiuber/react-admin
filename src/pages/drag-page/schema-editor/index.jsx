@@ -72,7 +72,7 @@ export default config({
         dragPageAction.setSchemaEditorWidth(clientX - 56);
     }
 
-    const code = `export default ${JSON5.stringify(removeComponentConfig(pageConfig), null, 2)}`;
+    const code = `export default ${JSON5.stringify(removeComponentConfig(pageConfig, true), null, 2)}`;
     return (
         <div styleName="root" id="schemaEditor" style={{width: schemaEditorWidth}}>
             <DragBar onDragging={handleDragging}/>

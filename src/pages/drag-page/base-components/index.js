@@ -165,10 +165,23 @@ export function getComponentIcon(node = {}, isContainer = true) {
     return icon;
 }
 
-export function removeComponentConfig(nodes) {
+export function removeComponentConfig(nodes, leaveComponentId) {
     const dataSource = (cloneDeep(Array.isArray(nodes) ? nodes : [nodes]));
 
     const loop = nodes => nodes.forEach(node => {
+        if (leaveComponentId && node) {
+
+            // 调整node字段顺序，保证 __id 在首位
+            const keys = Object.keys(node);
+            keys.unshift('__id');
+            keys.forEach(key => {
+                let value = node[key];
+                Reflect.deleteProperty(node, key);
+
+                if (key === '__id') value = node?.__config?.componentId;
+                node[key] = value;
+            });
+        }
         Reflect.deleteProperty(node, '__config');
         if (node.children) loop(node.children);
     });
@@ -185,8 +198,9 @@ export function setComponentDefaultOptions(componentNode) {
 
     const loop = nodes => {
         nodes.forEach(node => {
-            const componentId = node?.__config?.componentId;
+            const componentId = node?.__config?.componentId || node.__id;
 
+            Reflect.deleteProperty(node, '__id');
             node.__config = getComponentConfig(node);
 
             // componentId 不要替换，modal 连接 需要稳定id
