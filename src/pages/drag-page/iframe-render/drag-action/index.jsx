@@ -29,6 +29,7 @@ export default function DragAction(props) {
     const prevSideKeyRef = useRef(null);
 
     function handleDragStart(e) {
+        e.stopPropagation();
         const dragEle = e.target;
 
         const componentId = dragEle.getAttribute('data-componentId');

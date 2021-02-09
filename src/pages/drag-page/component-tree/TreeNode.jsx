@@ -40,9 +40,7 @@ export default config({
         e.stopPropagation();
 
         if (!draggable) {
-            const img = new Image();
-            e.dataTransfer.setDragImage(img, 10, 10);
-
+            e.preventDefault();
             return;
         }
 
