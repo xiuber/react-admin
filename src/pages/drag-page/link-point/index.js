@@ -2,6 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import {getEleCenterInWindow, findNodeById} from 'src/pages/drag-page/util';
 import {v4 as uuid} from 'uuid';
+import {throttle} from 'lodash';
 
 import styles from './style.less';
 
@@ -32,6 +33,32 @@ export default config({
     const lineRef = useRef(null);
     const dragImgRef = useRef(null);
     const pointRef = useRef(null);
+
+
+    const showDraggingArrowLine = throttle(({endX, endY}) => {
+        const options = {
+            ...startRef.current,
+            endX,
+            endY,
+            key: 'dragging',
+        };
+
+        lineRef.ref = options;
+        dragPageAction.showDraggingArrowLine(options);
+    }, 10, {trailing: false}); // 最后一次不触发
+
+    function showDraggingArrowLine2({endX, endY}) {
+        const options = {
+            ...startRef.current,
+            endX,
+            endY,
+            key: 'dragging',
+        };
+
+        lineRef.ref = options;
+        dragPageAction.showDraggingArrowLine(options);
+    }
+
 
     function handleDragStart(e) {
         onDragStart && onDragStart(e);
@@ -113,18 +140,6 @@ export default config({
         endY = endY + y;
 
         showDraggingArrowLine({endX, endY});
-    }
-
-    function showDraggingArrowLine({endX, endY}) {
-        const options = {
-            ...startRef.current,
-            endX,
-            endY,
-            key: 'dragging',
-        };
-
-        lineRef.ref = options;
-        dragPageAction.showDraggingArrowLine(options);
     }
 
     function handleClick() {
