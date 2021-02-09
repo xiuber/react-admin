@@ -82,6 +82,8 @@ export default [
                         },
                         actions: {
                             onCancel: event => options => {
+                                event.stopPropagation();
+
                                 const {
                                     // pageConfig, // 页面整体配置
                                     dragPageAction, // 页面action

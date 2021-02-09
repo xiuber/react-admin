@@ -48,7 +48,9 @@ export default function DragAction(props) {
         dragPageAction.setDragOverInfo(null);
     }
 
-    function handleDragEnd() {
+    function handleDragEnd(e) {
+        e && e.stopPropagation();
+
         dragPageAction.setDragOverInfo(null);
         dragPageAction.setDraggingNode(null);
         if (prevSideKeyRef.current) {
@@ -125,7 +127,6 @@ export default function DragAction(props) {
     }
 
     function handleDrop(e) {
-        console.time('drop top');
         e.preventDefault();
         e.stopPropagation();
 
@@ -200,7 +201,6 @@ export default function DragAction(props) {
             dragPageAction.setSelectedNodeId(componentConfig.__config?.componentId);
         }
         end();
-        console.timeEnd('drop top');
     }
 
     return (

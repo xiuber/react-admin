@@ -10,6 +10,15 @@
     z-index: 99999;
     pointer-events: none;
 
+    &.showEndPoint {
+
+    }
+
+    &.remove {
+        transition: width 200ms;
+        width: @arrowLineArrowSize !important;
+    }
+
     &:after {
         content: ' ';
         position: absolute;

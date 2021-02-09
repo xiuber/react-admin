@@ -108,7 +108,7 @@ export default config({
     useEffect(() => {
         const keys = getParentIds(pageConfig, selectedNodeId) || [];
         // 去重
-        const nextKeys = Array.from(new Set([...componentTreeExpendedKeys, ...keys]));
+        const nextKeys = Array.from(new Set([...componentTreeExpendedKeys, ...keys, selectedNodeId]));
 
         dragPageAction.setComponentTreeExpendedKeys(nextKeys);
     }, [selectedNodeId]);

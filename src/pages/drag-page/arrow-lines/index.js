@@ -9,7 +9,10 @@ export default config({
         };
     },
 })(function ArrowLines(props) {
-    const {arrowLines} = props;
+    const {
+        arrowLines,
+        action: {dragPage: dragPageAction},
+    } = props;
     useEffect(() => {
         // 清除
         if (!arrowLines?.length) {
@@ -25,10 +28,11 @@ export default config({
                 endX,
                 endY,
                 showEndPoint,
+                remove,
             } = item;
 
             const allEle = document.querySelectorAll(`.${styles.root}`);
-            let ele = Array.from(allEle)[index];
+            let ele = allEle[index];
 
             if (!ele) {
                 ele = document.createElement('div');
@@ -36,6 +40,9 @@ export default config({
             }
 
             ele.classList.add(styles.root);
+            if (showEndPoint) ele.classList.add(styles.showEndPoint);
+            if (remove) ele.classList.add(styles.remove);
+
             const w = Math.abs(startX - endX);
             const h = Math.abs(startY - endY);
 
@@ -58,6 +65,24 @@ export default config({
             ele.style.left = `${startX}px`;
             ele.style.transform = `rotate(${deg}deg) scaleY(.5)`;
         });
+
+        const st = setTimeout(() => {
+            if (arrowLines.some(item => item.remove)) {
+                const allEle = document.querySelectorAll(`.${styles.root}`);
+                const nextArrowLines = arrowLines.filter((item, index) => {
+                    if (item.remove) {
+                        if (allEle[index]) allEle[index].remove();
+                    }
+                    return !item.remove;
+                });
+                dragPageAction.setArrowLines(nextArrowLines);
+            }
+        }, 200);
+
+        return () => {
+            clearInterval(st);
+        };
+
     }, [arrowLines]);
     return null;
 });
