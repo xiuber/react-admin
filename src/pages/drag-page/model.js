@@ -94,7 +94,7 @@ export default {
 
         if (index > -1) arrowLines.splice(index, 1);
 
-        if(options){
+        if (options) {
             options.dragging = true;
             arrowLines.push(options);
         }
@@ -135,6 +135,7 @@ export default {
             node.props = {
                 ...node.props,
                 ...newProps,
+                key: uuid(), // 设置新key，保证组件重新渲染
             };
         }
         return {pageConfig: {...pageConfig}};

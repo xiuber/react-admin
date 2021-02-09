@@ -1,6 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import {getEleCenterInWindow, findNodeById} from 'src/pages/drag-page/util';
+import {v4 as uuid} from 'uuid';
 
 import styles from './style.less';
 
@@ -64,7 +65,6 @@ export default config({
         e.preventDefault();
         e.stopPropagation();
 
-        console.log('link-point handleDragEnd');
         if (movingPoint) {
             const {targetComponentId, propsKey, propsValue} = movingPoint;
 
@@ -76,10 +76,10 @@ export default config({
                     .forEach(([key, value]) => {
                         if (key === propsKey && value === propsValue) {
                             Reflect.deleteProperty(props, key);
+                            props.key = uuid();
                         }
                     });
-
-                dragPageAction.setSelectedNode({...selectedNode});
+                dragPageAction.render();
             }
         }
 
