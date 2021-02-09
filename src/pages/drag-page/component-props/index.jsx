@@ -10,14 +10,17 @@ import {v4 as uuid} from 'uuid';
 
 export default config({
     connect: state => {
-
         return {
+            // 不可以引入 pageConfig
+            // pageConfig: state.dragPage.pageConfig,
+            refreshProps: state.dragPage.refreshProps,
             selectedNode: state.dragPage.selectedNode,
         };
     },
 })(function ComponentProps(props) {
     const {
         selectedNode,
+        refreshProps,
         action: {dragPage: dragPageAction},
     } = props;
 
@@ -75,7 +78,7 @@ export default config({
             setLabelCol({flex: labelWidth});
         }
 
-    }, [selectedNode]);
+    }, [selectedNode, refreshProps]);
 
     const categories = [];
 

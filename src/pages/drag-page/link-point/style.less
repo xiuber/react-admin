@@ -1,3 +1,6 @@
+@noLinkColor: red;
+@linkPointColor: green;
+
 .root {
     position: relative;
     display: flex;
@@ -6,9 +9,21 @@
     width: 20px;
     height: 20px;
     pointer-events: all;
-}
 
-@linkPointColor: green;
+    &.noLink {
+        .point {
+            border-color: @noLinkColor;
+
+            &:before {
+                border-color: @noLinkColor;
+            }
+
+            &:after {
+                background: @noLinkColor;
+            }
+        }
+    }
+}
 
 .point {
     border: 1px solid @linkPointColor;

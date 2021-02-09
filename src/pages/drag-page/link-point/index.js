@@ -147,9 +147,19 @@ export default config({
         };
     }, [iFrameDocument, dragging]);
 
+    const links = movingPoint ? [] : findLinkElementsPosition({
+        pageConfig,
+        selectedNode,
+        iFrameDocument,
+    });
+
     const pointElement = (
         <div
-            className={[className, styles.root].join(' ')}
+            className={[
+                className,
+                styles.root,
+                !links?.length && !movingPoint ? styles.noLink : '',
+            ].join(' ')}
             draggable
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
@@ -165,14 +175,12 @@ export default config({
     if (movingPoint) return pointElement;
 
 
-    const links = findLinkElementsPosition({
-        pageConfig,
-        selectedNode,
-        iFrameDocument,
-    });
-
     return (
-        <Tooltip placement="top" title={`已关联(${links?.length || 0})，点击查看所有，拖拽指定关联`}>
+        <Tooltip
+            title={`已关联(${links?.length || 0})，点击查看所有，拖拽指定关联`}
+            placement="top"
+            getPopupContainer={() => document.body}
+        >
             {pointElement}
         </Tooltip>
     );

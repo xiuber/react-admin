@@ -97,6 +97,7 @@ export default [
                                 node.props.key = uuid();
 
                                 dragPageAction.render(); // props改变了，重新出发页面渲染
+                                dragPageAction.refreshProps(); // 刷新属性面板
                             },
                         },
                     },

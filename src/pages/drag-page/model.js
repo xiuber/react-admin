@@ -46,6 +46,7 @@ const initialState = {
     ],
     showArrowLines: false,
     refreshArrowLines: null,
+    refreshProps: null,
     activeToolKey: 'layout', // 头部激活 key
     selectedNodeId: null,
     selectedNode: null,
@@ -92,9 +93,9 @@ export default {
     setArrowLines: arrowLines => ({arrowLines}),
     setShowArrowLines: (showArrowLines, state) => {
 
-        if(showArrowLines === undefined) return {showArrowLines: !state.showArrowLines}
+        if (showArrowLines === undefined) return {showArrowLines: !state.showArrowLines};
 
-        return {showArrowLines}
+        return {showArrowLines};
     },
     setRefreshArrowLines: refreshArrowLines => ({refreshArrowLines}),
     showDraggingArrowLine: (options, state) => {
@@ -147,7 +148,7 @@ export default {
                 key: uuid(), // 设置新key，保证组件重新渲染
             };
         }
-        return {pageConfig: {...pageConfig}};
+        return {pageConfig: {...pageConfig}, refreshProps: {}};
     },
     showModal: (componentId, state) => {
         const {pageConfig} = state;
@@ -158,7 +159,7 @@ export default {
             node.props.visible = true;
         }
 
-        return {pageConfig: {...pageConfig}};
+        return {pageConfig: {...pageConfig}, refreshProps: {}};
     },
     syncFormItemLabelColFlex: ({node, flex}, state) => {
         const {pageConfig} = state;
@@ -222,6 +223,7 @@ export default {
 
         return {pageConfig: {...pageConfig}};
     },
+    refreshProps: () => ({refreshProps: {}}),
     setPageConfig: pageConfig => {
         if (!pageConfig) {
             return {pageConfig: {...holderNode}};
