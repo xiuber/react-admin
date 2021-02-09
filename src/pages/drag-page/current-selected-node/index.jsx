@@ -1,7 +1,7 @@
 import React from 'react';
 import config from 'src/commons/config-hoc';
 import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
-import LinkProps from '../link-props';
+import LinkProps from '../link-point';
 
 export default config({
     connect: state => {
