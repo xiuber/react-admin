@@ -1,9 +1,13 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {Tree} from 'antd';
-import {AppstoreOutlined} from '@ant-design/icons';
+import {Tree, Tooltip} from 'antd';
+import {
+    AppstoreOutlined,
+    ShrinkOutlined,
+    ArrowsAltOutlined,
+} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import TreeNode from './TreeNode';
-import {scrollElement} from '../util';
+import {scrollElement, getParentIds} from '../util';
 import Pane from '../pane';
 import classNames from 'classnames';
 import DragBar from 'src/pages/drag-page/drag-bar';
@@ -33,6 +37,7 @@ export default config({
     const [treeData, setTreeData] = useState([]);
     const [nodeCount, setNodeCount] = useState(0);
     const [allKeys, setAllKeys] = useState([]);
+    const [isAllExpanded, setIsAllExpanded] = useState(false);
     const mainRef = useRef(null);
 
     useEffect(() => {
@@ -101,8 +106,13 @@ export default config({
     }
 
     useEffect(() => {
-        dragPageAction.setComponentTreeExpendedKeys(allKeys);
-    }, [selectedNodeId, allKeys]);
+        const keys = getParentIds(pageConfig, selectedNodeId) || [];
+        // 去重
+        const nextKeys = Array.from(new Set([...componentTreeExpendedKeys, ...keys]));
+
+        dragPageAction.setComponentTreeExpendedKeys(nextKeys);
+    }, [selectedNodeId]);
+
     useEffect(() => {
         const containerEle = mainRef.current;
 
@@ -130,12 +140,30 @@ export default config({
         root: true,
         hasDraggingNode: !!draggingNode,
     });
+
+
     return (
         <Pane
             header={
-                <div>
-                    <AppstoreOutlined style={{marginRight: 4}}/>
-                    组件树({nodeCount})
+                <div styleName="header">
+                    <div>
+                        <AppstoreOutlined style={{marginRight: 4}}/>
+                        组件树({nodeCount})
+                    </div>
+                    <div>
+                        <Tooltip placement="top" title={isAllExpanded ? '收起所有' : '展开所有'}>
+                            <div
+                                styleName="tool"
+                                onClick={() => {
+                                    const nextKeys = isAllExpanded ? [] : allKeys;
+                                    dragPageAction.setComponentTreeExpendedKeys(nextKeys);
+                                    setIsAllExpanded(!isAllExpanded);
+                                }}
+                            >
+                                {isAllExpanded ? <ShrinkOutlined/> : <ArrowsAltOutlined/>}
+                            </div>
+                        </Tooltip>
+                    </div>
                 </div>
             }
         >

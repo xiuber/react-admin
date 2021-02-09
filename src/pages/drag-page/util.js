@@ -183,6 +183,36 @@ export function scrollElement(containerEle, element, toTop, force, offset = 0) {
     }
 }
 
+/**
+ * 获取 id 对应的所有祖先节点
+ * @param root
+ * @param id
+ * @returns {*|[]}
+ */
+export function getParentIds(root, id) {
+    const data = Array.isArray(root) ? root : [root];
+
+    // 深度遍历查找
+    function dfs(data, id, parents) {
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            // 找到id则返回父级id
+            if (item.__config?.componentId === id) return parents;
+            // children不存在或为空则不递归
+            if (!item.children || !item.children.length) continue;
+            // 往下查找时将当前id入栈
+            parents.push(item.__config?.componentId);
+
+            if (dfs(item.children, id, parents).length) return parents;
+            // 深度遍历查找未找到时当前id 出栈
+            parents.pop();
+        }
+        // 未找到时返回空数组
+        return [];
+    }
+
+    return dfs(data, id, []);
+}
 
 // 获取节点元素
 export function getNodeEle(target) {

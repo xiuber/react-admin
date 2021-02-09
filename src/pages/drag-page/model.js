@@ -258,32 +258,20 @@ export default {
         return {activeToolKey};
     },
     setSelectedNodeId: (selectedNodeId, state) => {
-        let {pageConfig, componentTreeExpendedKeys} = state;
+        let {pageConfig = []} = state;
 
         const selectedNode = findNodeById(pageConfig, selectedNodeId);
-
-        const parentKeys = getParentIds(pageConfig, selectedNodeId);
-        if (parentKeys?.length) {
-            if (!componentTreeExpendedKeys) componentTreeExpendedKeys = [];
-            parentKeys.forEach(key => {
-                if (key && !componentTreeExpendedKeys.some(k => k === key)) {
-                    componentTreeExpendedKeys.push(key);
-                }
-            });
-        }
 
         if (selectedNode?.__config?.isRootHolder) {
             return {
                 selectedNodeId: null,
                 selectedNode: null,
-                componentTreeExpendedKeys: [...componentTreeExpendedKeys],
             };
         }
 
         return {
             selectedNodeId,
             selectedNode,
-            componentTreeExpendedKeys: [...componentTreeExpendedKeys],
         };
     },
     render: (_, state) => {
@@ -531,37 +519,6 @@ function deleteComponentById(root, id) {
     return deletedNode;
 }
 
-
-/**
- * 获取 id 对应的所有祖先节点
- * @param root
- * @param id
- * @returns {*|[]}
- */
-function getParentIds(root, id) {
-    const data = Array.isArray(root) ? root : [root];
-
-    // 深度遍历查找
-    function dfs(data, id, parents) {
-        for (var i = 0; i < data.length; i++) {
-            var item = data[i];
-            // 找到id则返回父级id
-            if (item.__config?.componentId === id) return parents;
-            // children不存在或为空则不递归
-            if (!item.children || !item.children.length) continue;
-            // 往下查找时将当前id入栈
-            parents.push(item.__config?.componentId);
-
-            if (dfs(item.children, id, parents).length) return parents;
-            // 深度遍历查找未找到时当前id 出栈
-            parents.pop();
-        }
-        // 未找到时返回空数组
-        return [];
-    }
-
-    return dfs(data, id, []);
-}
 
 // 添加占位符
 function addDragHolder(node) {

@@ -29,7 +29,7 @@ export default config({
 
     let icon = getComponentIcon(nodeData, isContainer);
 
-    name = <span>{icon}{name}</span>;
+    name = <span styleName="nodeTitle">{icon}{name}</span>;
 
     const hoverRef = useRef(0);
     const nodeRef = useRef(null);

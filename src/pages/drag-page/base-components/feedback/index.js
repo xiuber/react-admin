@@ -63,7 +63,7 @@ export default [
                 image: modalImage,
                 config: {
                     __config: {
-                        draggable: false,
+                        // draggable: false,
                         componentDisplayName: ({node}) => {
                             const {componentName, props = {}, __config = {}} = node;
                             const {componentId} = __config;
