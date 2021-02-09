@@ -1,7 +1,7 @@
 import React from 'react';
 import config from 'src/commons/config-hoc';
 import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
-import LinkProps from '../link-point';
+import LinkPoint from '../link-point';
 
 export default config({
     connect: state => {
@@ -18,7 +18,7 @@ export default config({
 
     return (
         <div style={{display: 'flex', alignItems: 'center'}}>
-            <LinkProps/>
+            {selectedNode?.__config?.propsToSet ? <LinkPoint id="sourceLinkPoint"/> : null}
             当前选中: {name}
         </div>
     );

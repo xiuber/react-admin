@@ -1,18 +1,32 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import classNames from 'classnames';
 import config from 'src/commons/config-hoc';
+import LinkPoint from 'src/pages/drag-page/link-point';
 import styles from './style.less';
+import {getEleCenterInWindow, findNodeById} from 'src/pages/drag-page/util';
 
 export default config({
     connect: state => {
         return {
+            pageConfig: state.dragPage.pageConfig,
             arrowLines: state.dragPage.arrowLines,
+            selectedNode: state.dragPage.selectedNode,
+            selectedNodeId: state.dragPage.selectedNodeId,
+            iFrameDocument: state.dragPage.iFrameDocument,
         };
     },
 })(function ArrowLines(props) {
     const {
         arrowLines,
+        selectedNode,
+        selectedNodeId,
+        action: {dragPage: dragPageAction},
+        pageConfig,
+        iFrameDocument,
     } = props;
+
+    const propsToSet = selectedNode?.__config?.propsToSet;
+    const sourceLinkPointEle = document.getElementById('sourceLinkPoint');
 
     function getStyle(item) {
         const {
@@ -47,6 +61,127 @@ export default config({
         };
     }
 
+    function showAllArrowLines() {
+        // 获取所有关联元素
+        const componentId = selectedNode?.__config?.componentId;
+
+        if (!propsToSet) return;
+
+        const center = getEleCenterInWindow(sourceLinkPointEle);
+
+        if (!center) return;
+
+        const {x: startX, y: startY} = center;
+
+        let all = [];
+        Object.entries(propsToSet).forEach(([key, value]) => {
+            const str = value.replace(/\$\{componentId}/g, componentId);
+            const result = findLinkElementPosition(key, str);
+            all = all.concat(result);
+        });
+
+        const iframe = document.getElementById('dnd-iframe');
+        const rect = iframe.getBoundingClientRect();
+        const {x, y} = rect;
+
+        all.forEach(item => {
+            item.endX = item.endX + x;
+            item.endY = item.endY + y;
+            item.startX = startX;
+            item.startY = startY;
+            item.showEndPoint = true;
+        });
+
+        dragPageAction.setArrowLines(all);
+    }
+
+    function findLinkElementPosition(key, value) {
+        const sourceComponentId = selectedNode?.__config?.componentId;
+
+        const result = [];
+        const loop = (node) => {
+            let {props} = node;
+            if (!props) props = {};
+
+            if (props[key] === value) {
+                const componentId = node?.__config?.componentId;
+                const ele = iFrameDocument.querySelector(`[data-componentId="${componentId}"]`);
+                if (ele) {
+                    const {x, y, width, height} = ele.getBoundingClientRect();
+
+                    result.push({
+                        key: `${value}__${componentId}`,
+                        propsKey: key,
+                        propsValue: value,
+                        endX: x + width / 2,
+                        endY: y + height / 2,
+                        targetComponentId: componentId,
+                        sourceComponentId,
+                    });
+                }
+            }
+            if (node.children?.length) {
+                node.children.forEach(item => loop(item));
+            }
+        };
+
+        loop(pageConfig);
+
+        return result;
+    }
+
+    function handleDragStart(e, item) {
+        // const {targetComponentId, propsKey, propsValue} = item;
+        // const node = findNodeById(pageConfig, targetComponentId);
+        //
+        // if (!node) return;
+        //
+        // const props = node.props || {};
+        //
+        // Object.entries(props)
+        //     .forEach(([key, value]) => {
+        //         if (key === propsKey && value === propsValue) {
+        //             Reflect.deleteProperty(props, key);
+        //         }
+        //     });
+        //
+        // dragPageAction.setSelectedNode({...selectedNode});
+    }
+
+    // 显示隐藏
+    useEffect(() => {
+        if (!selectedNode) return;
+
+        const showLink = selectedNode?.__config?.showLink;
+        if (showLink) {
+            showAllArrowLines();
+        } else {
+            selectedNode.__config.showLink = false;
+            dragPageAction.setArrowLines([]);
+        }
+    }, [selectedNode]);
+
+    // 选中节点更改，清空line
+    useEffect(() => {
+        dragPageAction.setArrowLines([]);
+    }, [selectedNodeId]);
+
+    // 设计页面滚动，刷新位置
+    useEffect(() => {
+        if (!iFrameDocument) return;
+
+        function handleScroll() {
+            dragPageAction.setSelectedNode({...selectedNode});
+        }
+
+        iFrameDocument.body.addEventListener('scroll', handleScroll);
+
+        return () => {
+            iFrameDocument.body.removeEventListener('scroll', handleScroll);
+        };
+    }, [iFrameDocument, selectedNode]);
+
+
     return (
         <div>
             {arrowLines.map(item => {
@@ -68,7 +203,13 @@ export default config({
 
                 return (
                     <div key={key} className={styleNames} style={style}>
-                        <div className={styles.point}/>
+                        <LinkPoint
+                            className={styles.point}
+                            // sourcePointEle={sourceLinkPointEle}
+                            // onDragStart={e => handleDragStart(e, item)}
+                            movingPoint={item}
+                            onClick={() => undefined} // 覆盖默认click事件
+                        />
                     </div>
                 );
             })}

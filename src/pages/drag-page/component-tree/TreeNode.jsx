@@ -206,7 +206,7 @@ export default config({
                 isAfter: isBottom,
                 isChildren: isCenter,
             });
-            dragPageAction.setSelectedNodeId(sourceComponentId);
+            // dragPageAction.setSelectedNodeId(sourceComponentId);
         }
 
         if (componentConfig) {
@@ -218,7 +218,7 @@ export default config({
                 isChildren: isCenter,
                 node: componentConfig,
             });
-            dragPageAction.setSelectedNodeId(componentConfig.__config?.componentId);
+            // dragPageAction.setSelectedNodeId(componentConfig.__config?.componentId);
         }
 
         end();

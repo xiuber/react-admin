@@ -1,26 +1,28 @@
 import React, {useEffect, useRef} from 'react';
 import config from 'src/commons/config-hoc';
-import {getEleCenterInWindow} from 'src/pages/drag-page/util';
+import {getEleCenterInWindow, findNodeById} from 'src/pages/drag-page/util';
 
-import './style.less';
-
+import styles from './style.less';
 
 export default config({
     connect: state => {
         return {
             pageConfig: state.dragPage.pageConfig,
             selectedNode: state.dragPage.selectedNode,
-            selectedNodeId: state.dragPage.selectedNodeId,
             iFrameDocument: state.dragPage.iFrameDocument,
         };
     },
 })(function LinkProps(props) {
     const {
         selectedNode,
-        selectedNodeId,
         iFrameDocument,
         action: {dragPage: dragPageAction},
+        className,
+        sourcePointEle,
+        onDragStart,
+        movingPoint,
         pageConfig,
+        ...others
     } = props;
 
     const propsToSet = selectedNode?.__config?.propsToSet;
@@ -31,6 +33,7 @@ export default config({
     const pointRef = useRef(null);
 
     function handleDragStart(e) {
+        onDragStart && onDragStart(e);
         e.stopPropagation();
         // e.preventDefault();
         const componentId = selectedNode?.__config?.componentId;
@@ -44,19 +47,41 @@ export default config({
 
         dragPageAction.setDraggingNode({propsToSet: true});
 
-        const center = getEleCenterInWindow(e.target);
+        const center = getEleCenterInWindow(sourcePointEle || e.target);
         if (center) {
             const {x: startX, y: startY} = center;
             startRef.current = {startX, startY};
         }
 
         e.dataTransfer.setDragImage(dragImgRef.current, 0, 0);
-        showAllArrowLines();
+
+        // 显示所有 link line
+        selectedNode.__config.showLink = true;
+        dragPageAction.setSelectedNode({...selectedNode});
     }
 
     function handleDragEnd(e) {
         e.preventDefault();
         e.stopPropagation();
+
+        console.log('link-point handleDragEnd');
+        if (movingPoint) {
+            const {targetComponentId, propsKey, propsValue} = movingPoint;
+
+            const node = findNodeById(pageConfig, targetComponentId);
+            if (node) {
+                const props = node.props || {};
+
+                Object.entries(props)
+                    .forEach(([key, value]) => {
+                        if (key === propsKey && value === propsValue) {
+                            Reflect.deleteProperty(props, key);
+                        }
+                    });
+
+                dragPageAction.setSelectedNode({...selectedNode});
+            }
+        }
 
         selectedNode.__config.showLink = true;
         dragPageAction.setSelectedNode({...selectedNode});
@@ -75,6 +100,8 @@ export default config({
 
     function handleIframeOver(e) {
         e.preventDefault();
+        if (!startRef.current) return;
+
         const {pageX, pageY, clientX, clientY} = e;
         let endX = pageX || clientX;
         let endY = pageY || clientY;
@@ -105,83 +132,6 @@ export default config({
         dragPageAction.setSelectedNode({...selectedNode});
     }
 
-    function showAllArrowLines() {
-        // 获取所有关联元素
-        const componentId = selectedNode?.__config?.componentId;
-
-        if (!propsToSet) return;
-
-        const center = getEleCenterInWindow(pointRef.current);
-        const {x: startX, y: startY} = center;
-
-        let all = [];
-        Object.entries(propsToSet).forEach(([key, value]) => {
-            const str = value.replace(/\$\{componentId}/g, componentId);
-            const result = findLinkElementPosition(key, str);
-            all = all.concat(result);
-        });
-
-        const iframe = document.getElementById('dnd-iframe');
-        const rect = iframe.getBoundingClientRect();
-        const {x, y} = rect;
-
-        all.forEach(item => {
-            item.endX = item.endX + x;
-            item.endY = item.endY + y;
-            item.startX = startX;
-            item.startY = startY;
-            item.showEndPoint = true;
-        });
-
-        dragPageAction.setArrowLines(all);
-    }
-
-    function findLinkElementPosition(key, value) {
-        const result = [];
-        const loop = (node) => {
-            let {props} = node;
-            if (!props) props = {};
-
-            if (props[key] === value) {
-                const componentId = node?.__config?.componentId;
-                const ele = iFrameDocument.querySelector(`[data-componentId="${componentId}"]`);
-                if (ele) {
-                    const {x, y, width, height} = ele.getBoundingClientRect();
-
-                    result.push({
-                        key: `${value}__${componentId}`,
-                        endX: x + width / 2,
-                        endY: y + height / 2,
-                    });
-                }
-            }
-            if (node.children?.length) {
-                node.children.forEach(item => loop(item));
-            }
-        };
-
-        loop(pageConfig);
-
-        return result;
-    }
-
-    // 显示隐藏
-    useEffect(() => {
-        if (!pointRef.current) return;
-        const showLink = selectedNode?.__config?.showLink;
-        if (showLink) {
-            showAllArrowLines();
-        } else {
-            selectedNode.__config.showLink = false;
-            dragPageAction.setArrowLines([]);
-        }
-    }, [selectedNode, pointRef.current]);
-
-    // 选中节点更改，清空line
-    useEffect(() => {
-        dragPageAction.setArrowLines([]);
-    }, [selectedNodeId]);
-
     useEffect(() => {
         if (!iFrameDocument) return;
 
@@ -194,19 +144,18 @@ export default config({
         };
     }, [iFrameDocument]);
 
-    if (!propsToSet) return null;
-
     return (
         <div
-            styleName="root"
+            className={[className, styles.root].join(' ')}
             draggable
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
             onClick={handleClick}
+            {...others}
         >
             <img ref={dragImgRef} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=" alt=""/>
 
-            <div styleName="point" ref={pointRef}/>
+            <div className={styles.point} ref={pointRef}/>
         </div>
     );
 });

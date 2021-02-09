@@ -189,7 +189,7 @@ export default function DragAction(props) {
                 targetId: targetComponentId,
                 ...position,
             });
-            dragPageAction.setSelectedNodeId(sourceComponentId);
+            // dragPageAction.setSelectedNodeId(sourceComponentId);
         }
 
         if (componentConfig) {
@@ -199,7 +199,7 @@ export default function DragAction(props) {
                 node: componentConfig,
                 ...position,
             });
-            dragPageAction.setSelectedNodeId(componentConfig.__config?.componentId);
+            // dragPageAction.setSelectedNodeId(componentConfig.__config?.componentId);
         }
         end();
     }
