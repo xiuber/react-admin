@@ -1,6 +1,8 @@
-import {useEffect} from 'react';
+import React from 'react';
 import config from 'src/commons/config-hoc';
 import styles from './style.less';
+import classNames from 'classnames';
+
 
 export default config({
     connect: state => {
@@ -11,24 +13,15 @@ export default config({
 })(function ArrowLines(props) {
     const {
         arrowLines,
-        action: {dragPage: dragPageAction},
     } = props;
 
-    function showArrowLine(ele, item) {
+    function getStyle(item) {
         const {
             startX,
             startY,
             endX,
             endY,
-            showEndPoint,
-            remove,
-            dragging,
         } = item;
-
-        ele.classList.add(styles.root);
-        if (showEndPoint) ele.classList.add(styles.showEndPoint);
-        if (remove) ele.classList.add(styles.remove);
-        if (dragging) ele.classList.add(styles.dragging);
 
         const w = Math.abs(startX - endX);
         const h = Math.abs(startY - endY);
@@ -47,52 +40,34 @@ export default config({
         // 左下
         if (endX < startX && endY > startY) deg = 180 - deg;
 
-
-        ele.style.top = `${startY}px`;
-        ele.style.left = `${startX}px`;
-        ele.style.transform = `rotate(${deg}deg) scaleY(.5)`;
-
-        // 为了显示动画
-        setTimeout(() => ele.style.width = `${width}px`, 10);
+        return {
+            top: startY,
+            left: startX,
+            width: width,
+            transform: `rotate(${deg}deg) scaleY(.5)`,
+        };
     }
 
-    useEffect(() => {
-        // 清除
-        if (!arrowLines?.length) {
-            const allEle = document.querySelectorAll(`.${styles.root}`);
-            allEle.forEach(ele => ele.remove());
-        }
+    return arrowLines.map(item => {
+        const {
+            showEndPoint,
+            remove,
+            dragging,
+        } = item;
 
-        arrowLines.forEach((item, index) => {
-            const allEle = document.querySelectorAll(`.${styles.root}`);
-            let ele = allEle[index];
-
-            if (!ele) {
-                ele = document.createElement('div');
-                document.body.append(ele);
-            }
-
-            showArrowLine(ele, item);
+        const styleNames = classNames({
+            [styles.root]: true,
+            [styles.showEndPoint]: showEndPoint,
+            [styles.remove]: remove,
+            [styles.dragging]: dragging,
         });
 
-        // 删除
-        const st = setTimeout(() => {
-            if (arrowLines.some(item => item.remove)) {
-                const allEle = document.querySelectorAll(`.${styles.root}`);
-                const nextArrowLines = arrowLines.filter((item, index) => {
-                    if (item.remove) {
-                        if (allEle[index]) allEle[index].remove();
-                    }
-                    return !item.remove;
-                });
-                dragPageAction.setArrowLines(nextArrowLines);
-            }
-        }, 200);
+        const style = getStyle(item);
 
-        return () => {
-            clearInterval(st);
-        };
-
-    }, [arrowLines]);
-    return null;
+        return (
+            <div className={styleNames} style={style}>
+                <div className={styles.point}/>
+            </div>
+        );
+    });
 });

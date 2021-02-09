@@ -188,8 +188,10 @@ export default {
 
         if (index > -1) arrowLines.splice(index, 1);
 
-        options.dragging = true;
-        arrowLines.push(options);
+        if(options){
+            options.dragging = true;
+            arrowLines.push(options);
+        }
 
         return {arrowLines: [...arrowLines]};
     },
@@ -278,6 +280,7 @@ export default {
     setActiveTookKey: activeToolKey => {
         return {activeToolKey};
     },
+    setSelectedNode: selectedNode => ({selectedNode}),
     setSelectedNodeId: (selectedNodeId, state) => {
         let {pageConfig = []} = state;
 

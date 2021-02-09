@@ -28,8 +28,7 @@ export default config({
     const startRef = useRef(null);
     const lineRef = useRef(null);
     const dragImgRef = useRef(null);
-    const arrowLinesRef = useRef(null);
-
+    const pointRef = useRef(null);
 
     function handleDragStart(e) {
         e.stopPropagation();
@@ -52,19 +51,16 @@ export default config({
         }
 
         e.dataTransfer.setDragImage(dragImgRef.current, 0, 0);
+        showAllArrowLines();
     }
 
     function handleDragEnd(e) {
         e.preventDefault();
         e.stopPropagation();
-        const options = lineRef.ref;
 
-        options.remove = true;
-
-        dragPageAction.showDraggingArrowLine(options);
+        dragPageAction.showDraggingArrowLine(null);
+        showAllArrowLines();
     }
-
-    // const handleHoverMouseMove = throttle(e => {}, 100);
 
     function handleOver(e) {
         e.preventDefault();
@@ -103,26 +99,18 @@ export default config({
         dragPageAction.showDraggingArrowLine(options);
     }
 
-    function handleClick(e) {
-        // 隐藏
-        if (arrowLinesRef.current) {
-            const all = arrowLinesRef.current;
-            all.forEach(item => item.remove = true);
+    function handleClick() {
+        selectedNode.__config.showLink = !selectedNode.__config.showLink;
+        dragPageAction.setSelectedNode({...selectedNode});
+    }
 
-            dragPageAction.setArrowLines([...all]);
-            arrowLinesRef.current = null;
-
-            return;
-        }
-
-        // 显示
-
+    function showAllArrowLines() {
         // 获取所有关联元素
         const componentId = selectedNode?.__config?.componentId;
 
         if (!propsToSet) return;
 
-        const center = getEleCenterInWindow(e.target);
+        const center = getEleCenterInWindow(pointRef.current);
         const {x: startX, y: startY} = center;
 
         let all = [];
@@ -141,8 +129,8 @@ export default config({
             item.endY = item.endY + y;
             item.startX = startX;
             item.startY = startY;
+            item.showEndPoint = true;
         });
-        arrowLinesRef.current = all;
 
         dragPageAction.setArrowLines(all);
     }
@@ -175,10 +163,21 @@ export default config({
         return result;
     }
 
+    // 显示隐藏
+    useEffect(() => {
+        if (!pointRef.current) return;
+        const showLink = selectedNode?.__config?.showLink;
+        if (showLink) {
+            showAllArrowLines();
+        } else {
+            selectedNode.__config.showLink = false;
+            dragPageAction.setArrowLines([]);
+        }
+    }, [selectedNode, pointRef.current]);
+
     // 选中节点更改，清空line
     useEffect(() => {
         dragPageAction.setArrowLines([]);
-        arrowLinesRef.current = null;
     }, [selectedNodeId]);
 
     useEffect(() => {
@@ -205,7 +204,7 @@ export default config({
         >
             <img ref={dragImgRef} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=" alt=""/>
 
-            <div styleName="point"/>
+            <div styleName="point" ref={pointRef}/>
         </div>
     );
 });
