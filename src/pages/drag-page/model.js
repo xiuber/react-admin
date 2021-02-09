@@ -44,6 +44,8 @@ const initialState = {
             showEndPoint: false, // 显示结束点
         },
     ],
+    showArrowLines: false,
+    refreshArrowLines: null,
     activeToolKey: 'layout', // 头部激活 key
     selectedNodeId: null,
     selectedNode: null,
@@ -88,6 +90,13 @@ export default {
     syncStorage,
     init: () => cloneDeep(initialState),
     setArrowLines: arrowLines => ({arrowLines}),
+    setShowArrowLines: (showArrowLines, state) => {
+
+        if(showArrowLines === undefined) return {showArrowLines: !state.showArrowLines}
+
+        return {showArrowLines}
+    },
+    setRefreshArrowLines: refreshArrowLines => ({refreshArrowLines}),
     showDraggingArrowLine: (options, state) => {
         const {arrowLines = []} = state;
         const index = arrowLines.findIndex(item => item.dragging);
@@ -187,7 +196,10 @@ export default {
     setActiveTookKey: activeToolKey => {
         return {activeToolKey};
     },
-    setSelectedNode: selectedNode => ({selectedNode}),
+    // 不要写这样的代码
+    // 这样调用 dragPageAction.setSelectedNode({...selectedNode})
+    // 会使 selectedNode 脱离 pageConfig 导致意外bug
+    // setSelectedNode: selectedNode => ({selectedNode}),
     setSelectedNodeId: (selectedNodeId, state) => {
         let {pageConfig = []} = state;
 

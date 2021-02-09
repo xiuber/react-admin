@@ -72,8 +72,7 @@ export default config({
         e.dataTransfer.setDragImage(dragImgRef.current, 0, 0);
 
         // 显示所有 link line
-        selectedNode.__config.showLink = true;
-        dragPageAction.setSelectedNode({...selectedNode});
+        dragPageAction.setShowArrowLines(true);
     }
 
     function handleDragEnd(e) {
@@ -99,8 +98,7 @@ export default config({
             }
         }
 
-        selectedNode.__config.showLink = true;
-        dragPageAction.setSelectedNode({...selectedNode});
+        dragPageAction.setRefreshArrowLines({});
     }
 
     function handleOver(e) {
@@ -132,8 +130,8 @@ export default config({
     }
 
     function handleClick() {
-        selectedNode.__config.showLink = !selectedNode.__config.showLink;
-        dragPageAction.setSelectedNode({...selectedNode});
+        // 不传递参数，标识toggle
+        dragPageAction.setShowArrowLines();
     }
 
     useEffect(() => {

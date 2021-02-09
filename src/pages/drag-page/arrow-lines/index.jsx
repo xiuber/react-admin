@@ -10,6 +10,9 @@ export default config({
         return {
             pageConfig: state.dragPage.pageConfig,
             arrowLines: state.dragPage.arrowLines,
+            showArrowLines: state.dragPage.showArrowLines,
+            refreshArrowLines: state.dragPage.refreshArrowLines,
+
             selectedNode: state.dragPage.selectedNode,
             selectedNodeId: state.dragPage.selectedNodeId,
             iFrameDocument: state.dragPage.iFrameDocument,
@@ -17,6 +20,8 @@ export default config({
     },
 })(function ArrowLines(props) {
     const {
+        showArrowLines,
+        refreshArrowLines,
         arrowLines,
         selectedNode,
         selectedNodeId,
@@ -94,16 +99,12 @@ export default config({
 
     // 显示隐藏
     useEffect(() => {
-        if (!selectedNode) return;
-
-        const showLink = selectedNode?.__config?.showLink;
-        if (showLink) {
+        if (showArrowLines) {
             showAllArrowLines();
         } else {
-            selectedNode.__config.showLink = false;
             dragPageAction.setArrowLines([]);
         }
-    }, [selectedNode]);
+    }, [showArrowLines, refreshArrowLines]);
 
     // 选中节点更改，清空line
     useEffect(() => {
@@ -115,7 +116,7 @@ export default config({
         if (!iFrameDocument) return;
 
         function handleScroll() {
-            dragPageAction.setSelectedNode({...selectedNode});
+            dragPageAction.setRefreshArrowLines({});
         }
 
         iFrameDocument.body.addEventListener('scroll', handleScroll);
@@ -123,7 +124,7 @@ export default config({
         return () => {
             iFrameDocument.body.removeEventListener('scroll', handleScroll);
         };
-    }, [iFrameDocument, selectedNode]);
+    }, [iFrameDocument]);
 
 
     return (
