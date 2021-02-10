@@ -64,8 +64,6 @@ export default function NodeRenderDraggable(props) {
 
     const component = getComponent(config);
 
-    if (typeof component === 'string') console.log(component);
-
     const componentActions = Object.entries(actions)
         .reduce((prev, curr) => {
             const [key, value] = curr;

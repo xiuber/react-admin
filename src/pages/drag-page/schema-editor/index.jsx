@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {message, Switch} from 'antd';
 import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
@@ -34,6 +34,7 @@ export default config({
     const [visible, setVisible] = useState(false);
     const [editType, setEditType] = useState(EDIT_TYPE.CURRENT_NODE);
     const [code, setCode] = useState('');
+    const saveRef = useRef(false);
 
     const prevActiveSideKey = usePrevious(activeSideKey);
     useEffect(() => {
@@ -84,6 +85,8 @@ export default config({
             result = nodeConfig;
         }
 
+        saveRef.current = true;
+
         dragPageAction.setPageConfig({...result});
 
         // 原选中id是否存在
@@ -105,13 +108,21 @@ export default config({
     }
 
     useEffect(() => {
+        // 由于保存触发的，不做任何处理
+        if (saveRef.current) {
+            saveRef.current = false;
+            return;
+        }
+
         let editNode;
-        if (editType === EDIT_TYPE.CURRENT_NODE) editNode = selectedNode || {};
-        if (editType === EDIT_TYPE.ALL) editNode = pageConfig || {};
+        if (editType === EDIT_TYPE.CURRENT_NODE) editNode = selectedNode;
+        if (editType === EDIT_TYPE.ALL) editNode = pageConfig;
 
-        const code = `export default ${JSON5.stringify(removeComponentConfig(editNode, true), null, 2)}`;
+        if (!editNode) return setCode('');
 
-        setCode(code);
+        const nextCode = `export default ${JSON5.stringify(removeComponentConfig(editNode, true), null, 2)}`;
+
+        setCode(nextCode);
     }, [editType, selectedNode, pageConfig]);
 
     if (!visible) return null;

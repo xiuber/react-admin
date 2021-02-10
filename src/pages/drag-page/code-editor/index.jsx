@@ -14,6 +14,57 @@ import prettier from 'prettier/standalone';
 import parserPostCss from 'prettier/parser-postcss';
 import {isMac} from '../util';
 
+// vs code 的快捷键配置
+import keyboardShortcuts from './keyboard-shortcuts.json';
+
+function bindKeyWithAction(editor, monaco) {
+    const keyMap = {
+        cmd: monaco.KeyMod.CtrlCmd,
+        alt: monaco.KeyMod.Alt,
+        shift: monaco.KeyMod.Shift,
+        ctrl: monaco.KeyMod.WinCtrl,
+        backspace: monaco.KeyCode.Backspace,
+        down: monaco.KeyCode.DownArrow,
+        '/': monaco.KeyCode.US_SLASH,
+        '\\': monaco.KeyCode.US_BACKSLASH,
+        '[': monaco.KeyCode.US_OPEN_SQUARE_BRACKET,
+        ']': monaco.KeyCode.US_CLOSE_SQUARE_BRACKET,
+        '.': monaco.KeyCode.US_DOT,
+        ',': monaco.KeyCode.US_COMMA,
+        '+': monaco.KeyCode.US_EQUAL,
+        '-': monaco.KeyCode.US_MINUS,
+        '`': monaco.KeyCode.US_BACKTICK,
+        '\'': monaco.KeyCode.US_QUOTE,
+        ';': monaco.KeyCode.US_SEMICOLON,
+    };
+
+    keyboardShortcuts.filter(item => !item.command.startsWith('-'))
+        .forEach(item => {
+            const {key, command: actionID} = item;
+            // 空 隔开多个快捷键，取第一个
+            const keyCodes = key.split(' ')[0].split('+').map(k => {
+                let kk = keyMap[k];
+                if (kk) return kk;
+
+                if (k.length === 1 && /[0-9a-zA-Z]/.test(k)) {
+                    k = 'KEY_' + k.toUpperCase();
+                } else {
+                    k = k.replace(/\b(\w)(\w*)/g, ($0, $1, $2) => $1.toUpperCase() + $2);
+                }
+
+                return monaco.KeyCode[k];
+            });
+
+            const keyResult = keyCodes.reduce((prev, curr) => {
+                return prev | curr;
+            });
+
+            editor.addCommand(keyResult, function() {
+                editor.trigger('', actionID);
+            });
+        });
+}
+
 function CodeEditor(props) {
     const {
         title,
@@ -63,6 +114,9 @@ function CodeEditor(props) {
             handleClose();
         });
 
+        // console.log(monaco.KeyCode);
+        // console.log(editorRef.current.getSupportedActions());
+
     }, [code, errors, monacoRef.current, fullScreen]);
 
     function handleFormat() {
@@ -111,6 +165,10 @@ function CodeEditor(props) {
         setTimeout(() => {
             editor.setSelection(new monaco.Selection(0, 0, 0, 0));
         });
+
+        console.log('bindKeyWithAction');
+        // 绑定快捷键
+        bindKeyWithAction(editor, monaco);
     }
 
     function handleFullScreen() {
