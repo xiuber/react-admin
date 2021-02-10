@@ -275,6 +275,8 @@ export function setComponentDefaultOptions(componentNode, setComponentId = true)
                 node.__config.componentId = componentId || uuid();
             }
 
+            Object.freeze(node.__config);
+
             if (node.children?.length) {
                 loop(node.children);
             }

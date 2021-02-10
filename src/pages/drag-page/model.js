@@ -264,7 +264,6 @@ export default {
 
         const parentNode = findParentNodeById(pageConfig, id);
 
-
         const {beforeDelete, afterDelete} = node.__config.hooks || {};
 
         const {beforeDeleteChildren, afterDeleteChildren} = parentNode?.__config?.hooks || {};

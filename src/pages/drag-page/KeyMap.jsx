@@ -102,6 +102,9 @@ export default config({
             const loopId = (node) => {
                 if (!node.__config) node.__config = {};
                 node.__config.componentId = uuid();
+
+                Object.freeze(node.__config);
+
                 if (node.children?.length) {
                     node.children.forEach(item => loopId(item));
                 }
@@ -118,7 +121,7 @@ export default config({
             dragPageAction.addNode(options);
 
         } catch (e) {
-
+            console.error(e);
         }
     }
 
