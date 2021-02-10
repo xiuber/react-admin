@@ -1,3 +1,5 @@
+import {getComponentConfig} from 'src/pages/drag-page/component-config';
+
 export default [
     {
         title: '表单',
@@ -55,8 +57,9 @@ export default [
                         childrenDraggable: false, // 子节点不可拖拽
                         dropAccept: options => {
                             const {draggingNode} = options;
+                            const nodeConfig = getComponentConfig(draggingNode?.componentName);
 
-                            return draggingNode?.__config?.isFormElement;
+                            return nodeConfig?.isFormElement;
                         },
                         hooks: {
                             beforeAddChildren: (options) => {

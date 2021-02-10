@@ -104,7 +104,7 @@ export default function NodeRender(props) {
     const dragClassName = classNames({
         [styles.draggableElement]: true,
         [styles.selected]: selectedNodeId === componentId,
-        [styles.dragging]: draggingNode?.__config?.componentId === componentId,
+        [styles.dragging]: draggingNode?.id === componentId,
         [styles.unDraggable]: !draggable,
 
     });

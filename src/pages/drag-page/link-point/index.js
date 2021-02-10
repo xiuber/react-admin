@@ -6,6 +6,7 @@ import {getEleCenterInWindow, findNodeById, findLinkElementsPosition} from 'src/
 import {throttle} from 'lodash';
 
 import styles from './style.less';
+import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 export default config({
     connect: state => {
@@ -27,7 +28,9 @@ export default config({
         ...others
     } = props;
 
-    const propsToSet = selectedNode?.__config?.propsToSet;
+    const nodeConfig = getComponentConfig(selectedNode?.componentName);
+
+    const propsToSet = nodeConfig.propsToSet;
 
     const startRef = useRef(null);
     const lineRef = useRef(null);
@@ -51,7 +54,7 @@ export default config({
         onDragStart && onDragStart(e);
         e.stopPropagation();
         // e.preventDefault();
-        const componentId = selectedNode?.__config?.componentId;
+        const componentId = selectedNode?.id;
 
         if (!propsToSet) return;
         setDragging(true);

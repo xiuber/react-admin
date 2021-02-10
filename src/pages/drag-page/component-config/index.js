@@ -120,7 +120,6 @@ export function deleteDefaultProps(component) {
             const {fields = []} = propsConfig;
             Object.entries(props)
                 .forEach(([key, value]) => {
-
                     // 值为 空字符串
                     if (value === '') Reflect.deleteProperty(props, key);
 
