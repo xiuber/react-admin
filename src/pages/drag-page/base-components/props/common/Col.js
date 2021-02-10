@@ -1,7 +1,29 @@
+import {isMac} from 'src/pages/drag-page/util';
+
 export default {
     labelWidth: '100px',
     fields: [
-        {label: '占位格数', field: 'span', type: 'number', version: '', desc: '栅格占位格数，为 0 时相当于 display: none'},
+        {
+            label: '占位格数',
+            field: 'span',
+            type: 'number',
+            version: '',
+            desc: '栅格占位格数，为 0 时相当于 display: none',
+            placeholder: `span    ${isMac ? '⌘' : 'ctrl'}+Enter 同步所有列`,
+            onKeyDown: (e, options) => {
+                const {metaKey, ctrlKey, key, target: {value}} = e;
+                const isEnter = key === 'Enter';
+                const {node, dragPageAction} = options;
+
+                if ((metaKey || ctrlKey) && isEnter) {
+                    dragPageAction.syncOffspringProps({
+                        node,
+                        ancestorComponentName: 'Row',
+                        props: {span: value}
+                    });
+                }
+            },
+        },
         {label: '弹性布局属性', field: 'flex', type: 'unit', version: '', desc: 'flex 布局属性'},
         {label: '左间隔格数', span: 12, field: 'offset', type: 'number', defaultValue: '0', version: '', desc: '栅格左侧的间隔格数，间隔内不可以有栅格'},
         {label: '栅格顺序', span: 12, labelWidth: '80px', field: 'order', type: 'number', defaultValue: '0', version: '', desc: '栅格顺序'},

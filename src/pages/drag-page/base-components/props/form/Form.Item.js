@@ -27,10 +27,14 @@ export default {
                 const {node, dragPageAction} = options;
 
                 if ((metaKey || ctrlKey) && isEnter) {
-                    dragPageAction.syncFormItemLabelColFlex({node, flex: value});
+                    dragPageAction.syncOffspringProps({
+                        node,
+                        ancestorComponentName: 'Form',
+                        props: {labelCol: {flex: value}},
+                    });
                 }
             },
-            title: `标签宽度，${isMac ? '⌘' : 'ctrl'}+Enter 同步同表单下所有标签`
+            title: `标签宽度，${isMac ? '⌘' : 'ctrl'}+Enter 同步同表单下所有标签`,
         },
         {label: '字段名', field: 'name', type: 'string', version: '', desc: '字段名，支持数组'},
         {label: '默认值', field: 'initialValue', type: 'string', version: '4.2.0', desc: '设置子元素默认值，如果与 Form 的 initialValues 冲突则以 Form 为准'},

@@ -13,6 +13,22 @@ export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 // eslint-disable-next-line
 export const SHOW_MODAL_FUNCTION = 'e => dragPageAction.showModal("${componentId}")';
 
+// 同步设置对象，将newObj中属性，对应设置到oldObj中
+export function syncObject(oldObj, newObj) {
+    Object.entries(newObj).forEach(([key, value]) => {
+        if (typeof value !== 'object') {
+            oldObj[key] = value;
+        } else {
+            if (!(key in oldObj) || typeof oldObj[key] !== 'object') {
+                oldObj[key] = value;
+            } else {
+                if (oldObj[key]) {
+                    syncObject(oldObj[key], value);
+                }
+            }
+        }
+    });
+};
 
 export function findLinkElementsPosition(options) {
     const {pageConfig, selectedNode, iFrameDocument} = options;
@@ -621,7 +637,13 @@ export function getDropGuidePosition(options) {
 }
 
 // 根据 componentName 获取组件
-export function getComponent(componentName, componentType) {
+export function getComponent(options) {
+    let {componentName, __config = {}} = options;
+
+    const {renderComponentName, componentType} = __config;
+
+    componentName = renderComponentName || componentName;
+
     const [name, subName] = componentName.split('.');
     const com = Com => {
         if (subName) return Com[subName];

@@ -124,6 +124,9 @@ export default [
                         },
                         {
                             componentName: 'ModalFooter',
+                            props: {
+                                className: 'ant-modal-footer',
+                            },
                             children: [
                                 {
                                     componentName: 'Button',
@@ -163,8 +166,13 @@ export default [
                 previewStyle: {width: '100%'},
                 previewZoom: .8,
                 config: {
-                    __config: {},
+                    __config: {
+                        renderComponentName: 'div',
+                    },
                     componentName: 'ModalFooter',
+                    props: {
+                        className: 'ant-modal-footer',
+                    },
                     children: [
                         {
                             componentName: 'Button',

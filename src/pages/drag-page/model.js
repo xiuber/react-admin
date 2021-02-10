@@ -3,6 +3,7 @@ import {
     findParentNodeById,
     findParentNodeByParentName,
     getAllNodesByName,
+    syncObject,
 } from './util';
 import {v4 as uuid} from 'uuid';
 import {cloneDeep} from 'lodash';
@@ -158,6 +159,33 @@ export default {
         }
 
         return {pageConfig: {...pageConfig}, refreshProps: {}};
+    },
+    syncOffspringProps: (options, state) => {
+        const {pageConfig} = state;
+
+        const {
+            node, // 当前
+            ancestorComponentName, // 祖先
+            props, // 要同步的属性
+        } = options;
+        const {componentName} = node;
+
+        // 祖先节点
+        let ancestorNode = findParentNodeByParentName(pageConfig, ancestorComponentName, node.__config.componentId);
+
+        // 不存在，就从根节点开始
+        if (!ancestorNode) ancestorNode = pageConfig;
+
+        // 获取祖先下所有同名节点
+        const nodes = getAllNodesByName(ancestorNode, componentName);
+
+        // 设置新属性
+        nodes.forEach(item => {
+            if (!item.props) item.props = {};
+            syncObject(item.props, props);
+        });
+
+        return {pageConfig: {...pageConfig}};
     },
     syncFormItemLabelColFlex: ({node, flex}, state) => {
         const {pageConfig} = state;

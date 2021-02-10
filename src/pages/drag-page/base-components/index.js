@@ -23,6 +23,7 @@ let baseComponents = [
 
 // __config 说明
 const defaultConfig = {
+    // renderComponentName: '', // 指定渲染使用组件，比如 PageContent 并不存在，可以指定使用div渲染
     // componentId: undefined, // 渲染时组件id
     // componentDesc: undefined, // 组件描述
     // componentType: undefined, // 组件类型，详见 getComponent方法，默认 drag-page/components -> antd -> html
@@ -87,7 +88,7 @@ baseComponents.forEach(item => {
 
             if (componentConfigMap[componentName]) {
                 console.info(`${title} > ${subTitle} > ${t} componentName 已经被使用！
-注意：相同的componentName将使用相同的__config、icon配置，若想区分，请在components中定义别名组件，比如PageContent！`);
+注意：相同的componentName将使用相同的__config、icon配置，若想区分，请在components中定义别名组件，比如PageContent！或者使用 __config.renderComponentName指定渲染组件`);
             }
             componentConfigMap[componentName] = __config;
             componentIconMap[componentName] = icon;

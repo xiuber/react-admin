@@ -24,6 +24,7 @@ export default [
                         __config: {
                             isContainer: false,
                             renderAsDisplayName: true,
+                            componentDisplayName: 'Button',
                         },
                         componentName: 'Button',
                         props: {
@@ -48,22 +49,33 @@ export default [
         title: '栅格',
         subTitle: '栅格 Grid',
         children: [
-            {
-                title: '一行两列',
+            ...[
+                {title: '一行两列', count: 2},
+                {title: '一行三列', count: 3},
+            ].map((item) => ({
+                title: item.title,
                 // 预览渲染组件配置
                 renderPreview: (
                     <div style={{flex: 1, display: 'flex'}}>
-                        <div style={{flex: 1, margin: 4, height: 10, background: theme.primaryColor}}/>
-                        <div style={{flex: 1, margin: 4, height: 10, background: theme.primaryColor}}/>
+                        {Array.from({length: item.count}).map(() => (
+                            <div style={{flex: 1, margin: 4, height: 10, background: theme.primaryColor}}/>
+                        ))}
                     </div>
                 ),
                 config: {
+                    __config: {
+                        componentDisplayName: ({node}) => {
+                            const count = node?.children?.filter(item => item.componentName === 'Col').length || 0;
+
+                            return `Row(${count}列)`;
+                        },
+                    },
                     componentName: 'Row',
                     children: [
-                        ...[1, 1].map(() => ({
+                        ...Array.from({length: item.count}).map(() => ({
                             componentName: 'Col',
                             props: {
-                                span: 12,
+                                span: 24 / item.count,
                             },
                             children: [
                                 {
@@ -76,36 +88,7 @@ export default [
                         })),
                     ],
                 },
-            },
-            {
-                title: '一行三列',
-                renderPreview: (
-                    <div style={{flex: 1, display: 'flex'}}>
-                        <div style={{flex: 1, margin: 4, height: 10, background: theme.primaryColor}}/>
-                        <div style={{flex: 1, margin: 4, height: 10, background: theme.primaryColor}}/>
-                        <div style={{flex: 1, margin: 4, height: 10, background: theme.primaryColor}}/>
-                    </div>
-                ),
-                config: {
-                    componentName: 'Row',
-                    children: [
-                        ...[1, 1, 1].map(() => ({
-                            componentName: 'Col',
-                            props: {
-                                span: 8,
-                            },
-                            children: [
-                                {
-                                    componentName: 'DragHolder',
-                                    props: {
-                                        style: {height: 45},
-                                    },
-                                },
-                            ],
-                        })),
-                    ],
-                },
-            },
+            })),
         ],
     },
 ];

@@ -26,7 +26,6 @@ export default function NodeRenderDraggable(props) {
             isContainer,
             draggable,
             componentId,
-            componentType,
             componentDesc,
             withWrapper,
             wrapperStyle = {},
@@ -63,8 +62,9 @@ export default function NodeRenderDraggable(props) {
     }) : undefined;
 
 
-    const component = getComponent(componentName, componentType);
+    const component = getComponent(config);
 
+    if (typeof component === 'string') console.log(component);
 
     const componentActions = Object.entries(actions)
         .reduce((prev, curr) => {
