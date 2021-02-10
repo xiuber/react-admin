@@ -111,6 +111,7 @@ export default config({
     // 选中节点更改，清空line
     useEffect(() => {
         dragPageAction.setArrowLines([]);
+        dragPageAction.setShowArrowLines(false);
     }, [selectedNodeId]);
 
     // 设计页面滚动，刷新位置

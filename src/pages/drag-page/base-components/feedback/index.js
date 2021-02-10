@@ -53,7 +53,6 @@ export default [
                     props: {
                         title: '弹框标题',
                         maskClosable: false,
-                        footer: null,
                         bodyStyle: {
                             padding: 0,
                         },
@@ -70,41 +69,41 @@ export default [
                                 },
                             ],
                         },
-                        {
-                            componentName: 'ModalFooter',
-                            props: {
-                                className: 'ant-modal-footer',
-                            },
-                            children: [
-                                {
-                                    componentName: 'Button',
-                                    children: [
-                                        {
-                                            componentName: 'Text',
-                                            props: {
-                                                text: '取消',
-                                                isDraggable: false,
-                                            },
-                                        },
-                                    ],
-                                },
-                                {
-                                    componentName: 'Button',
-                                    props: {
-                                        type: 'primary',
-                                    },
-                                    children: [
-                                        {
-                                            componentName: 'Text',
-                                            props: {
-                                                text: '确定',
-                                                isDraggable: false,
-                                            },
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
+                        // {
+                        //     componentName: 'ModalFooter',
+                        //     props: {
+                        //         className: 'ant-modal-footer',
+                        //     },
+                        //     children: [
+                        //         {
+                        //             componentName: 'Button',
+                        //             children: [
+                        //                 {
+                        //                     componentName: 'Text',
+                        //                     props: {
+                        //                         text: '取消',
+                        //                         isDraggable: false,
+                        //                     },
+                        //                 },
+                        //             ],
+                        //         },
+                        //         {
+                        //             componentName: 'Button',
+                        //             props: {
+                        //                 type: 'primary',
+                        //             },
+                        //             children: [
+                        //                 {
+                        //                     componentName: 'Text',
+                        //                     props: {
+                        //                         text: '确定',
+                        //                         isDraggable: false,
+                        //                     },
+                        //                 },
+                        //             ],
+                        //         },
+                        //     ],
+                        // },
                     ],
                 },
             },
