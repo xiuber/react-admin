@@ -184,6 +184,7 @@ export default config({
             }
         };
 
+        // id 不存在，则设置新的id
         loopId(nextPageConfig);
 
         dragPageAction.setPageConfig({...nextPageConfig});
