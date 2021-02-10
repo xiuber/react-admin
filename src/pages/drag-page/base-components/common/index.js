@@ -49,6 +49,30 @@ export default [
         title: '栅格',
         subTitle: '栅格 Grid',
         children: [
+            {
+                title: '栅格行',
+                config: {
+                    __config: {
+                        dropAccept: ['Col', 'DragHolder'],
+                        withHolder: true,
+                        componentDisplayName: ({node}) => {
+                            const count = node?.children?.filter(item => item.componentName === 'Col').length || 0;
+
+                            return `Row(${count}列)`;
+                        },
+                    },
+                    componentName: 'Row',
+                },
+            },
+            {
+                title: '栅格列',
+                config: {
+                    __config: {
+                        withHolder: true,
+                    },
+                    componentName: 'Col',
+                },
+            },
             ...[
                 {title: '一行两列', count: 2},
                 {title: '一行三列', count: 3},
@@ -63,13 +87,6 @@ export default [
                     </div>
                 ),
                 config: {
-                    __config: {
-                        componentDisplayName: ({node}) => {
-                            const count = node?.children?.filter(item => item.componentName === 'Col').length || 0;
-
-                            return `Row(${count}列)`;
-                        },
-                    },
                     componentName: 'Row',
                     children: [
                         ...Array.from({length: item.count}).map(() => ({

@@ -90,9 +90,10 @@ baseComponents.forEach(item => {
             if (componentConfigMap[componentName]) {
                 console.info(`${title} > ${subTitle} > ${t} componentName 已经被使用！
 注意：相同的componentName将使用相同的__config、icon配置，若想区分，请在components中定义别名组件，比如PageContent！或者使用 __config.renderComponentName指定渲染组件`);
+            } else {
+                componentConfigMap[componentName] = __config;
+                componentIconMap[componentName] = icon;
             }
-            componentConfigMap[componentName] = __config;
-            componentIconMap[componentName] = icon;
             check__config(children, `${title} > ${subTitle} > ${t}`);
         });
     });
