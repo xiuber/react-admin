@@ -1,4 +1,4 @@
-// import {buttonTypeOptions} from '../common/Button';
+// import {buttonTypeOptions} from '../options';
 
 export default {
     labelWidth: '100px',

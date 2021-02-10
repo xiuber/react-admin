@@ -1,4 +1,4 @@
-import {targetOptions} from '../../index';
+import {targetOptions} from '../options';
 
 export default {
     labelWidth: '80px',

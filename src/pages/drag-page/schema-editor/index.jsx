@@ -4,7 +4,7 @@ import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
 import {findNodeById, usePrevious} from '../util';
-import {removeComponentConfig, setComponentDefaultOptions} from '../base-components';
+import {removeComponentConfig, setComponentDefaultOptions, deleteDefaultProps} from '../base-components';
 import DragBar from '../drag-bar';
 import './style.less';
 
@@ -120,7 +120,13 @@ export default config({
 
         if (!editNode) return setCode('');
 
-        const nextCode = `export default ${JSON5.stringify(removeComponentConfig(editNode, true), null, 2)}`;
+        // 清除默认值
+        editNode = deleteDefaultProps(editNode);
+
+        // 清除 __config 配置，保留 componentId
+        editNode = removeComponentConfig(editNode, true);
+
+        const nextCode = `export default ${JSON5.stringify(editNode, null, 2)}`;
 
         setCode(nextCode);
     }, [editType, selectedNode, pageConfig]);

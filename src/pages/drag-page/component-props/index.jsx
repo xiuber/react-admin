@@ -6,6 +6,7 @@ import propsMap from '../base-components/props';
 import elementMap from './form-element';
 import CurrentSelectedNode from '../current-selected-node';
 import './style.less';
+import {showFieldByAppend} from 'src/pages/drag-page/base-components';
 // import {v4 as uuid} from 'uuid';
 
 export default config({
@@ -186,19 +187,17 @@ export default config({
         if (appendField) {
             return (
                 <Form.Item shouldUpdate noStyle>
-                    {({getFieldValue}) => {
-                        let isShow;
-                        if (typeof appendField === 'string') {
-                            isShow = !!getFieldValue(appendField);
+                    {({getFieldsValue}) => {
+                        let isShow = showFieldByAppend(getFieldsValue(), appendField);
+
+                        if (isShow) {
+                            // 显示是，将数据同步一下，否则 组件 props 中不存在
+                            setTimeout(() => handleChange({}, getFieldsValue()));
+
+                            return element;
                         }
 
-                        if (typeof appendField === 'object') {
-                            isShow = Object.entries(appendField).some(([key, value]) => {
-                                return getFieldValue(key) === value;
-                            });
-                        }
-
-                        return isShow ? element : null;
+                        return null;
                     }}
                 </Form.Item>
             );

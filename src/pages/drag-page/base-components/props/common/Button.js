@@ -1,12 +1,5 @@
-import {targetOptions} from '../../index';
+import {targetOptions, buttonTypeOptions} from '../options';
 
-export const buttonTypeOptions = [
-    {value: 'primary', label: '主要'},
-    {value: 'ghost', label: '幽灵'},
-    {value: 'dashed', label: '虚线'},
-    {value: 'link', label: '连接'},
-    {value: 'text', label: '文本'},
-];
 export default {
     labelWidth: '80px',
     fields: [

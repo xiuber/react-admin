@@ -10,6 +10,7 @@ import form from './form';
 import feedback from './feedback';
 import other from './other';
 import NodeRender from 'src/pages/drag-page/iframe-render/node-render/NodeRender';
+import propsMap from './props';
 
 let baseComponents = [
     {title: '默认', children: base},
@@ -122,13 +123,67 @@ baseComponents.forEach(item => {
 
 export default baseComponents;
 
-export const targetOptions = [
-    {value: '_blank', label: '新页'},
-    {value: '_self', label: '当前页'},
-    {value: '_parent', label: '父级页'},
-    {value: '_top', label: 'top'},
-];
+export function showFieldByAppend(values, appendField) {
+    if (!appendField) return true;
 
+    let isShow;
+    if (typeof appendField === 'string') {
+        isShow = !!values[appendField];
+    }
+
+    if (typeof appendField === 'object') {
+        isShow = Object.entries(appendField).some(([k, v]) => {
+            return values[k] === v;
+        });
+    }
+
+    return isShow;
+}
+
+// 删除默认属性
+export function deleteDefaultProps(component) {
+    const loop = node => {
+        let {componentName, props} = node;
+        if (!props) props = {};
+        const propsConfig = propsMap[componentName];
+        if (propsConfig) {
+            const {fields} = propsConfig;
+            Object.entries(props)
+                .forEach(([key, value]) => {
+
+                    // 值为 空字符串
+                    if (value === '') Reflect.deleteProperty(props, key);
+
+                    // 值为 undefined
+                    if (value === undefined) Reflect.deleteProperty(props, key);
+
+                    const fieldOptions = fields.find(item => item.field === key);
+
+                    // 与默认值相同
+                    if (fieldOptions && fieldOptions.defaultValue === value) {
+                        Reflect.deleteProperty(props, key);
+                    }
+
+                    // 依赖父级不存在
+                    if (fieldOptions && fieldOptions.appendField) {
+                        const {appendField} = fieldOptions;
+
+                        const isShow = showFieldByAppend(props, appendField);
+
+                        if (!isShow) {
+                            Reflect.deleteProperty(props, key);
+                        }
+                    }
+                });
+        }
+    };
+
+    loop(component);
+
+    return component;
+}
+
+// 获取组件展示名称
 export function getComponentDisplayName(node, render) {
     if (!node) return '';
 
@@ -158,6 +213,7 @@ export function getComponentConfig(node) {
     return {...defaultConfig, ...config};
 }
 
+// 获取组件图标
 export function getComponentIcon(node = {}, isContainer = true) {
     const {componentName} = node;
 
@@ -166,6 +222,7 @@ export function getComponentIcon(node = {}, isContainer = true) {
     return icon;
 }
 
+// 删除组件__cofnig
 export function removeComponentConfig(nodes, leaveComponentId) {
     const dataSource = (cloneDeep(Array.isArray(nodes) ? nodes : [nodes]));
 
@@ -197,7 +254,6 @@ export function removeComponentConfig(nodes, leaveComponentId) {
 
     return dataSource[0];
 }
-
 
 // 设置组件配置 __config 重新设置 node.__config.componentId
 export function setComponentDefaultOptions(componentNode) {

@@ -5,7 +5,7 @@ import './style.less';
 
 const RadioGroup = props => {
     const {
-        options,
+        options = [],
         allowClear,
         onChange,
         showTooltip,
