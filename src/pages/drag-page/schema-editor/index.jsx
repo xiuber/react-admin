@@ -36,7 +36,6 @@ export default config({
     const [editType, setEditType] = useState(EDIT_TYPE.CURRENT_NODE);
     const [code, setCode] = useState('');
     const saveRef = useRef(false);
-    const idPositionRef = useRef(null);
 
     const prevActiveSideKey = usePrevious(activeSideKey);
     useEffect(() => {
@@ -146,7 +145,7 @@ export default config({
             const messages = [];
             repeatIds.forEach(item => {
                 const prevId = ids.find(it => it.id === item.id);
-                messages.push(`第 ${prevId.index - 1} 行 与 第 ${item.index - 1} 行「id」重复！`);
+                messages.push(`第 ${prevId.index + 1} 行 与 第 ${item.index + 1} 行「id」重复！`);
             });
             messages.push('请修改后保存！');
             const msg = messages.map(item => <div>{item}</div>);
@@ -223,14 +222,14 @@ export default config({
         // 清除默认值
         editNode = deleteDefaultProps(editNode);
 
+        // TODO 清除非关联id
+
         // id 属性调整到首位
         loopIdToFirst(editNode);
 
         const nextCode = `export default ${JSON5.stringify(editNode, null, 2)}`;
 
         setCode(nextCode);
-        idPositionRef.current = findIdPosition(nextCode);
-
     }, [editType, selectedNode, pageConfig]);
 
     if (!visible) return null;
