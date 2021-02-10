@@ -11,6 +11,7 @@ import {
 import RadioGroup from 'src/pages/drag-page/component-style/radio-group';
 import UnitInput from 'src/pages/drag-page/component-style/unit-input';
 import OptionsEditor from 'src/pages/drag-page/component-props/options-editor';
+import FooterSwitch from './FooterSwitch';
 
 function getPlaceholder(options, props) {
     const {field, placeholder} = options;
@@ -21,6 +22,11 @@ function getPlaceholder(options, props) {
 }
 
 export default {
+    FooterSwitch: (options) => props => {
+        return (
+            <FooterSwitch {...props}/>
+        );
+    },
     options: (options) => props => {
         const {withLabel} = options;
         return (

@@ -187,10 +187,14 @@ export default config({
             return (
                 <Form.Item shouldUpdate noStyle>
                     {({getFieldValue}) => {
-                        const value = getFieldValue(appendField);
-                        if (!value) return null;
+                        let obj = appendField;
+                        if (typeof obj === 'string') obj = {[appendField]: getFieldValue(appendField)};
 
-                        return element;
+                        const isShow = Object.entries(obj).some(([key, value]) => {
+                            return getFieldValue(key) === value;
+                        });
+
+                        return isShow ? element : null;
                     }}
                 </Form.Item>
             );

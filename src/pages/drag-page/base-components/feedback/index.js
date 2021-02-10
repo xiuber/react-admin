@@ -105,7 +105,7 @@ export default [
                     props: {
                         title: '弹框标题',
                         maskClosable: false,
-                        footer: null,
+                        footer: true,
                         bodyStyle: {
                             padding: 0,
                         },

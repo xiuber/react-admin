@@ -1,17 +1,18 @@
 import {targetOptions} from '../../index';
 
+export const buttonTypeOptions = [
+    {value: 'primary', label: '主要'},
+    {value: 'ghost', label: '幽灵'},
+    {value: 'dashed', label: '虚线'},
+    {value: 'link', label: '连接'},
+    {value: 'text', label: '文本'},
+];
 export default {
     labelWidth: '80px',
     fields: [
         {
             label: '按钮类型', field: 'type', type: 'radio-group', defaultValue: 'default', version: '',
-            options: [
-                {value: 'primary', label: '主要'},
-                {value: 'ghost', label: '幽灵'},
-                {value: 'dashed', label: '虚线'},
-                {value: 'link', label: '连接'},
-                {value: 'text', label: '文本'},
-            ],
+            options: buttonTypeOptions,
             desc: '设置按钮类型',
         },
         {label: '危险', category: '选项', categoryOrder: 1, field: 'danger', type: 'boolean', defaultValue: false, version: '', desc: '设置危险按钮'},
