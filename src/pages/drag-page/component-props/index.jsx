@@ -39,7 +39,7 @@ export default config({
         selectedNode.props = {
             ...selectedNode.props,
             ...allValues,
-            key: uuid(),
+            // key: uuid(),
         };
 
         const options = selectedNode.props.options || [];

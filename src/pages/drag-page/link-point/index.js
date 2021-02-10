@@ -91,7 +91,7 @@ export default config({
                     .forEach(([key, value]) => {
                         if (key === propsKey && value === propsValue) {
                             Reflect.deleteProperty(props, key);
-                            props.key = uuid();
+                            // props.key = uuid();
                         }
                     });
                 dragPageAction.render();

@@ -144,7 +144,7 @@ export default {
             node.props = {
                 ...node.props,
                 ...newProps,
-                key: uuid(), // 设置新key，保证组件重新渲染
+                // key: uuid(), // 设置新key，保证组件重新创建
             };
         }
         return {pageConfig: {...pageConfig}, refreshProps: {}};

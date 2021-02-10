@@ -93,8 +93,8 @@ export default [
 
                                 node.props.visible = false;
 
-                                // props 改之后，重新设置key，使组件重新渲染
-                                node.props.key = uuid();
+                                // props 改之后，重新设置key，使组件重新创建
+                                // node.props.key = uuid();
 
                                 dragPageAction.render(); // props改变了，重新出发页面渲染
                                 dragPageAction.refreshProps(); // 刷新属性面板

@@ -205,6 +205,7 @@ export function setComponentDefaultOptions(componentNode) {
 
     const loop = nodes => {
         nodes.forEach(node => {
+            // node.__id 为某些操作下的保留 componentId
             const componentId = node?.__config?.componentId || node.__id;
 
             Reflect.deleteProperty(node, '__id');
