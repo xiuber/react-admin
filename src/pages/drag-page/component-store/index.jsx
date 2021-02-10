@@ -1,14 +1,14 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {Input, Select, Empty} from 'antd';
 import {AppstoreOutlined} from '@ant-design/icons';
-import config from 'src/commons/config-hoc';
-import Pane from '../pane';
-import {getComponents, getStores} from '../dataSource';
-import ComponentItem from './ComponentItem';
-import {scrollElement, elementIsVisible, filterTree} from '../util';
 import {debounce} from 'lodash';
-import Draggable from './Draggable';
+import {scrollElement, elementIsVisible, filterTree} from '../util';
+import {getComponents, getStores} from '../dataSource';
 import DragBar from 'src/pages/drag-page/drag-bar';
+import config from 'src/commons/config-hoc';
+import ComponentItem from './ComponentItem';
+import Draggable from './Draggable';
+import Pane from '../pane';
 
 import './style.less';
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import config from 'src/commons/config-hoc';
 import {cloneDeep} from 'lodash';
+import config from 'src/commons/config-hoc';
 
 export default config({
     connect: true,
@@ -29,9 +29,11 @@ export default config({
         // TODO 处理componentId，删除存在的componentId，替换相关联的componentId，比如modal关联的
 
         const config = cloneDeep(data.config);
-        config.__config.__fromStore = true;
 
         e.dataTransfer.setData('componentConfig', JSON.stringify(config));
+
+        // 标记当前拖动组件,为添加
+        config.isNewAdd = true;
         dragPageAction.setDraggingNode(config);
     }
 

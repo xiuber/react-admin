@@ -4,7 +4,8 @@ import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
 import {findNodeById, usePrevious} from '../util';
-import {removeComponentConfig, setComponentDefaultOptions, deleteDefaultProps} from '../base-components';
+import {deleteDefaultProps} from '../component-config';
+import {v4 as uuid} from 'uuid';
 import DragBar from '../drag-bar';
 import './style.less';
 
@@ -45,6 +46,11 @@ export default config({
         setVisible(visible);
     }, [activeSideKey]);
 
+    function handleChange(value) {
+        // TODO  id 重复，重新设置第二个
+        // 通过正则匹配替换，进行字符串操作
+    }
+
     function handleSave(value, errors) {
         if (errors?.length) return message.error('语法错误，请修改后保存！');
         let nodeConfig = null;
@@ -56,22 +62,19 @@ export default config({
                 if (typeof nodeConfig !== 'object' || Array.isArray(nodeConfig)) {
                     return message.error('语法错误，请修改后保存！');
                 }
-
-                setComponentDefaultOptions(nodeConfig);
             } catch (e) {
                 console.error(e);
                 return message.error('语法错误，请修改后保存！');
             }
         }
 
+        const componentId = nodeConfig?.id;
+        const node = findNodeById(pageConfig, componentId);
+
+        if (!node) return message.error('节点无法对应，您是否修改了根节点的id?');
+
         let result;
         if (editType !== EDIT_TYPE.ALL) {
-            // 对应到pageConfig 中
-            const componentId = nodeConfig?.__config?.componentId;
-            const node = findNodeById(pageConfig, componentId);
-
-            if (!node) return message.error('节点无法对应，您是否修改了根节点的__id?');
-
             // 删除所有数据，保留引用
             Object.keys(node).forEach(key => {
                 Reflect.deleteProperty(node, key);
@@ -87,10 +90,20 @@ export default config({
 
         saveRef.current = true;
 
+        const loopId = node => {
+            if (!node.id) node.id = uuid();
+
+            if (node?.children?.length) {
+                node.children.forEach(item => loopId(item));
+            }
+        };
+
+        loopId(result);
+
         dragPageAction.setPageConfig({...result});
 
         // 原选中id是否存在
-        if (!findNodeById(result, selectedNode?.__config?.componentId)) {
+        if (!findNodeById(result, selectedNode.id)) {
             dragPageAction.setSelectedNodeId(null);
         }
 
@@ -123,9 +136,6 @@ export default config({
         // 清除默认值
         editNode = deleteDefaultProps(editNode);
 
-        // 清除 __config 配置，保留 componentId
-        editNode = removeComponentConfig(editNode, true);
-
         const nextCode = `export default ${JSON5.stringify(editNode, null, 2)}`;
 
         setCode(nextCode);
@@ -152,6 +162,7 @@ export default config({
                 value={code}
                 onSave={handleSave}
                 onClose={handleClose}
+                onChange={handleChange}
             />
         </div>
     );

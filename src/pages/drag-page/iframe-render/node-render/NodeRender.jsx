@@ -1,10 +1,10 @@
 import React, {createElement} from 'react';
 import classNames from 'classnames';
 import {getComponent} from '../../util';
-import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
+import {getComponentDisplayName, getComponentConfig} from 'src/pages/drag-page/component-config';
 import styles from './style.less';
 
-export default function NodeRenderDraggable(props) {
+export default function NodeRender(props) {
     const {
         config,
         pageConfig,
@@ -22,16 +22,7 @@ export default function NodeRenderDraggable(props) {
     if (typeof config !== 'object' || Array.isArray(config)) return config;
 
     let {
-        __config: {
-            isContainer,
-            draggable,
-            componentId,
-            componentDesc,
-            withWrapper,
-            wrapperStyle = {},
-            actions = {},
-            childrenDraggable,
-        },
+        id: componentId,
         componentName,
         children,
         props: componentProps,
@@ -41,13 +32,25 @@ export default function NodeRenderDraggable(props) {
 
     if (!componentName) return null;
 
+    const componentConfig = getComponentConfig(componentName);
+
+    let {
+        isContainer,
+        draggable,
+        componentDesc,
+        withWrapper,
+        wrapperStyle = {},
+        actions = {},
+        childrenDraggable,
+    } = componentConfig;
+
     componentDesc = componentDesc || componentName;
     const componentDisplayName = getComponentDisplayName(config);
 
     let childrenEle = children?.length ? children.map(item => {
 
         return (
-            <NodeRenderDraggable
+            <NodeRender
                 config={item}
                 pageConfig={pageConfig}
                 draggingNode={draggingNode}

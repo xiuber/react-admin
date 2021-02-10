@@ -11,7 +11,7 @@ import {scrollElement, getParentIds} from '../util';
 import Pane from '../pane';
 import classNames from 'classnames';
 import DragBar from 'src/pages/drag-page/drag-bar';
-import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
+import {getComponentConfig, getComponentDisplayName} from 'src/pages/drag-page/component-config';
 
 import './style.less';
 
@@ -46,14 +46,14 @@ export default config({
         const treeData = {};
         let nodeCount = 0;
         const allKeys = [];
-        const loop = (prev, next) => {
-            const {__config = {}, props, children} = prev;
+        const loop = (prev, next, _draggable) => {
+            const {id, props, children, componentName} = prev;
+            const componentConfig = getComponentConfig(componentName);
             let {
-                componentId,
                 isContainer,
                 draggable,
                 childrenDraggable,
-            } = __config;
+            } = componentConfig;
 
             if (props?.isDraggable === false) {
                 draggable = false;
@@ -61,25 +61,21 @@ export default config({
 
             next.title = ''; // 为了鼠标悬停，不显示原生 html title
             next.name = getComponentDisplayName(prev);
-            if (typeof next.name === 'function') next.name = next.name({node: prev, pageConfig});
             next.isContainer = isContainer;
-            next.key = componentId;
-            next.draggable = draggable;
+            next.key = id;
+            next.draggable = _draggable !== undefined ? _draggable : draggable;
             next.nodeData = prev;
 
-            allKeys.push(componentId);
+            allKeys.push(id);
             nodeCount++;
 
             if (children && children.length) {
                 next.children = children.map(() => ({}));
 
+                const _d = _draggable === false ? false : childrenDraggable;
+
                 children.forEach((item, index) => {
-
-                    if (!childrenDraggable) {
-                        item.__config.draggable = false;
-                    }
-
-                    loop(item, next.children[index]);
+                    loop(item, next.children[index], _d);
                 });
             }
         };

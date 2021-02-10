@@ -1,7 +1,7 @@
 import React, {useState, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import {getDropGuidePosition, isDropAccept} from 'src/pages/drag-page/util';
-import {getComponentIcon, setComponentDefaultOptions} from '../base-components';
+import {getComponentConfig} from '../component-config'
 import {throttle} from 'lodash';
 import classNames from 'classnames';
 
@@ -27,7 +27,7 @@ export default config({
 
     let {key, name, isContainer, draggable, nodeData} = node;
 
-    let icon = getComponentIcon(nodeData, isContainer);
+    let icon = getComponentConfig(nodeData.componentName).icon;
 
     name = <span styleName="nodeTitle">{icon}{name}</span>;
 
@@ -52,7 +52,7 @@ export default config({
     function handleDragEnter(e) {
         if (!draggable) return;
 
-        if (draggingNode?.__config?.componentId === key) return;
+        if (draggingNode?.id === key) return;
         setDragIn(true);
     }
 
@@ -62,7 +62,7 @@ export default config({
 
         if (!targetElement) return;
 
-        if (draggingNode?.__config?.componentId === key) return;
+        if (draggingNode?.id === key) return;
 
         // 1s 后展开节点
         if (!hoverRef.current) {
@@ -122,7 +122,7 @@ export default config({
 
         let cursor = 'move';
 
-        const isCopy = draggingNode?.__config?.__fromStore;
+        const isCopy = draggingNode?.isNewAdd;
         if (isCopy) cursor = 'copy';
 
         const isPropsToSet = draggingNode?.propsToSet;
@@ -210,7 +210,7 @@ export default config({
         }
 
         if (componentConfig) {
-            componentConfig = setComponentDefaultOptions(JSON.parse(componentConfig));
+            componentConfig = JSON.parse(componentConfig);
             dragPageAction.addNode({
                 targetId: key,
                 isBefore: isTop,
@@ -218,7 +218,7 @@ export default config({
                 isChildren: isCenter,
                 node: componentConfig,
             });
-            // dragPageAction.setSelectedNodeId(componentConfig.__config?.componentId);
+            // dragPageAction.setSelectedNodeId(componentConfig.id);
         }
 
         end();
@@ -235,7 +235,7 @@ export default config({
     }
 
     const isSelected = selectedKey === key;
-    const isDragging = draggingNode?.__config?.componentId === key;
+    const isDragging = draggingNode?.id === key;
 
     const styleNames = classNames(dropPosition, {
         treeNode: true,

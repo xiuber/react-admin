@@ -5,6 +5,7 @@ import * as raLibComponent from 'ra-lib';
 import * as components from './components';
 import * as antdComponent from 'antd/es';
 import * as antdIcon from '@ant-design/icons';
+import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
@@ -33,8 +34,8 @@ export function syncObject(oldObj, newObj) {
 export function findLinkElementsPosition(options) {
     const {pageConfig, selectedNode, iFrameDocument} = options;
 
-    const componentId = selectedNode?.__config?.componentId;
-    const propsToSet = selectedNode?.__config?.propsToSet;
+    const componentId = selectedNode?.id;
+    const propsToSet = getComponentConfig(selectedNode.componentName).propsToSet;
 
     if (!propsToSet) return;
 
@@ -66,7 +67,7 @@ function findLinkElementPosition(options) {
         if (!props) props = {};
 
         if (props[key] === value) {
-            const targetComponentId = node?.__config?.componentId;
+            const targetComponentId = node?.id;
             const ele = iFrameDocument.querySelector(`[data-componentId="${targetComponentId}"]`);
             if (ele) {
                 const {x, y, width, height} = ele.getBoundingClientRect();
@@ -290,11 +291,11 @@ export function getParentIds(root, id) {
         for (var i = 0; i < data.length; i++) {
             var item = data[i];
             // 找到id则返回父级id
-            if (item.__config?.componentId === id) return parents;
+            if (item.id === id) return parents;
             // children不存在或为空则不递归
             if (!item.children || !item.children.length) continue;
             // 往下查找时将当前id入栈
-            parents.push(item.__config?.componentId);
+            parents.push(item.id);
 
             if (dfs(item.children, id, parents).length) return parents;
             // 深度遍历查找未找到时当前id 出栈
@@ -406,12 +407,12 @@ export function isDropAccept(options) {
     // 不允许父节点拖入子节点
     if (isChildrenNode(draggingNode, targetNode)) return false;
 
-    const config = targetNode.__config || {};
+    const config = getComponentConfig(targetNode.componentName);
     const {isContainer = true} = config;
 
     if (!isContainer) return false;
 
-    let dropAccept = targetNode?.__config?.dropAccept;
+    let dropAccept = config.dropAccept;
 
     const args = {
         draggingNode,
@@ -435,7 +436,7 @@ export function isDropAccept(options) {
 export function isChildrenNode(parentNode, childrenNode) {
     if (!parentNode) return false;
 
-    const id = childrenNode?.__config?.componentId;
+    const id = childrenNode?.id;
 
     if (!id) return false;
     return !!findNodeById(parentNode, id);
@@ -443,7 +444,7 @@ export function isChildrenNode(parentNode, childrenNode) {
 
 // 根据id查找节点
 export function findNodeById(root, id) {
-    if (root.__config?.componentId === id) return root;
+    if (root.id === id) return root;
 
     if (!root.children) return null;
 
@@ -455,11 +456,11 @@ export function findNodeById(root, id) {
 
 // 根据id查找父节点
 export function findParentNodeById(root, id) {
-    if (root.__config?.componentId === id) return null;
+    if (root.id === id) return null;
 
     if (!root.children) return null;
 
-    if (root.children.some(item => item.__config?.componentId === id)) {
+    if (root.children.some(item => item.id === id)) {
         return root;
     } else {
         for (let node of root.children) {
@@ -638,9 +639,9 @@ export function getDropGuidePosition(options) {
 
 // 根据 componentName 获取组件
 export function getComponent(options) {
-    let {componentName, __config = {}} = options;
-
-    const {renderComponentName, componentType} = __config;
+    let {componentName} = options;
+    const componentConfig = getComponentConfig(componentName)
+    const {renderComponentName, componentType} = componentConfig;
 
     componentName = renderComponentName || componentName;
 

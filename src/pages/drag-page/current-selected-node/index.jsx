@@ -1,6 +1,6 @@
 import React from 'react';
+import {getComponentConfig, getComponentDisplayName} from 'src/pages/drag-page/component-config';
 import config from 'src/commons/config-hoc';
-import {getComponentDisplayName} from 'src/pages/drag-page/base-components';
 import LinkPoint from '../link-point';
 
 export default config({
@@ -13,7 +13,7 @@ export default config({
     },
 })(function(props) {
     const {selectedNode} = props;
-    const hasPropsToSet = selectedNode?.__config?.propsToSet;
+    const hasPropsToSet = getComponentConfig(selectedNode?.componentName).propsToSet;
 
     const name = getComponentDisplayName(selectedNode, true);
 

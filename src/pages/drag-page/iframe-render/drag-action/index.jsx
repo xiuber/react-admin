@@ -7,8 +7,6 @@ import {
     getNodeEle,
     getDroppableEle,
 } from 'src/pages/drag-page/util';
-import {setComponentDefaultOptions} from 'src/pages/drag-page/base-components';
-
 
 /**
  * 事件委托，统一添加事件，不给每个元素添加事件，提高性能
@@ -73,7 +71,7 @@ export default function DragAction(props) {
         const targetComponentId = targetElement.getAttribute('data-componentId');
 
         // 放在自身上
-        if (draggingNode?.__config?.componentId === targetComponentId) return;
+        if (draggingNode?.id === targetComponentId) return;
 
         const {pageX, pageY, clientX, clientY} = e;
 
@@ -118,7 +116,7 @@ export default function DragAction(props) {
 
         let cursor = 'move';
 
-        const isCopy = draggingNode?.__config?.__fromStore;
+        const isCopy = draggingNode?.isNewAdd;
         if (isCopy) cursor = 'copy';
 
         const isPropsToSet = draggingNode?.propsToSet;
@@ -195,14 +193,14 @@ export default function DragAction(props) {
         }
 
         if (componentConfig) {
-            componentConfig = setComponentDefaultOptions(JSON.parse(componentConfig));
+            componentConfig = JSON.parse(componentConfig);
 
             dragPageAction.addNode({
                 targetId: targetComponentId,
                 node: componentConfig,
                 ...position,
             });
-            // dragPageAction.setSelectedNodeId(componentConfig.__config?.componentId);
+            // dragPageAction.setSelectedNodeId(componentConfig.id);
         }
         end();
     }

@@ -75,7 +75,7 @@ export default [
 
                             },
                         },
-                        componentDisplayName: ({node, pageConfig}) => {
+                        componentDisplayName: ({node}) => {
                             const {componentName, props = {}} = node;
                             const {label} = props;
 

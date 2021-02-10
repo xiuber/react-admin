@@ -4,6 +4,7 @@ import config from 'src/commons/config-hoc';
 import LinkPoint from 'src/pages/drag-page/link-point';
 import styles from './style.less';
 import {getEleCenterInWindow, findLinkElementsPosition} from 'src/pages/drag-page/util';
+import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 export default config({
     connect: state => {
@@ -30,7 +31,8 @@ export default config({
         iFrameDocument,
     } = props;
 
-    const propsToSet = selectedNode?.__config?.propsToSet;
+    const nodeConfig = getComponentConfig(selectedNode?.componentName);
+    const propsToSet = nodeConfig.propsToSet;
     const sourceLinkPointEle = document.getElementById('sourceLinkPoint');
 
     function getStyle(item) {

@@ -32,7 +32,7 @@ export default config({
     } = props;
 
     const style = selectedNode?.props?.style || {};
-    const componentId = selectedNode?.__config?.componentId;
+    const componentId = selectedNode?.id;
 
     const options = [
         {key: 'layout', title: '布局', icon: <DesktopOutlined/>, Component: Layout},

@@ -1,3 +1,6 @@
+import {v4 as uuid} from 'uuid';
+import {cloneDeep} from 'lodash';
+import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import {
     findNodeById,
     findParentNodeById,
@@ -5,17 +8,10 @@ import {
     getAllNodesByName,
     syncObject,
 } from './util';
-import {v4 as uuid} from 'uuid';
-import {cloneDeep} from 'lodash';
-import {getComponentConfig, setComponentDefaultOptions} from './base-components';
 
 const rootHolderNode = () => (
     {
-        __config: {
-            draggable: false,
-            isContainer: true,
-            componentId: uuid(),
-        },
+        id: uuid(),
         componentName: 'RootDragHolder',
     }
 );
@@ -158,7 +154,7 @@ export default {
         const {componentName} = node;
 
         // 祖先节点
-        let ancestorNode = findParentNodeByParentName(pageConfig, ancestorComponentName, node.__config.componentId);
+        let ancestorNode = findParentNodeByParentName(pageConfig, ancestorComponentName, node.id);
 
         // 不存在，就从根节点开始
         if (!ancestorNode) ancestorNode = pageConfig;
@@ -177,7 +173,7 @@ export default {
     syncFormItemLabelColFlex: ({node, flex}, state) => {
         const {pageConfig} = state;
         // 获取父级Form
-        let formNode = findParentNodeByParentName(pageConfig, 'Form', node.__config.componentId);
+        let formNode = findParentNodeByParentName(pageConfig, 'Form', node.id);
 
         // 不存在，就从根节点开始
         if (!formNode) formNode = pageConfig;
@@ -254,19 +250,21 @@ export default {
         }
 
         // 删除的是根节点
-        if (id === pageConfig.__config.componentId) {
+        if (id === pageConfig.id) {
             return {pageConfig: rootHolderNode(), selectedNodeId, selectedNode};
         }
 
         const node = findNodeById(pageConfig, id);
 
         if (!node) return {selectedNode: null, selectedNodeId: null};
+        const nodeConfig = getComponentConfig(node.componentName);
 
         const parentNode = findParentNodeById(pageConfig, id);
+        const parentNodeConfig = getComponentConfig(parentNode.componentName);
 
-        const {beforeDelete, afterDelete} = node.__config.hooks || {};
+        const {beforeDelete, afterDelete} = nodeConfig.hooks || {};
 
-        const {beforeDeleteChildren, afterDeleteChildren} = parentNode?.__config?.hooks || {};
+        const {beforeDeleteChildren, afterDeleteChildren} = parentNodeConfig.hooks || {};
 
         const args = {node, pageConfig};
         const result = beforeDelete && beforeDelete(args);
@@ -295,11 +293,9 @@ export default {
         const {pageConfig} = state;
 
         // 拖拽节点 进行了 JSON.stringify, 会导致 actions hooks 函数丢失，重新设置一下
-        const {componentId} = node.__config;
-        node.__config = getComponentConfig(node);
-        node.__config.componentId = componentId;
+        const componentConfig = getComponentConfig(node.componentName);
 
-        const {beforeAdd, afterAdd} = node.__config.hooks || {};
+        const {beforeAdd, afterAdd} = componentConfig.hooks || {};
 
         const args = {
             node: findNodeById(pageConfig, targetId),
@@ -311,6 +307,15 @@ export default {
 
         // 添加占位符
         addDragHolder(node);
+
+        // 新增节点，添加id
+        const loopId = n => {
+            n.id = uuid();
+            if (n.children?.length) {
+                n.children.forEach(i => loopId(i));
+            }
+        };
+        loopId(node);
 
         const result = addOrMoveNode({
             isAdd: true,
@@ -330,7 +335,8 @@ export default {
     moveNode: ({sourceId, targetId, isBefore, isAfter, isChildren}, state) => {
         const {pageConfig} = state;
         const sourceNode = findNodeById(pageConfig, sourceId);
-        const {beforeMove, afterMove} = sourceNode.__config.hooks || {};
+        const sourceNodeConfig = getComponentConfig(sourceNode.componentName);
+        const {beforeMove, afterMove} = sourceNodeConfig.hooks || {};
 
         const args = {
             node: sourceNode,
@@ -394,7 +400,9 @@ function addOrMoveNode(options) {
             || (targetNode.children?.length === 1 && targetNode.children[0].componentName === 'DragHolder')
         ) targetNode.children = [];
 
-        const {beforeAddChildren, afterAddChildren} = targetNode.__config.hooks || {};
+        const targetNodeConfig = getComponentConfig(targetNode.componentName);
+
+        const {beforeAddChildren, afterAddChildren} = targetNodeConfig.hooks || {};
 
         const args = {node: targetNode, targetNode: node, pageConfig};
 
@@ -411,13 +419,13 @@ function addOrMoveNode(options) {
     if (!targetCollection) return;
 
     if (isBefore) {
-        const index = targetCollection.findIndex(item => item.__config?.componentId === targetId);
+        const index = targetCollection.findIndex(item => item.id === targetId);
         targetCollection.splice(index, 0, node);
         return {pageConfig: {...pageConfig}};
     }
 
     if (isAfter) {
-        const index = targetCollection.findIndex(item => item.__config?.componentId === targetId);
+        const index = targetCollection.findIndex(item => item.id === targetId);
         targetCollection.splice(index + 1, 0, node);
         return {pageConfig: {...pageConfig}};
     }
@@ -432,11 +440,11 @@ function addOrMoveNode(options) {
  * @returns {*|null}
  */
 function findChildrenCollection(root, id) {
-    if (root.__config?.componentId === id) return null;
+    if (root.id === id) return null;
 
     if (!root.children) return null;
 
-    if (root.children.some(item => item.__config?.componentId === id)) {
+    if (root.children.some(item => item.id === id)) {
         return root.children;
     } else {
         for (let node of root.children) {
@@ -458,8 +466,8 @@ function deleteComponentById(root, id) {
     let deletedNode = undefined;
     const loop = nodes => {
         for (const node of nodes) {
-            if (node?.__config?.componentId === id) {
-                const index = nodes.findIndex(item => item?.__config?.componentId === id);
+            if (node?.id === id) {
+                const index = nodes.findIndex(item => item?.id === id);
                 deletedNode = nodes.splice(index, 1);
                 return;
             } else {
@@ -480,14 +488,16 @@ function deleteComponentById(root, id) {
 function addDragHolder(node) {
     if (!node) return;
 
-    const {children, __config: {isContainer, withHolder, holderProps}} = node;
+    const {componentName, children} = node;
+    const nodeConfig = getComponentConfig(componentName);
+    const {isContainer, withHolder, holderProps} = nodeConfig;
 
     if (isContainer && withHolder && !children?.length) {
         node.children = [
-            setComponentDefaultOptions({
+            {
                 componentName: 'DragHolder',
                 props: {...holderProps},
-            }),
+            },
         ];
     }
 }

@@ -6,8 +6,20 @@ import propsMap from '../base-components/props';
 import elementMap from './form-element';
 import CurrentSelectedNode from '../current-selected-node';
 import './style.less';
-import {showFieldByAppend} from 'src/pages/drag-page/base-components';
+import {showFieldByAppend} from 'src/pages/drag-page/component-config';
+
 // import {v4 as uuid} from 'uuid';
+
+function getLabelWidth(label) {
+    if (!label?.length) return 0;
+
+    // 统计汉字数，不包括标点符号
+    const m = label.match(/[\u4e00-\u9fff\uf900-\ufaff]/g);
+    const chineseCount = (!m ? 0 : m.length);
+    const otherCount = label.length - chineseCount;
+    return (chineseCount + otherCount / 2) * 12 + 30;
+
+}
 
 export default config({
     connect: state => {
@@ -59,14 +71,16 @@ export default config({
         const {componentName, props: nodeProps = {}} = selectedNode || {};
         const propFields = propsMap[componentName];
 
-        const {fields = [], labelWidth} = propFields || {};
+        const {fields = []} = propFields || {};
 
         setPropFields(fields);
 
         // 回显表单 设置默认值
         const fieldValues = {...nodeProps};
+        let maxLabel = '';
         fields.forEach(item => {
-            const {field, defaultValue} = item;
+            const {field, label, defaultValue} = item;
+            if (label.length > maxLabel.length) maxLabel = label;
             if (fieldValues[field] === undefined) {
                 fieldValues[field] = defaultValue;
             }
@@ -75,9 +89,9 @@ export default config({
         form.setFieldsValue(fieldValues);
 
         // 设置label宽度
-        if (labelWidth) {
-            setLabelCol({flex: labelWidth});
-        }
+        const labelWidth = getLabelWidth(maxLabel);
+
+        setLabelCol({flex: `${labelWidth}px`});
 
     }, [selectedNode, refreshProps]);
 
@@ -142,7 +156,6 @@ export default config({
             label,
             desc,
             title: tip,
-            labelWidth = labelCol.flex,
             field,
             appendField,
             type,
@@ -174,7 +187,7 @@ export default config({
         const element = (
             <Col span={span}>
                 <Form.Item
-                    labelCol={{flex: labelWidth}}
+                    labelCol={labelCol}
                     wrapperCol={wrapperCol}
                     label={labelEle}
                     name={field}

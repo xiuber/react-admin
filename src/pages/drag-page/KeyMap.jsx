@@ -97,13 +97,10 @@ export default config({
             // 不是节点
             if (!cloneNode.componentName) return;
 
-            const targetId = cloneNode.__config?.componentId;
+            const targetId = cloneNode.id;
 
             const loopId = (node) => {
-                if (!node.__config) node.__config = {};
-                node.__config.componentId = uuid();
-
-                Object.freeze(node.__config);
+                node.id = uuid();
 
                 if (node.children?.length) {
                     node.children.forEach(item => loopId(item));

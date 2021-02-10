@@ -1,7 +1,7 @@
 import React from 'react';
+import {cloneDeep} from 'lodash';
 import config from 'src/commons/config-hoc';
 import NodeRender from '../iframe-render/node-render/NodeRender';
-import {cloneDeep} from 'lodash';
 import Draggable from './Draggable';
 
 import './ComponentItem.less';
@@ -59,17 +59,19 @@ export default config({})(function DraggableComponent(props) {
         );
     }
 
+    const {icon, title, image} = data;
+
     return (
         <Draggable data={data}>
             <div styleName="root">
                 <div styleName="title">
-                    {data.icon} {data.title}
+                    {icon} {title}
                 </div>
-                {data.image ? (
+                {image ? (
                     <img
                         draggable={false}
                         styleName="img"
-                        src={data.image}
+                        src={image}
                         alt="组件预览图"
                     />
                 ) : null}
