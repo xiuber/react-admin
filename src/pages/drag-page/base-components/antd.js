@@ -15,9 +15,6 @@ document.querySelectorAll('.ant-menu-item-group')
                         title,
                         renderPreview: true,
                         config: {
-                            __config: {
-                                isContainer: false,
-                            },
                             componentName,
                         },
                     },

@@ -1,6 +1,45 @@
 import {isMac} from 'src/pages/drag-page/util';
+import {getComponentConfig} from 'src/pages/drag-page/component-config/index';
 
 export default {
+
+    withHolder: true,
+    holderProps: {
+        tip: '请拖入表单元素',
+    },
+    childrenDraggable: false, // 子节点不可拖拽
+    dropAccept: options => {
+        const {draggingNode} = options;
+        const nodeConfig = getComponentConfig(draggingNode?.componentName);
+
+        return nodeConfig?.isFormElement;
+    },
+    hooks: {
+        beforeAddChildren: (options) => {
+            const {node, targetNode} = options;
+
+            if (!node) return;
+
+            // 清空 相当于替换元素了
+            node.children = [];
+
+            if (targetNode?.componentName === 'Switch') {
+                if (!node.props) node.props = {};
+
+                node.props.valuePropName = 'checked';
+            }
+
+        },
+    },
+    componentDisplayName: ({node}) => {
+        const {componentName, props = {}} = node;
+        const {label} = props;
+
+        if (!label) return componentName;
+
+        return `${componentName} ${label}`;
+    },
+
     fields: [
         {label: '必填', category: '选项', field: 'required', type: 'boolean', defaultValue: false, version: '', desc: '必填样式设置。如不设置，则会根据校验规则自动生成'},
         {label: '校验图标', category: '选项', field: 'hasFeedback', type: 'boolean', defaultValue: false, version: '', desc: '配合 validateStatus 属性使用，展示校验状态图标，建议只配合 Input 组件使用'},

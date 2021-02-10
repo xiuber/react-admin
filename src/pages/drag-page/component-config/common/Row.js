@@ -1,5 +1,12 @@
 export default {
-    labelWidth: '80px',
+    dropAccept: ['Col', 'DragHolder'],
+    withHolder: true,
+    componentDisplayName: ({node}) => {
+        const count = node?.children?.filter(item => item.componentName === 'Col').length || 0;
+
+        return `Row(${count}列)`;
+    },
+
     fields: [
         {
             label: '垂直对齐', field: 'align', type: 'radio-group', defaultValue: 'top', version: '',

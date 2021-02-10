@@ -2,11 +2,10 @@ import React, {useEffect, useState, useRef} from 'react';
 import {Form, ConfigProvider, Row, Col, Tooltip} from 'antd';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
-import propsMap from '../base-components/props';
 import elementMap from './form-element';
 import CurrentSelectedNode from '../current-selected-node';
 import './style.less';
-import {showFieldByAppend} from 'src/pages/drag-page/component-config';
+import {getComponentConfig, showFieldByAppend} from 'src/pages/drag-page/component-config';
 
 // import {v4 as uuid} from 'uuid';
 
@@ -69,9 +68,9 @@ export default config({
         form.resetFields();
 
         const {componentName, props: nodeProps = {}} = selectedNode || {};
-        const propFields = propsMap[componentName];
+        const componentConfig = getComponentConfig(componentName);
 
-        const {fields = []} = propFields || {};
+        const {fields = []} = componentConfig || {};
 
         setPropFields(fields);
 

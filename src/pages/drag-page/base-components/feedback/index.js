@@ -1,7 +1,4 @@
-import React from 'react';
-// import {v4 as uuid} from 'uuid';
 import modalImage from './modal.png';
-import {SHOW_MODAL_FUNCTION} from 'src/pages/drag-page/util';
 
 export default [
     {
@@ -12,9 +9,6 @@ export default [
                 title: '警告提示',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Alert',
                 },
             },
@@ -28,9 +22,6 @@ export default [
                 title: '抽屉',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Drawer',
                 },
             },
@@ -44,9 +35,6 @@ export default [
                 title: '全局提示',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Message',
                 },
             },
@@ -61,46 +49,6 @@ export default [
                 // renderPreview: true,
                 image: modalImage,
                 config: {
-                    __config: {
-                        // draggable: false,
-                        componentDisplayName: ({node}) => {
-                            const {componentName, props = {}} = node;
-                            const {title} = props;
-
-                            if (!title) return componentName;
-
-                            return (
-                                <>
-                                    {componentName}
-                                    <span style={{marginLeft: 4}}>{title}</span>
-                                </>
-                            );
-                        },
-
-                        propsToSet: {
-                            onClick: SHOW_MODAL_FUNCTION,
-                        },
-                        actions: {
-                            onCancel: event => options => {
-                                event.stopPropagation();
-
-                                const {
-                                    // pageConfig, // 页面整体配置
-                                    dragPageAction, // 页面action
-                                    node, // 当前组件配置
-                                } = options;
-                                if (!node.props) node.props = {};
-
-                                node.props.visible = false;
-
-                                // props 改之后，重新设置key，使组件重新创建
-                                // node.props.key = uuid();
-
-                                dragPageAction.render(); // props改变了，重新出发页面渲染
-                                dragPageAction.refreshProps(); // 刷新属性面板
-                            },
-                        },
-                    },
                     componentName: 'Modal',
                     props: {
                         title: '弹框标题',
@@ -166,9 +114,6 @@ export default [
                 previewStyle: {width: '100%'},
                 previewZoom: .8,
                 config: {
-                    __config: {
-                        renderComponentName: 'div',
-                    },
                     componentName: 'ModalFooter',
                     props: {
                         className: 'ant-modal-footer',
@@ -214,9 +159,6 @@ export default [
                 title: '通知提醒框',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Notification',
                 },
             },
@@ -230,9 +172,6 @@ export default [
                 title: '气泡确认框',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Popconfirm',
                 },
             },
@@ -246,9 +185,6 @@ export default [
                 title: '进度条',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Progress',
                 },
             },
@@ -262,9 +198,6 @@ export default [
                 title: '结果',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Result',
                 },
             },
@@ -278,10 +211,6 @@ export default [
                 title: '骨架屏',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                        withWrapper: true,
-                    },
                     componentName: 'Skeleton',
                 },
             },
@@ -295,9 +224,6 @@ export default [
                 title: '加载中',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Spin',
                 },
             },

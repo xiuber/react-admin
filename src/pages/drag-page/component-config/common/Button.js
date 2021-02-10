@@ -1,7 +1,8 @@
 import {targetOptions, buttonTypeOptions} from '../options';
 
 export default {
-    labelWidth: '80px',
+    isContainer: false,
+    renderAsDisplayName: true,
     fields: [
         {
             label: '按钮类型', field: 'type', type: 'radio-group', defaultValue: 'default', version: '',

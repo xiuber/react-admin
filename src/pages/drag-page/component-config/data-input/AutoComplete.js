@@ -1,4 +1,28 @@
 export default {
+    isFormElement: true,
+    isContainer: false,
+    actions: {
+        onSearch: value => args => {
+            const {
+                // pageConfig,
+                dragPageAction,
+                node,
+            } = args;
+            if (!node.props) node.props = {};
+
+            if (node?.props?.__options?.length !== node.props.options?.length) {
+
+                node.props.__options = node.props.options.map(item => ({...item}));
+            }
+            node.props.options = node.props.__options.map(item => {
+
+                return {value: `${value}${item.value}`};
+            });
+
+            dragPageAction.render();
+        },
+    },
+
     fields: [
         {label: '支持清除', category: '选项', field: 'allowClear', type: 'boolean', defaultValue: false, version: '', desc: '支持清除'},
         {label: '是否禁用', category: '选项', field: 'disabled', type: 'boolean', defaultValue: false, version: '', desc: '是否禁用'},

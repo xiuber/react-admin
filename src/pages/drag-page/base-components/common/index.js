@@ -21,11 +21,6 @@ export default [
                     // 预览渲染config配置的组件
                     renderPreview: true,
                     config: {
-                        __config: {
-                            isContainer: false,
-                            renderAsDisplayName: true,
-                            componentDisplayName: 'Button',
-                        },
                         componentName: 'Button',
                         props: {
                             type,
@@ -52,24 +47,12 @@ export default [
             {
                 title: '栅格行',
                 config: {
-                    __config: {
-                        dropAccept: ['Col', 'DragHolder'],
-                        withHolder: true,
-                        componentDisplayName: ({node}) => {
-                            const count = node?.children?.filter(item => item.componentName === 'Col').length || 0;
-
-                            return `Row(${count}列)`;
-                        },
-                    },
                     componentName: 'Row',
                 },
             },
             {
                 title: '栅格列',
                 config: {
-                    __config: {
-                        withHolder: true,
-                    },
                     componentName: 'Col',
                 },
             },

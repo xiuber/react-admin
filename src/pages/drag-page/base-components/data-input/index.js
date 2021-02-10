@@ -10,29 +10,6 @@ export default [
                 title: '自动完成',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        actions: {
-                            onSearch: value => args => {
-                                const {
-                                    // pageConfig,
-                                    dragPageAction,
-                                    node,
-                                } = args;
-                                if (!node.props) node.props = {};
-
-                                if (node?.props?.__options?.length !== node.props.options?.length) {
-
-                                    node.props.__options = node.props.options.map(item => ({...item}));
-                                }
-                                node.props.options = node.props.__options.map(item => {
-
-                                    return {value: `${value}${item.value}`};
-                                });
-
-                                dragPageAction.render();
-                            },
-                        },
-                    },
                     componentName: 'AutoComplete',
                     props: {
                         style: {width: '100%'},
@@ -55,13 +32,6 @@ export default [
                 title: '级联选择',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        withWrapper: true,
-                        wrapperStyle: {
-                            display: 'inline-block',
-                            position: 'relative',
-                        },
-                    },
                     componentName: 'Cascader',
                     props: {
                         placeholder: '请选择',
@@ -149,10 +119,6 @@ export default [
                 title: '数字输入框',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        withWrapper: true,
-                        wrapperStyle: {display: 'inline-block'},
-                    },
                     componentName: 'InputNumber',
                     props: {
                         style: {width: '100%'},
@@ -230,11 +196,6 @@ export default [
                 },
                 // previewStyle: {width: '100%'},
                 config: {
-                    __config: {
-                        // 无论是否添加wrapper，下拉选择项了之后，就无法拖拽了
-                        // withWrapper: true,
-                        // wrapperStyle: {display: 'inline-block'},
-                    },
                     componentName: 'Select',
                     props: {
                         placeholder: '请选择',
@@ -288,10 +249,6 @@ export default [
                 title: '时间选择框',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        withWrapper: true,
-                        wrapperStyle: {display: 'inline-block'},
-                    },
                     componentName: 'TimePicker',
                 },
             },
@@ -306,9 +263,6 @@ export default [
                 renderPreview: true,
                 previewZoom: .28,
                 config: {
-                    __config: {
-                        withWrapper: true,
-                    },
                     componentName: 'Transfer',
                 },
             },
@@ -339,9 +293,6 @@ export default [
                 title: '上传',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        childrenDraggable: false,
-                    },
                     componentName: 'Upload',
                     children: [
                         {
@@ -368,17 +319,4 @@ export default [
             },
         ],
     },
-].map(item => {
-    const {children} = item;
-    children.forEach(node => {
-        const {config} = node;
-        if (!config.__config) config.__config = {};
-
-        // 都为表单元素，可放入 Form.Item 中
-        config.__config.isFormElement = true;
-
-        // 默认 isContainer = false
-        if (!('isContainer' in config.__config)) config.__config.isContainer = false;
-    });
-    return item;
-});
+];

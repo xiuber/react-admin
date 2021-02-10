@@ -29,9 +29,6 @@ export async function getComponents(store) {
                             title: '输入框',
                             image: 'https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg',
                             config: {
-                                __config: {
-                                    isContainer: false,
-                                },
                                 componentName: 'Input',
                                 props: {
                                     placeholder: '请输入',
@@ -43,14 +40,6 @@ export async function getComponents(store) {
                             title: '搜索框',
                             image: 'https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg',
                             config: {
-                                __config: {
-                                    isContainer: false,
-                                    withWrapper: true,
-                                    wrapperStyle: {
-                                        display: 'inline-block',
-                                        width: '100%',
-                                    },
-                                },
                                 componentName: 'Input.Search',
                                 props: {
                                     placeholder: '请搜索',
@@ -62,9 +51,6 @@ export async function getComponents(store) {
                             title: '文本域',
                             image: 'https://gw.alipayobjects.com/zos/alicdn/xS9YEJhfe/Input.svg',
                             config: {
-                                __config: {
-                                    isContainer: false,
-                                },
                                 componentName: 'Input.TextArea',
                                 props: {
                                     placeholder: '请输入',
@@ -83,9 +69,6 @@ export async function getComponents(store) {
                             title: '下拉框' + store,
                             image: 'https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg',
                             config: {
-                                __config: {
-                                    isContainer: false,
-                                },
                                 componentName: 'Select',
                                 props: {
                                     style: { width: '100%' },

@@ -7,9 +7,6 @@ export default [
                 title: '头像',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Avatar',
                 },
             },
@@ -23,9 +20,6 @@ export default [
                 title: '徽标数',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Badge',
                 },
             },
@@ -40,9 +34,6 @@ export default [
                 renderPreview: true,
                 previewZoom: .28,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Calendar',
                 },
             },
@@ -56,9 +47,6 @@ export default [
                 title: '卡片',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Card',
                 },
             },
@@ -72,9 +60,6 @@ export default [
                 title: '走马灯',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Carousel',
                 },
             },
@@ -88,9 +73,6 @@ export default [
                 title: '折叠面板',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Collapse',
                 },
             },
@@ -104,9 +86,6 @@ export default [
                 title: '评论',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Comment',
                 },
             },
@@ -120,9 +99,6 @@ export default [
                 title: '描述列表',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Descriptions',
                 },
             },
@@ -136,9 +112,6 @@ export default [
                 title: '空状态',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Empty',
                 },
             },
@@ -152,9 +125,6 @@ export default [
                 title: '图片',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Image',
                 },
             },
@@ -168,9 +138,6 @@ export default [
                 title: '列表',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'List',
                 },
             },
@@ -184,9 +151,6 @@ export default [
                 title: '气泡卡片',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Popover',
                 },
             },
@@ -200,9 +164,6 @@ export default [
                 title: '统计数值',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Statistic',
                 },
             },
@@ -216,9 +177,6 @@ export default [
                 title: '表格',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Table',
                 },
             },
@@ -232,9 +190,6 @@ export default [
                 title: '标签页',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Tabs',
                 },
             },
@@ -248,9 +203,6 @@ export default [
                 title: '标签',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Tag',
                 },
             },
@@ -264,9 +216,6 @@ export default [
                 title: '时间轴',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Timeline',
                 },
             },
@@ -280,9 +229,6 @@ export default [
                 title: '文字提示',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Tooltip',
                 },
             },
@@ -296,9 +242,6 @@ export default [
                 title: '树形控件',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Tree',
                 },
             },

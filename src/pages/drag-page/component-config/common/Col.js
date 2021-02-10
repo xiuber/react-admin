@@ -1,7 +1,7 @@
 import {isMac} from 'src/pages/drag-page/util';
 
 export default {
-    labelWidth: '100px',
+    withHolder: true,
     fields: [
         {
             label: '占位格数',
@@ -19,7 +19,7 @@ export default {
                     dragPageAction.syncOffspringProps({
                         node,
                         ancestorComponentName: 'Row',
-                        props: {span: value}
+                        props: {span: value},
                     });
                 }
             },

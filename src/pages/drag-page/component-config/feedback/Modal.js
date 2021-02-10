@@ -1,7 +1,46 @@
+import React from 'react';
+import {SHOW_MODAL_FUNCTION} from 'src/pages/drag-page/util';
 // import {buttonTypeOptions} from '../options';
 
 export default {
-    labelWidth: '100px',
+    // draggable: false,
+    componentDisplayName: ({node}) => {
+        const {componentName, props = {}} = node;
+        const {title} = props;
+
+        if (!title) return componentName;
+
+        return (
+            <>
+                {componentName}
+                <span style={{marginLeft: 4}}>{title}</span>
+            </>
+        );
+    },
+
+    propsToSet: {
+        onClick: SHOW_MODAL_FUNCTION,
+    },
+    actions: {
+        onCancel: event => options => {
+            event.stopPropagation();
+
+            const {
+                // pageConfig, // 页面整体配置
+                dragPageAction, // 页面action
+                node, // 当前组件配置
+            } = options;
+            if (!node.props) node.props = {};
+
+            node.props.visible = false;
+
+            // props 改之后，重新设置key，使组件重新创建
+            // node.props.key = uuid();
+
+            dragPageAction.render(); // props改变了，重新出发页面渲染
+            dragPageAction.refreshProps(); // 刷新属性面板
+        },
+    },
     fields: [
         {label: '显示弹框', field: 'visible', type: 'boolean', version: '', desc: '对话框是否可见'},
         {label: '弹框标题', field: 'title', type: 'string', version: '', desc: '标题'},

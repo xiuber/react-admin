@@ -7,9 +7,6 @@ export default [
                 title: '锚点',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'Anchor',
                 },
             },
@@ -23,9 +20,6 @@ export default [
                 title: '回到顶部',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'BackTop',
                 },
             },
@@ -39,9 +33,6 @@ export default [
                 title: '全局化配置',
                 renderPreview: true,
                 config: {
-                    __config: {
-                        isContainer: false,
-                    },
                     componentName: 'ConfigProvider',
                 },
             },
