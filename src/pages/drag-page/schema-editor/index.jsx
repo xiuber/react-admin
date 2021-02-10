@@ -84,7 +84,7 @@ export default config({
             result = nodeConfig;
         }
 
-        dragPageAction.setPageConfig(result);
+        dragPageAction.setPageConfig({...result});
 
         // 原选中id是否存在
         if (!findNodeById(result, selectedNode?.__config?.componentId)) {
