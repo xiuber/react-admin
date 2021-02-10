@@ -20,6 +20,7 @@ export function loopIdToFirst(node) {
     Reflect.deleteProperty(node, 'id');
 
     const entries = Object.entries(node);
+    if(!entries?.length) return;
 
     // 如果第一个key 不是 id
     if (entries[0][0] !== id) {
