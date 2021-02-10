@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Tooltip} from 'antd';
 import config from 'src/commons/config-hoc';
 import {getEleCenterInWindow, findNodeById, findLinkElementsPosition} from 'src/pages/drag-page/util';
-import {v4 as uuid} from 'uuid';
+// import {v4 as uuid} from 'uuid';
 import {throttle} from 'lodash';
 
 import styles from './style.less';

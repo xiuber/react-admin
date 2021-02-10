@@ -5,7 +5,7 @@ import {
     getAllNodesByName,
     syncObject,
 } from './util';
-import {v4 as uuid} from 'uuid';
+// import {v4 as uuid} from 'uuid';
 import {cloneDeep} from 'lodash';
 import {getComponentConfig, setComponentDefaultOptions} from './base-components';
 

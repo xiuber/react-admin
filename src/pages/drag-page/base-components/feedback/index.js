@@ -1,5 +1,5 @@
 import React from 'react';
-import {v4 as uuid} from 'uuid';
+// import {v4 as uuid} from 'uuid';
 import modalImage from './modal.png';
 import {SHOW_MODAL_FUNCTION} from 'src/pages/drag-page/util';
 

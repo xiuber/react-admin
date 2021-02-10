@@ -6,7 +6,7 @@ import propsMap from '../base-components/props';
 import elementMap from './form-element';
 import CurrentSelectedNode from '../current-selected-node';
 import './style.less';
-import {v4 as uuid} from 'uuid';
+// import {v4 as uuid} from 'uuid';
 
 export default config({
     connect: state => {
