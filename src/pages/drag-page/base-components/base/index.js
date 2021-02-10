@@ -9,6 +9,23 @@ import {
 export default [
     {
         hiddenInStore: true,
+        title: '页面根节点占位',
+        subTitle: '页面根节点占位 RootDragHolder',
+        children: [
+            {
+                title: '页面根节点占位',
+                icon: <PicCenterOutlined/>,
+                config: {
+                    __config: {
+                        draggable: false,
+                    },
+                    componentName: 'RootDragHolder',
+                },
+            },
+        ],
+    },
+    {
+        hiddenInStore: true,
         title: '拖拽占位',
         subTitle: '拖拽占位 DragHolder',
         children: [

@@ -381,7 +381,6 @@ function addOrMoveNode(options) {
 
     const targetNode = findNodeById(pageConfig, targetId);
 
-    console.log(targetNode);
     // 目标节点为 根占位
     if (targetNode.componentName === 'RootDragHolder') {
         return {pageConfig: {...node}};

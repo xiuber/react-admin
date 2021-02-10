@@ -1,8 +1,18 @@
 import { v4 as uuid } from 'uuid';
 import baseComponents from './base-components';
 
-export async function getComponents(category) {
-    if (category === 'base') return baseComponents;
+export async function getStores() {
+    return [
+        { value: 'base', label: '基础组件' },
+        { value: 'page', label: '基础页面' },
+        { value: 'model', label: '基础模块' },
+        { value: '1', label: '自定义分类1' },
+        { value: '2', label: '自定义分类2' },
+    ];
+}
+
+export async function getComponents(store) {
+    if (store === 'base') return baseComponents;
 
     return [
         {
@@ -70,7 +80,7 @@ export async function getComponents(category) {
                     children: [
                         {
                             id: uuid(),
-                            title: '下拉框' + category,
+                            title: '下拉框' + store,
                             image: 'https://gw.alipayobjects.com/zos/alicdn/_0XzgOis7/Select.svg',
                             config: {
                                 __config: {
@@ -91,15 +101,5 @@ export async function getComponents(category) {
                 },
             ],
         },
-    ];
-}
-
-export async function getStores() {
-    return [
-        { value: 'base', label: '基础组件' },
-        { value: 'page', label: '基础页面' },
-        { value: 'model', label: '基础模块' },
-        { value: '1', label: '自定义分类1' },
-        { value: '2', label: '自定义分类2' },
     ];
 }

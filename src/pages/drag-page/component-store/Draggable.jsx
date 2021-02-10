@@ -1,6 +1,5 @@
 import React from 'react';
 import config from 'src/commons/config-hoc';
-import './DraggableComponent.less';
 import {cloneDeep} from 'lodash';
 
 export default config({

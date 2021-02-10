@@ -257,7 +257,7 @@ export function removeComponentConfig(nodes, leaveComponentId) {
 }
 
 // 设置组件配置 __config 重新设置 node.__config.componentId
-export function setComponentDefaultOptions(componentNode) {
+export function setComponentDefaultOptions(componentNode, setComponentId = true) {
     const dataSource = !Array.isArray(componentNode) ? [componentNode] : componentNode;
 
     const loop = nodes => {
@@ -270,8 +270,10 @@ export function setComponentDefaultOptions(componentNode) {
             // 直接覆盖__config
             node.__config = getComponentConfig(node);
 
-            // componentId 不要替换，modal 连接 需要稳定id
-            node.__config.componentId = componentId || uuid();
+            if (setComponentId) {
+                // componentId 不要替换，modal 连接 需要稳定id
+                node.__config.componentId = componentId || uuid();
+            }
 
             if (node.children?.length) {
                 loop(node.children);
@@ -295,7 +297,8 @@ export function setDefaultOptions(nodes) {
             if (!node.id) node.id = uuid();
             if (!node.icon) node.icon = <AppstoreOutlined/>;
 
-            if (node.config) setComponentDefaultOptions(node.config);
+            if (node.config) setComponentDefaultOptions(node.config, false);
+
         });
     });
 

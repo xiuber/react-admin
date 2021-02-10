@@ -4,12 +4,13 @@ import {AppstoreOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
 import {getComponents, getStores} from '../dataSource';
-import DraggableComponent from './DraggableComponent';
+import ComponentItem from './ComponentItem';
 import {scrollElement, elementIsVisible, filterTree} from '../util';
 import {debounce} from 'lodash';
 import Draggable from './Draggable';
-import './style.less';
 import DragBar from 'src/pages/drag-page/drag-bar';
+
+import './style.less';
 
 export default config({
     connect: state => {
@@ -242,7 +243,7 @@ export default config({
                                                             storeAction.setCategory(subCategoryId);
                                                         }}
                                                     >
-                                                        <DraggableComponent key={item.id} data={item}/>
+                                                        <ComponentItem key={item.id} data={item}/>
                                                     </div>
                                                 );
                                             })}

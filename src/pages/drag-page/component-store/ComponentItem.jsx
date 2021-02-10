@@ -1,9 +1,10 @@
 import React from 'react';
 import config from 'src/commons/config-hoc';
-import './DraggableComponent.less';
 import NodeRender from '../iframe-render/node-render/NodeRender';
 import {cloneDeep} from 'lodash';
 import Draggable from './Draggable';
+
+import './ComponentItem.less';
 
 export default config({})(function DraggableComponent(props) {
     const {data} = props;
