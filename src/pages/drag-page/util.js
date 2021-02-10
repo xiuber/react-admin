@@ -14,6 +14,30 @@ export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 // eslint-disable-next-line
 export const SHOW_MODAL_FUNCTION = 'e => dragPageAction.showModal("${componentId}")';
 
+// 调整id为首位
+export function loopIdToFirst(node) {
+    const id = node.id;
+    Reflect.deleteProperty(node, 'id');
+
+    const entries = Object.entries(node);
+
+    // 如果第一个key 不是 id
+    if (entries[0][0] !== id) {
+        // id 放首位
+        entries.unshift(['id', id]);
+
+        // 删除所有属性，保留引用
+        entries.forEach(([key]) => Reflect.deleteProperty(node, key));
+
+        // 从新赋值
+        entries.forEach(([key, value]) => node[key] = value);
+    }
+
+    if (node.children?.length) {
+        node.children.forEach(item => loopIdToFirst(item));
+    }
+}
+
 // 同步设置对象，将newObj中属性，对应设置到oldObj中
 export function syncObject(oldObj, newObj) {
     Object.entries(newObj).forEach(([key, value]) => {
@@ -640,7 +664,7 @@ export function getDropGuidePosition(options) {
 // 根据 componentName 获取组件
 export function getComponent(options) {
     let {componentName} = options;
-    const componentConfig = getComponentConfig(componentName)
+    const componentConfig = getComponentConfig(componentName);
     const {renderComponentName, componentType} = componentConfig;
 
     componentName = renderComponentName || componentName;

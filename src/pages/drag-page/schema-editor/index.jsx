@@ -3,7 +3,7 @@ import {message, Switch} from 'antd';
 import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
-import {findNodeById, usePrevious} from '../util';
+import {findNodeById, usePrevious, loopIdToFirst} from '../util';
 import {deleteDefaultProps} from '../component-config';
 import {v4 as uuid} from 'uuid';
 import DragBar from '../drag-bar';
@@ -73,7 +73,9 @@ export default config({
 
         if (!node) return message.error('节点无法对应，您是否修改了根节点的id?');
 
-        let result;
+        let nextPageConfig;
+
+        // 编辑单独节点
         if (editType !== EDIT_TYPE.ALL) {
             // 删除所有数据，保留引用
             Object.keys(node).forEach(key => {
@@ -83,9 +85,9 @@ export default config({
             Object.entries(nodeConfig).forEach(([key, value]) => {
                 node[key] = value;
             });
-            result = pageConfig;
+            nextPageConfig = pageConfig;
         } else {
-            result = nodeConfig;
+            nextPageConfig = nodeConfig;
         }
 
         saveRef.current = true;
@@ -98,12 +100,12 @@ export default config({
             }
         };
 
-        loopId(result);
+        loopId(nextPageConfig);
 
-        dragPageAction.setPageConfig({...result});
+        dragPageAction.setPageConfig({...nextPageConfig});
 
         // 原选中id是否存在
-        if (!findNodeById(result, selectedNode.id)) {
+        if (!findNodeById(nextPageConfig, selectedNode?.id)) {
             dragPageAction.setSelectedNodeId(null);
         }
 
@@ -135,6 +137,9 @@ export default config({
 
         // 清除默认值
         editNode = deleteDefaultProps(editNode);
+
+        // id 属性调整到首位
+        loopIdToFirst(editNode);
 
         const nextCode = `export default ${JSON5.stringify(editNode, null, 2)}`;
 

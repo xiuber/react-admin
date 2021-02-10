@@ -109,14 +109,19 @@ export default config({
         const result = filterTree(
             allComponents,
             node => {
-                let {title = '', subTitle = ''} = node;
+                let {title = '', subTitle = '', config = {}} = node;
+                let {componentName = ''} = config;
 
                 title = title.toLowerCase();
                 subTitle = subTitle.toLowerCase();
+                componentName = componentName.toLowerCase();
+
                 const val = value ? value.toLowerCase() : '';
 
                 return title.includes(val)
-                    || subTitle.includes(val);
+                    || subTitle.includes(val)
+                    || componentName.includes(val)
+                    ;
             },
         );
 

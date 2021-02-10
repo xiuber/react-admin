@@ -495,6 +495,7 @@ function addDragHolder(node) {
     if (isContainer && withHolder && !children?.length) {
         node.children = [
             {
+                id: uuid(),
                 componentName: 'DragHolder',
                 props: {...holderProps},
             },

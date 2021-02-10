@@ -112,7 +112,7 @@ export default [
                 title: '对话框底部',
                 renderPreview: true,
                 previewStyle: {width: '100%'},
-                previewZoom: .8,
+                previewZoom: .68,
                 config: {
                     componentName: 'ModalFooter',
                     props: {

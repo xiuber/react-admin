@@ -35,9 +35,6 @@ export default [
                     children: [
                         {
                             componentName: 'DragHolder',
-                            props: {
-                                style: {height: 100},
-                            },
                         },
                     ],
                 },

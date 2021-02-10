@@ -1,5 +1,11 @@
 import {v4 as uuid} from 'uuid';
 import base from './base';
+import common from './common';
+import form from './form';
+import dataInput from './data-input';
+import dataShow from './data-show';
+import feedback from './feedback';
+import other from './other';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 const defaultConfig = {
@@ -18,12 +24,12 @@ const defaultConfig = {
 
 export default [
     {title: '默认', children: base},
-    // {title: '通用', children: common},
-    // {title: '表单', children: form},
-    // {title: '数据输入', children: dataInput},
-    // {title: '数据展示', children: dataShow},
-    // {title: '反馈', children: feedback},
-    // {title: '其他', children: other},
+    {title: '通用', children: common},
+    {title: '表单', children: form},
+    {title: '数据输入', children: dataInput},
+    {title: '数据展示', children: dataShow},
+    {title: '反馈', children: feedback},
+    {title: '其他', children: other},
 ].map(item => {
     item.id = uuid();
     item.children = setDefaultOptions(item.children);
