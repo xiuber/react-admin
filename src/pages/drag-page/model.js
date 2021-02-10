@@ -9,29 +9,13 @@ import {
 import {cloneDeep} from 'lodash';
 import {getComponentConfig, setComponentDefaultOptions} from './base-components';
 
-const holderNode = () => setComponentDefaultOptions({
+const rootHolderNode = {
     __config: {
         draggable: false,
-        isRootHolder: true,
+
     },
-    componentName: 'div',
-    children: [
-        {
-            __config: {
-                isContainer: false,
-                isRootHolder: true,
-            },
-            componentName: 'DragHolder',
-            props: {
-                // className: 'grid-background',
-                style: {
-                    height: 'calc(100vh - 2px)',
-                    fontSize: 18,
-                },
-            },
-        },
-    ],
-});
+    componentName: 'RootDragHolder',
+};
 
 const initialState = {
     arrowLines: [
@@ -73,7 +57,7 @@ const initialState = {
     canvasWidth: '100%',
     canvasHeight: '100%',
 
-    pageConfig: {...holderNode()},
+    pageConfig: {...rootHolderNode},
     iFrameDocument: null,
 };
 
@@ -232,7 +216,7 @@ export default {
 
         const selectedNode = findNodeById(pageConfig, selectedNodeId);
 
-        if (selectedNode?.__config?.isRootHolder) {
+        if (selectedNode?.componentName === 'RootDragHolder') {
             return {
                 selectedNodeId: null,
                 selectedNode: null,
@@ -252,7 +236,7 @@ export default {
     refreshProps: () => ({refreshProps: {}}),
     setPageConfig: pageConfig => {
         if (!pageConfig) {
-            return {pageConfig: {...holderNode()}};
+            return {pageConfig: {...rootHolderNode}};
         }
 
         return {pageConfig};
@@ -269,7 +253,7 @@ export default {
 
         // 删除的是根节点
         if (id === pageConfig.__config.componentId) {
-            return {pageConfig: {...holderNode()}, selectedNodeId, selectedNode};
+            return {pageConfig: {...rootHolderNode}, selectedNodeId, selectedNode};
         }
 
         const node = findNodeById(pageConfig, id);
@@ -399,7 +383,7 @@ function addOrMoveNode(options) {
 
     console.log(targetNode);
     // 目标节点为 根占位
-    if (targetNode?.__config?.isRootHolder) {
+    if (targetNode.componentName === 'RootDragHolder') {
         return {pageConfig: {...node}};
     }
 
