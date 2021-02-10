@@ -5,17 +5,20 @@ import {
     getAllNodesByName,
     syncObject,
 } from './util';
-// import {v4 as uuid} from 'uuid';
+import {v4 as uuid} from 'uuid';
 import {cloneDeep} from 'lodash';
 import {getComponentConfig, setComponentDefaultOptions} from './base-components';
 
-const rootHolderNode = {
-    __config: {
-        draggable: false,
-
-    },
-    componentName: 'RootDragHolder',
-};
+const rootHolderNode = () => (
+    {
+        __config: {
+            draggable: false,
+            isContainer: true,
+            componentId: uuid(),
+        },
+        componentName: 'RootDragHolder',
+    }
+);
 
 const initialState = {
     arrowLines: [
@@ -57,7 +60,7 @@ const initialState = {
     canvasWidth: '100%',
     canvasHeight: '100%',
 
-    pageConfig: {...rootHolderNode},
+    pageConfig: rootHolderNode(),
     iFrameDocument: null,
 };
 
@@ -236,7 +239,7 @@ export default {
     refreshProps: () => ({refreshProps: {}}),
     setPageConfig: pageConfig => {
         if (!pageConfig) {
-            return {pageConfig: {...rootHolderNode}};
+            return {pageConfig: rootHolderNode()};
         }
 
         return {pageConfig};
@@ -250,10 +253,9 @@ export default {
             selectedNode = null;
         }
 
-
         // 删除的是根节点
         if (id === pageConfig.__config.componentId) {
-            return {pageConfig: {...rootHolderNode}, selectedNodeId, selectedNode};
+            return {pageConfig: rootHolderNode(), selectedNodeId, selectedNode};
         }
 
         const node = findNodeById(pageConfig, id);
