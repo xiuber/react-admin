@@ -70,7 +70,7 @@ export default config({
                 if (!componentTreeExpendedKeys.some(k => k === key)) {
                     dragPageAction.setComponentTreeExpendedKeys([...componentTreeExpendedKeys, key]);
                 }
-            }, 500);
+            }, 300);
         }
         const {pageX, pageY, clientX, clientY} = e;
 
