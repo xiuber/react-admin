@@ -27,7 +27,7 @@ export default config({
     },
 })(function ComponentStyle(props) {
     let {
-        selectedNode = {},
+        selectedNode,
         iframeDocument,
         action: {dragPage: dragPageAction},
     } = props;

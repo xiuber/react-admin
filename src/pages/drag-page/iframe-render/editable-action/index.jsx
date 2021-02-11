@@ -1,5 +1,6 @@
 import {useEffect} from 'react';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
+import {debounce} from 'lodash';
 
 export default function EditableAction(props) {
     const {
@@ -67,7 +68,8 @@ export default function EditableAction(props) {
                 // }, 100);
             };
 
-            ele.oninput = e => {
+
+            ele.oninput = debounce(e => {
                 handleInput(e);
                 if (onInput) {
                     onInput(e)({node, pageConfig, dragPageAction});
@@ -78,7 +80,7 @@ export default function EditableAction(props) {
 
                 // 都会导致焦点跳动
                 // dragPageAction.render();
-            };
+            }, 300);
             ele.onblur = e => {
                 ele.style.outline = prevStyleOutline;
                 if (onBlur) {
