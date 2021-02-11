@@ -1,19 +1,18 @@
 import React from 'react';
 import {cloneDeep} from 'lodash';
 import config from 'src/commons/config-hoc';
+import {setDragImage} from 'src/pages/drag-page/util';
 
 export default config({
     connect: true,
 })(function DraggableComponent(props) {
     const {
         data,
-        action: {
-            dragPage: dragPageAction,
-        },
         children,
         style = {},
         onDragStart,
         onDragEnd,
+        action: {dragPage: dragPageAction},
         ...others
     } = props;
 
@@ -30,6 +29,7 @@ export default config({
 
         const config = cloneDeep(data.config);
 
+        setDragImage(e, config);
         e.dataTransfer.setData('componentConfig', JSON.stringify(config));
 
         // 标记当前拖动组件,为添加

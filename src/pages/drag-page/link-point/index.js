@@ -34,7 +34,6 @@ export default config({
 
     const startRef = useRef(null);
     const lineRef = useRef(null);
-    const dragImgRef = useRef(null);
     const pointRef = useRef(null);
     const [dragging, setDragging] = useState(false);
 
@@ -72,7 +71,10 @@ export default config({
             startRef.current = {startX, startY};
         }
 
-        e.dataTransfer.setDragImage(dragImgRef.current, 0, 0);
+        const img = new Image();
+        img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=';
+
+        e.dataTransfer.setDragImage(img, 0, 0);
 
         // 显示所有 link line
         dragPageAction.setShowArrowLines(true);
@@ -169,8 +171,6 @@ export default config({
             onClick={handleClick}
             {...others}
         >
-            <img ref={dragImgRef} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=" alt=""/>
-
             <div className={styles.point} ref={pointRef}/>
         </div>
     );

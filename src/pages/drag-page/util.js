@@ -13,6 +13,13 @@ export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 // eslint-disable-next-line
 export const SHOW_MODAL_FUNCTION = 'e => dragPageAction.showModal("${componentId}")';
 
+// 设置拖拽图片
+export function setDragImage(e, node) {
+    // const img = new Image();
+    // img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=';
+    // e.dataTransfer.setDragImage(img, -20, -30);
+}
+
 // 调整id为首位
 export function loopIdToFirst(node) {
     const id = node.id;

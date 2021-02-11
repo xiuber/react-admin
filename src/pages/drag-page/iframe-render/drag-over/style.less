@@ -26,12 +26,18 @@
 }
 
 .guideBgActive {
-    display: block !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
     position: fixed;
     z-index: 9999;
     background: rgba(0, 255, 0, 0.05);
     pointer-events: none;
     border: 1px solid @guide-color;
+    overflow: hidden;
+    font-size: 18px;
+    color: @guide-color;
+    text-shadow: 2px 2px 2px #fff;
 }
 
 .guideActive {

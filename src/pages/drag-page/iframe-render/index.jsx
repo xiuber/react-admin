@@ -49,6 +49,7 @@ export default config({
             rightSideWidth: state.dragPage.rightSideWidth,
             schemaEditorWidth: state.dragPage.schemaEditorWidth,
             componentTreeWidth: state.dragPage.componentTreeWidth,
+            contentEditable: state.dragPage.contentEditable,
         };
     },
 })(function IframeRender(props) {
@@ -66,6 +67,7 @@ export default config({
         rightSideWidth,
         schemaEditorWidth,
         componentTreeWidth,
+        contentEditable,
         action: {dragPage: dragPageAction},
     } = props;
 
@@ -107,6 +109,7 @@ export default config({
         activeSideKey,
         dragPageAction,
         isPreview,
+        contentEditable,
         iframeDocument: iframeRef.current?.contentDocument,
     };
     useEffect(() => {
@@ -116,7 +119,7 @@ export default config({
 
         ReactDOM.render(
             <ConfigProvider getPopupContainer={() => iframeRootRef.current}>
-                {isPreview ? null : <EditableAction {...draggableNodeProps}/>}
+                {isPreview || !contentEditable ? null : <EditableAction {...draggableNodeProps}/>}
                 <DragAction {...draggableNodeProps}>
                     <NodeRender {...draggableNodeProps}/>
                 </DragAction>

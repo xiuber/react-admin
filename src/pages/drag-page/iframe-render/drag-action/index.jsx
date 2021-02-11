@@ -6,6 +6,7 @@ import {
     isDropAccept,
     getNodeEle,
     getDroppableEle,
+    setDragImage,
 } from 'src/pages/drag-page/util';
 
 /**
@@ -41,6 +42,7 @@ export default function DragAction(props) {
 
         // 拖拽携带的数据
         e.dataTransfer.setData('sourceComponentId', componentId);
+        setDragImage(e, node);
     }
 
     function handleDragLeave() {
