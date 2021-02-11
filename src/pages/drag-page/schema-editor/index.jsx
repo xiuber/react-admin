@@ -175,8 +175,6 @@ export default config({
             nextPageConfig = nodeConfig;
         }
 
-        saveRef.current = true;
-
         const loopId = node => {
             if (!node.id) node.id = uuid();
 
@@ -195,6 +193,7 @@ export default config({
             dragPageAction.setSelectedNodeId(null);
         }
 
+        saveRef.current = true;
         message.success('保存成功！');
     }
 
@@ -209,6 +208,7 @@ export default config({
     }
 
     useEffect(() => {
+        console.log('saveRef.current', saveRef.current);
         // 由于保存触发的，不做任何处理
         if (saveRef.current) {
             saveRef.current = false;
@@ -236,7 +236,7 @@ export default config({
         const nextCode = `export default ${JSON5.stringify(editNode, null, 2)}`;
 
         setCode(nextCode);
-    }, [editType, selectedNode, pageConfig]);
+    }, [visible, editType, selectedNode, pageConfig]);
 
     if (!visible) return null;
 
