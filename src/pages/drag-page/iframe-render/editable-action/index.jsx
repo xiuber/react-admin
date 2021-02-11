@@ -70,9 +70,10 @@ export default function EditableAction(props) {
 
 
             ele.oninput = debounce(e => {
-                handleInput(e);
                 if (onInput) {
-                    onInput(e)({node, pageConfig, dragPageAction});
+                    onInput(e)({node, pageConfig, dragPageAction, iframeDocument});
+                } else {
+                    handleInput(e);
                 }
 
                 // 弹框内容编辑会光标跳动
@@ -84,7 +85,7 @@ export default function EditableAction(props) {
             ele.onblur = e => {
                 ele.style.outline = prevStyleOutline;
                 if (onBlur) {
-                    onBlur(e)({node, pageConfig, dragPageAction});
+                    onBlur(e)({node, pageConfig, dragPageAction, iframeDocument});
                 }
                 dragPageAction.render();
             };

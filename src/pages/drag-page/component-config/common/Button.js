@@ -3,6 +3,17 @@ import {targetOptions, buttonTypeOptions} from '../options';
 export default {
     isContainer: false,
     renderAsDisplayName: true,
+    componentDisplayName: options => {
+        const {node} = options;
+
+        const textNode = node?.children?.find(item => item.componentName === 'Text');
+
+        const text = textNode?.props?.text;
+
+        if (text) return `Button ${text}`;
+
+        return 'Button';
+    },
     fields: [
         {
             label: '按钮类型', field: 'type', type: 'radio-group', defaultValue: 'default', version: '',
