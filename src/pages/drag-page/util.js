@@ -10,7 +10,6 @@ import {getComponentConfig} from 'src/pages/drag-page/component-config';
 export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
-
 // eslint-disable-next-line
 export const SHOW_MODAL_FUNCTION = 'e => dragPageAction.showModal("${componentId}")';
 
@@ -57,10 +56,10 @@ export function syncObject(oldObj, newObj) {
 }
 
 // 删除所有非关联id
-export function deleteUnLinkedIds(nodeConfig, ids = []) {
+export function deleteUnLinkedIds(nodeConfig, keepIds = []) {
     let linkedIds = findLinkSourceComponentIds(nodeConfig);
 
-    linkedIds = linkedIds.concat(ids);
+    linkedIds = linkedIds.concat(keepIds);
 
     const loop = node => {
         if (!linkedIds.includes(node.id)) Reflect.deleteProperty(node, 'id');
