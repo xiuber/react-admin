@@ -46,12 +46,25 @@ export default [
         children: [
             {
                 title: '栅格行',
+                renderPreview: (
+                    <div style={{flex: 1}}>
+                        <div style={{flex: 1, margin: 4, height: 10, background: theme.primaryColor}}/>
+                        <div style={{flex: 1, margin: 4, height: 10, background: theme.primaryColor}}/>
+                    </div>
+                ),
                 config: {
                     componentName: 'Row',
                 },
             },
             {
                 title: '栅格列',
+                renderPreview: (
+                    <div style={{flex: 1, display: 'flex'}}>
+                        {Array.from({length: 6}).map(() => {
+                            return <div style={{flex: 1, margin: 4, height: 20, background: theme.primaryColor}}/>;
+                        })}
+                    </div>
+                ),
                 config: {
                     componentName: 'Col',
                 },

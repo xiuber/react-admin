@@ -85,6 +85,10 @@ export default [
         children: [
             {
                 title: '图片',
+                previewStyle: {
+                    width: '100%',
+                    height: 50,
+                },
                 config: {
                     componentName: 'img',
                     props: {

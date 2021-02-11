@@ -18,7 +18,7 @@ const defaultConfig = {
     // renderPreview: config => <div>函数返回jsx</div>,
     previewProps: {}, // 预览时属性
     // previewZoom: .5, // 预览缩放
-    previewStyle: {width: '100%'}, // 预览组件样式
+    // previewStyle: {width: '100%'}, // 预览组件样式
     // previewWrapperStyle: {}, // 预览容器样式
 };
 
