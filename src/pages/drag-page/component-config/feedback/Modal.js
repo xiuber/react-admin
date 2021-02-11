@@ -7,16 +7,14 @@ export default {
         {
             selector: '.ant-modal-title',
             propsField: 'title',
-            //
-            // onInput: event => options => {
-            //     const {node, pageConfig, dragPageAction} = options;
-            //     const value = event.target.innerText;
-            //
-            //     if (!node.props) node.props = {};
-            //     node.props.title = value;
-            //
-            // },
-            //
+        },
+        {
+            selector: '.ant-modal-footer:not(.customer-modal-footer) .ant-btn-primary',
+            propsField: 'okText',
+        },
+        {
+            selector: '.ant-modal-footer:not(.customer-modal-footer) .ant-btn:not(.ant-btn-primary)',
+            propsField: 'cancelText',
         },
     ],
 

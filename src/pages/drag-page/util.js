@@ -496,18 +496,35 @@ export function isDropAccept(options) {
     // 不允许父节点拖入子节点
     if (isChildrenNode(draggingNode, targetNode)) return false;
 
-    const config = getComponentConfig(targetNode.componentName);
-    const {isContainer = true} = config;
+    const targetConfig = getComponentConfig(targetNode.componentName);
+    const sourceConfig = getComponentConfig(draggingNode.componentName);
+
+    const {isContainer = true} = targetConfig;
 
     if (!isContainer) return false;
 
-    let dropAccept = config.dropAccept;
+    let {dropInTo} = sourceConfig;
+
 
     const args = {
         draggingNode,
         targetNode,
         pageConfig,
     };
+
+    if (typeof dropInTo === 'function') {
+        if (!dropInTo(args)) return false;
+    }
+
+    if (typeof dropInTo === 'string') dropInTo = [dropInTo];
+
+    if (Array.isArray(dropInTo)) {
+        if (!dropInTo.includes(targetNode.componentName)) return false;
+    }
+
+
+    let {dropAccept} = targetConfig;
+
 
     if (typeof dropAccept === 'function') {
 

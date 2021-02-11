@@ -1,3 +1,6 @@
+import React from 'react';
+import {Form, Input} from 'antd';
+
 export default [
     {
         title: '表单',
@@ -45,11 +48,28 @@ export default [
             },
             {
                 title: '表单项',
+                renderPreview: (
+                    <Form>
+                        <Form.Item
+                            label="名称"
+                        >
+                            <Input placeholder="请输入"/>
+                        </Form.Item>
+                    </Form>
+                ),
                 config: {
                     componentName: 'Form.Item',
                     props: {
-                        label: '表单项',
+                        label: '名称',
                     },
+                    children: [
+                        {
+                            componentName: 'Input',
+                            props: {
+                                placeholder: '请输入',
+                            },
+                        },
+                    ],
                 },
             },
         ],

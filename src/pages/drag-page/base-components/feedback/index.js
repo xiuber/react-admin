@@ -115,7 +115,7 @@ export default [
                 config: {
                     componentName: 'ModalFooter',
                     props: {
-                        className: 'ant-modal-footer',
+                        className: 'ant-modal-footer customer-modal-footer',
                     },
                     children: [
                         {
