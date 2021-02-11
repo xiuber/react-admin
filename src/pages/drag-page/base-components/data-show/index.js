@@ -176,8 +176,22 @@ export default [
             {
                 title: '表格',
                 renderPreview: true,
+                previewZoom: .8,
                 config: {
                     componentName: 'Table',
+                    props: {
+                        style: {width: '100%'},
+                        pagination: false,
+                        columns: [
+                            {title: '姓名', dataIndex: 'name'},
+                            {title: '年龄', dataIndex: 'age'},
+                            {title: '操作', dataIndex: 'operator'},
+                        ],
+                        dataSource: [
+                            {name: '张三', age: 25, operator: '修改'},
+                            {name: '李四', age: 26, operator: '修改'},
+                        ],
+                    },
                 },
             },
         ],

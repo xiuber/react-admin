@@ -18,15 +18,15 @@ export default function EditableAction(props) {
             editableContents.forEach(item => {
                 let {selector} = item;
 
-                let ele;
+                let eles;
                 if (selector) {
-                    ele = iframeDocument.querySelector(`.${className} ${selector}`);
+                    eles = iframeDocument.querySelectorAll(`.${className} ${selector}`);
                 } else {
-                    ele = iframeDocument.querySelector(`.${className}`);
+                    eles = iframeDocument.querySelectorAll(`.${className}`);
                 }
 
-                if (!ele) return;
-                cb(ele, node, item);
+                if (!eles?.length) return;
+                eles.forEach((ele, index) => cb(ele, index, node, item));
             });
         }
 
@@ -39,7 +39,7 @@ export default function EditableAction(props) {
         if (!iframeDocument) return;
 
         let tabIndex = 1000;
-        loop(pageConfig, (ele, node, item) => {
+        loop(pageConfig, (ele, index, node, item) => {
             let {onInput, onBlur, propsField} = item;
             tabIndex++;
 
@@ -71,7 +71,7 @@ export default function EditableAction(props) {
 
             ele.oninput = debounce(e => {
                 if (onInput) {
-                    onInput(e)({node, pageConfig, dragPageAction, iframeDocument});
+                    onInput(e)({index, node, pageConfig, dragPageAction, iframeDocument});
                 } else {
                     handleInput(e);
                 }
@@ -85,7 +85,7 @@ export default function EditableAction(props) {
             ele.onblur = e => {
                 ele.style.outline = prevStyleOutline;
                 if (onBlur) {
-                    onBlur(e)({node, pageConfig, dragPageAction, iframeDocument});
+                    onBlur(e)({index, node, pageConfig, dragPageAction, iframeDocument});
                 }
                 dragPageAction.render();
             };
