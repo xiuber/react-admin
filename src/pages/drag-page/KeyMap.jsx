@@ -26,11 +26,12 @@ export default config({
             selectedNode: state.dragPage.selectedNode,
             activeSideKey: state.dragPage.activeSideKey,
             showSide: state.dragPage.showSide,
+            iframeDocument: state.dragPage.iframeDocument,
         };
     },
 })(function KeyMap(props) {
     const {
-        iframe,
+        iframeDocument,
         selectedNode,
         selectedNodeId,
         activeSideKey,
@@ -140,15 +141,13 @@ export default config({
     }
 
     useEffect(() => {
-        if (iframe) {
-            const iframeDocument = iframe.contentDocument;
+        if (iframeDocument) {
             iframeDocument.addEventListener('keydown', handleKeyDown);
         }
         window.addEventListener('keydown', handleKeyDown);
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
-            if (iframe) {
-                const iframeDocument = iframe.contentDocument;
+            if (iframeDocument) {
                 iframeDocument.removeEventListener('keydown', handleKeyDown);
             }
         };

@@ -4,7 +4,6 @@ import {ConfigProvider} from 'antd';
 import config from 'src/commons/config-hoc';
 import NodeRender from './node-render/NodeRender';
 import {scrollElement} from 'src/pages/drag-page/util';
-import KeyMap from 'src/pages/drag-page/KeyMap';
 import Scale from './scale';
 import DragOver from './drag-over';
 import DragAction from './drag-action';
@@ -184,7 +183,6 @@ export default config({
                 ref={containerRef}
                 style={containerStyle}
             >
-                <KeyMap iframe={iframeRef.current}/>
                 <iframe
                     styleName="dndIframe"
                     id="dnd-iframe"

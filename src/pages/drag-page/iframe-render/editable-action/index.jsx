@@ -37,8 +37,10 @@ export default function EditableAction(props) {
     useEffect(() => {
         if (!iframeDocument) return;
 
+        let tabIndex = 1000;
         loop(pageConfig, (ele, node, item) => {
             let {onInput, onBlur, propsField} = item;
+            tabIndex++;
 
             let handleInput = () => undefined;
 
@@ -49,15 +51,22 @@ export default function EditableAction(props) {
                 };
             }
 
-            ele.setAttribute('contenteditable', 'true');
+            // 只能输入纯文本
+            // ele.style.webkitUserModify = 'read-write-plaintext-only';
+
+            ele.setAttribute('contenteditable', 'plaintext-only');
+            ele.setAttribute('tabindex', tabIndex);
             // 清除 元素 focus 样式
-            // const prevOutline = window.getComputedStyle(ele).outline;
-            // const prevStyleOutline = ele.style.outline;
-            //
-            // ele.onfocus = () => {
-            //     ele.style.outline = prevOutline;
-            // };
-            //
+            const prevOutline = window.getComputedStyle(ele).outline;
+            const prevStyleOutline = ele.style.outline;
+
+            ele.onfocus = () => {
+                ele.style.outline = prevOutline;
+                // setTimeout(() => {
+                //     document.execCommand('selectAll', false, null);
+                // }, 100);
+            };
+
             ele.oninput = e => {
                 handleInput(e);
                 if (onInput) {
@@ -71,7 +80,7 @@ export default function EditableAction(props) {
                 // dragPageAction.render();
             };
             ele.onblur = e => {
-                // ele.style.outline = prevStyleOutline;
+                ele.style.outline = prevStyleOutline;
                 if (onBlur) {
                     onBlur(e)({node, pageConfig, dragPageAction});
                 }
@@ -81,7 +90,9 @@ export default function EditableAction(props) {
 
         return () => {
             loop(pageConfig, (ele) => {
+                // ele.style.userModify = '';
                 ele.setAttribute('contenteditable', 'false');
+                ele.removeAttribute('tabindex');
                 ele.oninput = null;
                 ele.onblur = null;
             });

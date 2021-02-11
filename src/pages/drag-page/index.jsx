@@ -6,6 +6,7 @@ import Left from './left';
 import Right from './right';
 import IframeRender from './iframe-render';
 import ArrowLines from './arrow-lines';
+import KeyMap from './KeyMap';
 import './style.less';
 
 export default config({
@@ -14,6 +15,7 @@ export default config({
 })(function DragPage(props) {
     return (
         <PageContent fitHeight styleName="root">
+            <KeyMap/>
             <div styleName="top">
                 <Top/>
             </div>
