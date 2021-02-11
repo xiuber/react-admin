@@ -113,7 +113,8 @@ export function showFieldByAppend(values, appendField) {
 // 删除默认属性
 export function deleteDefaultProps(component) {
     const loop = node => {
-        let {componentName, props} = node;
+        let {componentName, props, children} = node;
+
         if (!props) props = {};
         const propsConfig = getComponentConfig(componentName);
         if (propsConfig) {
@@ -144,6 +145,10 @@ export function deleteDefaultProps(component) {
                         }
                     }
                 });
+        }
+
+        if (children?.length) {
+            children.forEach(item => loop(item));
         }
     };
 

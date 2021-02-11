@@ -216,12 +216,10 @@ export default config({
         }
 
         const node = cloneDeep(selectedNode);
-
         const allNodes = cloneDeep(pageConfig);
 
         // 清除非关联id
         deleteUnLinkedIds(allNodes);
-
 
         let editNode;
         if (editType === EDIT_TYPE.CURRENT_NODE) editNode = node;
