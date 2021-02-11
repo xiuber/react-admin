@@ -2,6 +2,7 @@ import {isMac} from 'src/pages/drag-page/util';
 
 export default {
     withHolder: true,
+    dropInTo: 'Row', // Col 只能放入Row中
     fields: [
         {
             label: '占位格数',

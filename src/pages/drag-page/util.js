@@ -514,6 +514,8 @@ export function isDropAccept(options) {
         return dropAccept(args);
     }
 
+    if (typeof dropAccept === 'string') dropAccept = [dropAccept];
+
     if (!Array.isArray(dropAccept)) return true;
 
     const {componentName} = draggingNode;

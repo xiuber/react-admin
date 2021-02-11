@@ -1,4 +1,4 @@
-import {isMac} from 'src/pages/drag-page/util';
+import {findParentNodeByParentName, isMac} from 'src/pages/drag-page/util';
 import {getComponentConfig} from 'src/pages/drag-page/component-config/index';
 
 export default {
@@ -18,6 +18,13 @@ export default {
         const nodeConfig = getComponentConfig(draggingNode?.componentName);
 
         return nodeConfig?.isFormElement;
+    },
+    dropInTo: options => {
+        const {targetNode, pageConfig} = options;
+
+        let formNode = findParentNodeByParentName(pageConfig, 'Form', targetNode.id);
+
+        return !!formNode;
     },
     hooks: {
         beforeAddChildren: (options) => {

@@ -59,7 +59,8 @@ const defaultConfig = {
 
     // propsToSet: '', // 连接时，要设置的属性
 
-    // dropAccept: undefined, // ['Text'] || function, // 可拖入组件，默认 任意组件都可放入
+    // dropAccept: undefined, // 'text' || ['Text'] || function({draggingNode, targetNode, pageConfig,}), // 可接受拖入的组件，默认 任意组件都接收
+    // dropInto: undefined, // 'text' || ['Text'] || function({draggingNode, targetNode, pageConfig,}), // 可放入的目标组件，默认 可以放入任何组件中
     // 如果某个组件必须存在子元素，可以添加 withHolder: true, 提示用户必须拖入子元素，比如 Form.Item，但是div不要设置true，有些情况div不需要子元素
     withHolder: false, // 当没有子组件的时候，是否显示holder 默认 false ，true && isContainer 显示
     // holderProps: {}, //
