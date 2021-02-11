@@ -189,6 +189,7 @@ export default config({
         saveRef.current = true;
 
         dragPageAction.setPageConfig({...nextPageConfig});
+        // 右侧样式、属性面板没有关联pageConfig，需要刷新同步一下
         dragPageAction.refreshProps();
 
         const nextSelectedNode = findNodeById(nextPageConfig, selectedNode?.id);

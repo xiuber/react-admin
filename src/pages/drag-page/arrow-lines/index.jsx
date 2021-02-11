@@ -16,7 +16,7 @@ export default config({
 
             selectedNode: state.dragPage.selectedNode,
             selectedNodeId: state.dragPage.selectedNodeId,
-            iFrameDocument: state.dragPage.iFrameDocument,
+            iframeDocument: state.dragPage.iframeDocument,
         };
     },
 })(function ArrowLines(props) {
@@ -28,7 +28,7 @@ export default config({
         selectedNodeId,
         action: {dragPage: dragPageAction},
         pageConfig,
-        iFrameDocument,
+        iframeDocument,
     } = props;
 
     const nodeConfig = getComponentConfig(selectedNode?.componentName);
@@ -81,7 +81,7 @@ export default config({
         const all = findLinkTargetsPosition({
             pageConfig,
             selectedNode,
-            iFrameDocument,
+            iframeDocument,
         });
 
         const iframe = document.getElementById('dnd-iframe');
@@ -116,18 +116,18 @@ export default config({
 
     // 设计页面滚动，刷新位置
     useEffect(() => {
-        if (!iFrameDocument) return;
+        if (!iframeDocument) return;
 
         function handleScroll() {
             dragPageAction.setRefreshArrowLines({});
         }
 
-        iFrameDocument.body.addEventListener('scroll', handleScroll);
+        iframeDocument.body.addEventListener('scroll', handleScroll);
 
         return () => {
-            iFrameDocument.body.removeEventListener('scroll', handleScroll);
+            iframeDocument.body.removeEventListener('scroll', handleScroll);
         };
-    }, [iFrameDocument]);
+    }, [iframeDocument]);
 
 
     return (

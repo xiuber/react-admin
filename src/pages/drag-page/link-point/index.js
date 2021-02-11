@@ -13,13 +13,13 @@ export default config({
         return {
             pageConfig: state.dragPage.pageConfig,
             selectedNode: state.dragPage.selectedNode,
-            iFrameDocument: state.dragPage.iFrameDocument,
+            iframeDocument: state.dragPage.iframeDocument,
         };
     },
 })(function LinkProps(props) {
     const {
         selectedNode,
-        iFrameDocument,
+        iframeDocument,
         action: {dragPage: dragPageAction},
         className,
         onDragStart,
@@ -138,22 +138,22 @@ export default config({
     }
 
     useEffect(() => {
-        if (!iFrameDocument) return;
+        if (!iframeDocument) return;
         if (!dragging) return;
 
         // 捕获方式
-        iFrameDocument.addEventListener('dragover', handleIframeOver, true);
+        iframeDocument.addEventListener('dragover', handleIframeOver, true);
         window.addEventListener('dragover', handleOver, true);
         return () => {
-            iFrameDocument.removeEventListener('dragover', handleIframeOver, true);
+            iframeDocument.removeEventListener('dragover', handleIframeOver, true);
             window.removeEventListener('dragover', handleOver, true);
         };
-    }, [iFrameDocument, dragging]);
+    }, [iframeDocument, dragging]);
 
     const links = movingPoint ? [] : findLinkTargetsPosition({
         pageConfig,
         selectedNode,
-        iFrameDocument,
+        iframeDocument,
     });
 
     const pointElement = (

@@ -8,6 +8,7 @@ import KeyMap from 'src/pages/drag-page/KeyMap';
 import Scale from './scale';
 import DragOver from './drag-over';
 import DragAction from './drag-action';
+import EditableAction from './editable-action';
 import './style.less';
 
 // 构建iframe内容
@@ -66,8 +67,10 @@ export default config({
         rightSideWidth,
         schemaEditorWidth,
         componentTreeWidth,
+        action: {dragPage: dragPageAction},
     } = props;
-    const dragPageAction = props.action.dragPage;
+
+    const isPreview = activeToolKey === 'preview';
 
     const containerRef = useRef(null);
     const iframeRef = useRef(null);
@@ -95,6 +98,7 @@ export default config({
 
     }, []);
 
+
     const draggableNodeProps = {
         config: pageConfig,
         pageConfig,
@@ -103,7 +107,7 @@ export default config({
         draggingNode,
         activeSideKey,
         dragPageAction,
-        isPreview: activeToolKey === 'preview',
+        isPreview,
         iframeDocument: iframeRef.current?.contentDocument,
     };
     useEffect(() => {
@@ -113,6 +117,7 @@ export default config({
 
         ReactDOM.render(
             <ConfigProvider getPopupContainer={() => iframeRootRef.current}>
+                {isPreview ? null : <EditableAction {...draggableNodeProps}/>}
                 <DragAction {...draggableNodeProps}>
                     <NodeRender {...draggableNodeProps}/>
                 </DragAction>

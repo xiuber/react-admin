@@ -133,7 +133,7 @@ function findLinkTargetComponentIds(options) {
 
 // 获取关联元素位置
 export function findLinkTargetsPosition(options) {
-    const {pageConfig, selectedNode, iFrameDocument} = options;
+    const {pageConfig, selectedNode, iframeDocument} = options;
 
     const componentId = selectedNode?.id;
     const propsToSet = getComponentConfig(selectedNode.componentName).propsToSet;
@@ -148,7 +148,7 @@ export function findLinkTargetsPosition(options) {
                 key,
                 value: str,
                 componentId,
-                iFrameDocument,
+                iframeDocument,
             }) || [];
         }).flat();
 }
@@ -159,7 +159,7 @@ function findElementPosition(options) {
         key,
         value,
         componentId: sourceComponentId,
-        iFrameDocument,
+        iframeDocument,
         pageConfig,
     } = options;
     const targetIds = findLinkTargetComponentIds({
@@ -169,7 +169,7 @@ function findElementPosition(options) {
     });
 
     return targetIds.map(targetComponentId => {
-        const ele = iFrameDocument.querySelector(`[data-componentId="${targetComponentId}"]`);
+        const ele = iframeDocument.querySelector(`[data-componentId="${targetComponentId}"]`);
         if (!ele) return false;
         const {x, y, width, height} = ele.getBoundingClientRect();
         return {

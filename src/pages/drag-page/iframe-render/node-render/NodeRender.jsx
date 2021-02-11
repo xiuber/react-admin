@@ -64,7 +64,6 @@ export default function NodeRender(props) {
         );
     }) : undefined;
 
-
     const component = getComponent(config);
 
     const componentActions = Object.entries(actions)
@@ -107,6 +106,7 @@ export default function NodeRender(props) {
         [styles.dragging]: draggingNode?.id === componentId,
         [styles.unDraggable]: !draggable,
 
+        [`id_${componentId}`]: true,
     });
 
     const dragProps = {

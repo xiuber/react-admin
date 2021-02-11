@@ -19,6 +19,31 @@ req.keys().forEach(key => {
 });
 
 const defaultConfig = {
+    // editableContents: [ // 可编辑内容
+    //     {
+    //         selector: '.ant-modal-title', // 基于当前元素的选择器，缺省标识当前节点
+    //         propsField: 'title', // 要修改的props属性
+    //
+    //          onInput: event => options => { // 输入事件
+    //              const {node, pageConfig, dragPageAction} = options;
+    //              const value = event.target.innerText;
+    //
+    //              if (!node.props) node.props = {};
+    //              node.props.title = value;
+    //
+    //          },
+    //          onBlur: event => options => { // 失去焦点事件
+    //              const {node, pageConfig, dragPageAction} = options;
+    //              const value = event.target.innerText;
+    //
+    //              if (!node.props) node.props = {};
+    //              node.props.title = value;
+    //
+    //          },
+    //
+    //
+    //     },
+    // ],
     icon: <AppstoreOutlined/>, // 组件图标
     // isFormElement: undefined, // 是否是表单组件，如果是，可以放入 Form.Item中
     // renderComponentName: '', // 指定渲染使用组件，比如 PageContent 并不存在，可以指定使用div渲染

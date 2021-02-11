@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Form} from 'antd';
+import {Form, Switch} from 'antd';
 import {AppstoreOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
@@ -18,6 +18,7 @@ export default config({
     connect: state => {
         return {
             canvasWidth: state.dragPage.canvasWidth,
+            contentEditable: state.dragPage.contentEditable,
             canvasHeight: state.dragPage.canvasHeight,
             nodeSelectType: state.dragPage.nodeSelectType,
         };
@@ -27,6 +28,7 @@ export default config({
         canvasWidth,
         canvasHeight,
         nodeSelectType,
+        contentEditable,
         action: {dragPage: dragPageAction},
     } = props;
     const [form] = Form.useForm();
@@ -36,23 +38,23 @@ export default config({
             canvasWidth,
             canvasHeight,
             nodeSelectType,
+            contentEditable,
         } = allValues;
         dragPageAction.setCanvasWidth(canvasWidth);
         dragPageAction.setCanvasHeight(canvasHeight);
         dragPageAction.setNodeSelectType(nodeSelectType);
+        dragPageAction.setContentEditable(contentEditable);
     }
 
+    const fieldsValue = {
+        canvasWidth,
+        canvasHeight,
+        nodeSelectType,
+        contentEditable,
+    };
     useEffect(() => {
-        form.setFieldsValue({nodeSelectType});
-    }, [nodeSelectType]);
-
-    useEffect(() => {
-        form.setFieldsValue({canvasWidth});
-    }, [canvasWidth]);
-
-    useEffect(() => {
-        form.setFieldsValue({canvasHeight});
-    }, [canvasHeight]);
+        form.setFieldsValue(fieldsValue);
+    }, [Object.values(fieldsValue)]);
 
     // TODO 提供 iphoneX PC 等预设
 
@@ -102,6 +104,15 @@ export default config({
                                 {value: 'meta', label: `${isMac ? '⌘' : 'ctrl'}+左键`},
                             ]}
                         />
+                    </Form.Item>
+                    <Form.Item
+                        {...layout}
+                        label="可编辑"
+                        name="contentEditable"
+                        colon={false}
+                        valuePropName="checked"
+                    >
+                        <Switch/>
                     </Form.Item>
                 </Form>
             </div>

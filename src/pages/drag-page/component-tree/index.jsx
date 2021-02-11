@@ -23,6 +23,7 @@ export default config({
             selectedNodeId: state.dragPage.selectedNodeId,
             componentTreeExpendedKeys: state.dragPage.componentTreeExpendedKeys,
             componentTreeWidth: state.dragPage.componentTreeWidth,
+            refreshProps: state.dragPage.refreshProps,
         };
     },
 })(function ComponentTree(props) {
@@ -32,8 +33,10 @@ export default config({
         componentTreeExpendedKeys,
         componentTreeWidth,
         draggingNode,
+        refreshProps,
         action: {dragPage: dragPageAction},
     } = props;
+
     const [treeData, setTreeData] = useState([]);
     const [nodeCount, setNodeCount] = useState(0);
     const [allKeys, setAllKeys] = useState([]);
@@ -86,7 +89,7 @@ export default config({
         setNodeCount(nodeCount);
         setAllKeys(allKeys);
 
-    }, [pageConfig]);
+    }, [pageConfig, refreshProps]);
 
     function handleSelected([key]) {
         dragPageAction.setSelectedNodeId(key);

@@ -62,7 +62,7 @@ const paddingFields = [
 
 
 export default function Layout(props) {
-    const {iFrameDocument, componentId, value, onChange = () => undefined} = props;
+    const {iframeDocument, componentId, value, onChange = () => undefined} = props;
     const [form] = Form.useForm();
     const [parentIsFlexBox, setParentIsFlexBox] = useState(false);
 
@@ -89,14 +89,14 @@ export default function Layout(props) {
     }, [value]);
 
     useEffect(() => {
-        if (!iFrameDocument || !componentId) return;
+        if (!iframeDocument || !componentId) return;
 
-        const ele = iFrameDocument.querySelector(`[data-componentId="${componentId}"]`);
+        const ele = iframeDocument.querySelector(`[data-componentId="${componentId}"]`);
         if (!ele?.parentNode) return;
 
         const display = window.getComputedStyle(ele.parentNode).display;
         setParentIsFlexBox(display === 'flex' || display === 'inline-flex');
-    }, [componentId, iFrameDocument]);
+    }, [componentId, iframeDocument]);
 
     return (
         <div styleName="root">

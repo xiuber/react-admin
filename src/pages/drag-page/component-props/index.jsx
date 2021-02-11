@@ -60,7 +60,7 @@ export default config({
             Reflect.deleteProperty(item, '_form');
         });
 
-        // console.log('props', JSON.stringify(selectedNode.props, null, 4));
+        console.log('props', JSON.stringify(selectedNode.props, null, 4));
         dragPageAction.render();
     }
 
@@ -76,7 +76,11 @@ export default config({
 
         // 回显表单 设置默认值
         const fieldValues = {...nodeProps};
+
+        // 自大字符标签
         let maxLabel = '';
+
+        // 设置默认属性
         fields.forEach(item => {
             const {field, label, defaultValue} = item;
             if (label.length > maxLabel.length) maxLabel = label;
@@ -85,6 +89,7 @@ export default config({
             }
         });
 
+        // 设置表单
         form.setFieldsValue(fieldValues);
 
         // 设置label宽度
@@ -203,9 +208,6 @@ export default config({
                         let isShow = showFieldByAppend(getFieldsValue(), appendField);
 
                         if (isShow) {
-                            // 显示是，将数据同步一下，否则 组件 props 中不存在
-                            setTimeout(() => handleChange({}, getFieldsValue()));
-
                             return element;
                         }
 

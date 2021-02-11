@@ -22,13 +22,13 @@ export default config({
         return {
             refreshProps: state.dragPage.refreshProps,
             selectedNode: state.dragPage.selectedNode,
-            iFrameDocument: state.dragPage.iFrameDocument,
+            iframeDocument: state.dragPage.iframeDocument,
         };
     },
 })(function ComponentStyle(props) {
     let {
         selectedNode = {},
-        iFrameDocument,
+        iframeDocument,
         action: {dragPage: dragPageAction},
     } = props;
 
@@ -131,7 +131,7 @@ export default config({
                                 return (
                                     <Panel key={key} header={<div id={`style-${key}`}>{title}</div>}>
                                         <Component
-                                            iFrameDocument={iFrameDocument}
+                                            iframeDocument={iframeDocument}
                                             componentId={componentId}
                                             containerRef={boxRef}
                                             value={style}

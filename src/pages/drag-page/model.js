@@ -26,6 +26,7 @@ const initialState = {
             showEndPoint: false, // 显示结束点
         },
     ],
+    contentEditable: true,
     showArrowLines: false,
     refreshArrowLines: null,
     refreshProps: null,
@@ -57,21 +58,25 @@ const initialState = {
     canvasHeight: '100%',
 
     pageConfig: rootHolderNode(),
-    iFrameDocument: null,
+    iframeDocument: null,
 };
 
 const syncStorage = {
     // rightSideWidth: true,
     schemaEditorWidth: true,
     componentTreeWidth: true,
-    pageConfig: true,
+    contentEditable: true,
     nodeSelectType: true,
+
+    pageConfig: true,
+
 };
 
 export default {
     initialState,
     syncStorage,
     init: () => cloneDeep(initialState),
+    setContentEditable: contentEditable => ({contentEditable}),
     setArrowLines: arrowLines => ({arrowLines}),
     setShowArrowLines: (showArrowLines, state) => {
 
@@ -94,7 +99,7 @@ export default {
         return {arrowLines: [...arrowLines]};
     },
     setNodeSelectType: nodeSelectType => ({nodeSelectType}),
-    setIFrameDocument: iFrameDocument => ({iFrameDocument}),
+    setIFrameDocument: iframeDocument => ({iframeDocument}),
     setDragOverInfo: dragOverInfo => ({dragOverInfo}),
     setCanvasWidth: canvasWidth => ({canvasWidth}),
     setCanvasHeight: canvasHeight => ({canvasHeight}),

@@ -2,7 +2,12 @@ import {isMac} from 'src/pages/drag-page/util';
 import {getComponentConfig} from 'src/pages/drag-page/component-config/index';
 
 export default {
-
+    editableContents: [
+        {
+            selector: '.ant-col.ant-form-item-label>label',
+            propsField: 'label',
+        },
+    ],
     withHolder: true,
     holderProps: {
         tip: '请拖入表单元素',

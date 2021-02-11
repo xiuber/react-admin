@@ -1,7 +1,7 @@
 import React, {useState, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import {getDropGuidePosition, isDropAccept} from 'src/pages/drag-page/util';
-import {getComponentConfig} from '../component-config'
+import {getComponentConfig} from '../component-config';
 import {throttle} from 'lodash';
 import classNames from 'classnames';
 

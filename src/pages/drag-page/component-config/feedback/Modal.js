@@ -3,6 +3,23 @@ import {SHOW_MODAL_FUNCTION} from 'src/pages/drag-page/util';
 // import {buttonTypeOptions} from '../options';
 
 export default {
+    editableContents: [
+        {
+            selector: '.ant-modal-title',
+            propsField: 'title',
+            //
+            // onInput: event => options => {
+            //     const {node, pageConfig, dragPageAction} = options;
+            //     const value = event.target.innerText;
+            //
+            //     if (!node.props) node.props = {};
+            //     node.props.title = value;
+            //
+            // },
+            //
+        },
+    ],
+
     // draggable: false,
     componentDisplayName: ({node}) => {
         const {componentName, props = {}} = node;
@@ -38,7 +55,8 @@ export default {
             // node.props.key = uuid();
 
             dragPageAction.render(); // props改变了，重新出发页面渲染
-            dragPageAction.refreshProps(); // 刷新属性面板
+
+            dragPageAction.refreshProps(); // 刷新属性面板，属性面板没有关联pageConfig，需要刷新一下
         },
     },
     fields: [
@@ -50,7 +68,7 @@ export default {
         {label: 'esc关闭', category: '选项', field: 'keyboard', type: 'boolean', defaultValue: true, version: '', desc: '是否支持键盘 esc 关闭'},
         {label: '垂直居中', category: '选项', field: 'centered', type: 'boolean', defaultValue: false, version: '', desc: '垂直居中展示 Modal'},
         {label: '展示默认底部', field: 'footer', type: 'FooterSwitch', version: '', desc: '底部内容，当不需要默认底部按钮时，可以设为 footer={null}'},
-        {label: '确认按钮文字', field: 'okText', appendField: {footer: undefined},  type: 'string', defaultValue: '确定', version: '', desc: '确认按钮文字'},
+        {label: '确认按钮文字', field: 'okText', appendField: {footer: undefined}, type: 'string', defaultValue: '确定', version: '', desc: '确认按钮文字'},
         // {label: '确认按钮类型', field: 'okType', appendField: {footer: undefined}, type: 'radio-group', options: buttonTypeOptions, defaultValue: 'primary', version: '', desc: '确认按钮类型'},
         {label: '确定loading', field: 'confirmLoading', appendField: {footer: undefined}, type: 'boolean', defaultValue: false, version: '', desc: '确定按钮 loading'},
         {label: '取消按钮文字', field: 'cancelText', appendField: {footer: undefined}, type: 'string', defaultValue: '取消', version: '', desc: '取消按钮文字'},
