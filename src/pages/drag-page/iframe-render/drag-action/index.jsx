@@ -41,8 +41,6 @@ export default function DragAction(props) {
 
         // 拖拽携带的数据
         e.dataTransfer.setData('sourceComponentId', componentId);
-
-        console.log('componentId', componentId);
     }
 
     function handleDragLeave() {

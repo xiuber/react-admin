@@ -175,12 +175,12 @@ export default function NodeRender(props) {
             ...dragProps,
             className: dragClassName + ' dragWrapper',
             style: wStyle,
+            onClick: onNodeClick,
             children: [
                 createElement(component, {
                     ...commonProps,
                     ...componentProps,
                     ...propsActions,
-                    onClick: onNodeClick,
                     style,
                 }),
             ],
