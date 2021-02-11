@@ -148,8 +148,6 @@ export function deleteDefaultProps(component) {
     };
 
     loop(component);
-
-    return component;
 }
 
 // 获取组件配置

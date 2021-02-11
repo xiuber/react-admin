@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import config from 'src/commons/config-hoc';
 import LinkPoint from 'src/pages/drag-page/link-point';
 import styles from './style.less';
-import {getEleCenterInWindow, findLinkElementsPosition} from 'src/pages/drag-page/util';
+import {getEleCenterInWindow, findLinkTargetsPosition} from 'src/pages/drag-page/util';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 export default config({
@@ -78,7 +78,7 @@ export default config({
 
         const {x: startX, y: startY} = center;
 
-        const all = findLinkElementsPosition({
+        const all = findLinkTargetsPosition({
             pageConfig,
             selectedNode,
             iFrameDocument,

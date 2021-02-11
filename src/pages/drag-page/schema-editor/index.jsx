@@ -3,10 +3,11 @@ import {message, Switch} from 'antd';
 import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
-import {findNodeById, usePrevious, loopIdToFirst} from '../util';
+import {findNodeById, usePrevious, loopIdToFirst, deleteUnLinkedIds} from '../util';
 import {deleteDefaultProps} from '../component-config';
 import {v4 as uuid} from 'uuid';
 import DragBar from '../drag-bar';
+import {cloneDeep} from 'lodash';
 import './style.less';
 
 const EDIT_TYPE = {
@@ -152,15 +153,15 @@ export default config({
             return message.error(msg);
         }
 
-        const componentId = nodeConfig?.id;
-        const node = findNodeById(pageConfig, componentId);
-
-        if (!node) return message.error('节点无法对应，您是否修改了根节点的id?');
-
         let nextPageConfig;
 
         // 编辑单独节点
         if (editType !== EDIT_TYPE.ALL) {
+            const componentId = nodeConfig?.id;
+            const node = findNodeById(pageConfig, componentId);
+
+            if (!node) return message.error('节点无法对应，您是否修改了根节点的id?');
+
             // 删除所有数据，保留引用
             Object.keys(node).forEach(key => {
                 Reflect.deleteProperty(node, key);
@@ -214,16 +215,22 @@ export default config({
             return;
         }
 
+        const node = cloneDeep(selectedNode);
+
+        const allNodes = cloneDeep(pageConfig);
+
+        // 清除非关联id
+        deleteUnLinkedIds(allNodes);
+
+
         let editNode;
-        if (editType === EDIT_TYPE.CURRENT_NODE) editNode = selectedNode;
-        if (editType === EDIT_TYPE.ALL) editNode = pageConfig;
+        if (editType === EDIT_TYPE.CURRENT_NODE) editNode = node;
+        if (editType === EDIT_TYPE.ALL) editNode = allNodes;
 
         if (!editNode) return setCode('');
 
         // 清除默认值
-        editNode = deleteDefaultProps(editNode);
-
-        // TODO 清除非关联id
+        deleteDefaultProps(editNode);
 
         // id 属性调整到首位
         loopIdToFirst(editNode);

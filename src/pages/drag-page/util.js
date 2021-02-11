@@ -20,7 +20,7 @@ export function loopIdToFirst(node) {
     Reflect.deleteProperty(node, 'id');
 
     const entries = Object.entries(node);
-    if(!entries?.length) return;
+    if (!entries?.length) return;
 
     // 如果第一个key 不是 id
     if (entries[0][0] !== id) {
@@ -54,35 +54,59 @@ export function syncObject(oldObj, newObj) {
             }
         }
     });
-};
-
-export function findLinkElementsPosition(options) {
-    const {pageConfig, selectedNode, iFrameDocument} = options;
-
-    const componentId = selectedNode?.id;
-    const propsToSet = getComponentConfig(selectedNode.componentName).propsToSet;
-
-    if (!propsToSet) return;
-
-    return Object.entries(propsToSet)
-        .map(([key, value]) => {
-            const str = value.replace(/\$\{componentId}/g, componentId);
-            return findLinkElementPosition({
-                pageConfig,
-                key,
-                value: str,
-                componentId,
-                iFrameDocument,
-            }) || [];
-        }).flat();
 }
 
-function findLinkElementPosition(options) {
+// 删除所有非关联id
+export function deleteUnLinkedIds(nodeConfig) {
+    const linkedIds = findLinkSourceComponentIds(nodeConfig);
+    const loop = node => {
+        if (!linkedIds.includes(node.id)) Reflect.deleteProperty(node, 'id');
+
+        if (node.children?.length) {
+            node.children.forEach(item => loop(item));
+        }
+    };
+    loop(nodeConfig);
+}
+
+// 获取含有关联元素的ids
+export function findLinkSourceComponentIds(pageConfig) {
+    const ids = [];
+    const loop = node => {
+        const propsToSet = getComponentConfig(node.componentName).propsToSet;
+        const componentId = node.id;
+
+        if (propsToSet) {
+            const targetIds = Object.entries(propsToSet)
+                .map(([key, value]) => {
+                    const str = value.replace(/\$\{componentId}/g, componentId);
+                    return findLinkTargetComponentIds({
+                        key,
+                        value: str,
+                        pageConfig,
+                    });
+                }).flat();
+
+            // 存在target
+            if (targetIds?.length) {
+                ids.push(componentId);
+            }
+        }
+
+        if (node.children?.length) {
+            node.children.forEach(item => loop(item));
+        }
+    };
+    loop(pageConfig);
+
+    return ids;
+}
+
+// 获取所有关联目标组件id
+function findLinkTargetComponentIds(options) {
     const {
         key,
         value,
-        componentId: sourceComponentId,
-        iFrameDocument,
         pageConfig,
     } = options;
 
@@ -93,20 +117,7 @@ function findLinkElementPosition(options) {
 
         if (props[key] === value) {
             const targetComponentId = node?.id;
-            const ele = iFrameDocument.querySelector(`[data-componentId="${targetComponentId}"]`);
-            if (ele) {
-                const {x, y, width, height} = ele.getBoundingClientRect();
-
-                result.push({
-                    key: `${value}__${targetComponentId}`,
-                    propsKey: key,
-                    propsValue: value,
-                    endX: x + width / 2,
-                    endY: y + height / 2,
-                    targetComponentId,
-                    sourceComponentId,
-                });
-            }
+            result.push(targetComponentId);
         }
         if (node.children?.length) {
             node.children.forEach(item => loop(item));
@@ -118,6 +129,58 @@ function findLinkElementPosition(options) {
     return result;
 }
 
+// 获取关联元素位置
+export function findLinkTargetsPosition(options) {
+    const {pageConfig, selectedNode, iFrameDocument} = options;
+
+    const componentId = selectedNode?.id;
+    const propsToSet = getComponentConfig(selectedNode.componentName).propsToSet;
+
+    if (!propsToSet) return;
+
+    return Object.entries(propsToSet)
+        .map(([key, value]) => {
+            const str = value.replace(/\$\{componentId}/g, componentId);
+            return findElementPosition({
+                pageConfig,
+                key,
+                value: str,
+                componentId,
+                iFrameDocument,
+            }) || [];
+        }).flat();
+}
+
+// 获取位置
+function findElementPosition(options) {
+    const {
+        key,
+        value,
+        componentId: sourceComponentId,
+        iFrameDocument,
+        pageConfig,
+    } = options;
+    const targetIds = findLinkTargetComponentIds({
+        key,
+        value,
+        pageConfig,
+    });
+
+    return targetIds.map(targetComponentId => {
+        const ele = iFrameDocument.querySelector(`[data-componentId="${targetComponentId}"]`);
+        if (!ele) return;
+        const {x, y, width, height} = ele.getBoundingClientRect();
+        return {
+            key: `${value}__${targetComponentId}`,
+            propsKey: key,
+            propsValue: value,
+            endX: x + width / 2,
+            endY: y + height / 2,
+            targetComponentId,
+            sourceComponentId,
+        };
+    }).filter(item => !!item);
+}
 
 // css 样式字符串 转 js 样式对象
 export function cssToObject(css) {
@@ -151,7 +214,6 @@ export function cssToObject(css) {
     }, {});
 }
 
-
 // js 样式对象 转 css 字符串
 export async function objectToCss(style) {
     return new Promise((resolve, reject) => {
@@ -176,7 +238,6 @@ export async function objectToCss(style) {
         });
     });
 }
-
 
 // 表单值转换，纯数字字符串，转换为数字 并不允许输入空格
 export function getNumberValueFromEvent(e) {
@@ -224,6 +285,7 @@ export function filterTree(array, filter) {
     return array.reduce(getNodes, []);
 }
 
+// 记录前一次渲染时数据
 export function usePrevious(value) {
     const ref = useRef();
     useEffect(() => {
@@ -232,6 +294,7 @@ export function usePrevious(value) {
     return ref.current;
 }
 
+// 获取元素中间位置
 export function getEleCenterInWindow(element) {
     if (!element) return null;
 
@@ -407,7 +470,6 @@ export function getDropPosition(options) {
     };
 }
 
-
 // 是否接受放入
 export function isDropAccept(options) {
     const {
@@ -495,7 +557,6 @@ export function findParentNodeById(root, id) {
     }
 }
 
-
 // 根据id查找具体名称对应的祖先节点
 export function findParentNodeByParentName(node, name, id) {
     const child = findNodeById(node, id);
@@ -508,6 +569,7 @@ export function findParentNodeByParentName(node, name, id) {
     }
 }
 
+// 根据componentName获取所有节点
 export function getAllNodesByName(node, name) {
     const nodes = [];
     const loop = n => {
@@ -694,6 +756,7 @@ export function getComponent(options) {
     return name;
 }
 
+// 复制兼容函数
 function fallbackCopyTextToClipboard(text) {
     var textArea = document.createElement('textarea');
     textArea.value = text;

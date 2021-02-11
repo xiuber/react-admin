@@ -54,7 +54,7 @@ export default {
         // {label: '确认按钮类型', field: 'okType', appendField: {footer: undefined}, type: 'radio-group', options: buttonTypeOptions, defaultValue: 'primary', version: '', desc: '确认按钮类型'},
         {label: '确定loading', field: 'confirmLoading', appendField: {footer: undefined}, type: 'boolean', defaultValue: false, version: '', desc: '确定按钮 loading'},
         {label: '取消按钮文字', field: 'cancelText', appendField: {footer: undefined}, type: 'string', defaultValue: '取消', version: '', desc: '取消按钮文字'},
-        {label: 'z-index', field: 'zIndex', type: 'number', defaultValue: '1000', version: '', desc: '设置 Modal 的 z-index'},
+        {label: 'z-index', field: 'zIndex', type: 'number', defaultValue: 1000, version: '', desc: '设置 Modal 的 z-index'},
         /*
         {label: 'Modal 完全关闭后的回调', field: 'afterClose', type: 'function', version: '', desc: 'Modal 完全关闭后的回调'},
         {label: 'Modal body 样式', field: 'bodyStyle', type: 'CSSProperties', defaultValue: '', version: '', desc: 'Modal body 样式'},
