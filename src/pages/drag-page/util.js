@@ -57,8 +57,11 @@ export function syncObject(oldObj, newObj) {
 }
 
 // 删除所有非关联id
-export function deleteUnLinkedIds(nodeConfig) {
-    const linkedIds = findLinkSourceComponentIds(nodeConfig);
+export function deleteUnLinkedIds(nodeConfig, ids = []) {
+    let linkedIds = findLinkSourceComponentIds(nodeConfig);
+
+    linkedIds = linkedIds.concat(ids);
+
     const loop = node => {
         if (!linkedIds.includes(node.id)) Reflect.deleteProperty(node, 'id');
 
@@ -168,7 +171,7 @@ function findElementPosition(options) {
 
     return targetIds.map(targetComponentId => {
         const ele = iFrameDocument.querySelector(`[data-componentId="${targetComponentId}"]`);
-        if (!ele) return;
+        if (!ele) return false;
         const {x, y, width, height} = ele.getBoundingClientRect();
         return {
             key: `${value}__${targetComponentId}`,

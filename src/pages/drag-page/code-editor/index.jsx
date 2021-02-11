@@ -166,7 +166,6 @@ function CodeEditor(props) {
             editor.setSelection(new monaco.Selection(0, 0, 0, 0));
         });
 
-        console.log('bindKeyWithAction');
         // 绑定快捷键
         bindKeyWithAction(editor, monaco);
     }

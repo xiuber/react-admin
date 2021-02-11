@@ -20,6 +20,7 @@ const {Panel} = Collapse;
 export default config({
     connect: state => {
         return {
+            refreshProps: state.dragPage.refreshProps,
             selectedNode: state.dragPage.selectedNode,
             iFrameDocument: state.dragPage.iFrameDocument,
         };

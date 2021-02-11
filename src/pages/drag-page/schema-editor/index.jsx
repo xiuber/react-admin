@@ -186,14 +186,14 @@ export default config({
         // id 不存在，则设置新的id
         loopId(nextPageConfig);
 
-        dragPageAction.setPageConfig({...nextPageConfig});
-
-        // 原选中id是否存在
-        if (!findNodeById(nextPageConfig, selectedNode?.id)) {
-            dragPageAction.setSelectedNodeId(null);
-        }
-
         saveRef.current = true;
+
+        dragPageAction.setPageConfig({...nextPageConfig});
+        dragPageAction.refreshProps();
+
+        const nextSelectedNode = findNodeById(nextPageConfig, selectedNode?.id);
+        dragPageAction.setSelectedNodeId(nextSelectedNode?.id)
+
         message.success('保存成功！');
     }
 
@@ -208,24 +208,26 @@ export default config({
     }
 
     useEffect(() => {
-        console.log('saveRef.current', saveRef.current);
         // 由于保存触发的，不做任何处理
         if (saveRef.current) {
             saveRef.current = false;
             return;
         }
 
-        const node = cloneDeep(selectedNode);
         const allNodes = cloneDeep(pageConfig);
+        const node = findNodeById(allNodes, selectedNode?.id)
 
-        // 清除非关联id
-        deleteUnLinkedIds(allNodes);
+        // 清除非关联id， 当前选中节点id不能删
+        deleteUnLinkedIds(allNodes, [node?.id]);
 
         let editNode;
         if (editType === EDIT_TYPE.CURRENT_NODE) editNode = node;
         if (editType === EDIT_TYPE.ALL) editNode = allNodes;
 
-        if (!editNode) return setCode('');
+        if (!editNode) {
+            setEditType(EDIT_TYPE.ALL);
+            return;
+        }
 
         // 清除默认值
         deleteDefaultProps(editNode);
