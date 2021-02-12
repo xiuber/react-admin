@@ -204,6 +204,7 @@ export default config({
     }
 
     useEffect(() => {
+        if (!visible) return;
         // 由于保存触发的，不做任何处理
         if (saveRef.current) {
             saveRef.current = false;

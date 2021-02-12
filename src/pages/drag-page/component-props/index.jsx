@@ -254,7 +254,6 @@ export default config({
             )}
         >
             <PropsEditor
-                value={{...(selectedNode?.props || {})}}
                 onChange={values => handleChange({}, values, true)}
                 visible={propsEditorVisible}
                 onCancel={() => setPropsEditorVisible(false)}

@@ -3,11 +3,15 @@ import {message} from 'antd';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
 import JSON5 from 'json5';
+import {cloneDeep} from 'lodash';
 import './style.less';
+import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 export default config({
     connect: state => {
         return {
+
+            selectedNode: state.dragPage.selectedNode,
             draggingNode: state.dragPage.draggingNode,
             activeSideKey: state.dragPage.activeSideKey,
             rightSideWidth: state.dragPage.rightSideWidth,
@@ -16,11 +20,11 @@ export default config({
 })(function StyleEditor(props) {
     const {
         visible,
-        value,
         onChange,
         onCancel,
         draggingNode,
         rightSideWidth,
+        selectedNode,
     } = props;
 
     const saveRef = useRef(false);
@@ -68,10 +72,20 @@ export default config({
             return;
         }
 
-        const nextCode = `export default ${JSON5.stringify(value, null, 2)}`;
+        if (!selectedNode) return setCode('');
+
+        const editNode = cloneDeep(selectedNode);
+
+        const nodeConfig = getComponentConfig(editNode.componentName);
+
+        const beforeSchemaEdit = nodeConfig?.hooks?.beforeSchemaEdit;
+
+        beforeSchemaEdit && beforeSchemaEdit({node: editNode});
+
+        const nextCode = `export default ${JSON5.stringify(editNode.props, null, 2)}`;
 
         setCode(nextCode);
-    }, [visible, value]);
+    }, [visible, selectedNode]);
 
     if (!visible) return null;
 
