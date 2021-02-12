@@ -87,6 +87,7 @@ const defaultConfig = {
     //     },
     // },
     // hooks: {
+    // beforeSchemaEdit // scheme 源码编辑之前出发
     // beforeRender // 渲染之前触发，返回false不渲染
     // beforeMove // 返回false， 不允许移动
     // afterMove

@@ -4,7 +4,7 @@ import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
 import {findNodeById, usePrevious, loopIdToFirst, deleteUnLinkedIds} from '../util';
-import {deleteDefaultProps} from '../component-config';
+import {deleteDefaultProps, getComponentConfig} from '../component-config';
 import {v4 as uuid} from 'uuid';
 import DragBar from '../drag-bar';
 import {cloneDeep} from 'lodash';
@@ -193,7 +193,7 @@ export default config({
         dragPageAction.refreshProps();
 
         const nextSelectedNode = findNodeById(nextPageConfig, selectedNode?.id);
-        dragPageAction.setSelectedNodeId(nextSelectedNode?.id)
+        dragPageAction.setSelectedNodeId(nextSelectedNode?.id);
 
         message.success('保存成功！');
     }
@@ -216,7 +216,7 @@ export default config({
         }
 
         const allNodes = cloneDeep(pageConfig);
-        const node = findNodeById(allNodes, selectedNode?.id)
+        const node = findNodeById(allNodes, selectedNode?.id);
 
         // 清除非关联id， 当前选中节点id不能删
         deleteUnLinkedIds(allNodes, [node?.id]);
@@ -235,6 +235,19 @@ export default config({
 
         // id 属性调整到首位
         loopIdToFirst(editNode);
+
+
+        const loop = node => {
+            const nodeConfig = getComponentConfig(node.componentName);
+            const beforeSchemaEdit = nodeConfig?.hooks?.beforeSchemaEdit;
+            beforeSchemaEdit && beforeSchemaEdit({node});
+
+            if (node.children?.length) {
+                node.children.forEach(item => loop(item));
+            }
+        };
+
+        loop(editNode);
 
         const nextCode = `export default ${JSON5.stringify(editNode, null, 2)}`;
 
