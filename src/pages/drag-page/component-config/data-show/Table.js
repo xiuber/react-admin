@@ -8,7 +8,6 @@ export default {
         },
         beforeSchemaEdit: options => {
             const {node} = options;
-            console.log(node);
             if(node?.props) {
                 Reflect.deleteProperty(node.props, 'columns');
             }

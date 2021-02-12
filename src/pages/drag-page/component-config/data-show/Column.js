@@ -9,7 +9,6 @@ export default {
             },
             propsField: 'title',
             onClick: e => options => {
-                console.log('onClick column');
                 const {node, dragPageAction} = options;
                 const {nodeSelectType} = store.getState().dragPage;
                 if (nodeSelectType === 'meta') {
