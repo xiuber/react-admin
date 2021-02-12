@@ -1,6 +1,7 @@
 import {useEffect} from 'react';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import {debounce} from 'lodash';
+import {v4 as uuid} from 'uuid';
 
 export default function EditableAction(props) {
     const {
@@ -112,15 +113,20 @@ export default function EditableAction(props) {
                     ele.addEventListener(action, handler);
                 });
 
-            actions[node.id] = eventMap;
+            const actionKey = uuid();
+            ele.setAttribute('data-actionKey', actionKey);
+
+            actions[actionKey] = eventMap;
         });
 
         return () => {
-            loop(pageConfig, (ele, index, node) => {
+            loop(pageConfig, (ele) => {
                 // ele.style.userModify = '';
                 ele.setAttribute('contenteditable', 'false');
                 ele.removeAttribute('tabindex');
-                const eventMap = actions[node.id];
+                const actionKey = ele.getAttribute('data-actionKey');
+
+                const eventMap = actions[actionKey] || {};
 
                 Object.entries(eventMap)
                     .forEach(([action, handler]) => {

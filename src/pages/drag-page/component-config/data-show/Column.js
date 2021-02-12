@@ -6,7 +6,7 @@ export default {
         {
             selector: options => {
                 const {node} = options;
-                return `.${node.props.className}`;
+                return `th.${node.props.className}`;
             },
             onInput: e => options => {
                 const {node, pageConfig} = options;
@@ -16,6 +16,7 @@ export default {
                 syncTableColumns({node, pageConfig});
             },
             onClick: e => options => {
+                console.log('onClick column');
                 const {node, dragPageAction} = options;
                 const {nodeSelectType} = store.getState().dragPage;
                 if (nodeSelectType === 'meta') {

@@ -9,6 +9,7 @@ export default config({
             // 保证页面配置改变之后，重新渲染
             pageConfig: state.dragPage.pageConfig,
             selectedNode: state.dragPage.selectedNode,
+            refreshProps: state.dragPage.refreshProps,
         };
     },
 })(function(props) {
