@@ -197,6 +197,23 @@ export default [
         ],
     },
     {
+        title: '表格列',
+        subTitle: '表格列 Column',
+        children: [
+            {
+                title: '表格列',
+                renderPreview: false,
+                config: {
+                    componentName: 'Column',
+                    props: {
+                        title: '新增列',
+                        dataIndex: 'newColumn',
+                    },
+                },
+            },
+        ],
+    },
+    {
         title: '标签页',
         subTitle: '标签页 Tabs',
         children: [

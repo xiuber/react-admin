@@ -60,6 +60,10 @@ export default config({
             Reflect.deleteProperty(item, '_form');
         });
 
+        const nodeConfig = getComponentConfig(selectedNode.componentName);
+        const afterPropsChange = nodeConfig?.hooks?.afterPropsChange;
+        afterPropsChange({node: selectedNode});
+
         console.log('props', JSON.stringify(selectedNode.props, null, 4));
         dragPageAction.render();
     }

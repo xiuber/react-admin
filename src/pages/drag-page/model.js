@@ -271,7 +271,7 @@ export default {
 
         const {beforeDeleteChildren, afterDeleteChildren} = parentNodeConfig.hooks || {};
 
-        const args = {node, pageConfig};
+        const args = {node, targetNode: parentNode, pageConfig};
         const result = beforeDelete && beforeDelete(args);
 
         if (result === false) return {pageConfig};
@@ -303,8 +303,8 @@ export default {
         const {beforeAdd, afterAdd} = componentConfig.hooks || {};
 
         const args = {
-            node: findNodeById(pageConfig, targetId),
-            targetNode: node,
+            node,
+            targetNode: isChildren ? findNodeById(pageConfig, targetId) : findParentNodeById(pageConfig, targetId),
             pageConfig,
         };
         const res = beforeAdd && beforeAdd(args);
@@ -347,7 +347,7 @@ export default {
             node: sourceNode,
             pageConfig,
             targetId,
-            targetNode: findNodeById(pageConfig, targetId),
+            targetNode: isChildren ? findNodeById(pageConfig, targetId) : findParentNodeById(pageConfig, targetId),
         };
 
         const res = beforeMove && beforeMove(args);

@@ -20,12 +20,17 @@ export default function EditableAction(props) {
 
                 let eles;
                 if (selector) {
-                    eles = iframeDocument.querySelectorAll(`.${className} ${selector}`);
+                    if (typeof selector === 'function') {
+                        eles = iframeDocument.querySelectorAll(selector({node, pageConfig}));
+                    } else {
+                        eles = iframeDocument.querySelectorAll(`.${className} ${selector}`);
+                    }
                 } else {
                     eles = iframeDocument.querySelectorAll(`.${className}`);
                 }
 
                 if (!eles?.length) return;
+
                 eles.forEach((ele, index) => cb(ele, index, node, item));
             });
         }
@@ -38,9 +43,11 @@ export default function EditableAction(props) {
     useEffect(() => {
         if (!iframeDocument) return;
 
+        const actions = {};
+
         let tabIndex = 1000;
         loop(pageConfig, (ele, index, node, item) => {
-            let {onInput, onBlur, propsField} = item;
+            let {onInput, onBlur, onClick, propsField} = item;
             tabIndex++;
 
             let handleInput = () => undefined;
@@ -61,17 +68,19 @@ export default function EditableAction(props) {
             const prevOutline = window.getComputedStyle(ele).outline;
             const prevStyleOutline = ele.style.outline;
 
-            ele.onfocus = () => {
+            const options = {index, node, pageConfig, dragPageAction, iframeDocument};
+
+            function handleClick(e) {
+                onClick && onClick(e)(options);
+            }
+
+            function handleFocus(e) {
                 ele.style.outline = prevOutline;
-                // setTimeout(() => {
-                //     document.execCommand('selectAll', false, null);
-                // }, 100);
-            };
+            }
 
-
-            ele.oninput = debounce(e => {
+            const handleInputDebounce = debounce(e => {
                 if (onInput) {
-                    onInput(e)({index, node, pageConfig, dragPageAction, iframeDocument});
+                    onInput(e)(options);
                 } else {
                     handleInput(e);
                 }
@@ -82,22 +91,41 @@ export default function EditableAction(props) {
                 // 都会导致焦点跳动
                 // dragPageAction.render();
             }, 300);
-            ele.onblur = e => {
+
+            function handleBlur(e) {
                 ele.style.outline = prevStyleOutline;
                 if (onBlur) {
-                    onBlur(e)({index, node, pageConfig, dragPageAction, iframeDocument});
+                    onBlur(e)(options);
                 }
                 dragPageAction.render();
+            }
+
+            const eventMap = {
+                click: handleClick,
+                focus: handleFocus,
+                input: handleInputDebounce,
+                blur: handleBlur,
             };
+
+            Object.entries(eventMap)
+                .forEach(([action, handler]) => {
+                    ele.addEventListener(action, handler);
+                });
+
+            actions[node.id] = eventMap;
         });
 
         return () => {
-            loop(pageConfig, (ele) => {
+            loop(pageConfig, (ele, index, node) => {
                 // ele.style.userModify = '';
                 ele.setAttribute('contenteditable', 'false');
                 ele.removeAttribute('tabindex');
-                ele.oninput = null;
-                ele.onblur = null;
+                const eventMap = actions[node.id];
+
+                Object.entries(eventMap)
+                    .forEach(([action, handler]) => {
+                        ele.removeEventListener(action, handler);
+                    });
             });
         };
     }, [

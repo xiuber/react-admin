@@ -35,6 +35,7 @@ export default function NodeRender(props) {
     const componentConfig = getComponentConfig(componentName);
 
     let {
+        render,
         isContainer,
         draggable,
         componentDesc,
@@ -91,6 +92,8 @@ export default function NodeRender(props) {
         children: childrenEle,
         ...componentActions,
     };
+
+    if (render === false) return null;
 
     if (isPreview) {
         return createElement(component, {
