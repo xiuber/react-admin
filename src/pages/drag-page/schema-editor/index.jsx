@@ -47,11 +47,6 @@ export default config({
         setVisible(visible);
     }, [activeSideKey]);
 
-    function handleChange(value) {
-        // TODO  id 重复，重新设置第二个
-        // 通过正则匹配替换，进行字符串操作
-    }
-
     function findIdPosition(value) {
         const nodeConfig = codeToObject(value);
         if (nodeConfig instanceof Error) return;
@@ -275,7 +270,6 @@ export default config({
                 value={code}
                 onSave={handleSave}
                 onClose={handleClose}
-                onChange={handleChange}
             />
         </div>
     );

@@ -6,6 +6,8 @@ import elementMap from './form-element';
 import CurrentSelectedNode from '../current-selected-node';
 import './style.less';
 import {getComponentConfig, showFieldByAppend} from 'src/pages/drag-page/component-config';
+import {DesktopOutlined} from '@ant-design/icons';
+import PropsEditor from './props-editor';
 
 // import {v4 as uuid} from 'uuid';
 
@@ -27,32 +29,39 @@ export default config({
             // pageConfig: state.dragPage.pageConfig,
             refreshProps: state.dragPage.refreshProps,
             selectedNode: state.dragPage.selectedNode,
+            rightSideWidth: state.dragPage.rightSideWidth,
         };
     },
 })(function ComponentProps(props) {
     const {
+        rightSideWidth,
         selectedNode,
         refreshProps,
         action: {dragPage: dragPageAction},
     } = props;
 
-    const [propFields, setPropFields] = useState([]);
     const [form] = Form.useForm();
     const rootRef = useRef(null);
+    const [propFields, setPropFields] = useState([]);
     const [labelCol, setLabelCol] = useState({flex: '80px'});
+    const [propsEditorVisible, setPropsEditorVisible] = useState(false);
 
     const wrapperCol = {flex: '1 1 0%'};
 
-    function handleChange(changedValues, allValues) {
+    function handleChange(changedValues, allValues, replace) {
         if (!selectedNode?.componentName) return;
 
         if (!selectedNode?.props) selectedNode.props = {};
 
-        selectedNode.props = {
-            ...selectedNode.props,
-            ...allValues,
-            // key: uuid(),
-        };
+        if (replace) {
+            selectedNode.props = allValues;
+        } else {
+            selectedNode.props = {
+                ...selectedNode.props,
+                ...allValues,
+                // key: uuid(),
+            };
+        }
 
         const options = selectedNode.props.options || [];
 
@@ -101,7 +110,7 @@ export default config({
 
         setLabelCol({flex: `${labelWidth}px`});
 
-    }, [selectedNode, refreshProps]);
+    }, [selectedNode, refreshProps, propsEditorVisible]);
 
     const categories = [];
 
@@ -223,15 +232,34 @@ export default config({
         return element;
     }
 
+
+    useEffect(() => {
+        if (propsEditorVisible && rightSideWidth < 440) {
+            dragPageAction.setRightSideWidth(440);
+        }
+    }, [propsEditorVisible, rightSideWidth]);
+
     return (
         <Pane
             fitHeight
             header={(
-                <div>
+                <div styleName="header">
                     <CurrentSelectedNode/>
+                    <DesktopOutlined
+                        disabled={!selectedNode}
+                        styleName="tool"
+                        onClick={() => setPropsEditorVisible(!propsEditorVisible)}
+                    />
                 </div>
             )}
         >
+            <PropsEditor
+                value={{...(selectedNode?.props || {})}}
+                onChange={values => handleChange({}, values, true)}
+                visible={propsEditorVisible}
+                onCancel={() => setPropsEditorVisible(false)}
+            />
+
             <div styleName="root" ref={rootRef}>
                 <ConfigProvider autoInsertSpaceInButton={false} getPopupContainer={() => rootRef.current}>
                     <Form

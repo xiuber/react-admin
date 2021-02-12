@@ -23,10 +23,12 @@ export default config({
             refreshProps: state.dragPage.refreshProps,
             selectedNode: state.dragPage.selectedNode,
             iframeDocument: state.dragPage.iframeDocument,
+            rightSideWidth: state.dragPage.rightSideWidth,
         };
     },
 })(function ComponentStyle(props) {
     let {
+        rightSideWidth,
         selectedNode,
         iframeDocument,
         action: {dragPage: dragPageAction},
@@ -82,8 +84,10 @@ export default config({
     }
 
     useEffect(() => {
-        dragPageAction.setRightSideWidth(styleEditorVisible ? 440 : 385);
-    }, [styleEditorVisible]);
+        if (styleEditorVisible && rightSideWidth < 440) {
+            dragPageAction.setRightSideWidth(440);
+        }
+    }, [styleEditorVisible, rightSideWidth]);
 
 
     return (

@@ -180,7 +180,6 @@ export default [
                 config: {
                     componentName: 'Table',
                     props: {
-                        style: {width: '100%'},
                         pagination: false,
                         dataSource: [
                             {name: '张三', age: 25, operator: '修改'},

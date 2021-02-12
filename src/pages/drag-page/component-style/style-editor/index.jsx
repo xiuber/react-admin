@@ -8,7 +8,6 @@ import './style.less';
 export default config({
     connect: state => {
         return {
-            pageConfig: state.dragPage.pageConfig,
             draggingNode: state.dragPage.draggingNode,
             activeSideKey: state.dragPage.activeSideKey,
             rightSideWidth: state.dragPage.rightSideWidth,
