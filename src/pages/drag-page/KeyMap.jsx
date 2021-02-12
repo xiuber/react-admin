@@ -39,6 +39,7 @@ export default config({
         action: {dragPage: dragPageAction},
     } = props;
 
+    // TODO 如何正确判断是哪些面板激活
     const isSchemaEditor = showSide && activeSideKey === 'schemaEditor';
     const isDesignPage = !isSchemaEditor;
 
