@@ -43,7 +43,13 @@ export default function NodeRender(props) {
         wrapperStyle = {},
         actions = {},
         childrenDraggable,
+        hooks = {},
     } = componentConfig;
+
+    const isRender = hooks.beforeRender && hooks.beforeRender({node: config});
+
+    if (isRender === false) return null;
+    if (render === false) return null;
 
     componentDesc = componentDesc || componentName;
     const componentDisplayName = getComponentDisplayName(config);
@@ -92,8 +98,6 @@ export default function NodeRender(props) {
         children: childrenEle,
         ...componentActions,
     };
-
-    if (render === false) return null;
 
     if (isPreview) {
         return createElement(component, {

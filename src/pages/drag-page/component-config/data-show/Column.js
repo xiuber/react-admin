@@ -1,4 +1,3 @@
-import {findParentNodeByParentName} from 'src/pages/drag-page/util';
 import {store} from 'src/models';
 
 export default {
@@ -6,15 +5,9 @@ export default {
         {
             selector: options => {
                 const {node} = options;
-                return `th.${node.props.className}`;
+                return `th.id_${node.id}`;
             },
-            onInput: e => options => {
-                const {node, pageConfig} = options;
-                if (!node.props) node.props = {};
-                node.props.title = e.target.innerText;
-
-                syncTableColumns({node, pageConfig});
-            },
+            propsField: 'title',
             onClick: e => options => {
                 console.log('onClick column');
                 const {node, dragPageAction} = options;
@@ -48,51 +41,5 @@ export default {
 
         return `Column ${title}`;
     },
-    hooks: {
-        afterAdd: options => {
-            const {node} = options;
-            node.props.className = `id_${node.id}`;
-
-            syncTableColumns(options);
-        },
-        afterMove: syncTableColumns,
-        // node 已经不存在了，使用 targetNode
-        afterDelete: ({targetNode, pageConfig}) => syncTableColumns({node: targetNode, pageConfig}),
-        afterPropsChange: syncTableColumns,
-    },
 };
 
-function syncTableColumns(options) {
-    let {node, pageConfig} = options;
-    if (!pageConfig) pageConfig = store.getState().dragPage.pageConfig;
-
-    const tableNode = findParentNodeByParentName(pageConfig, 'Table', node.id);
-    setTableColumns(tableNode);
-}
-
-function setTableColumns(tableNode) {
-    if (!tableNode) return;
-
-    let {children} = tableNode;
-    if (!tableNode.props) tableNode.props = {};
-    if (!tableNode.props.columns) tableNode.props.columns = [];
-
-    if (!children?.length) {
-        tableNode.props.columns = [];
-        return;
-    }
-
-    const loop = (node, columns) => {
-        const {props, children} = node;
-        const col = {...props};
-        columns.push(col);
-        if (children?.length) {
-            col.children = [];
-            children.forEach(item => loop(item, col.children));
-        }
-    };
-    const columns = [];
-    children.forEach(node => loop(node, columns));
-
-    tableNode.props.columns = columns;
-}

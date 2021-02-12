@@ -21,7 +21,7 @@ req.keys().forEach(key => {
 const defaultConfig = {
     // editableContents: [ // 可编辑内容
     //     {
-    //         selector: '.ant-modal-title', // 基于当前元素的选择器，缺省标识当前节点
+    //         selector: '.ant-modal-title', // string || function  基于当前元素的选择器，缺省标识当前节点
     //         propsField: 'title', // 要修改的props属性
     //
     //          onInput: event => options => { // 输入事件
@@ -44,6 +44,7 @@ const defaultConfig = {
     //
     //     },
     // ],
+    render: true, // 是否渲染，默认 true
     icon: <AppstoreOutlined/>, // 组件图标
     // isFormElement: undefined, // 是否是表单组件，如果是，可以放入 Form.Item中
     // renderComponentName: '', // 指定渲染使用组件，比如 PageContent 并不存在，可以指定使用div渲染
@@ -86,6 +87,7 @@ const defaultConfig = {
     //     },
     // },
     // hooks: {
+    // beforeRender // 渲染之前触发，返回false不渲染
     // beforeMove // 返回false， 不允许移动
     // afterMove
 
