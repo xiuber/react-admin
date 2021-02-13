@@ -8,8 +8,9 @@ import theme from '../../../../theme.less';
 const presetColors = [
     theme.primaryColor,
     '#FFFFFF',
-    '#4A4A4A',
+    '#D8D8D8',
     '#9B9B9B',
+    '#4A4A4A',
     '#000000',
     '#D0021B',
     '#F5A623',

@@ -1,3 +1,5 @@
+import imgImage from './img.png';
+
 export default [
     {
         title: '页面容器',
@@ -85,10 +87,7 @@ export default [
         children: [
             {
                 title: '图片',
-                previewStyle: {
-                    width: '100%',
-                    height: 50,
-                },
+                image: imgImage,
                 config: {
                     componentName: 'img',
                     props: {
