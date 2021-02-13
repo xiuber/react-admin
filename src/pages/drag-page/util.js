@@ -427,23 +427,34 @@ export function getNodeEle(target) {
 // 可投放元素 自身是容器，或则父级组件是容器
 export function getDroppableEle(target) {
     if (!target) return target;
-    console.log(target);
 
-    if (typeof target.getAttribute !== 'function') return null;
+    const loop = node => {
+        if (!node) return null;
+        if (
+            node?.getAttribute
+            && node.getAttribute('data-componentId')
+        ) {
+
+            return node;
+        }
+
+        return loop(node.parentNode);
+    };
+
+    const componentEle = loop(target);
 
     // 当前是容器
-    let draggable = target.getAttribute('data-isContainer') === 'true';
+    let draggable = componentEle.getAttribute('data-isContainer') === 'true';
+    if (draggable) return componentEle;
 
-    // 父级是容器
-    if (!draggable && target.parentNode?.getAttribute) {
-        draggable =
-            target.parentNode.getAttribute('data-isContainer') === 'true'
-            && target.getAttribute('data-componentId');
+    // 父组件是容器
+    const parentComponent = loop(componentEle.parentNode);
+    if (parentComponent?.getAttribute('data-isContainer') === 'true') {
+        return componentEle;
     }
 
-    if (draggable) return target;
-
-    return getDroppableEle(target.parentNode);
+    // 继续向上找
+    return getDroppableEle(parentComponent);
 }
 
 // 获取组件投放位置
