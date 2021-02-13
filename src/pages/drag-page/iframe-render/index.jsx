@@ -1,6 +1,7 @@
 import React, {useCallback, useRef, useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 import {ConfigProvider} from 'antd';
+import zhCN from 'antd/lib/locale-provider/zh_CN';
 import config from 'src/commons/config-hoc';
 import NodeRender from './node-render/NodeRender';
 import {scrollElement} from 'src/pages/drag-page/util';
@@ -118,7 +119,7 @@ export default config({
         if (!iframeRootEle) return;
 
         ReactDOM.render(
-            <ConfigProvider getPopupContainer={() => iframeRootRef.current}>
+            <ConfigProvider locale={zhCN} getPopupContainer={() => iframeRootRef.current}>
                 {isPreview || !contentEditable ? null : <EditableAction {...draggableNodeProps}/>}
                 <DragAction {...draggableNodeProps}>
                     <NodeRender {...draggableNodeProps}/>

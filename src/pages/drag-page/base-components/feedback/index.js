@@ -1,4 +1,5 @@
-import modalImage from './modal.png';
+import ModalImage from './Modal.png';
+import PopconfirmImage from './Popconfirm.png';
 
 export default [
     {
@@ -47,7 +48,7 @@ export default [
             {
                 title: '对话框',
                 // renderPreview: true,
-                image: modalImage,
+                image: ModalImage,
                 config: {
                     componentName: 'Modal',
                     props: {
@@ -176,12 +177,18 @@ export default [
             {
                 title: '气泡确认框',
                 renderPreview: true,
+                // previewProps: {
+                //     visible: true,
+                //     getPopupContainer: e => e.parentNode,
+                // },
+                // previewWrapperStyle: {
+                //     paddingTop: 120,
+                // },
+                image: PopconfirmImage,
                 config: {
                     componentName: 'Popconfirm',
                     props: {
                         title: '您确定吗？',
-                        okText: '确定',
-                        cancelText: '取消',
                     },
                 },
             },

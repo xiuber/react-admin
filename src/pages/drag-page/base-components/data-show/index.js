@@ -1,4 +1,5 @@
 import BadgeImage from './Badge.png';
+import PopoverImage from './Popover.png';
 
 export default [
     {
@@ -164,12 +165,29 @@ export default [
             {
                 title: '气泡卡片',
                 renderPreview: true,
+                // previewProps: {
+                //     visible: true,
+                //     getPopupContainer: e => e.parentNode,
+                // },
+                // previewWrapperStyle: {
+                //     paddingTop: 120,
+                // },
+                image: PopoverImage,
                 config: {
                     componentName: 'Popover',
                     props: {
                         title: '卡片标题',
                         content: '卡片内容',
                     },
+                    children: [
+                        {
+                            componentName: 'Text',
+                            props: {
+                                text: '气泡卡片',
+                            },
+                        },
+                    ],
+
                 },
             },
         ],
