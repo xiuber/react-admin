@@ -111,7 +111,7 @@ export default config({
         if (accept && isCenter) setDropPosition('center');
 
         const isPropsToSet = draggingNode?.propsToSet;
-        const isWrapper = getComponentConfig(draggingNode?.componentName)?.isWrapper;
+        const isWrapper = draggingNode?.isWrapper;
         const isToSelectTarget = isWrapper || isPropsToSet;
 
         if (isToSelectTarget) {

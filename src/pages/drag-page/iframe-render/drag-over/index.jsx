@@ -46,7 +46,7 @@ export default config({
             } = dragOverInfo;
 
             const isPropsToSet = draggingNode?.propsToSet;
-            const isWrapper = getComponentConfig(draggingNode?.componentName)?.isWrapper;
+            const isWrapper = draggingNode?.isWrapper;
             const toSelectTarget = isPropsToSet || isWrapper;
 
             if (isTree) {

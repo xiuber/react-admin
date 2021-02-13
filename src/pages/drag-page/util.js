@@ -424,9 +424,10 @@ export function getNodeEle(target) {
     return getDroppableEle(target.parentNode);
 }
 
-// 可投放元素
+// 可投放元素 自身是容器，或则父级组件是容器
 export function getDroppableEle(target) {
     if (!target) return target;
+    console.log(target);
 
     if (typeof target.getAttribute !== 'function') return null;
 
@@ -494,7 +495,7 @@ export function isDropAccept(options) {
 
     if (draggingNode.propsToSet) return true;
 
-    if (getComponentConfig(draggingNode?.componentName)?.isWrapper) return true;
+    if (draggingNode?.isWrapper) return true;
 
     let targetNode;
     if (isChildren) targetNode = findNodeById(pageConfig, targetComponentId);

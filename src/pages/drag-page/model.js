@@ -108,7 +108,18 @@ export default {
     setSchemaEditorWidth: schemaEditorWidth => ({schemaEditorWidth}),
     setRightSideWidth: rightSideWidth => ({rightSideWidth}),
     setComponentTreeExpendedKeys: componentTreeExpendedKeys => ({componentTreeExpendedKeys}),
-    setDraggingNode: draggingNode => ({draggingNode}),
+    setDraggingNode: draggingNode => {
+        const node = cloneDeep(draggingNode);
+
+        if (node) {
+            const componentConfig = getComponentConfig(node?.componentName);
+            const {isWrapper} = componentConfig;
+
+            node.isWrapper = isWrapper;
+        }
+
+        return {draggingNode: node};
+    },
     setActiveTabKey: activeTabKey => {
         return {activeTabKey};
     },

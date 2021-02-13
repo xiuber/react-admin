@@ -101,19 +101,26 @@ export default function NodeRender(props) {
     };
 
     function setWrapper(com) {
-        if (!wrapper?.length) return com;
+        return com;
+    }
 
-        return wrapper.reduce((prev, wrapperConfig) => {
-            const wrapperComponent = getComponent(wrapperConfig);
-            const wrapperProps = wrapperConfig.props || {};
+    if (wrapper?.length) {
+        wrapper[wrapper.length - 1].children = [{...config, wrapper: null}];
+        const nextConfig = wrapper.reduce((prev, wrapperConfig) => {
+            wrapperConfig.children = [prev];
+        });
 
-            return createElement(wrapperComponent, {
-                ...wrapperProps,
-                children: [
-                    prev,
-                ],
-            });
-        }, com);
+        return <NodeRender
+            config={nextConfig}
+            pageConfig={pageConfig}
+            draggingNode={draggingNode}
+            selectedNodeId={selectedNodeId}
+            dragPageAction={dragPageAction}
+            activeSideKey={activeSideKey}
+            isPreview={isPreview || !childrenDraggable}
+            nodeSelectType={nodeSelectType}
+            iframeDocument={iframeDocument}
+        />;
     }
 
 
