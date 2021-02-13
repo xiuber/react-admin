@@ -78,6 +78,7 @@ export default function Layout(props) {
 
         // 同步表单数据
         form.setFieldsValue(allValues);
+        console.log(allValues);
         onChange(allValues);
     }
 
@@ -162,8 +163,8 @@ export default function Layout(props) {
                             <UnitInput
                                 allowClear={false}
                                 placeholder="0"
-                                onClick={event => handleSyncFields({event, form, fields: marginFields, field: item})}
-                                onKeyDown={event => handleSyncFields({enter: true, event, form, fields: marginFields, field: item})}
+                                onClick={event => handleSyncFields({event, form, fields: marginFields, field: item, onChange: handleChange})}
+                                onKeyDown={event => handleSyncFields({enter: true, event, form, fields: marginFields, field: item, onChange: handleChange})}
                             />
                         </Form.Item>
                     ))}
@@ -177,8 +178,8 @@ export default function Layout(props) {
                                 <UnitInput
                                     allowClear={false}
                                     placeholder="0"
-                                    onClick={event => handleSyncFields({event, form, fields: paddingFields, field: item})}
-                                    onKeyDown={event => handleSyncFields({enter: true, event, form, fields: paddingFields, field: item})}
+                                    onClick={event => handleSyncFields({event, form, fields: paddingFields, field: item, onChange: handleChange})}
+                                    onKeyDown={event => handleSyncFields({enter: true, event, form, fields: paddingFields, field: item, onChange: handleChange})}
                                 />
                             </Form.Item>
                         ))}

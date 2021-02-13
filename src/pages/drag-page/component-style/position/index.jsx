@@ -223,8 +223,8 @@ export default function Position(props) {
                                             <UnitInput
                                                 allowClear={false}
                                                 placeholder='auto'
-                                                onClick={event => handleSyncFields({event, form, fields: directionOptions, field: item})}
-                                                onKeyDown={event => handleSyncFields({enter: true, event, form, fields: directionOptions, field: item})}
+                                                onClick={event => handleSyncFields({event, form, fields: directionOptions, field: item, onChange: handleChange})}
+                                                onKeyDown={event => handleSyncFields({enter: true, event, form, fields: directionOptions, field: item, onChange: handleChange})}
                                             />
                                         </Form.Item>
                                     );

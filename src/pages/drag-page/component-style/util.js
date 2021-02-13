@@ -1,5 +1,5 @@
 export function handleSyncFields(options) {
-    const {event, form, field, fields, enter} = options;
+    const {event, form, field, fields, enter, onChange} = options;
 
     // 需要是 上 右 下 左 的顺序
     const topBottomFields = [fields[0], fields[2]];
@@ -12,7 +12,8 @@ export function handleSyncFields(options) {
     if (enter && !enterKey) return;
 
     if (ctrlKey || metaKey) {
-        const value = form.getFieldValue(field);
+        let value = form.getFieldValue(field);
+        if (value === '') value = undefined;
 
         const syncFields = keys => {
             const fields = keys.reduce((prev, field) => {
@@ -21,6 +22,7 @@ export function handleSyncFields(options) {
             }, {});
 
             form.setFieldsValue(fields);
+            onChange && onChange({}, form.getFieldsValue());
         };
 
         if (shiftKey) {

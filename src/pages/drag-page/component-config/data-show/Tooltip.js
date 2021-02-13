@@ -1,4 +1,5 @@
 export default {
-    isContainer: false,
+    isContainer: true,
+    isWrapper: true,
     fields: [],
-}
+};

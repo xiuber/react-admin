@@ -16,7 +16,7 @@ export default config({
     const {selectedNode} = props;
     const hasPropsToSet = getComponentConfig(selectedNode?.componentName).propsToSet;
 
-    const name = getComponentDisplayName(selectedNode, true);
+    const name = getComponentDisplayName(selectedNode);
 
     return (
         <div style={{display: 'flex', alignItems: 'center'}}>

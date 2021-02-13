@@ -21,6 +21,9 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Badge',
+                    props: {
+                        count: 5,
+                    },
                 },
             },
         ],
@@ -258,8 +261,26 @@ export default [
             {
                 title: '文字提示',
                 renderPreview: true,
+                previewProps: {
+                    visible: true,
+                    getPopupContainer: e => e.parentNode,
+                },
+                previewWrapperStyle: {
+                    paddingTop: 54,
+                },
                 config: {
                     componentName: 'Tooltip',
+                    props: {
+                        title: '文字提示',
+                    },
+                    children: [
+                        {
+                            componentName: 'Text',
+                            props: {
+                                text: '提示',
+                            },
+                        },
+                    ],
                 },
             },
         ],
