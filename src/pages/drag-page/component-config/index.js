@@ -54,7 +54,7 @@ const defaultConfig = {
     // componentDisplayName: '', // 组件展示名称，默认 componentName，string 字符串 || ReactNode 节点 || ({node, pageConfig}) => name 函数返回值
     // renderAsDisplayName: '', // 是否渲染组件，作为componentDisplayName
     draggable: true, // 组件是否可拖拽 默认 true
-    isWrapper: true, // 是否是包裹类组件，比如Tooltip、Badge ，包裹其他组件的
+    isWrapper: false, // 是否是包裹类组件，比如Tooltip、Badge ，包裹其他组件的
     isContainer: true, // 组件是否是容器，默认true，如果是容器，则可托放入子节点
     withWrapper: false, // 是否需要拖拽包裹元素，默认 false，有些组件拖拽无效，需要包裹一下
     // wrapperStyle: undefined, // {display: 'inline-block'}, // 拖拽包裹元素样式，一般用来设置 display width height 等

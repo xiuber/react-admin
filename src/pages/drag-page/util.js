@@ -494,6 +494,8 @@ export function isDropAccept(options) {
 
     if (draggingNode.propsToSet) return true;
 
+    if (getComponentConfig(draggingNode?.componentName)?.isWrapper) return true;
+
     let targetNode;
     if (isChildren) targetNode = findNodeById(pageConfig, targetComponentId);
     if (isBefore || isAfter) targetNode = findParentNodeById(pageConfig, targetComponentId);

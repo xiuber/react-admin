@@ -8,6 +8,7 @@ import {
     getDroppableEle,
     setDragImage,
 } from 'src/pages/drag-page/util';
+import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 /**
  * 事件委托，统一添加事件，不给每个元素添加事件，提高性能
@@ -63,8 +64,12 @@ export default function DragAction(props) {
     const THROTTLE_TIME = 50; // 如果卡顿，可以调整大一些
     const throttleOver = throttle((e) => {
         const isPropsToSet = draggingNode?.propsToSet;
+        const isWrapper = getComponentConfig(draggingNode?.componentName)?.isWrapper;
 
-        const targetElement = isPropsToSet ? getNodeEle(e.target) : getDroppableEle(e.target);
+        // 选择一个目标，非投放
+        const toSelectedTarget = isPropsToSet || isWrapper;
+
+        const targetElement = toSelectedTarget ? getNodeEle(e.target) : getDroppableEle(e.target);
 
         if (!targetElement) return;
 
@@ -195,12 +200,20 @@ export default function DragAction(props) {
         if (componentConfig) {
             componentConfig = JSON.parse(componentConfig);
 
-            dragPageAction.addNode({
-                targetId: targetComponentId,
-                node: componentConfig,
-                ...position,
-            });
-            // dragPageAction.setSelectedNodeId(componentConfig.id);
+            const isWrapper = getComponentConfig(componentConfig?.componentName)?.isWrapper;
+            if (isWrapper) {
+                dragPageAction.addWrapper({
+                    targetId: targetComponentId,
+                    node: componentConfig,
+                });
+            } else {
+                dragPageAction.addNode({
+                    targetId: targetComponentId,
+                    node: componentConfig,
+                    ...position,
+                });
+                // dragPageAction.setSelectedNodeId(componentConfig.id);
+            }
         }
         end();
     }

@@ -111,7 +111,10 @@ export default config({
         if (accept && isCenter) setDropPosition('center');
 
         const isPropsToSet = draggingNode?.propsToSet;
-        if (isPropsToSet) {
+        const isWrapper = getComponentConfig(draggingNode?.componentName)?.isWrapper;
+        const isToSelectTarget = isWrapper || isPropsToSet;
+
+        if (isToSelectTarget) {
             setDropPosition(false);
         }
     }, THROTTLE_TIME);
@@ -211,14 +214,22 @@ export default config({
 
         if (componentConfig) {
             componentConfig = JSON.parse(componentConfig);
-            dragPageAction.addNode({
-                targetId: key,
-                isBefore: isTop,
-                isAfter: isBottom,
-                isChildren: isCenter,
-                node: componentConfig,
-            });
-            // dragPageAction.setSelectedNodeId(componentConfig.id);
+            const isWrapper = getComponentConfig(componentConfig?.componentName)?.isWrapper;
+            if (isWrapper) {
+                dragPageAction.addWrapper({
+                    targetId: key,
+                    node: componentConfig,
+                });
+            } else {
+                dragPageAction.addNode({
+                    targetId: key,
+                    isBefore: isTop,
+                    isAfter: isBottom,
+                    isChildren: isCenter,
+                    node: componentConfig,
+                });
+                // dragPageAction.setSelectedNodeId(componentConfig.id);
+            }
         }
 
         end();

@@ -2,6 +2,7 @@ import {useEffect, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import styles from './style.less';
 import {getDropGuidePosition, LINE_SIZE, /*TRIGGER_SIZE,*/ usePrevious} from 'src/pages/drag-page/util';
+import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 export default config({
     connect: state => {
@@ -45,6 +46,8 @@ export default config({
             } = dragOverInfo;
 
             const isPropsToSet = draggingNode?.propsToSet;
+            const isWrapper = getComponentConfig(draggingNode?.componentName)?.isWrapper;
+            const toSelectTarget = isPropsToSet || isWrapper;
 
             if (isTree) {
                 targetElement = frameDocument.querySelector(`[data-componentid="${targetElementId}"]`);
@@ -73,7 +76,7 @@ export default config({
                 };
             }
 
-            if (isPropsToSet) guidePosition.guideLine = false;
+            if (toSelectTarget) guidePosition.guideLine = false;
 
             clearTimeout(timeRef.current);
             showDropGuideLine(guidePosition);

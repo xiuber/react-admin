@@ -22,6 +22,7 @@ export default function NodeRender(props) {
     if (typeof config !== 'object' || Array.isArray(config)) return config;
 
     let {
+        wrapper,
         id: componentId,
         componentName,
         children,
@@ -99,12 +100,29 @@ export default function NodeRender(props) {
         ...componentActions,
     };
 
+    function setWrapper(com) {
+        if (!wrapper?.length) return com;
+
+        return wrapper.reduce((prev, wrapperConfig) => {
+            const wrapperComponent = getComponent(wrapperConfig);
+            const wrapperProps = wrapperConfig.props || {};
+
+            return createElement(wrapperComponent, {
+                ...wrapperProps,
+                children: [
+                    prev,
+                ],
+            });
+        }, com);
+    }
+
+
     if (isPreview) {
-        return createElement(component, {
+        return setWrapper(createElement(component, {
             ...commonProps,
             ...componentProps,
             ...propsActions,
-        });
+        }));
     }
 
     const dragClassName = classNames({
@@ -178,7 +196,7 @@ export default function NodeRender(props) {
             style[key] = undefined;
         });
 
-        return createElement('div', {
+        return setWrapper(createElement('div', {
             ...dragProps,
             className: dragClassName + ' dragWrapper',
             style: wStyle,
@@ -191,16 +209,16 @@ export default function NodeRender(props) {
                     style,
                 }),
             ],
-        });
+        }));
     }
 
-    return createElement(component, {
+    return setWrapper(createElement(component, {
         ...commonProps,
         ...componentProps,
         ...propsActions,
         ...dragProps,
         className: [dragClassName, componentProps.className].join(' '),
         onClick: onNodeClick,
-    });
+    }));
 }
 

@@ -24,6 +24,14 @@ export default [
                     props: {
                         count: 5,
                     },
+                    children: [
+                        {
+                            componentName: 'Text',
+                            props: {
+                                text: '消息',
+                            },
+                        },
+                    ],
                 },
             },
         ],

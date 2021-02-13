@@ -12,8 +12,8 @@ export default [
                         style: {
                             flexGrow: 1,
                             flexShrink: 1,
-                            display: 'flex',
-                            flexDirection: 'column',
+                            // display: 'flex',
+                            // flexDirection: 'column',
                             padding: 8,
                             margin: 8,
                             backgroundColor: '#fff',

@@ -293,6 +293,25 @@ export default {
 
         return {pageConfig: {...pageConfig}, selectedNodeId, selectedNode};
     },
+    addWrapper: (options, state) => {
+        const {pageConfig} = state;
+        const {node, targetId} = options;
+
+        // 新增节点，添加id
+        const loopId = n => {
+            n.id = uuid();
+            if (n.children?.length) {
+                n.children.forEach(i => loopId(i));
+            }
+        };
+        loopId(node);
+
+        const targetNode = findNodeById(pageConfig, targetId);
+        if (!targetNode?.wrapper?.length) targetNode.wrapper = [];
+        targetNode.wrapper.push(node);
+
+        return {pageConfig: {...pageConfig}};
+    },
     addNode: (options, state) => {
         const {node, targetId, isBefore, isAfter, isChildren} = options;
         const {pageConfig} = state;
