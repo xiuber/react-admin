@@ -153,11 +153,11 @@ export default function NodeRender(props) {
     };
 
     const onNodeClick = (e) => {
-        e.stopPropagation && e.stopPropagation();
-        e.preventDefault && e.preventDefault();
 
         if (nodeSelectType === 'meta') {
             if ((e.metaKey || e.ctrlKey)) {
+                e.stopPropagation && e.stopPropagation();
+                e.preventDefault && e.preventDefault();
                 // 单纯选中节点，不进行其他操作
                 dragPageAction.setSelectedNodeId(componentId);
             } else {
@@ -168,6 +168,9 @@ export default function NodeRender(props) {
         // 单击模式
         if (nodeSelectType === 'click') {
             propsActions.onClick && propsActions.onClick(e);
+
+            e.stopPropagation && e.stopPropagation();
+            e.preventDefault && e.preventDefault();
             dragPageAction.setSelectedNodeId(componentId);
         }
     };

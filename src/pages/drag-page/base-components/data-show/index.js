@@ -166,6 +166,10 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Popover',
+                    props: {
+                        title: '卡片标题',
+                        content: '卡片内容',
+                    },
                 },
             },
         ],

@@ -229,7 +229,7 @@ export default function ComponentProps(props) {
                     <Form
                         form={form}
                         onValuesChange={onChange}
-                        name="props"
+                        name={selectedNode?.componentName || 'props'}
                     >
                         <Row>
                             {propFields.filter(item => !item.category)

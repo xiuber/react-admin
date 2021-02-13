@@ -178,6 +178,11 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Popconfirm',
+                    props: {
+                        title: '您确定吗？',
+                        okText: '确定',
+                        cancelText: '取消',
+                    },
                 },
             },
         ],
