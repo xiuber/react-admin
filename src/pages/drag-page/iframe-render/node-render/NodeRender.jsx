@@ -106,8 +106,11 @@ export default function NodeRender(props) {
 
     if (wrapper?.length) {
         wrapper[wrapper.length - 1].children = [{...config, wrapper: null}];
+
         const nextConfig = wrapper.reduce((prev, wrapperConfig) => {
             wrapperConfig.children = [prev];
+
+            return wrapperConfig;
         });
 
         return <NodeRender

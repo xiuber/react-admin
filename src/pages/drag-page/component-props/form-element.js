@@ -10,8 +10,11 @@ import {
 } from 'antd';
 import RadioGroup from 'src/pages/drag-page/component-style/radio-group';
 import UnitInput from 'src/pages/drag-page/component-style/unit-input';
+import ColorInput from 'src/pages/drag-page/component-style/color-input';
 import OptionsEditor from 'src/pages/drag-page/component-props/options-editor';
 import FooterSwitch from './FooterSwitch';
+import OffsetInput from 'src/pages/drag-page/component-props/offset-input';
+import Placement from 'src/pages/drag-page/component-props/placement';
 
 function getPlaceholder(options, props) {
     const {field, placeholder} = options;
@@ -22,6 +25,31 @@ function getPlaceholder(options, props) {
 }
 
 export default {
+    placement: (options) => props => {
+        return (
+            <Placement
+                allowClear
+                {...props}
+            />
+        );
+    },
+    offset: (options) => props => {
+        return (
+            <OffsetInput
+                allowClear
+                {...props}
+            />
+        );
+    },
+    color: (options) => props => {
+        return (
+            <ColorInput
+                allowClear
+                placeholder={getPlaceholder(options, props)}
+                {...props}
+            />
+        );
+    },
     FooterSwitch: (options) => props => {
         return (
             <FooterSwitch {...props}/>

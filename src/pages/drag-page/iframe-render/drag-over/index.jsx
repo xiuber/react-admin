@@ -2,7 +2,6 @@ import {useEffect, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import styles from './style.less';
 import {getDropGuidePosition, LINE_SIZE, /*TRIGGER_SIZE,*/ usePrevious} from 'src/pages/drag-page/util';
-import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 export default config({
     connect: state => {

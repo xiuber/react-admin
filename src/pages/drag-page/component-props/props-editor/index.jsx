@@ -4,14 +4,12 @@ import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
 import JSON5 from 'json5';
 import {cloneDeep} from 'lodash';
-import './style.less';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
+import './style.less';
 
 export default config({
     connect: state => {
         return {
-
-            selectedNode: state.dragPage.selectedNode,
             draggingNode: state.dragPage.draggingNode,
             activeSideKey: state.dragPage.activeSideKey,
             rightSideWidth: state.dragPage.rightSideWidth,

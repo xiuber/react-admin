@@ -13,7 +13,10 @@ export default config({
         };
     },
 })(function(props) {
-    const {selectedNode} = props;
+    let {tip = '当前选中：', node, selectedNode} = props;
+
+    selectedNode = node || selectedNode;
+
     const hasPropsToSet = getComponentConfig(selectedNode?.componentName).propsToSet;
 
     const name = getComponentDisplayName(selectedNode);
@@ -26,7 +29,7 @@ export default config({
                     style={{marginRight: 4}}
                 />
             ) : null}
-            当前选中: {name}
+            {tip} {name}
         </div>
     );
 });
