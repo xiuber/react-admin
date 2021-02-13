@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {createElement} from 'react';
 import config from 'src/commons/config-hoc';
 import {PageContent} from 'ra-lib';
 import Top from './top';

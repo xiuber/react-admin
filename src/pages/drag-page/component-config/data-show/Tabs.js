@@ -1,7 +1,15 @@
 export default {
     isContainer: true,
-    withWrapper: true,
     dropAccept: ['Tabs.TabPane'],
+    editableContents: [
+        {
+            selector: '.ant-tabs-tab',
+            onInput: e => options => {
+                const {node, index} = options;
+                node.children[index].props.tab = e.target.innerText;
+            },
+        },
+    ],
     fields: [
         {
             label: '页签样式', field: 'type', type: 'radio-group',
@@ -13,18 +21,30 @@ export default {
             defaultValue: 'line', version: '', desc: '页签的基本样式，可选 line、card editable-card 类型',
         },
         {
-            label: '切换动画',
+            label: '卡片动画',
+            category: '选项',
             appendField: {tabPosition: 'top'},
-            field: 'animated.tabPane',
+            field: ['animated', 'inkBar'],
             type: 'boolean',
-            defaultValue: false,
+            defaultValue: true,
             // defaultValue: '{ inkBar: true, tabPane: false }',
             version: '',
             options: [{value: 'boolean', label: 'boolean'}, {value: '{ inkBar: boolean, tabPane: boolean }', label: '{ inkBar: boolean, tabPane: boolean }'}],
             desc: '是否使用动画切换 Tabs, 仅生效于 tabPosition=\'top\'',
         },
-        {label: '标签居中展示', field: 'centered', type: 'boolean', defaultValue: false, version: '4.4.0', desc: '标签居中展示'},
-        {label: '开启键盘切换功能', field: 'keyboard', type: 'boolean', defaultValue: true, version: '', desc: '开启键盘切换功能'},
+        {
+            label: '页面动画',
+            category: '选项',
+            appendField: {tabPosition: 'top'},
+            field: ['animated', 'tabPane'],
+            type: 'boolean',
+            defaultValue: false,
+            version: '',
+            options: [{value: 'boolean', label: 'boolean'}, {value: '{ inkBar: boolean, tabPane: boolean }', label: '{ inkBar: boolean, tabPane: boolean }'}],
+            desc: '是否使用动画切换 Tabs, 仅生效于 tabPosition=\'top\'',
+        },
+        {label: '标签居中展示', category: '选项', field: 'centered', type: 'boolean', defaultValue: false, version: '4.4.0', desc: '标签居中展示'},
+        {label: '键盘切换', category: '选项', field: 'keyboard', type: 'boolean', defaultValue: true, version: '', desc: '开启键盘切换功能'},
         {
             label: '大小', field: 'size', type: 'radio-group',
             options: [

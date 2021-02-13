@@ -1,5 +1,6 @@
 import React, {createElement} from 'react';
 import classNames from 'classnames';
+import {Tabs} from 'antd';
 import {getComponent} from '../../util';
 import {getComponentDisplayName, getComponentConfig} from 'src/pages/drag-page/component-config';
 import styles from './style.less';
@@ -56,18 +57,35 @@ export default function NodeRender(props) {
     const componentDisplayName = getComponentDisplayName(config);
 
     let childrenEle = children?.length ? children.map(item => {
+        const commonChildrenProps = {
+            pageConfig,
+            draggingNode,
+            selectedNodeId,
+            dragPageAction,
+            activeSideKey,
+            isPreview: isPreview || !childrenDraggable,
+            nodeSelectType,
+            iframeDocument,
+        };
+        if (item.componentName === 'Tabs.TabPane') {
+            return (
+                <Tabs.TabPane {...item.props}>
+                    {item.children.map(it => {
+                        return (
+                            <NodeRender
+                                config={it}
+                                {...commonChildrenProps}
+                            />
+                        );
+                    })}
+                </Tabs.TabPane>
+            );
+        }
 
         return (
             <NodeRender
                 config={item}
-                pageConfig={pageConfig}
-                draggingNode={draggingNode}
-                selectedNodeId={selectedNodeId}
-                dragPageAction={dragPageAction}
-                activeSideKey={activeSideKey}
-                isPreview={isPreview || !childrenDraggable}
-                nodeSelectType={nodeSelectType}
-                iframeDocument={iframeDocument}
+                {...commonChildrenProps}
             />
         );
     }) : undefined;

@@ -1,6 +1,5 @@
 export default {
-    draggable: false,
-    isContainer: false,
+    isContainer: true,
     dropInTo: ['Tabs'],
     fields: [
         {label: '隐藏渲染', field: 'forceRender', type: 'boolean', defaultValue: false, desc: '被隐藏时是否渲染 DOM 结构'},

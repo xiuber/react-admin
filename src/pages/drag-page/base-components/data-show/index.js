@@ -261,21 +261,26 @@ export default [
                         defaultActiveKey: 'user',
                     },
                     children: [
-                        {
-                            componentName: 'Tabs.TabPane',
-                            props: {
-                                key: 'user',
-                                tab: '标签',
-                            },
-                            children: [
-                                {
-                                    componentName: 'div',
-                                    children: [
-                                        {componentName: 'DragHolder'},
-                                    ],
+                        ...(['1', '2', '3'].map(item => {
+
+                            return {
+                                componentName: 'Tabs.TabPane',
+                                props: {
+                                    key: item,
+                                    tab: '标签' + item,
                                 },
-                            ],
-                        },
+                                children: [
+                                    {
+                                        componentName: 'div',
+                                        children: [
+                                            {
+                                                componentName: 'DragHolder',
+                                            },
+                                        ],
+                                    },
+                                ],
+                            };
+                        })),
                     ],
                 },
             },
