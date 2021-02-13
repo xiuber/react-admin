@@ -1,6 +1,6 @@
 import React, {useState, useRef} from 'react';
 import config from 'src/commons/config-hoc';
-import {getDropGuidePosition, isDropAccept} from 'src/pages/drag-page/util';
+import {getDropGuidePosition, isDropAccept, setDragImage} from 'src/pages/drag-page/util';
 import {getComponentConfig} from '../component-config';
 import {throttle} from 'lodash';
 import classNames from 'classnames';
@@ -34,6 +34,7 @@ export default config({
     const hoverRef = useRef(0);
     const nodeRef = useRef(null);
     const [dragIn, setDragIn] = useState(false);
+    const [accept, setAccept] = useState(true);
     const [dropPosition, setDropPosition] = useState('');
 
     function handleDragStart(e) {
@@ -47,6 +48,8 @@ export default config({
         dragPageAction.setDraggingNode(nodeData);
 
         e.dataTransfer.setData('sourceComponentId', key);
+
+        setDragImage(e, nodeData);
     }
 
     function handleDragEnter(e) {
@@ -54,6 +57,7 @@ export default config({
 
         if (draggingNode?.id === key) return;
         setDragIn(true);
+        setAccept(true);
     }
 
     const THROTTLE_TIME = 100;
@@ -95,6 +99,7 @@ export default config({
 
         setDropPosition('');
         setDragIn(true);
+        setAccept(accept);
 
         if (!accept) return;
 
@@ -140,6 +145,7 @@ export default config({
 
     function handleDragLeave(e) {
         setDragIn(false);
+        setAccept(true);
 
         if (!draggable) return;
 
@@ -236,6 +242,7 @@ export default config({
     }
 
     function handleDragEnd() {
+        setAccept(true);
         if (!draggable) return;
         if (hoverRef.current) {
             clearTimeout(hoverRef.current);
@@ -255,7 +262,9 @@ export default config({
         dragIn: dragIn && draggingNode,
         unDraggable: !draggable,
         hasDraggingNode: !!draggingNode,
+        unAccept: !accept,
     });
+
 
     const positionMap = {
         top: '前',

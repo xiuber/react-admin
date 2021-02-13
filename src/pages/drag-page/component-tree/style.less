@@ -36,6 +36,7 @@
     padding: 0 4px;
     transition: background-color, padding .1s;
     user-select: none;
+
     .nodeTitle {
         pointer-events: none;
         display: flex;
@@ -75,6 +76,11 @@
     //&::after {
     //    display: none;
     //}
+
+    &.unAccept {
+        background: #f6c1c1 !important;
+        cursor: no-drop !important;
+    }
 
     &.dragIn {
         padding-top: 10px;
