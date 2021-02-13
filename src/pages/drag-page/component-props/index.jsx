@@ -60,7 +60,7 @@ export default config({
         });
 
         const afterPropsChange = nodeConfig?.hooks?.afterPropsChange;
-        afterPropsChange && afterPropsChange({node: node});
+        afterPropsChange && afterPropsChange({node: node, dragPageAction});
 
         console.log('props', JSON.stringify(node.props, null, 4));
         dragPageAction.render();
