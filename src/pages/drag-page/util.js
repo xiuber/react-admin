@@ -443,6 +443,8 @@ export function getDroppableEle(target) {
 
     const componentEle = loop(target);
 
+    if (!componentEle) return null;
+
     // 当前是容器
     let draggable = componentEle.getAttribute('data-isContainer') === 'true';
     if (draggable) return componentEle;

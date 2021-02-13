@@ -27,6 +27,7 @@ export default function ComponentProps(props) {
         onChange,
         fitHeight,
         tip,
+        tool,
     } = props;
 
     const [form] = Form.useForm();
@@ -205,11 +206,14 @@ export default function ComponentProps(props) {
             header={(
                 <div styleName="header">
                     <CurrentSelectedNode tip={tip} node={selectedNode}/>
-                    <DesktopOutlined
-                        disabled={!selectedNode}
-                        styleName="tool"
-                        onClick={() => setPropsEditorVisible(!propsEditorVisible)}
-                    />
+                    <div>
+                        {tool}
+                        <DesktopOutlined
+                            disabled={!selectedNode}
+                            styleName="tool"
+                            onClick={() => setPropsEditorVisible(!propsEditorVisible)}
+                        />
+                    </div>
                 </div>
             )}
         >

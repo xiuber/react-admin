@@ -15,7 +15,6 @@ const OffsetInput = props => {
                 allowClear={allowClear}
                 value={value[0]}
                 onChange={e => onChange([e, value[1]])}
-                min={0}
                 step={1}
                 placeholder={placeholder[0]}
             />
@@ -24,7 +23,6 @@ const OffsetInput = props => {
                 allowClear={allowClear}
                 value={value[1]}
                 onChange={e => onChange([value[0], e])}
-                min={0}
                 step={1}
                 placeholder={placeholder[1]}
             />

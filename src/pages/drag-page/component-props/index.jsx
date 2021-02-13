@@ -4,6 +4,7 @@ import config from 'src/commons/config-hoc';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import FieldEditor from './field-editor';
 import {useHeight} from 'ra-lib';
+import {Button} from 'antd';
 
 export default config({
     connect: state => {
@@ -50,13 +51,14 @@ export default config({
                 }
             });
 
+        const nodeConfig = getComponentConfig(node.componentName);
+
         const options = node.props.options || [];
 
         options.forEach(item => {
             Reflect.deleteProperty(item, '_form');
         });
 
-        const nodeConfig = getComponentConfig(node.componentName);
         const afterPropsChange = nodeConfig?.hooks?.afterPropsChange;
         afterPropsChange && afterPropsChange({node: node});
 
@@ -64,7 +66,12 @@ export default config({
         dragPageAction.render();
     }
 
-    console.log(selectedNode?.wrapper);
+    function handleDelete(index) {
+        selectedNode.wrapper.splice(index, 1);
+        dragPageAction.refreshProps();
+        dragPageAction.render();
+    }
+
     return (
         <div
             ref={rootRef}
@@ -81,10 +88,18 @@ export default config({
                 refreshProps={refreshProps}
                 onChange={(...args) => handleChange(selectedNode, ...args)}
             />
-            {selectedNode?.wrapper?.length ? selectedNode?.wrapper.map(node => {
+            {selectedNode?.wrapper?.length ? selectedNode?.wrapper.map((node, index) => {
                 return (
                     <FieldEditor
                         tip="相关："
+                        tool={(
+                            <Button
+                                style={{marginRight: 8}}
+                                type="text"
+                                danger
+                                onClick={() => handleDelete(index)}
+                            >删除</Button>
+                        )}
                         dragPageAction={dragPageAction}
                         rightSideWidth={rightSideWidth}
                         selectedNode={node}

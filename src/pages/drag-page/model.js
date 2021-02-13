@@ -321,7 +321,7 @@ export default {
         if (!targetNode?.wrapper?.length) targetNode.wrapper = [];
         targetNode.wrapper.push(node);
 
-        return {pageConfig: {...pageConfig}};
+        return {pageConfig: {...pageConfig}, refreshProps: {}};
     },
     addNode: (options, state) => {
         const {node, targetId, isBefore, isAfter, isChildren} = options;

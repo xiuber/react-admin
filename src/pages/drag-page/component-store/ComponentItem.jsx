@@ -67,15 +67,17 @@ export default config({})(function DraggableComponent(props) {
                 <div styleName="title">
                     {icon} {title}
                 </div>
+
                 {image ? (
-                    <img
-                        draggable={false}
-                        styleName="img"
-                        src={image}
-                        alt="组件预览图"
-                    />
-                ) : null}
-                {_renderPreview()}
+                    <div styleName="preview">
+                        <img
+                            draggable={false}
+                            styleName="img"
+                            src={image}
+                            alt="组件预览图"
+                        />
+                    </div>
+                ) : _renderPreview()}
             </div>
         </Draggable>
     );

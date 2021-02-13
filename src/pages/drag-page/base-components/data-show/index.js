@@ -1,3 +1,5 @@
+import BadgeImage from './Badge.png';
+
 export default [
     {
         title: '头像',
@@ -18,7 +20,8 @@ export default [
         children: [
             {
                 title: '徽标数',
-                renderPreview: true,
+                renderPreview: false,
+                image: BadgeImage,
                 config: {
                     componentName: 'Badge',
                     props: {
