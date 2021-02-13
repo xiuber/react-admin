@@ -777,6 +777,7 @@ export function getComponent(options) {
     componentName = renderComponentName || componentName;
 
     const [name, subName] = componentName.split('.');
+
     const com = Com => {
         if (subName) return Com[subName];
 

@@ -257,6 +257,25 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Tabs',
+                    children: [
+                        ...(['1', '2', '3'].map(item => {
+                            return {
+                                componentName: 'Tabs.TabPane',
+                                props: {
+                                    key: item,
+                                    tab: '标签' + item,
+                                },
+                                children: [
+                                    {
+                                        componentName: 'div',
+                                        children: [
+                                            {componentName: 'DragHolder'},
+                                        ],
+                                    },
+                                ],
+                            };
+                        })),
+                    ],
                 },
             },
         ],
