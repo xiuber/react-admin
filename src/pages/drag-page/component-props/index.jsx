@@ -1,10 +1,10 @@
 import React, {useRef} from 'react';
 import config from 'src/commons/config-hoc';
-
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import FieldEditor from './field-editor';
 import {useHeight} from 'ra-lib';
 import {Button} from 'antd';
+// import {v4 as uuid} from 'uuid';
 
 export default config({
     connect: state => {

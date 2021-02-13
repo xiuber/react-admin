@@ -1,5 +1,5 @@
 export default {
-    isContainer: false,
+    isContainer: true,
     withWrapper: true,
     dropAccept: ['Tabs.TabPane'],
     fields: [
@@ -36,7 +36,7 @@ export default {
             defaultValue: 'default', version: '', desc: '大小，提供 large default 和 small 三种大小',
         },
         {
-            label: '页签位置', field: 'tabPosition', type: 'string',
+            label: '页签位置', field: 'tabPosition', type: 'radio-group',
             options: [
                 //，可选值有 top right bottom left
                 {value: 'top', label: '顶部'},

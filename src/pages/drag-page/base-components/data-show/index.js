@@ -257,24 +257,44 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Tabs',
+                    props: {
+                        defaultActiveKey: 'user',
+                    },
                     children: [
-                        ...(['1', '2', '3'].map(item => {
-                            return {
-                                componentName: 'Tabs.TabPane',
-                                props: {
-                                    key: item,
-                                    tab: '标签' + item,
+                        {
+                            componentName: 'Tabs.TabPane',
+                            props: {
+                                key: 'user',
+                                tab: '标签',
+                            },
+                            children: [
+                                {
+                                    componentName: 'div',
+                                    children: [
+                                        {componentName: 'DragHolder'},
+                                    ],
                                 },
-                                children: [
-                                    {
-                                        componentName: 'div',
-                                        children: [
-                                            {componentName: 'DragHolder'},
-                                        ],
-                                    },
-                                ],
-                            };
-                        })),
+                            ],
+                        },
+                    ],
+                },
+            },
+            {
+                title: '标签页面',
+                renderPreview: true,
+                config: {
+                    componentName: 'Tabs.TabPane',
+                    props: {
+                        key: 'user2',
+                        tab: '标签',
+                    },
+                    children: [
+                        {
+                            componentName: 'div',
+                            children: [
+                                {componentName: 'DragHolder'},
+                            ],
+                        },
                     ],
                 },
             },

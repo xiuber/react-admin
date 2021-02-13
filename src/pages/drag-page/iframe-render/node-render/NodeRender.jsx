@@ -100,10 +100,6 @@ export default function NodeRender(props) {
         ...componentActions,
     };
 
-    function setWrapper(com) {
-        return com;
-    }
-
     if (wrapper?.length) {
         wrapper[wrapper.length - 1].children = [{...config, wrapper: null}];
 
@@ -128,11 +124,11 @@ export default function NodeRender(props) {
 
 
     if (isPreview) {
-        return setWrapper(createElement(component, {
+        return createElement(component, {
             ...commonProps,
             ...componentProps,
             ...propsActions,
-        }));
+        });
     }
 
     const dragClassName = classNames({
@@ -209,7 +205,7 @@ export default function NodeRender(props) {
             style[key] = undefined;
         });
 
-        return setWrapper(createElement('div', {
+        return createElement('div', {
             ...dragProps,
             className: dragClassName + ' dragWrapper',
             style: wStyle,
@@ -222,16 +218,16 @@ export default function NodeRender(props) {
                     style,
                 }),
             ],
-        }));
+        });
     }
 
-    return setWrapper(createElement(component, {
+    return createElement(component, {
         ...commonProps,
         ...componentProps,
         ...propsActions,
         ...dragProps,
         className: [dragClassName, componentProps.className].join(' '),
         onClick: onNodeClick,
-    }));
+    });
 }
 
