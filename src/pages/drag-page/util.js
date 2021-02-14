@@ -656,6 +656,7 @@ export function getDropGuidePosition(options) {
             height: 0,
         },
         target: {
+            targetElement,
             targetHeight: 0,
             targetWidth: 0,
             targetX: 0,
@@ -754,6 +755,7 @@ export function getDropGuidePosition(options) {
     };
 
     const target = {
+        targetElement,
         targetHeight,
         targetWidth,
         targetX,

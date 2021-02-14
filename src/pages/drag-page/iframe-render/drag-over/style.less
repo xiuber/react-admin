@@ -7,6 +7,22 @@
     #drop-guide-bg {
         transition: 100ms;
     }
+
+    #drop-guide-bg:before {
+        content: attr(data-componentDisplayName);
+        font-size: 12px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 0 4px;
+        background: @guide-color;
+        color: #fff;
+        word-break: keep-all;
+        z-index: 999;
+        transform-origin: 0 0;
+        transform: scale(.8);
+        opacity: .5;
+    }
 }
 
 .largeY {
@@ -37,7 +53,6 @@
     overflow: hidden;
     font-size: 18px;
     color: @guide-color;
-    text-shadow: 2px 2px 2px #fff;
 }
 
 .guideActive {

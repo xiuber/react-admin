@@ -273,6 +273,7 @@ export default {
         const node = findNodeById(pageConfig, id);
 
         if (!node) return {selectedNode: null, selectedNodeId: null};
+
         const nodeConfig = getComponentConfig(node.componentName);
 
         const parentNode = findParentNodeById(pageConfig, id);
@@ -293,6 +294,9 @@ export default {
 
         if (res === false) return {pageConfig};
 
+        const targetCollection = findChildrenCollection(pageConfig, id);
+
+        const deleteIndex = targetCollection.findIndex(item => item.id === id);
 
         deleteComponentById(pageConfig, id);
 
@@ -301,6 +305,26 @@ export default {
 
         afterDelete && afterDelete(args);
         afterDeleteChildren && afterDeleteChildren({node: parentNode, targetNode: node});
+
+        // 删空了，选择父级
+        if (!targetCollection?.length) {
+            selectedNodeId = parentNode.id;
+            selectedNode = parentNode;
+        } else {
+            // 选择下一个兄弟节点
+            const nextNode = targetCollection[deleteIndex];
+            if (nextNode) {
+                selectedNodeId = nextNode.id;
+                selectedNode = nextNode;
+            } else {
+                // 选择上一个兄弟节点
+                const prevNode = targetCollection[deleteIndex - 1];
+                if (prevNode) {
+                    selectedNodeId = prevNode.id;
+                    selectedNode = prevNode;
+                }
+            }
+        }
 
         return {pageConfig: {...pageConfig}, selectedNodeId, selectedNode};
     },
@@ -504,7 +528,7 @@ function deleteComponentById(root, id) {
             if (node?.id === id) {
                 const index = nodes.findIndex(item => item?.id === id);
                 deletedNode = nodes.splice(index, 1);
-                return;
+                return index;
             } else {
                 if (node?.children?.length) {
                     loop(node.children);

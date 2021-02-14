@@ -143,6 +143,7 @@ function showDropGuideLine(position) {
             isBottom,
         },
         target: {
+            targetElement,
             targetHeight,
             targetWidth,
             targetX,
@@ -162,6 +163,9 @@ function showDropGuideLine(position) {
     if (!guideLineEle) return;
 
     const guideBgEle = frameDocument.getElementById('drop-guide-bg');
+    const componentDisplayName = targetElement?.getAttribute('data-componentDisplayName');
+
+    guideBgEle.setAttribute('data-componentDisplayName', componentDisplayName);
     guideBgEle.classList.add(styles.guideBgActive);
     guideBgEle.style.top = `${targetY}px`;
     guideBgEle.style.left = `${targetX}px`;
