@@ -55,6 +55,7 @@ export default function NodeRender(props) {
 
     componentDesc = componentDesc || componentName;
     const componentDisplayName = getComponentDisplayName(config);
+    const component = getComponent(config);
 
     let childrenEle = children?.length ? children.map(item => {
         const commonChildrenProps = {
@@ -67,9 +68,10 @@ export default function NodeRender(props) {
             nodeSelectType,
             iframeDocument,
         };
-        if (item.componentName === 'Tabs.TabPane') {
+        if (['Collapse.Panel', 'Tabs.TabPane'].includes(item.componentName)) {
+            const Component = getComponent(item);
             return (
-                <Tabs.TabPane {...item.props}>
+                <Component {...item.props}>
                     {item.children.map(it => {
                         return (
                             <NodeRender
@@ -78,7 +80,7 @@ export default function NodeRender(props) {
                             />
                         );
                     })}
-                </Tabs.TabPane>
+                </Component>
             );
         }
 
@@ -89,8 +91,6 @@ export default function NodeRender(props) {
             />
         );
     }) : undefined;
-
-    const component = getComponent(config);
 
     const componentActions = Object.entries(actions)
         .reduce((prev, curr) => {

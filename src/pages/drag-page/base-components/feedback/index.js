@@ -203,6 +203,9 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Progress',
+                    props: {
+                        percent: 50,
+                    },
                 },
             },
         ],

@@ -143,6 +143,8 @@ export default [
             {
                 title: '折叠面板',
                 renderPreview: true,
+                previewZoom: .7,
+                previewProps: {style: {width: '100%'}},
                 config: {
                     componentName: 'Collapse',
                     children: [
@@ -157,7 +159,9 @@ export default [
                                     {
                                         componentName: 'div',
                                         children: [
-                                            {componentName: 'DragHolder'},
+                                            {
+                                                componentName: 'DragHolder',
+                                            },
                                         ],
                                     },
                                 ],
@@ -347,12 +351,7 @@ export default [
                                 },
                                 children: [
                                     {
-                                        componentName: 'div',
-                                        children: [
-                                            {
-                                                componentName: 'DragHolder',
-                                            },
-                                        ],
+                                        componentName: 'DragHolder',
                                     },
                                 ],
                             };
