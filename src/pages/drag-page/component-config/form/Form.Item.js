@@ -13,12 +13,12 @@ export default {
         tip: '请拖入表单元素',
     },
     childrenDraggable: false, // 子节点不可拖拽
-    dropAccept: options => {
-        const {draggingNode} = options;
-        const nodeConfig = getComponentConfig(draggingNode?.componentName);
-
-        return nodeConfig?.isFormElement;
-    },
+    // dropAccept: options => {
+    //     const {draggingNode} = options;
+    //     const nodeConfig = getComponentConfig(draggingNode?.componentName);
+    //
+    //     return nodeConfig?.isFormElement;
+    // },
     dropInTo: options => {
         const {targetNode, pageConfig} = options;
 
@@ -33,7 +33,11 @@ export default {
             if (!node) return;
 
             // 清空 相当于替换元素了
-            node.children = [];
+            if (node.children?.length === 1
+                && getComponentConfig(node.children[0].componentName).isFormElement
+            ) {
+                node.children = [];
+            }
 
             if (targetNode?.componentName === 'Switch') {
                 if (!node.props) node.props = {};
