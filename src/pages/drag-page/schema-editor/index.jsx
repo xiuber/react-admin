@@ -204,7 +204,8 @@ export default config({
     function handleDragging(info) {
         const {clientX} = info;
 
-        dragPageAction.setSchemaEditorWidth(clientX - 56);
+        const {x} = document.getElementById('schemaEditor').getBoundingClientRect();
+        dragPageAction.setSchemaEditorWidth(clientX - x - 4);
     }
 
     useEffect(() => {

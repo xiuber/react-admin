@@ -4,6 +4,7 @@ import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import FieldEditor from './field-editor';
 import {useHeight} from 'ra-lib';
 import {Button} from 'antd';
+import {OTHER_HEIGHT} from 'src/pages/drag-page/util';
 // import {v4 as uuid} from 'uuid';
 
 export default config({
@@ -25,7 +26,7 @@ export default config({
     } = props;
     const rootRef = useRef(null);
 
-    const [height] = useHeight(rootRef);
+    const [height] = useHeight(rootRef, OTHER_HEIGHT);
 
 
     function handleChange(node, changedValues, allValues, replace) {

@@ -14,6 +14,7 @@ import {v4 as uuid} from 'uuid';
 import {useHeight} from 'ra-lib';
 import CurrentSelectedNode from '../current-selected-node';
 import './style.less';
+import {OTHER_HEIGHT} from 'src/pages/drag-page/util';
 
 const {Panel} = Collapse;
 
@@ -50,7 +51,7 @@ export default config({
     const [activeKey, setActiveKey] = useState(options.map(item => item.key));
     const boxRef = useRef(null);
 
-    const [height] = useHeight(boxRef);
+    const [height] = useHeight(boxRef, OTHER_HEIGHT);
 
     function handleChange(values, replace) {
         if (!selectedNode?.componentName) return;

@@ -42,6 +42,7 @@ export default config({
     const [allComponents, setAllComponents] = useState([]);
     const [searchValue, setSearchValue] = useState('');
 
+    const rootRef = useRef(null);
     const categoryRef = useRef(null);
     const componentRef = useRef(null);
     const componentSpaceRef = useRef(null);
@@ -131,7 +132,8 @@ export default config({
     function handleDragging(info) {
         const {clientX} = info;
 
-        dragPageAction.setComponentTreeWidth(clientX - 56);
+        const {x} = rootRef.current.getBoundingClientRect();
+        dragPageAction.setComponentTreeWidth(clientX - x - 4);
     }
 
     return (
@@ -143,7 +145,7 @@ export default config({
                 </div>
             }
         >
-            <div styleName="root" style={{width: componentTreeWidth}}>
+            <div styleName="root" ref={rootRef} style={{width: componentTreeWidth}}>
                 <DragBar onDragging={handleDragging}/>
                 <header>
                     <Input
@@ -218,7 +220,12 @@ export default config({
                                 );
                             })}
                         </div>
-                        <div styleName="components" id="storeComponents" ref={componentRef} onScroll={handleComponentScroll}>
+                        <div
+                            styleName="components"
+                            id="storeComponents"
+                            ref={componentRef}
+                            onScroll={handleComponentScroll}
+                        >
                             {components.map(baseCategory => {
                                 const {id: baseCategoryId, children = [], hiddenInStore} = baseCategory;
                                 if (hiddenInStore) return null;
@@ -233,7 +240,7 @@ export default config({
                                         >
                                             <div
                                                 id={`componentCategory_${subCategoryId}`}
-                                                styleName="componentCategory"
+                                                styleName="componentCategoryTitle"
                                             >
                                                 {subTitle}
                                             </div>

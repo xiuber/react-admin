@@ -12,7 +12,7 @@ import Pane from 'src/pages/drag-page/pane';
 import {useHeight} from 'ra-lib';
 import prettier from 'prettier/standalone';
 import parserPostCss from 'prettier/parser-postcss';
-import {isMac} from '../util';
+import {isMac, OTHER_HEIGHT} from '../util';
 
 // vs code 的快捷键配置
 import keyboardShortcuts from './keyboard-shortcuts.json';
@@ -83,7 +83,7 @@ function CodeEditor(props) {
     const [code, setCode] = useState('');
     const [fullScreen, setFullScreen] = useState(false);
 
-    const [height] = useHeight(mainRef, 53, [fullScreen]);
+    const [height] = useHeight(mainRef, 53 - OTHER_HEIGHT, [fullScreen]);
 
     function handleSave(code) {
 

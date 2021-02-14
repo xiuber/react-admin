@@ -8,6 +8,8 @@ import * as antdIcon from '@ant-design/icons';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import {v4 as uuid} from 'uuid';
 
+export const OTHER_HEIGHT = 0;
+
 export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);

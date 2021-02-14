@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {Tabs, Tooltip} from 'antd';
 import config from 'src/commons/config-hoc';
 import ComponentStyle from '../component-style';
@@ -35,6 +35,8 @@ export default config({
         action: {dragPage: dragPageAction},
     } = props;
 
+    const rootRef = useRef(null);
+
     function handleChange(key) {
         dragPageAction.setActiveTabKey(key);
     }
@@ -44,7 +46,9 @@ export default config({
     function handleDragging(info) {
         const {clientX} = info;
 
-        const width = windowWidth - clientX - 12;
+        const {x, width: rightWidth} = rootRef.current.getBoundingClientRect();
+
+        const width = windowWidth - clientX - 4 - (windowWidth - x - rightWidth);
 
         dragPageAction.setRightSideWidth(width);
     }
@@ -62,7 +66,11 @@ export default config({
     ];
 
     return (
-        <div styleName={`root ${rightSideExpended ? 'expended' : ''}`} style={{width: rightSideExpended ? rightSideWidth : 45}}>
+        <div
+            ref={rootRef}
+            styleName={`root ${rightSideExpended ? 'expended' : ''}`}
+            style={{width: rightSideExpended ? rightSideWidth : 45}}
+        >
             <div styleName="toolBar">
                 <Tooltip
                     placement="right"

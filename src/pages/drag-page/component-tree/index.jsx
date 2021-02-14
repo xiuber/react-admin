@@ -177,7 +177,9 @@ export default config({
     function handleDragging(info) {
         const {clientX} = info;
 
-        dragPageAction.setComponentTreeWidth(clientX - 56);
+        const {x} = mainRef.current.getBoundingClientRect();
+
+        dragPageAction.setComponentTreeWidth(clientX - x - 4);
     }
 
     const styleName = classNames({

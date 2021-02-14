@@ -13,6 +13,7 @@ import ComponentTree from '../component-tree';
 import ComponentStore from '../component-store';
 import SchemaEditor from '../schema-editor';
 import CanvasSetting from '../canvas-setting';
+import {OTHER_HEIGHT} from 'src/pages/drag-page/util';
 import './style.less';
 
 export default config({
@@ -29,7 +30,7 @@ export default config({
         action: {dragPage: dragPageAction},
     } = props;
     const rightRef = useRef(null);
-    const [height] = useHeight(rightRef);
+    const [height] = useHeight(rightRef, OTHER_HEIGHT);
 
     function handleToolClick(key) {
         if (key === activeSideKey) {
