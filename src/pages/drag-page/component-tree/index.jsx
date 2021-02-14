@@ -7,11 +7,12 @@ import {
 } from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import TreeNode from './TreeNode';
-import {scrollElement, getParentIds} from '../util';
+import {scrollElement, getParentIds, isComponentConfig} from '../util';
 import Pane from '../pane';
 import classNames from 'classnames';
 import DragBar from 'src/pages/drag-page/drag-bar';
 import {getComponentConfig, getComponentDisplayName} from 'src/pages/drag-page/component-config';
+import {cloneDeep} from 'lodash';
 
 import './style.less';
 
@@ -91,7 +92,7 @@ export default config({
                     name: 'wrapper',
                     draggable: false,
                     nodeData: {},
-                    children: wrapper.map(w => {
+                    children: cloneDeep(wrapper).map((w, index) => {
                         Reflect.deleteProperty(w, 'children');
                         const n = {};
                         loop(w, n);
@@ -99,6 +100,15 @@ export default config({
                     }),
                 });
             }
+            Object.entries(props || {})
+                .filter(([, value]) => isComponentConfig(value))
+                .forEach(([key, value]) => {
+                    if (!next.children) next.children = [];
+                    const node = {};
+                    loop(value, node);
+                    node.name = `${key} ${node.name}`;
+                    next.children.unshift(node);
+                });
         };
 
         loop(pageConfig, treeData);
