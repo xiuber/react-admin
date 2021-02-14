@@ -68,7 +68,7 @@ export default {
             ],
             desc: '标签文本对齐方式',
         },
-        // TODO  怎么支持更多情况
+        // TODO  标签宽度 怎么支持更多情况
         {
             label: '标签宽度', field: ['labelCol', 'flex'], type: 'unit', version: '',
             placeholder: `labelCol.flex    ${isMac ? '⌘' : 'ctrl'}+Enter 同步所有标签`,

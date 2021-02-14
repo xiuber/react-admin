@@ -255,6 +255,7 @@ export default [
             {
                 title: '标签页',
                 renderPreview: true,
+                previewZoom: .7,
                 config: {
                     componentName: 'Tabs',
                     props: {

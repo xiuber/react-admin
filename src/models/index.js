@@ -1,4 +1,9 @@
-import { model, storage, layoutModel, PAGE_FRAME_LAYOUT } from 'ra-lib';
+import {
+    model,
+    storage,
+    layoutModel,
+    PAGE_FRAME_LAYOUT,
+} from 'ra-lib';
 import models from './models';
 import handleError from '../commons/handle-error';
 import handleSuccess from '../commons/handle-success';
@@ -17,7 +22,7 @@ layoutModel.initialState = {
 };
 
 const modelObj = model({
-    models: { ...models, layout: layoutModel },
+    models: {...models, layout: layoutModel},
     storage,
     handleError,
     handleSuccess,
