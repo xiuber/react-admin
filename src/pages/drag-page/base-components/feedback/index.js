@@ -227,6 +227,7 @@ export default [
             {
                 title: '骨架屏',
                 renderPreview: true,
+                previewZoom: .7,
                 config: {
                     componentName: 'Skeleton',
                 },

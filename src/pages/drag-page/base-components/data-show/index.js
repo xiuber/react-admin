@@ -1,5 +1,7 @@
 import BadgeImage from './Badge.png';
 import PopoverImage from './Popover.png';
+import TabsImage from './Tabs.png';
+import CarouselImage from './Carousel.png';
 
 export default [
     {
@@ -11,6 +13,9 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Avatar',
+                    props: {
+                        src: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                    },
                 },
             },
         ],
@@ -61,8 +66,12 @@ export default [
             {
                 title: '卡片',
                 renderPreview: true,
+                previewZoom: .7,
                 config: {
                     componentName: 'Card',
+                    props: {
+                        title: '卡片标题',
+                    },
                 },
             },
         ],
@@ -73,9 +82,56 @@ export default [
         children: [
             {
                 title: '走马灯',
-                renderPreview: true,
+                image: CarouselImage,
                 config: {
                     componentName: 'Carousel',
+                    children: [
+                        {
+                            componentName: 'div',
+                            children: [
+                                {
+                                    componentName: 'DragHolder',
+                                    props: {
+                                        style: {
+                                            height: 200,
+                                            color: '#fff',
+                                            backgroundColor: '#507e10',
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                        {
+                            componentName: 'div',
+                            children: [
+                                {
+                                    componentName: 'DragHolder',
+                                    props: {
+                                        style: {
+                                            height: 200,
+                                            color: '#fff',
+                                            backgroundColor: '#f3d80e',
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                        {
+                            componentName: 'div',
+                            children: [
+                                {
+                                    componentName: 'DragHolder',
+                                    props: {
+                                        style: {
+                                            height: 200,
+                                            color: '#fff',
+                                            backgroundColor: '#221111',
+                                        },
+                                    },
+                                },
+                            ],
+                        },
+                    ],
                 },
             },
         ],
@@ -89,6 +145,25 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Collapse',
+                    children: [
+                        ...(['1', '2', '3'].map(item => {
+                            return {
+                                componentName: 'Collapse.Panel',
+                                props: {
+                                    key: item,
+                                    header: '标题' + item,
+                                },
+                                children: [
+                                    {
+                                        componentName: 'div',
+                                        children: [
+                                            {componentName: 'DragHolder'},
+                                        ],
+                                    },
+                                ],
+                            };
+                        })),
+                    ],
                 },
             },
         ],
@@ -254,12 +329,12 @@ export default [
         children: [
             {
                 title: '标签页',
-                renderPreview: true,
-                previewZoom: .7,
+                image: TabsImage,
                 config: {
                     componentName: 'Tabs',
                     props: {
                         defaultActiveKey: 'user',
+                        animated: {inkBar: true, tabPane: true},
                     },
                     children: [
                         ...(['1', '2', '3'].map(item => {
@@ -287,11 +362,11 @@ export default [
             },
             {
                 title: '标签页面',
-                renderPreview: true,
+                renderPreview: false,
                 config: {
                     componentName: 'Tabs.TabPane',
                     props: {
-                        key: 'user2',
+                        key: 'key',
                         tab: '标签',
                     },
                     children: [
