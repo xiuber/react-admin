@@ -2,6 +2,7 @@ import {useEffect} from 'react';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import {debounce} from 'lodash';
 import {v4 as uuid} from 'uuid';
+import {isComponentConfig} from 'src/pages/drag-page/util';
 
 export default function EditableAction(props) {
     const {
@@ -38,6 +39,19 @@ export default function EditableAction(props) {
 
         if (node.children?.length) {
             node.children.forEach(item => loop(item, cb));
+        }
+
+        // props中有可能也有节点
+        Object.values(node.props || {})
+            .forEach(value => {
+                if (isComponentConfig(value)) {
+                    loop(value, cb);
+                }
+            });
+
+        // wrapper中有节点
+        if (node?.wrapper?.length) {
+            node.wrapper.forEach(item => loop(item, cb));
         }
     };
 

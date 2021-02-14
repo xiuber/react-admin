@@ -3,7 +3,7 @@ import {message, Switch} from 'antd';
 import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
-import {findNodeById, usePrevious, loopIdToFirst, deleteUnLinkedIds, setNodeId} from '../util';
+import {findNodeById, usePrevious, loopIdToFirst, deleteUnLinkedIds, setNodeId, isComponentConfig} from '../util';
 import {deleteDefaultProps, getComponentConfig} from '../component-config';
 import DragBar from '../drag-bar';
 import {cloneDeep} from 'lodash';
@@ -56,6 +56,19 @@ export default config({
 
             if (node.children?.length) {
                 node.children.forEach(item => loopGetId(item));
+            }
+
+            // props中有可能也有节点
+            Object.values(node.props || {})
+                .forEach(value => {
+                    if (isComponentConfig(value)) {
+                        loopGetId(value);
+                    }
+                });
+
+            // wrapper中有节点
+            if (node?.wrapper?.length) {
+                node.wrapper.forEach(item => loopGetId(item));
             }
         };
 
@@ -231,6 +244,19 @@ export default config({
 
             if (node.children?.length) {
                 node.children.forEach(item => loop(item));
+            }
+
+            // props中有可能也有节点
+            Object.values(node.props || {})
+                .forEach(value => {
+                    if (isComponentConfig(value)) {
+                        loop(value);
+                    }
+                });
+
+            // wrapper中有节点
+            if (node?.wrapper?.length) {
+                node.wrapper.forEach(item => loop(item));
             }
         };
 

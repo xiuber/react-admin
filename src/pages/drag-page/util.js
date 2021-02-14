@@ -45,6 +45,11 @@ export function setNodeId(node, force) {
                     loopId(value);
                 }
             });
+
+        // wrapper中有节点
+        if (node.wrapper?.length) {
+            node.wrapper.forEach(item => loopId(item));
+        }
     };
 
     loopId(node);
@@ -81,6 +86,10 @@ export function loopIdToFirst(node) {
                 loopIdToFirst(value);
             }
         });
+    // wrapper中有节点
+    if (node.wrapper?.length) {
+        node.wrapper.forEach(item => loopIdToFirst(item));
+    }
 }
 
 // 同步设置对象，将newObj中属性，对应设置到oldObj中
@@ -121,6 +130,10 @@ export function deleteUnLinkedIds(nodeConfig, keepIds = []) {
                     loop(value);
                 }
             });
+        // wrapper中有节点
+        if (node.wrapper?.length) {
+            node.wrapper.forEach(item => loop(item));
+        }
     };
     loop(nodeConfig);
 }
@@ -160,6 +173,10 @@ export function findLinkSourceComponentIds(pageConfig) {
                     loop(value);
                 }
             });
+        // wrapper中有节点
+        if (node.wrapper?.length) {
+            node.wrapper.forEach(item => loop(item));
+        }
     };
     loop(pageConfig);
 
@@ -193,6 +210,10 @@ function findLinkTargetComponentIds(options) {
                     loop(value);
                 }
             });
+        // wrapper中有节点
+        if (node.wrapper?.length) {
+            node.wrapper.forEach(item => loop(item));
+        }
     };
 
     loop(pageConfig);
@@ -575,7 +596,6 @@ export function isDropAccept(options) {
     let targetNode;
     if (isChildren) targetNode = findNodeById(pageConfig, targetComponentId);
     if (isBefore || isAfter) targetNode = findParentNodeById(pageConfig, targetComponentId);
-
     if (!targetNode) return false;
 
     // 不允许父节点拖入子节点
@@ -639,15 +659,20 @@ export function isChildrenNode(parentNode, childrenNode) {
 export function findNodeById(root, id) {
     if (root.id === id) return root;
 
-    if (!root.children) return null;
-
-    for (let node of root.children) {
+    for (let node of (root?.children || [])) {
         const result = findNodeById(node, id);
         if (result) return result;
     }
 
     // props中有可能也有节点
-    for (let node of Object.values(root.props || {})) {
+    for (let node of Object.values(root?.props || {})) {
+        if (isComponentConfig(node)) {
+            const result = findNodeById(node, id);
+            if (result) return result;
+        }
+    }
+    // wrapper中有节点
+    for (let node of (root.wrapper || [])) {
         if (isComponentConfig(node)) {
             const result = findNodeById(node, id);
             if (result) return result;

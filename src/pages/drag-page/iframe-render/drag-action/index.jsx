@@ -156,14 +156,38 @@ export default function DragAction(props) {
             return end();
         }
 
+        const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
+        let componentConfig = e.dataTransfer.getData('componentConfig');
+        componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
+
+        const sourceNode = componentConfig ? componentConfig : findNodeById(pageConfig, sourceComponentId);
+        const isWrapper = getComponentConfig(sourceNode?.componentName)?.isWrapper;
+
         // 可投放元素
-        const targetElement = getDroppableEle(e.target);
+        const targetElement = isWrapper ? e.target : getDroppableEle(e.target);
+
         if (!targetElement) return end();
 
         const targetComponentId = targetElement.getAttribute('data-componentId');
 
-        const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
-        let componentConfig = e.dataTransfer.getData('componentConfig');
+        if (isWrapper) {
+            if (sourceComponentId) {
+                dragPageAction.moveWrapper({
+                    sourceId: sourceComponentId,
+                    targetId: targetComponentId,
+                });
+                return end();
+            }
+
+            if (componentConfig) {
+                dragPageAction.addWrapper({
+                    targetId: targetComponentId,
+                    node: componentConfig,
+                });
+                return end();
+            }
+
+        }
 
         // 放在自身上
         if (targetComponentId === sourceComponentId) return end();
@@ -198,22 +222,13 @@ export default function DragAction(props) {
         }
 
         if (componentConfig) {
-            componentConfig = JSON.parse(componentConfig);
 
-            const isWrapper = getComponentConfig(componentConfig?.componentName)?.isWrapper;
-            if (isWrapper) {
-                dragPageAction.addWrapper({
-                    targetId: targetComponentId,
-                    node: componentConfig,
-                });
-            } else {
-                dragPageAction.addNode({
-                    targetId: targetComponentId,
-                    node: componentConfig,
-                    ...position,
-                });
-                // dragPageAction.setSelectedNodeId(componentConfig.id);
-            }
+            dragPageAction.addNode({
+                targetId: targetComponentId,
+                node: componentConfig,
+                ...position,
+            });
+            // dragPageAction.setSelectedNodeId(componentConfig.id);
         }
         end();
     }

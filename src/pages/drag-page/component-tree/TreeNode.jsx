@@ -1,6 +1,6 @@
 import React, {useState, useRef} from 'react';
 import config from 'src/commons/config-hoc';
-import {getDropGuidePosition, isDropAccept, setDragImage} from 'src/pages/drag-page/util';
+import {findNodeById, getDropGuidePosition, isDropAccept, setDragImage} from 'src/pages/drag-page/util';
 import {getComponentConfig} from '../component-config';
 import {throttle} from 'lodash';
 import classNames from 'classnames';
@@ -169,7 +169,6 @@ export default config({
         e.stopPropagation();
 
         const propsToSet = e.dataTransfer.getData('propsToSet');
-
         if (propsToSet) {
             const newProps = JSON.parse(propsToSet);
 
@@ -180,6 +179,31 @@ export default config({
 
         const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
         let componentConfig = e.dataTransfer.getData('componentConfig');
+        componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
+
+        if (sourceComponentId) {
+            const sourceNode = findNodeById(pageConfig, sourceComponentId);
+            const isWrapper = getComponentConfig(sourceNode?.name)?.isWrapper;
+            if (isWrapper) {
+                dragPageAction.moveWrapper({
+                    sourceId: sourceComponentId,
+                    targetId: key,
+                });
+                return end();
+            }
+        }
+
+        if (componentConfig) {
+            const isWrapper = getComponentConfig(componentConfig?.componentName)?.isWrapper;
+
+            if (isWrapper) {
+                dragPageAction.addWrapper({
+                    targetId: key,
+                    node: componentConfig,
+                });
+                return end();
+            }
+        }
 
         if (key === sourceComponentId) return end();
 
@@ -219,23 +243,15 @@ export default config({
         }
 
         if (componentConfig) {
-            componentConfig = JSON.parse(componentConfig);
-            const isWrapper = getComponentConfig(componentConfig?.componentName)?.isWrapper;
-            if (isWrapper) {
-                dragPageAction.addWrapper({
-                    targetId: key,
-                    node: componentConfig,
-                });
-            } else {
-                dragPageAction.addNode({
-                    targetId: key,
-                    isBefore: isTop,
-                    isAfter: isBottom,
-                    isChildren: isCenter,
-                    node: componentConfig,
-                });
-                // dragPageAction.setSelectedNodeId(componentConfig.id);
-            }
+
+            dragPageAction.addNode({
+                targetId: key,
+                isBefore: isTop,
+                isAfter: isBottom,
+                isChildren: isCenter,
+                node: componentConfig,
+            });
+            // dragPageAction.setSelectedNodeId(componentConfig.id);
         }
 
         end();

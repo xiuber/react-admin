@@ -8,6 +8,7 @@ import {
     getAllNodesByName,
     syncObject,
     setNodeId,
+    isComponentConfig,
 } from './util';
 
 const rootHolderNode = () => (
@@ -277,7 +278,7 @@ export default {
 
         const nodeConfig = getComponentConfig(node.componentName);
 
-        const parentNode = findParentNodeById(pageConfig, id);
+        const parentNode = findParentNodeById(pageConfig, id) || {};
         const parentNodeConfig = getComponentConfig(parentNode.componentName);
 
         const {beforeDelete, afterDelete} = nodeConfig.hooks || {};
@@ -295,7 +296,7 @@ export default {
 
         if (res === false) return {pageConfig};
 
-        const targetCollection = findChildrenCollection(pageConfig, id);
+        const targetCollection = findChildrenCollection(pageConfig, id) || [];
 
         const deleteIndex = targetCollection.findIndex(item => item.id === id);
 
@@ -521,6 +522,25 @@ function deleteComponentById(root, id) {
             } else {
                 if (node?.children?.length) {
                     loop(node.children);
+                }
+
+                // props中有可能也有节点
+                Object.entries(node.props || {})
+                    .filter(([key, item]) => isComponentConfig(item))
+                    .forEach(([key, value]) => {
+                        if (value.id === id) {
+                            Reflect.deleteProperty(node.props, key);
+                            deletedNode = value;
+                        } else {
+                            if (value?.children?.length) {
+                                loop(value.children);
+                            }
+                        }
+                    });
+
+                // wrapper中有节点
+                if (node?.wrapper?.length) {
+                    loop(node.wrapper);
                 }
             }
         }

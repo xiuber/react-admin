@@ -185,6 +185,7 @@ export default function ComponentProps(props) {
                             return element;
                         }
 
+                        if (!selectedNode) return null;
 
                         if (!selectedNode.props) selectedNode.props = {};
 

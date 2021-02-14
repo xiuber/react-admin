@@ -1,6 +1,7 @@
 import React from 'react';
 import {AppstoreOutlined} from '@ant-design/icons';
 import NodeRender from 'src/pages/drag-page/iframe-render/node-render/NodeRender';
+import {isComponentConfig} from 'src/pages/drag-page/util';
 
 const result = {};
 const req = require.context('./', true, /\.js$/);
@@ -179,6 +180,19 @@ export function deleteDefaultProps(component) {
 
         if (children?.length) {
             children.forEach(item => loop(item));
+        }
+
+        // props中有可能也有节点
+        Object.values(node.props || {})
+            .forEach(value => {
+                if (isComponentConfig(value)) {
+                    loop(value);
+                }
+            });
+
+        // wrapper中有节点
+        if (node?.wrapper?.length) {
+            node.wrapper.forEach(item => loop(item));
         }
     };
 

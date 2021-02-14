@@ -132,6 +132,7 @@ export default function NodeRender(props) {
     };
 
     if (wrapper?.length) {
+        wrapper = cloneDeep(wrapper);
         wrapper[wrapper.length - 1].children = [{...config, wrapper: null}];
 
         const nextConfig = wrapper.reduce((prev, wrapperConfig) => {

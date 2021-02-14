@@ -50,7 +50,7 @@ export default config({
         let nodeCount = 0;
         const allKeys = [];
         const loop = (prev, next, _draggable) => {
-            const {id, props, children, componentName} = prev;
+            const {id, props, wrapper, children, componentName} = prev;
             const componentConfig = getComponentConfig(componentName);
             let {
                 isContainer,
@@ -72,13 +72,31 @@ export default config({
             allKeys.push(id);
             nodeCount++;
 
-            if (children && children.length) {
+            if (children?.length) {
                 next.children = children.map(() => ({}));
 
                 const _d = _draggable === false ? false : childrenDraggable;
 
                 children.forEach((item, index) => {
                     loop(item, next.children[index], _d);
+                });
+            }
+
+            if (wrapper?.length) {
+                if (!next.children) next.children = [];
+
+                next.children.unshift({
+                    key: `wrapper_${id}`,
+                    title: '',
+                    name: 'wrapper',
+                    draggable: false,
+                    nodeData: {},
+                    children: wrapper.map(w => {
+                        Reflect.deleteProperty(w, 'children');
+                        const n = {};
+                        loop(w, n);
+                        return n;
+                    }),
                 });
             }
         };
