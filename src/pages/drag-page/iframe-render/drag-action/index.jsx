@@ -6,9 +6,8 @@ import {
     isDropAccept,
     getNodeEle,
     getDroppableEle,
-    setDragImage,
+    setDragImage, handleNodDrop,
 } from 'src/pages/drag-page/util';
-import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 /**
  * 事件委托，统一添加事件，不给每个元素添加事件，提高性能
@@ -141,96 +140,14 @@ export default function DragAction(props) {
             handleDragEnd();
         };
 
-        const propsToSet = e.dataTransfer.getData('propsToSet');
-
-        if (propsToSet) {
-            // 组件节点
-            const nodeEle = getNodeEle(e.target);
-            if (!nodeEle) return end();
-
-            const newProps = JSON.parse(propsToSet);
-            const componentId = nodeEle.getAttribute('data-componentId');
-
-            dragPageAction.setNewProps({componentId, newProps});
-
-            return end();
-        }
-
-        const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
-        let componentConfig = e.dataTransfer.getData('componentConfig');
-        componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
-
-        const sourceNode = componentConfig ? componentConfig : findNodeById(pageConfig, sourceComponentId);
-        const isWrapper = getComponentConfig(sourceNode?.componentName)?.isWrapper;
-
-        // 可投放元素
-        const targetElement = isWrapper ? e.target : getDroppableEle(e.target);
-
-        if (!targetElement) return end();
-
-        const targetComponentId = targetElement.getAttribute('data-componentId');
-
-        if (isWrapper) {
-            if (sourceComponentId) {
-                dragPageAction.moveWrapper({
-                    sourceId: sourceComponentId,
-                    targetId: targetComponentId,
-                });
-                return end();
-            }
-
-            if (componentConfig) {
-                dragPageAction.addWrapper({
-                    targetId: targetComponentId,
-                    node: componentConfig,
-                });
-                return end();
-            }
-
-        }
-
-        // 放在自身上
-        if (targetComponentId === sourceComponentId) return end();
-
-        const {pageX, pageY, clientX, clientY} = e;
-
-        const position = getDropPosition({
-            pageX,
-            pageY,
-            clientX,
-            clientY,
-            targetElement,
-            frameDocument: iframeDocument,
-        });
-
-        if (!position) return end();
-        const accept = isDropAccept({
-            draggingNode,
+        handleNodDrop({
+            e,
+            iframeDocument,
+            end,
             pageConfig,
-            targetComponentId,
-            ...position,
+            draggingNode,
+            dragPageAction,
         });
-        if (!accept) return end();
-
-        if (sourceComponentId) {
-            dragPageAction.moveNode({
-                sourceId: sourceComponentId,
-                targetId: targetComponentId,
-                ...position,
-            });
-            // dragPageAction.setSelectedNodeId(sourceComponentId);
-        }
-
-        if (componentConfig) {
-
-            dragPageAction.addNode({
-                targetId: targetComponentId,
-                node: componentConfig,
-                ...position,
-            });
-            // dragPageAction.setSelectedNodeId(componentConfig.id);
-        }
-        end();
     }
 
     useEffect(() => {

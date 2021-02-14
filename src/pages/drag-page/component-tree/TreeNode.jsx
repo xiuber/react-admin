@@ -1,6 +1,11 @@
 import React, {useState, useRef} from 'react';
 import config from 'src/commons/config-hoc';
-import {findNodeById, getDropGuidePosition, isDropAccept, setDragImage} from 'src/pages/drag-page/util';
+import {
+    handleNodDrop,
+    getDropGuidePosition,
+    isDropAccept,
+    setDragImage,
+} from 'src/pages/drag-page/util';
 import {getComponentConfig} from '../component-config';
 import {throttle} from 'lodash';
 import classNames from 'classnames';
@@ -157,6 +162,7 @@ export default config({
         }
     }
 
+
     function handleDrop(e) {
         const end = () => {
             handleDragLeave(e);
@@ -168,90 +174,16 @@ export default config({
         e.preventDefault();
         e.stopPropagation();
 
-        const propsToSet = e.dataTransfer.getData('propsToSet');
-        if (propsToSet) {
-            const newProps = JSON.parse(propsToSet);
+        const iframeDocument = window.document;
 
-            dragPageAction.setNewProps({componentId: key, newProps});
-
-            return end();
-        }
-
-        const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
-        let componentConfig = e.dataTransfer.getData('componentConfig');
-        componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
-
-        const sourceNode = componentConfig ? componentConfig : findNodeById(pageConfig, sourceComponentId);
-        const isWrapper = getComponentConfig(sourceNode?.componentName)?.isWrapper;
-
-        if (isWrapper) {
-            if (sourceComponentId) {
-
-                dragPageAction.moveWrapper({
-                    sourceId: sourceComponentId,
-                    targetId: key,
-                });
-                return end();
-            }
-
-            if (componentConfig) {
-                dragPageAction.addWrapper({
-                    targetId: key,
-                    node: componentConfig,
-                });
-                return end();
-            }
-        }
-
-        if (key === sourceComponentId) return end();
-
-        const {pageX, pageY, clientX, clientY} = e;
-
-        const {position} = getDropGuidePosition({
-            pageX,
-            pageY,
-            clientX,
-            clientY,
-            targetElement: e.target,
-            frameDocument: window.document,
-        });
-
-        const {isTop, isBottom, isCenter} = position;
-
-        const accept = isDropAccept({
-            draggingNode,
+        handleNodDrop({
+            e,
+            iframeDocument,
+            end,
             pageConfig,
-            targetComponentId: key,
-            isBefore: isTop,
-            isAfter: isBottom,
-            isChildren: isCenter,
+            draggingNode,
+            dragPageAction,
         });
-
-        if (!accept) return end();
-
-        if (sourceComponentId) {
-            dragPageAction.moveNode({
-                sourceId: sourceComponentId,
-                targetId: key,
-                isBefore: isTop,
-                isAfter: isBottom,
-                isChildren: isCenter,
-            });
-            // dragPageAction.setSelectedNodeId(sourceComponentId);
-        }
-
-        if (componentConfig) {
-            dragPageAction.addNode({
-                targetId: key,
-                isBefore: isTop,
-                isAfter: isBottom,
-                isChildren: isCenter,
-                node: componentConfig,
-            });
-            // dragPageAction.setSelectedNodeId(componentConfig.id);
-        }
-
-        end();
     }
 
     function handleDragEnd() {

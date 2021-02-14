@@ -184,6 +184,7 @@ export default function NodeRender(props) {
                 e.preventDefault && e.preventDefault();
                 // 单纯选中节点，不进行其他操作
                 dragPageAction.setSelectedNodeId(componentId);
+                // console.log(e.nativeEvent.path);
             } else {
                 propsActions.onClick && propsActions.onClick(e);
             }

@@ -542,6 +542,106 @@ export function getDroppableEle(target) {
     return getDroppableEle(parentComponent);
 }
 
+export function handleNodDrop(options) {
+    const {
+        e,
+        iframeDocument,
+        end,
+        pageConfig,
+        draggingNode,
+        dragPageAction,
+    } = options;
+
+    const propsToSet = e.dataTransfer.getData('propsToSet');
+    if (propsToSet) {
+        // 组件节点
+        const nodeEle = getNodeEle(e.target);
+        if (!nodeEle) return end();
+
+        const newProps = JSON.parse(propsToSet);
+        const componentId = nodeEle.getAttribute('data-componentId');
+
+        dragPageAction.setNewProps({componentId, newProps});
+
+        return end();
+    }
+
+    const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
+    let componentConfig = e.dataTransfer.getData('componentConfig');
+    componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
+
+    const sourceNode = componentConfig ? componentConfig : findNodeById(pageConfig, sourceComponentId);
+    const isWrapper = getComponentConfig(sourceNode?.componentName)?.isWrapper;
+
+    // 可投放元素
+    const targetElement = isWrapper ? e.target : getDroppableEle(e.target);
+
+    if (!targetElement) return end();
+    const targetComponentId = targetElement.getAttribute('data-componentId');
+
+    if (isWrapper) {
+        if (sourceComponentId) {
+            dragPageAction.moveWrapper({
+                sourceId: sourceComponentId,
+                targetId: targetComponentId,
+            });
+            return end();
+        }
+
+        if (componentConfig) {
+            dragPageAction.addWrapper({
+                targetId: targetComponentId,
+                node: componentConfig,
+            });
+            return end();
+        }
+    }
+
+    // 放在自身上
+    if (targetComponentId === sourceComponentId) return end();
+
+    const {pageX, pageY, clientX, clientY} = e;
+
+    const position = getDropPosition({
+        pageX,
+        pageY,
+        clientX,
+        clientY,
+        targetElement,
+        frameDocument: iframeDocument,
+    });
+
+    if (!position) return end();
+    const accept = isDropAccept({
+        draggingNode,
+        pageConfig,
+        targetComponentId,
+        ...position,
+    });
+
+    if (!accept) return end();
+
+    if (sourceComponentId) {
+        dragPageAction.moveNode({
+            sourceId: sourceComponentId,
+            targetId: targetComponentId,
+            ...position,
+        });
+        // dragPageAction.setSelectedNodeId(sourceComponentId);
+    }
+
+    if (componentConfig) {
+        dragPageAction.addNode({
+            targetId: targetComponentId,
+            node: componentConfig,
+            ...position,
+        });
+        // dragPageAction.setSelectedNodeId(componentConfig.id);
+    }
+
+    end();
+}
+
 // 获取组件投放位置
 export function getDropPosition(options) {
     const guidePosition = getDropGuidePosition(options);
@@ -653,6 +753,38 @@ export function isChildrenNode(parentNode, childrenNode) {
 
     if (!id) return false;
     return !!findNodeById(parentNode, id);
+}
+
+// 查找所有的父级节点
+export function findParentNodes(root, id) {
+    const nodes = [];
+
+    const loop = node => {
+        const has = findNodeById(node, id);
+
+        if (has) nodes.push(node);
+
+        if (node?.children?.length) {
+            node.children.forEach(item => loop(item));
+        }
+
+        // props中有可能也有节点
+        Object.values(node.props || {})
+            .forEach(value => {
+                if (isComponentConfig(value)) {
+                    loop(value);
+                }
+            });
+
+        // wrapper中有节点
+        if (node.wrapper?.length) {
+            node.wrapper.forEach(item => loop(item));
+        }
+    };
+
+    loop(root);
+
+    return nodes;
 }
 
 // 根据id查找节点

@@ -9,6 +9,7 @@ import Scale from './scale';
 import DragOver from './drag-over';
 import DragAction from './drag-action';
 import EditableAction from './editable-action';
+import NodePath from './node-path';
 import './style.less';
 
 // 构建iframe内容
@@ -182,28 +183,32 @@ export default config({
 
     return (
         <div styleName="root">
-            <div
-                styleName="container"
-                ref={containerRef}
-                style={containerStyle}
-            >
-                <iframe
-                    styleName="dndIframe"
-                    id="dnd-iframe"
-                    title="页面设计"
-                    ref={iframeRef}
-                    srcDoc={iframeSrcDoc}
-                    onLoad={() => handleIframeLoad()}
-                    style={{
-                        width: canvasWidth,
-                        height: canvasHeight,
-                    }}
-                />
-            </div>
-
-            <div styleName="scale">
-                <Scale element={scaleElement}/>
-            </div>
+            <main>
+                <div
+                    styleName="container"
+                    ref={containerRef}
+                    style={containerStyle}
+                >
+                    <iframe
+                        styleName="dndIframe"
+                        id="dnd-iframe"
+                        title="页面设计"
+                        ref={iframeRef}
+                        srcDoc={iframeSrcDoc}
+                        onLoad={() => handleIframeLoad()}
+                        style={{
+                            width: canvasWidth,
+                            height: canvasHeight,
+                        }}
+                    />
+                    <div styleName="scale">
+                        <Scale element={scaleElement}/>
+                    </div>
+                </div>
+                <footer>
+                    <NodePath/>
+                </footer>
+            </main>
             <DragOver frameDocument={iframeRef.current?.contentDocument}/>
         </div>
     );
