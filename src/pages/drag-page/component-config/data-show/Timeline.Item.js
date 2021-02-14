@@ -1,5 +1,5 @@
 export default {
     isContainer: true,
-    dropAccept: 'Timeline.Item',
+    dropInTo: 'TimeLine',
     fields: [],
 };

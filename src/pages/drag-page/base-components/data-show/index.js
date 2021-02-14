@@ -321,6 +321,7 @@ export default [
                 title: '表格',
                 renderPreview: true,
                 previewZoom: .8,
+                previewProps: {style: {width: '100%'}},
                 config: {
                     componentName: 'Table',
                     props: {
@@ -418,6 +419,12 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Tag',
+                    props: {
+                        color: 'red',
+                    },
+                    children: [
+                        {componentName: 'Text', props: {text: '标签'}},
+                    ],
                 },
             },
         ],
@@ -431,6 +438,19 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Timeline',
+                    children: [
+                        ...(Array.from({length: 3}).map((item, index) => {
+                            return {
+                                componentName: 'Timeline.Item',
+                                props: {
+                                    color: index === 0 ? 'green' : index === 2 ? 'red' : undefined,
+                                },
+                                children: [
+                                    {componentName: 'Text', props: {text: '时间轴' + (index + 1)}},
+                                ],
+                            };
+                        })),
+                    ],
                 },
             },
         ],
