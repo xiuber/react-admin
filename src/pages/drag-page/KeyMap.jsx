@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
 import config from 'src/commons/config-hoc';
 import {v4 as uuid} from 'uuid';
-import {copyTextToClipboard, getTextFromClipboard} from './util';
+import {copyTextToClipboard, getTextFromClipboard, setNodeId} from './util';
 
 /**
  ### 快捷键说明
@@ -101,15 +101,7 @@ export default config({
 
             const targetId = cloneNode.id;
 
-            const loopId = (node) => {
-                node.id = uuid();
-
-                if (node.children?.length) {
-                    node.children.forEach(item => loopId(item));
-                }
-            };
-
-            loopId(cloneNode);
+            setNodeId(cloneNode, true);
 
             const options = {
                 node: cloneNode,

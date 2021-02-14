@@ -7,6 +7,7 @@ import {
     findParentNodeByParentName,
     getAllNodesByName,
     syncObject,
+    setNodeId,
 } from './util';
 
 const rootHolderNode = () => (
@@ -333,13 +334,7 @@ export default {
         const {node, targetId} = options;
 
         // 新增节点，添加id
-        const loopId = n => {
-            n.id = uuid();
-            if (n.children?.length) {
-                n.children.forEach(i => loopId(i));
-            }
-        };
-        loopId(node);
+        setNodeId(node, true);
 
         const targetNode = findNodeById(pageConfig, targetId);
         if (!targetNode?.wrapper?.length) targetNode.wrapper = [];
@@ -368,13 +363,7 @@ export default {
         addDragHolder(node);
 
         // 新增节点，添加id
-        const loopId = n => {
-            n.id = uuid();
-            if (n.children?.length) {
-                n.children.forEach(i => loopId(i));
-            }
-        };
-        loopId(node);
+        setNodeId(node, true);
 
         const result = addOrMoveNode({
             isAdd: true,

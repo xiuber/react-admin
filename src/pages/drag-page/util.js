@@ -6,6 +6,7 @@ import * as components from './components';
 import * as antdComponent from 'antd/es';
 import * as antdIcon from '@ant-design/icons';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
+import {v4 as uuid} from 'uuid';
 
 export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
@@ -18,6 +19,35 @@ export function setDragImage(e, node) {
     // const img = new Image();
     // img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=';
     // e.dataTransfer.setDragImage(img, -20, -30);
+}
+
+export function isComponentConfig(node) {
+    return !!node?.componentName;
+}
+
+// 设置id
+export function setNodeId(node, force) {
+    const loopId = (node) => {
+        if (force) {
+            node.id = uuid();
+        } else {
+            if (!node.id) node.id = uuid();
+        }
+
+        if (node.children?.length) {
+            node.children.forEach(item => loopId(item));
+        }
+
+        // props中有可能也有节点
+        Object.values(node.props || {})
+            .forEach(value => {
+                if (isComponentConfig(value)) {
+                    loopId(value);
+                }
+            });
+    };
+
+    loopId(node);
 }
 
 // 调整id为首位
@@ -43,23 +73,32 @@ export function loopIdToFirst(node) {
     if (node.children?.length) {
         node.children.forEach(item => loopIdToFirst(item));
     }
+
+    // props中有可能也有节点
+    Object.values(node.props || {})
+        .forEach(value => {
+            if (isComponentConfig(value)) {
+                loopIdToFirst(value);
+            }
+        });
 }
 
 // 同步设置对象，将newObj中属性，对应设置到oldObj中
 export function syncObject(oldObj, newObj) {
-    Object.entries(newObj).forEach(([key, value]) => {
-        if (typeof value !== 'object') {
-            oldObj[key] = value;
-        } else {
-            if (!(key in oldObj) || typeof oldObj[key] !== 'object') {
+    Object.entries(newObj)
+        .forEach(([key, value]) => {
+            if (typeof value !== 'object') {
                 oldObj[key] = value;
             } else {
-                if (oldObj[key]) {
-                    syncObject(oldObj[key], value);
+                if (!(key in oldObj) || typeof oldObj[key] !== 'object') {
+                    oldObj[key] = value;
+                } else {
+                    if (oldObj[key]) {
+                        syncObject(oldObj[key], value);
+                    }
                 }
             }
-        }
-    });
+        });
 }
 
 // 删除所有非关联id
@@ -74,6 +113,14 @@ export function deleteUnLinkedIds(nodeConfig, keepIds = []) {
         if (node.children?.length) {
             node.children.forEach(item => loop(item));
         }
+
+        // props中有可能也有节点
+        Object.values(node.props || {})
+            .forEach(value => {
+                if (isComponentConfig(value)) {
+                    loop(value);
+                }
+            });
     };
     loop(nodeConfig);
 }
@@ -105,6 +152,14 @@ export function findLinkSourceComponentIds(pageConfig) {
         if (node.children?.length) {
             node.children.forEach(item => loop(item));
         }
+
+        // props中有可能也有节点
+        Object.values(node.props || {})
+            .forEach(value => {
+                if (isComponentConfig(value)) {
+                    loop(value);
+                }
+            });
     };
     loop(pageConfig);
 
@@ -131,6 +186,13 @@ function findLinkTargetComponentIds(options) {
         if (node.children?.length) {
             node.children.forEach(item => loop(item));
         }
+        // props中有可能也有节点
+        Object.values(node.props || {})
+            .forEach(value => {
+                if (isComponentConfig(value)) {
+                    loop(value);
+                }
+            });
     };
 
     loop(pageConfig);
@@ -582,6 +644,14 @@ export function findNodeById(root, id) {
     for (let node of root.children) {
         const result = findNodeById(node, id);
         if (result) return result;
+    }
+
+    // props中有可能也有节点
+    for (let node of Object.values(root.props || {})) {
+        if (isComponentConfig(node)) {
+            const result = findNodeById(node, id);
+            if (result) return result;
+        }
     }
 }
 

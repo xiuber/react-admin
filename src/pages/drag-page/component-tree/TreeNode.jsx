@@ -122,7 +122,7 @@ export default config({
         if (isToSelectTarget) {
             setDropPosition(false);
         }
-    }, THROTTLE_TIME);
+    }, THROTTLE_TIME, {trailing: false});
 
     function handleDragOver(e) {
         e.preventDefault();

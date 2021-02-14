@@ -285,7 +285,12 @@ export default [
                     componentName: 'Popover',
                     props: {
                         title: '卡片标题',
-                        content: '卡片内容',
+                        content: {
+                            componentName: 'div',
+                            children: [
+                                {componentName: 'DragHolder'},
+                            ],
+                        },
                     },
                     children: [
                         {

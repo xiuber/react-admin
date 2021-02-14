@@ -3,9 +3,8 @@ import {message, Switch} from 'antd';
 import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
-import {findNodeById, usePrevious, loopIdToFirst, deleteUnLinkedIds} from '../util';
+import {findNodeById, usePrevious, loopIdToFirst, deleteUnLinkedIds, setNodeId} from '../util';
 import {deleteDefaultProps, getComponentConfig} from '../component-config';
-import {v4 as uuid} from 'uuid';
 import DragBar from '../drag-bar';
 import {cloneDeep} from 'lodash';
 import './style.less';
@@ -170,16 +169,8 @@ export default config({
             nextPageConfig = nodeConfig;
         }
 
-        const loopId = node => {
-            if (!node.id) node.id = uuid();
-
-            if (node?.children?.length) {
-                node.children.forEach(item => loopId(item));
-            }
-        };
-
         // id 不存在，则设置新的id
-        loopId(nextPageConfig);
+        setNodeId(nextPageConfig);
 
         saveRef.current = true;
 

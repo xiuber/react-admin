@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect} from 'react';
 import {throttle} from 'lodash';
 import {
     findNodeById,
@@ -112,7 +112,7 @@ export default function DragAction(props) {
             clientY,
             guidePosition: position.guidePosition,
         });
-    }, THROTTLE_TIME);
+    }, THROTTLE_TIME, {trailing: false});
 
     // 不要做任何导致当前页面render的操作，否则元素多了会很卡
     function handleDragOver(e) {
@@ -218,22 +218,22 @@ export default function DragAction(props) {
         end();
     }
 
-    return (
-        <div
-            style={{
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-                padding: 1,
-            }}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDragEnd={handleDragEnd}
-            onDrop={handleDrop}
-        >
-            {children}
-        </div>
-    );
+    useEffect(() => {
+        if (!iframeDocument) return;
+        iframeDocument.body.addEventListener('dragstart', handleDragStart);
+        iframeDocument.body.addEventListener('dragover', handleDragOver);
+        iframeDocument.body.addEventListener('dragleave', handleDragLeave);
+        iframeDocument.body.addEventListener('dragend', handleDragEnd);
+        iframeDocument.body.addEventListener('drop', handleDrop);
+
+        return () => {
+            iframeDocument.body.removeEventListener('dragstart', handleDragStart);
+            iframeDocument.body.removeEventListener('dragover', handleDragOver);
+            iframeDocument.body.removeEventListener('dragleave', handleDragLeave);
+            iframeDocument.body.removeEventListener('dragend', handleDragEnd);
+            iframeDocument.body.removeEventListener('drop', handleDrop);
+        };
+    });
+
+    return children;
 };

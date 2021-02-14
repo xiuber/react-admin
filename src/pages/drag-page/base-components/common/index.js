@@ -25,6 +25,9 @@ export default [
                         props: {
                             type,
                             danger,
+                            icon: {
+                                componentName: 'AppstoreOutlined',
+                            },
                         },
                         children: [
                             {

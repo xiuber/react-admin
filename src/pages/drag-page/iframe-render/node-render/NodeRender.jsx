@@ -1,7 +1,8 @@
 import React, {createElement} from 'react';
 import classNames from 'classnames';
-import {getComponent} from '../../util';
+import {getComponent, isComponentConfig} from '../../util';
 import {getComponentDisplayName, getComponentConfig} from 'src/pages/drag-page/component-config';
+import {cloneDeep} from 'lodash';
 import styles from './style.less';
 
 export default function NodeRender(props) {
@@ -31,6 +32,8 @@ export default function NodeRender(props) {
 
     if (!componentProps) componentProps = {};
 
+    componentProps = cloneDeep(componentProps);
+
     if (!componentName) return null;
 
     const componentConfig = getComponentConfig(componentName);
@@ -45,6 +48,7 @@ export default function NodeRender(props) {
         actions = {},
         childrenDraggable,
         hooks = {},
+        fields,
     } = componentConfig;
 
     const isRender = hooks.beforeRender && hooks.beforeRender({node: config});
@@ -55,6 +59,23 @@ export default function NodeRender(props) {
     componentDesc = componentDesc || componentName;
     const componentDisplayName = getComponentDisplayName(config);
     const component = getComponent(config);
+
+    // 处理属性
+    if (fields?.length) {
+        fields.filter(item => item.type === 'ReactNode').forEach(item => {
+            const {field} = item;
+            const propsConfig = componentProps[field];
+
+            if (isComponentConfig(propsConfig)) {
+                componentProps[field] = (
+                    <NodeRender
+                        {...props}
+                        config={propsConfig}
+                    />
+                );
+            }
+        });
+    }
 
     let childrenEle = children?.length ? children.map(item => {
         if (['Collapse.Panel', 'Tabs.TabPane'].includes(item.componentName)) {

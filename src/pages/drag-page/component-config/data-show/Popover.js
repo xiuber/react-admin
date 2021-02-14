@@ -18,7 +18,7 @@ export default {
     fields: [
         {label: '显示', field: 'visible', type: 'boolean', version: '', desc: '提示信息'},
         {label: '卡片标题', field: 'title', type: 'string', version: '', desc: '提示信息'},
-        {label: '卡片内容', field: 'content', type: 'string', version: '', desc: '提示信息'},
+        {label: '卡片内容', field: 'content', type: 'ReactNode', version: '', desc: '提示信息'},
         {
             label: '触发方式', field: 'trigger', type: 'radio-group', defaultValue: 'hover',
             options: [
