@@ -3,15 +3,15 @@ export default {
     isContainer: true,
     isWrapper: true,
     hooks: {
-        afterPropsChange: options => {
-            const {node, dragPageAction} = options;
-
-            if (!node.props.dot) {
-                Reflect.deleteProperty(node.props, 'color');
-                dragPageAction.refreshProps();
-                dragPageAction.render();
-            }
-        },
+        // afterPropsChange: options => {
+        //     const {node, dragPageAction} = options;
+        //
+        //     if (!node.props.dot) {
+        //         Reflect.deleteProperty(node.props, 'color');
+        //         dragPageAction.refreshProps();
+        //         dragPageAction.render();
+        //     }
+        // },
     },
     fields: [
         {label: '只展示小红点', category: '选项', field: 'dot', type: 'boolean', defaultValue: false, version: '', desc: '不展示数字，只有一个小红点'},

@@ -128,7 +128,7 @@ export function showFieldByAppend(values, appendField) {
 
     let isShow;
     if (typeof appendField === 'string') {
-        isShow = !!values[appendField];
+        isShow = !!(values[appendField] && values[appendField] !== 0);
     }
 
     if (typeof appendField === 'object') {

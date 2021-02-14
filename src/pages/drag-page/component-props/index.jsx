@@ -88,7 +88,7 @@ export default config({
                 refreshProps={refreshProps}
                 onChange={(...args) => handleChange(selectedNode, ...args)}
             />
-            {selectedNode?.wrapper?.length ? selectedNode?.wrapper.map((node, index) => {
+            {selectedNode?.wrapper?.length ? selectedNode.wrapper.map((node, index) => {
                 return (
                     <FieldEditor
                         tip="相关："

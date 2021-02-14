@@ -185,6 +185,18 @@ export default function ComponentProps(props) {
                             return element;
                         }
 
+
+                        if (!selectedNode.props) selectedNode.props = {};
+
+                        if (selectedNode.props[field] !== undefined) {
+
+                            Reflect.deleteProperty(selectedNode.props, field);
+
+                            form.setFieldsValue({[field]: undefined});
+
+                            dragPageAction.render();
+                        }
+
                         return null;
                     }}
                 </Form.Item>

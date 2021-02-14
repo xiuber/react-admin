@@ -41,6 +41,7 @@ function ColorInput(props) {
                     <Popover
                         trigger="click"
                         overlayClassName={styles.overlay}
+                        getPopupContainer={() => document.body}
                         content={(
                             <SketchPicker
                                 width={250}
