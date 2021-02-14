@@ -1,5 +1,5 @@
 export default {
-    draggable: false,
+    draggable: true,
     isWrapper: true,
     hooks: {
         afterPropsChange: options => {

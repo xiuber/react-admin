@@ -181,22 +181,20 @@ export default config({
         let componentConfig = e.dataTransfer.getData('componentConfig');
         componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
 
-        if (sourceComponentId) {
-            const sourceNode = findNodeById(pageConfig, sourceComponentId);
-            const isWrapper = getComponentConfig(sourceNode?.name)?.isWrapper;
-            if (isWrapper) {
+        const sourceNode = componentConfig ? componentConfig : findNodeById(pageConfig, sourceComponentId);
+        const isWrapper = getComponentConfig(sourceNode?.componentName)?.isWrapper;
+
+        if (isWrapper) {
+            if (sourceComponentId) {
+
                 dragPageAction.moveWrapper({
                     sourceId: sourceComponentId,
                     targetId: key,
                 });
                 return end();
             }
-        }
 
-        if (componentConfig) {
-            const isWrapper = getComponentConfig(componentConfig?.componentName)?.isWrapper;
-
-            if (isWrapper) {
+            if (componentConfig) {
                 dragPageAction.addWrapper({
                     targetId: key,
                     node: componentConfig,
@@ -243,7 +241,6 @@ export default config({
         }
 
         if (componentConfig) {
-
             dragPageAction.addNode({
                 targetId: key,
                 isBefore: isTop,

@@ -1,5 +1,5 @@
 export default {
-    draggable: false,
+    draggable: true,
     isContainer: true,
     isWrapper: true,
     hooks: {

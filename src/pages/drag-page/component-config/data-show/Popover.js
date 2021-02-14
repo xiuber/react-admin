@@ -1,6 +1,6 @@
 export default {
     isContainer: false,
-    draggable: false,
+    draggable: true,
     isWrapper: true,
     hooks: {
         afterPropsChange: options => {

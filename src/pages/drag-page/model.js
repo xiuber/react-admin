@@ -330,6 +330,20 @@ export default {
 
         return {pageConfig: {...pageConfig}, selectedNodeId, selectedNode};
     },
+    moveWrapper: (options, state) => {
+        const {pageConfig} = state;
+
+        const {sourceId, targetId} = options;
+
+        const sourceNode = deleteComponentById(pageConfig, sourceId);
+        const targetNode = findNodeById(pageConfig, targetId);
+        if (!targetNode?.wrapper?.length) targetNode.wrapper = [];
+
+        targetNode.wrapper.push(sourceNode);
+
+
+        return {pageConfig: {...pageConfig}, refreshProps: {}};
+    },
     addWrapper: (options, state) => {
         const {pageConfig} = state;
         const {node, targetId} = options;
@@ -399,7 +413,7 @@ export default {
 
         const parentNode = findParentNodeById(pageConfig, sourceId);
 
-        const [node] = deleteComponentById(pageConfig, sourceId);
+        const node = deleteComponentById(pageConfig, sourceId);
 
         // 添加占位符
         addDragHolder(parentNode);
@@ -517,7 +531,7 @@ function deleteComponentById(root, id) {
         for (const node of nodes) {
             if (node?.id === id) {
                 const index = nodes.findIndex(item => item?.id === id);
-                deletedNode = nodes.splice(index, 1);
+                deletedNode = (nodes.splice(index, 1))[0];
                 return;
             } else {
                 if (node?.children?.length) {
