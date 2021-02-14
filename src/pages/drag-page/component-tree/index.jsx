@@ -5,14 +5,21 @@ import {
     ShrinkOutlined,
     ArrowsAltOutlined,
 } from '@ant-design/icons';
+import classNames from 'classnames';
+import {cloneDeep} from 'lodash';
 import config from 'src/commons/config-hoc';
 import TreeNode from './TreeNode';
-import {scrollElement, getParentIds, isComponentConfig} from '../util';
+import {
+    scrollElement,
+    getParentIds,
+    isComponentConfig,
+} from '../util';
 import Pane from '../pane';
-import classNames from 'classnames';
 import DragBar from 'src/pages/drag-page/drag-bar';
-import {getComponentConfig, getComponentDisplayName} from 'src/pages/drag-page/component-config';
-import {cloneDeep} from 'lodash';
+import {
+    getComponentConfig,
+    getComponentDisplayName,
+} from 'src/pages/drag-page/component-config';
 
 import './style.less';
 
@@ -67,6 +74,7 @@ export default config({
             next.name = getComponentDisplayName(prev);
             next.isContainer = isContainer;
             next.key = id;
+            next.id = id;
             next.draggable = _draggable !== undefined ? _draggable : draggable;
             next.nodeData = prev;
 
@@ -88,6 +96,7 @@ export default config({
 
                 next.children.unshift({
                     key: `wrapper_${id}`,
+                    id: `wrapper_${id}`,
                     title: '',
                     name: 'wrapper',
                     draggable: false,
@@ -102,11 +111,11 @@ export default config({
             }
             Object.entries(props || {})
                 .filter(([, value]) => isComponentConfig(value))
-                .forEach(([key, value]) => {
+                .forEach(([field, value]) => {
                     if (!next.children) next.children = [];
                     const node = {};
                     loop(value, node);
-                    node.name = `${key} ${node.name}`;
+                    node.name = `${field}: ${node.name}`;
                     next.children.unshift(node);
                 });
         };
@@ -120,6 +129,8 @@ export default config({
     }, [pageConfig, refreshProps]);
 
     function handleSelected([key]) {
+        if (!key) return;
+
         dragPageAction.setSelectedNodeId(key);
     }
 
@@ -132,14 +143,20 @@ export default config({
         dragPageAction.setComponentTreeExpendedKeys(keys);
     }
 
+    // 当有节点选中，展开对应父节点
     useEffect(() => {
-        const keys = getParentIds(pageConfig, selectedNodeId) || [];
+        if (!treeData?.length) {
+            dragPageAction.setComponentTreeExpendedKeys([]);
+            return;
+        }
+        const keys = getParentIds(treeData[0], selectedNodeId) || [];
         // 去重
         const nextKeys = Array.from(new Set([...componentTreeExpendedKeys, ...keys, selectedNodeId]));
 
         dragPageAction.setComponentTreeExpendedKeys(nextKeys);
-    }, [selectedNodeId]);
+    }, [selectedNodeId, treeData]);
 
+    // 当有节点选中，树滚动到相应位置
     useEffect(() => {
         const containerEle = mainRef.current;
 

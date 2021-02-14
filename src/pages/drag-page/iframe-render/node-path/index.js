@@ -37,14 +37,17 @@ export default config({
         setPaths(parentNodes);
     }, [selectedNode]);
 
+    const SHOW_COUNT = 5;
+
     return (
         <div styleName="root">
-            {paths.map(node => {
+            {paths.map((node, index) => {
                 const componentDisplayName = getComponentDisplayName(node);
+                if (paths.length > SHOW_COUNT && index < paths.length - SHOW_COUNT) return '.';
                 return (
                     <div>
                         <Tag
-                            color={selectedNode.id === node.id ? 'cyan' : 'lime'}
+                            color={selectedNode?.id === node.id ? 'cyan' : 'lime'}
                             onClick={() => {
                                 dragPageAction.setSelectedNodeId(node.id);
                                 holdRef.current = true;
