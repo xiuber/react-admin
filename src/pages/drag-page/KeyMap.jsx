@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 import config from 'src/commons/config-hoc';
-import {v4 as uuid} from 'uuid';
+// import {v4 as uuid} from 'uuid';
 import {copyTextToClipboard, getTextFromClipboard, setNodeId} from './util';
 
 /**

@@ -518,25 +518,28 @@ function deleteComponentById(root, id) {
             if (node?.id === id) {
                 const index = nodes.findIndex(item => item?.id === id);
                 deletedNode = nodes.splice(index, 1);
-                return index;
+                return;
             } else {
                 if (node?.children?.length) {
                     loop(node.children);
                 }
 
                 // props中有可能也有节点
-                Object.entries(node.props || {})
-                    .filter(([key, item]) => isComponentConfig(item))
-                    .forEach(([key, value]) => {
-                        if (value.id === id) {
-                            Reflect.deleteProperty(node.props, key);
-                            deletedNode = value;
-                        } else {
-                            if (value?.children?.length) {
-                                loop(value.children);
-                            }
+                const propsKeyValue = Object.entries(node.props || {})
+                    .filter(([, item]) => isComponentConfig(item));
+
+                for (let item of propsKeyValue) {
+                    const [key, value] = item;
+                    if (value.id === id) {
+                        Reflect.deleteProperty(node.props, key);
+                        deletedNode = value;
+                        return;
+                    } else {
+                        if (value?.children?.length) {
+                            loop(value.children);
                         }
-                    });
+                    }
+                }
 
                 // wrapper中有节点
                 if (node?.wrapper?.length) {
