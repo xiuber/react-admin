@@ -243,6 +243,7 @@ export default {
         return {
             selectedNodeId,
             selectedNode,
+            activeSideKey: 'componentTree',
         };
     },
     render: (_, state) => {

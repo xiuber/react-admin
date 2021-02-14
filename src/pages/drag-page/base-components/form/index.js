@@ -48,11 +48,6 @@ const formChildren = [
                     },
                 ],
             },
-        ],
-    },
-    {
-        componentName: 'Form.Item',
-        children: [
             {
                 componentName: 'Button',
                 children: [
