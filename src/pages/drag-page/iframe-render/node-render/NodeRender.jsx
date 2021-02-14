@@ -1,20 +1,19 @@
 import React, {createElement} from 'react';
 import classNames from 'classnames';
-import {Tabs} from 'antd';
 import {getComponent} from '../../util';
 import {getComponentDisplayName, getComponentConfig} from 'src/pages/drag-page/component-config';
 import styles from './style.less';
 
 export default function NodeRender(props) {
-    const {
+    let {
         config,
         pageConfig,
         selectedNodeId,
         draggingNode,
         dragPageAction,
-        activeSideKey, // 左侧激活面板
+        // activeSideKey, // 左侧激活面板
         nodeSelectType, // 节点选中方式
-        iframeDocument,
+        // iframeDocument,
         isPreview = true,
     } = props;
 
@@ -58,25 +57,17 @@ export default function NodeRender(props) {
     const component = getComponent(config);
 
     let childrenEle = children?.length ? children.map(item => {
-        const commonChildrenProps = {
-            pageConfig,
-            draggingNode,
-            selectedNodeId,
-            dragPageAction,
-            activeSideKey,
-            isPreview: isPreview || !childrenDraggable,
-            nodeSelectType,
-            iframeDocument,
-        };
         if (['Collapse.Panel', 'Tabs.TabPane'].includes(item.componentName)) {
             const Component = getComponent(item);
+            isPreview = isPreview || !childrenDraggable;
             return (
                 <Component {...item.props}>
                     {item.children.map(it => {
                         return (
                             <NodeRender
+                                {...props}
                                 config={it}
-                                {...commonChildrenProps}
+                                isPreview={isPreview}
                             />
                         );
                     })}
@@ -86,8 +77,9 @@ export default function NodeRender(props) {
 
         return (
             <NodeRender
+                {...props}
                 config={item}
-                {...commonChildrenProps}
+                isPreview={isPreview}
             />
         );
     }) : undefined;
@@ -127,17 +119,12 @@ export default function NodeRender(props) {
             return wrapperConfig;
         });
 
-        return <NodeRender
-            config={nextConfig}
-            pageConfig={pageConfig}
-            draggingNode={draggingNode}
-            selectedNodeId={selectedNodeId}
-            dragPageAction={dragPageAction}
-            activeSideKey={activeSideKey}
-            isPreview={isPreview || !childrenDraggable}
-            nodeSelectType={nodeSelectType}
-            iframeDocument={iframeDocument}
-        />;
+        return (
+            <NodeRender
+                {...props}
+                config={nextConfig}
+            />
+        );
     }
 
 
