@@ -451,6 +451,8 @@ function addOrMoveNode(options) {
     const targetCollection = findChildrenCollection(pageConfig, targetId);
 
     const targetNode = findNodeById(pageConfig, targetId);
+    const parentNode = findParentNodeById(pageConfig, targetId);
+    const parentNodeConfig = getComponentConfig(parentNode.componentName);
 
     // 目标节点为 根占位
     if (targetNode.componentName === 'RootDragHolder') {
@@ -484,13 +486,35 @@ function addOrMoveNode(options) {
 
     if (isBefore) {
         const index = targetCollection.findIndex(item => item.id === targetId);
+
+        const {beforeAddChildren, afterAddChildren} = parentNodeConfig.hooks || {};
+        const args = {node: parentNode, targetNode, pageConfig};
+
+        const result = beforeAddChildren && beforeAddChildren(args);
+
+        if (result === false) return {pageConfig};
+
         targetCollection.splice(index, 0, node);
+
+        afterAddChildren && afterAddChildren(args);
+
         return {pageConfig: {...pageConfig}};
     }
 
     if (isAfter) {
         const index = targetCollection.findIndex(item => item.id === targetId);
+
+        const {beforeAddChildren, afterAddChildren} = parentNodeConfig.hooks || {};
+        const args = {node: parentNode, targetNode, pageConfig};
+
+        const result = beforeAddChildren && beforeAddChildren(args);
+
+        if (result === false) return {pageConfig};
+
         targetCollection.splice(index + 1, 0, node);
+
+        afterAddChildren && afterAddChildren(args);
+
         return {pageConfig: {...pageConfig}};
     }
 

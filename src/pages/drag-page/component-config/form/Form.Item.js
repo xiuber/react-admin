@@ -12,8 +12,8 @@ export default {
     holderProps: {
         tip: '请拖入表单元素',
     },
-    childrenDraggable: false, // 子节点不可拖拽
-    // dropAccept: options => {
+    // childrenDraggable: true, // 子节点不可拖拽
+    // dropAccept: options => { // 值接受表单元素
     //     const {draggingNode} = options;
     //     const nodeConfig = getComponentConfig(draggingNode?.componentName);
     //
@@ -32,11 +32,12 @@ export default {
 
             if (!node) return;
 
-            // 清空 相当于替换元素了
-            if (node.children?.length === 1
+            // 如果只存在一个表单元素，则清空 相当于替换元素了
+            if (
+                node.children?.length === 1
                 && getComponentConfig(node.children[0].componentName).isFormElement
             ) {
-                node.children = [];
+                node.children.splice(0, 1);
             }
 
             if (targetNode?.componentName === 'Switch') {
@@ -44,7 +45,6 @@ export default {
 
                 node.props.valuePropName = 'checked';
             }
-
         },
     },
     componentDisplayName: ({node}) => {
