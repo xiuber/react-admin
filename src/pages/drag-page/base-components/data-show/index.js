@@ -67,6 +67,7 @@ export default [
                 title: '卡片',
                 renderPreview: true,
                 previewZoom: .7,
+                previewProps: {style: {width: '100%'}},
                 config: {
                     componentName: 'Card',
                     props: {
@@ -167,6 +168,34 @@ export default [
                                 ],
                             };
                         })),
+                    ],
+                },
+            },
+        ],
+    },
+
+    {
+        title: '折叠面板页面',
+        subTitle: '折叠面板页面 Collapse.Panel',
+        children: [
+            {
+                title: '折叠面板页面',
+                renderPreview: false,
+                config: {
+                    componentName: 'Collapse.Panel',
+                    props: {
+                        key: 'key',
+                        header: '标题',
+                    },
+                    children: [
+                        {
+                            componentName: 'div',
+                            children: [
+                                {
+                                    componentName: 'DragHolder',
+                                },
+                            ],
+                        },
                     ],
                 },
             },

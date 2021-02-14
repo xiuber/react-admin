@@ -1,5 +1,5 @@
 export default {
     isContainer: true,
-    dropInTo: 'Carousel',
+    dropInTo: 'Collapse',
     fields: [],
 };
