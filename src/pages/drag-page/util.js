@@ -16,6 +16,12 @@ export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 // eslint-disable-next-line
 export const SHOW_MODAL_FUNCTION = 'e => dragPageAction.showModal("${componentId}")';
 
+export function isFunctionString(value) {
+    return value
+        && typeof value === 'string'
+        && (value.includes('function') || value.includes('=>'));
+}
+
 // 设置拖拽图片
 export function setDragImage(e, node) {
     // const img = new Image();

@@ -226,7 +226,7 @@ export default {
     // 会使 selectedNode 脱离 pageConfig 导致意外bug
     // setSelectedNode: selectedNode => ({selectedNode}),
     setSelectedNodeId: (selectedNodeId, state) => {
-        let {pageConfig = []} = state;
+        let {pageConfig = [], activeSideKey} = state;
 
         const selectedNode = findNodeById(pageConfig, selectedNodeId);
 
@@ -237,10 +237,12 @@ export default {
             };
         }
 
+        const nextActiveKey = activeSideKey === 'schemaEditor' ? activeSideKey : 'componentTree';
+
         return {
             selectedNodeId,
             selectedNode,
-            activeSideKey: 'componentTree',
+            activeSideKey: nextActiveKey,
         };
     },
     render: (_, state) => {

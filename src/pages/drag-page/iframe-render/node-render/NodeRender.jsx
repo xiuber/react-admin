@@ -1,6 +1,6 @@
 import React, {createElement} from 'react';
 import classNames from 'classnames';
-import {getComponent, isComponentConfig} from '../../util';
+import {getComponent, isComponentConfig, isFunctionString} from '../../util';
 import {getComponentDisplayName, getComponentConfig} from 'src/pages/drag-page/component-config';
 import {cloneDeep} from 'lodash';
 import styles from './style.less';
@@ -18,7 +18,9 @@ export default function NodeRender(props) {
         isPreview = true,
         // eslint-disable-next-line
         state, // eval 函数中会用到这个变量
+        ...others
     } = props;
+    console.log(others);
 
     if (!config) return null;
 
@@ -120,13 +122,17 @@ export default function NodeRender(props) {
 
 
     const propsActions = {};
-    ['onClick'].forEach(key => {
-        const value = componentProps[key];
-        if (typeof value === 'string') {
-            // eslint-disable-next-line
-            propsActions[key] = eval(value);
-        }
-    });
+    Object.entries(componentProps)
+        .forEach(([key, value]) => {
+            if (isFunctionString(value)) {
+                let fn;
+                // eslint-disable-next-line
+                eval(`fn = ${value}`);
+                if (typeof fn === 'function') {
+                    propsActions[key] = fn;
+                }
+            }
+        });
 
     const commonProps = {
         children: childrenEle,

@@ -143,7 +143,11 @@ function CodeEditor(props) {
     // 检测错误
     useEffect(() => {
         const si = setInterval(() => {
-            const errors = monacoRef.current.editor.getModelMarkers();
+            let errors = monacoRef.current.editor.getModelMarkers();
+
+            // 严重程度
+            errors = errors.filter(item => item.severity > 1);
+
             setErrors(errors);
         }, 300);
         const st = setTimeout(() => {

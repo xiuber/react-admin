@@ -3,7 +3,15 @@ import {message, Switch} from 'antd';
 import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
-import {findNodeById, usePrevious, loopIdToFirst, deleteUnLinkedIds, setNodeId, isComponentConfig} from '../util';
+import {
+    findNodeById,
+    usePrevious,
+    loopIdToFirst,
+    deleteUnLinkedIds,
+    setNodeId,
+    isComponentConfig,
+    isFunctionString,
+} from '../util';
 import {deleteDefaultProps, getComponentConfig} from '../component-config';
 import {cloneDeep} from 'lodash';
 import './style.less';
@@ -103,7 +111,9 @@ export default config({
 
         const val = code.replace('export', '').replace('default', '');
         try {
-            const obj = JSON5.parse(val);
+            let obj;
+            // eslint-disable-next-line
+            eval(`obj = ${val}`);
 
             if (typeof obj !== 'object' || Array.isArray(obj)) {
                 return Error('语法错误，请修改后保存！');
@@ -123,6 +133,24 @@ export default config({
             };
 
             if (!loopComponentName(obj)) return Error('缺少必填字段「componentName」!');
+
+            // 函数转字符串
+            const loopFunction = node => {
+                Object.entries(node)
+                    .forEach(([key, value]) => {
+                        if (typeof value === 'function') {
+                            node[key] = value.toString();
+                        }
+                        if (Array.isArray(value)) {
+                            value.forEach(item => loopFunction(item));
+                        }
+                        if (typeof value === 'object' && value && !Array.isArray(value)) {
+                            loopFunction(value);
+                        }
+                    });
+            };
+
+            loopFunction(obj);
 
             return obj;
         } catch (e) {
@@ -186,6 +214,7 @@ export default config({
 
         saveRef.current = true;
 
+        console.log(nextPageConfig);
         dragPageAction.setPageConfig({...nextPageConfig});
         // 右侧样式、属性面板没有关联pageConfig，需要刷新同步一下
         dragPageAction.refreshProps();
@@ -230,10 +259,25 @@ export default config({
         loopIdToFirst(editNode);
 
 
+        const FUNCTION_HOLDER = '___function___';
+
         const loop = node => {
             const nodeConfig = getComponentConfig(node.componentName);
             const beforeSchemaEdit = nodeConfig?.hooks?.beforeSchemaEdit;
             beforeSchemaEdit && beforeSchemaEdit({node});
+            if (node.props) {
+                Object.entries(node.props)
+                    .forEach(([key, value]) => {
+                        if (isFunctionString(value)) {
+                            let fn;
+                            // eslint-disable-next-line
+                            eval(`fn = ${value}`);
+                            if (typeof fn === 'function') {
+                                node.props[key] = `${FUNCTION_HOLDER}${value}${FUNCTION_HOLDER}`;
+                            }
+                        }
+                    });
+            }
 
             if (node.children?.length) {
                 node.children.forEach(item => loop(item));
@@ -255,7 +299,10 @@ export default config({
 
         loop(editNode);
 
-        const nextCode = `export default ${JSON5.stringify(editNode, null, 2)}`;
+        let nextCode = `export default ${JSON5.stringify(editNode, null, 2)}`;
+        nextCode = nextCode.replace(RegExp(`'${FUNCTION_HOLDER}`, 'g'), '');
+        nextCode = nextCode.replace(RegExp(`${FUNCTION_HOLDER}'`, 'g'), '');
+        nextCode = nextCode.replace(/\\n/g, '\n');
 
         setCode(nextCode);
     }, [visible, editType, selectedNode, pageConfig]);
