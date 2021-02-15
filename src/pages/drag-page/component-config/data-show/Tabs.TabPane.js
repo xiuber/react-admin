@@ -6,7 +6,7 @@ export default {
     withHolder: true,
     hooks: {
         afterRender: options => {
-            const {node, dragProps, dragClassName, styles, pageConfig, iframeDocument} = options;
+            const {node, dragProps, pageConfig, iframeDocument} = options;
             if (!iframeDocument) return;
             const {id} = node;
             const parentNode = findParentNodeById(pageConfig, id);
@@ -22,21 +22,6 @@ export default {
                     if (key === 'onClick') return;
 
                     ele.setAttribute(key, value);
-                });
-
-            ele.classList.forEach(item => {
-                Object.values(styles).forEach(it => {
-                    if (item === it && !dragClassName.includes(it)) {
-                        ele.classList.remove(item);
-                    }
-                });
-            });
-
-            (dragClassName || '')
-                .split(' ')
-                .forEach(item => {
-
-                    ele.classList.add(item);
                 });
         },
     },

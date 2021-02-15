@@ -35,6 +35,12 @@ function getDragInfo(options) {
         'data-componentDisplayName': componentDisplayName,
         'data-componentId': componentId,
         'data-isContainer': isContainer,
+
+        // 控制样式，将相关样式通过属性控制，可以解决有些组件className被修改，样式丢失问题，比如 Tabs.Panel
+        'data-draggableElement': true,
+        'data-dragSelected': selectedNodeId === componentId,
+        'data-dragDragging': draggingNode?.id === componentId,
+        'data-dragUnDraggable': !draggable,
     };
 
     return {dragProps, dragClassName};

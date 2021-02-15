@@ -1,5 +1,6 @@
 @guide-color: green;
 
+[data-draggableelement="true"],
 .draggableElement {
     position: relative;
     outline: 1px dotted #d8d8d8;
@@ -8,10 +9,12 @@
         outline: none !important;
     }
 
+    [data-dragdragging="true"],
     &.dragging {
         filter: blur(2px);
     }
 
+    [data-dragundraggable="true"],
     &.unDraggable {
         outline: none !important;
     }
@@ -20,6 +23,7 @@
         outline: 1px dotted @guide-color;
     }
 
+    [data-dragselected="true"],
     &.selected {
         outline: 1px solid @guide-color;
 
