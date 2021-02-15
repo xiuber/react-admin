@@ -1,4 +1,4 @@
-import {findParentNodeById} from 'src/pages/drag-page/util';
+import {findParentNodeById, handleAfterRender} from 'src/pages/drag-page/util';
 
 export default {
     isContainer: true,
@@ -6,7 +6,7 @@ export default {
     withHolder: true,
     hooks: {
         afterRender: options => {
-            const {node, dragProps, pageConfig, iframeDocument} = options;
+            const {node, pageConfig, iframeDocument} = options;
             if (!iframeDocument) return;
             const {id} = node;
             const parentNode = findParentNodeById(pageConfig, id);
@@ -15,14 +15,7 @@ export default {
             const elements = iframeDocument.querySelectorAll(selectors);
             const ele = elements[index];
 
-            if (!ele) return;
-
-            Object.entries(dragProps)
-                .forEach(([key, value]) => {
-                    if (key === 'onClick') return;
-
-                    ele.setAttribute(key, value);
-                });
+            handleAfterRender({...options, element: ele});
         },
     },
     fields: [

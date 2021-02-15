@@ -24,15 +24,21 @@ export function isFunctionString(value) {
 
 // 节点渲染之后，统一处理函数，用于给没有透传props属性的组件，添加拖拽相关属性
 export function handleAfterRender(options) {
-    const {node, dragProps, iframeDocument} = options;
+    const {node, dragProps, iframeDocument, isPreview, element} = options;
     if (!iframeDocument) return;
     const {id} = node;
 
-    const ele = iframeDocument.querySelector(`.id_${id}`);
+    const ele = element || iframeDocument.querySelector(`.id_${id}`);
+
+    if (!ele) return;
 
     Object.entries(dragProps)
         .forEach(([key, value]) => {
-            ele.setAttribute(key, value);
+            if (isPreview) {
+                ele.removeAttribute(key);
+            } else {
+                ele.setAttribute(key, value);
+            }
         });
 }
 

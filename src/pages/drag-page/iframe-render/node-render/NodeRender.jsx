@@ -72,7 +72,7 @@ export default function NodeRender(props) {
     let {
         render,
         // withWrapper,
-        wrapperStyle = {},
+        // wrapperStyle = {},
         actions = {},
         childrenDraggable,
         hooks = {},
@@ -87,6 +87,7 @@ export default function NodeRender(props) {
 
     const component = getComponent(config);
     componentProps = cloneDeep(componentProps || {});
+    if (!componentProps.className) componentProps.className = '';
 
     // 组件属性中的事件
     const propsActions = {};
@@ -154,6 +155,7 @@ export default function NodeRender(props) {
                         dragPageAction,
                         pageConfig,
                         styles,
+                        isPreview,
                     });
                 });
             }
@@ -235,6 +237,7 @@ export default function NodeRender(props) {
                 dragClassName,
                 dragPageAction,
                 styles,
+                isPreview,
             });
         });
     }
@@ -244,6 +247,7 @@ export default function NodeRender(props) {
             ...commonProps,
             ...componentProps,
             ...propsActions,
+            className: [dragClassName, componentProps.className].join(' '),
         });
     }
     /*
