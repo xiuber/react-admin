@@ -83,7 +83,7 @@ function CodeEditor(props) {
     const [code, setCode] = useState('');
     const [fullScreen, setFullScreen] = useState(false);
 
-    const [height] = useHeight(mainRef, 53 - OTHER_HEIGHT, [fullScreen]);
+    const [height] = useHeight(mainRef, 45 + OTHER_HEIGHT, [fullScreen]);
 
     function handleSave(code) {
 

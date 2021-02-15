@@ -15,17 +15,20 @@ import SchemaEditor from '../schema-editor';
 import CanvasSetting from '../canvas-setting';
 import {OTHER_HEIGHT} from 'src/pages/drag-page/util';
 import './style.less';
+import DragBar from 'src/pages/drag-page/drag-bar';
 
 export default config({
     connect: state => {
         return {
             showSide: state.dragPage.showSide,
+            sideWidth: state.dragPage.sideWidth,
             activeSideKey: state.dragPage.activeSideKey,
         };
     },
 })(function Left(props) {
     const {
         showSide,
+        sideWidth,
         activeSideKey,
         action: {dragPage: dragPageAction},
     } = props;
@@ -49,6 +52,13 @@ export default config({
         }
 
         dragPageAction.showSide(nextShowSide);
+    }
+
+    function handleDragging(info) {
+        const {clientX} = info;
+
+        const {x} = rightRef.current.getBoundingClientRect();
+        dragPageAction.setSideWidth(clientX - x - 4);
     }
 
     const tools = [
@@ -95,8 +105,12 @@ export default config({
         });
     }
 
+    const rightWidth = showSide ? sideWidth : 0;
     return (
-        <div styleName="root">
+        <div
+            styleName="root"
+        >
+            {showSide ? <DragBar onDragging={handleDragging}/> : null}
             <div styleName="left">
                 <div styleName="leftTop">
                     <Tooltip placement="right" title={showSide ? '收起' : '展开'}>
@@ -110,16 +124,16 @@ export default config({
                     {renderTools(tools, true)}
                 </div>
             </div>
-            <div styleName="right" ref={rightRef} style={{height}}>
+            <div styleName="right" ref={rightRef} style={{height, width: rightWidth}}>
                 {tools.map(item => {
-                    const {key, component, width} = item;
+                    const {key, component} = item;
                     return (
                         <div
                             id={key}
                             style={{
                                 display: showSide && key === activeSideKey ? 'flex' : 'none',
                                 height: '100%',
-                                width,
+                                width: '100%',
                             }}
                         >
                             {component}

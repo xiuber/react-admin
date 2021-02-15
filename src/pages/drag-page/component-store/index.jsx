@@ -4,7 +4,6 @@ import {AppstoreOutlined} from '@ant-design/icons';
 import {debounce} from 'lodash';
 import {scrollElement, elementIsVisible, filterTree} from '../util';
 import {getComponents, getStores} from '../dataSource';
-import DragBar from 'src/pages/drag-page/drag-bar';
 import config from 'src/commons/config-hoc';
 import ComponentItem from './ComponentItem';
 import Draggable from './Draggable';
@@ -21,7 +20,6 @@ export default config({
             category: state.componentStore.category,
             components: state.componentStore.components,
             activeSideKey: state.dragPage.activeSideKey,
-            componentTreeWidth: state.dragPage.componentTreeWidth,
         };
     },
 })(function ComponentStore(props) {
@@ -32,9 +30,8 @@ export default config({
         category,
         components,
         // activeSideKey,
-        componentTreeWidth, // 保持和tree同宽度
         action: {
-            dragPage: dragPageAction,
+            // dragPage: dragPageAction,
             componentStore: storeAction,
         },
     } = props;
@@ -129,13 +126,6 @@ export default config({
         storeAction.setComponents(result);
     }, 300);
 
-    function handleDragging(info) {
-        const {clientX} = info;
-
-        const {x} = rootRef.current.getBoundingClientRect();
-        dragPageAction.setComponentTreeWidth(clientX - x - 4);
-    }
-
     return (
         <Pane
             header={
@@ -145,8 +135,7 @@ export default config({
                 </div>
             }
         >
-            <div styleName="root" ref={rootRef} style={{width: componentTreeWidth}}>
-                <DragBar onDragging={handleDragging}/>
+            <div styleName="root" ref={rootRef}>
                 <header>
                     <Input
                         allowClear

@@ -81,6 +81,7 @@ export default config({
     const [scaleElement, setScaleElement] = useState(null);
     const [containerStyle, setContainerStyle] = useState({});
     const [iframeSrcDoc, setIframeSrcDoc] = useState('<html lang="cn"/>');
+    const [state, setState] = useState({});
 
     // iframe 加载完成后一些初始化工作
     const handleIframeLoad = useCallback(() => {
@@ -101,8 +102,22 @@ export default config({
 
     }, []);
 
+    useEffect(() => {
+
+        const state = {
+            visible: false,
+            setVisible: visible => {
+                state.visible = visible;
+                alert(state.visible);
+            },
+        };
+
+        setState(state);
+    }, [pageConfig]);
+
 
     const draggableNodeProps = {
+        state,
         config: pageConfig,
         pageConfig,
         selectedNodeId,

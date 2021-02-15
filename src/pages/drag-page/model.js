@@ -43,6 +43,7 @@ const initialState = {
     showSide: true,
     // activeSideKey: null, // 左侧激活key
     activeSideKey: 'componentStore',
+    sideWidth: 300,
     // activeSideKey: 'schemaEditor',
     // activeTabKey: 'attribute', // 右侧激活tab key
     // activeTabKey: 'style', // 右侧激活tab key
@@ -51,8 +52,6 @@ const initialState = {
     componentTreeExpendedKeys: [], // 组件树 展开节点
 
     rightSideWidth: 385,
-    schemaEditorWidth: 350,
-    componentTreeWidth: 250,
 
     rightSideExpended: true,
 
@@ -64,9 +63,8 @@ const initialState = {
 };
 
 const syncStorage = {
-    // rightSideWidth: true,
-    schemaEditorWidth: true,
-    componentTreeWidth: true,
+    sideWidth: true,
+    rightSideWidth: true,
     contentEditable: true,
     nodeSelectType: true,
 
@@ -78,6 +76,7 @@ export default {
     initialState,
     syncStorage,
     init: () => cloneDeep(initialState),
+    setSideWidth: sideWidth => ({sideWidth}),
     setContentEditable: contentEditable => ({contentEditable}),
     setArrowLines: arrowLines => ({arrowLines}),
     setShowArrowLines: (showArrowLines, state) => {
@@ -106,8 +105,6 @@ export default {
     setCanvasWidth: canvasWidth => ({canvasWidth}),
     setCanvasHeight: canvasHeight => ({canvasHeight}),
     setRightSideExpended: rightSideExpended => ({rightSideExpended}),
-    setComponentTreeWidth: componentTreeWidth => ({componentTreeWidth}),
-    setSchemaEditorWidth: schemaEditorWidth => ({schemaEditorWidth}),
     setRightSideWidth: rightSideWidth => ({rightSideWidth}),
     setComponentTreeExpendedKeys: componentTreeExpendedKeys => ({componentTreeExpendedKeys}),
     setDraggingNode: draggingNode => {
@@ -452,7 +449,7 @@ function addOrMoveNode(options) {
 
     const targetNode = findNodeById(pageConfig, targetId);
     const parentNode = findParentNodeById(pageConfig, targetId);
-    const parentNodeConfig = getComponentConfig(parentNode.componentName);
+    const parentNodeConfig = getComponentConfig(parentNode?.componentName);
 
     // 目标节点为 根占位
     if (targetNode.componentName === 'RootDragHolder') {

@@ -5,7 +5,6 @@ import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
 import {findNodeById, usePrevious, loopIdToFirst, deleteUnLinkedIds, setNodeId, isComponentConfig} from '../util';
 import {deleteDefaultProps, getComponentConfig} from '../component-config';
-import DragBar from '../drag-bar';
 import {cloneDeep} from 'lodash';
 import './style.less';
 
@@ -20,7 +19,7 @@ export default config({
             pageConfig: state.dragPage.pageConfig,
             selectedNode: state.dragPage.selectedNode,
             activeSideKey: state.dragPage.activeSideKey,
-            schemaEditorWidth: state.dragPage.schemaEditorWidth,
+            sideWidth: state.dragPage.sideWidth,
         };
     },
 })(function SchemaEditor(props) {
@@ -28,7 +27,7 @@ export default config({
         pageConfig,
         selectedNode,
         activeSideKey,
-        schemaEditorWidth,
+        sideWidth,
         action: {dragPage: dragPageAction},
     } = props;
 
@@ -201,13 +200,6 @@ export default config({
         dragPageAction.setActiveSideKey(null);
     }
 
-    function handleDragging(info) {
-        const {clientX} = info;
-
-        const {x} = document.getElementById('schemaEditor').getBoundingClientRect();
-        dragPageAction.setSchemaEditorWidth(clientX - x - 4);
-    }
-
     useEffect(() => {
         if (!visible) return;
         // 由于保存触发的，不做任何处理
@@ -271,10 +263,9 @@ export default config({
     if (!visible) return null;
 
     return (
-        <div styleName="root" id="schemaEditor" style={{width: schemaEditorWidth}}>
-            <DragBar onDragging={handleDragging}/>
+        <div styleName="root" id="schemaEditor">
             <CodeEditor
-                editorWidth={schemaEditorWidth}
+                editorWidth={sideWidth}
                 title={(
                     <div styleName="title">
                         <span style={{marginRight: 8}}>Schema 源码开发</span>

@@ -15,7 +15,6 @@ import {
     isComponentConfig,
 } from '../util';
 import Pane from '../pane';
-import DragBar from 'src/pages/drag-page/drag-bar';
 import {
     getComponentConfig,
     getComponentDisplayName,
@@ -30,7 +29,6 @@ export default config({
             draggingNode: state.dragPage.draggingNode,
             selectedNodeId: state.dragPage.selectedNodeId,
             componentTreeExpendedKeys: state.dragPage.componentTreeExpendedKeys,
-            componentTreeWidth: state.dragPage.componentTreeWidth,
             refreshProps: state.dragPage.refreshProps,
         };
     },
@@ -39,7 +37,6 @@ export default config({
         pageConfig,
         selectedNodeId,
         componentTreeExpendedKeys,
-        componentTreeWidth,
         draggingNode,
         refreshProps,
         action: {dragPage: dragPageAction},
@@ -174,19 +171,10 @@ export default config({
 
     }, [selectedNodeId]);
 
-    function handleDragging(info) {
-        const {clientX} = info;
-
-        const {x} = mainRef.current.getBoundingClientRect();
-
-        dragPageAction.setComponentTreeWidth(clientX - x - 4);
-    }
-
     const styleName = classNames({
         root: true,
         hasDraggingNode: !!draggingNode,
     });
-
 
     return (
         <Pane
@@ -216,9 +204,7 @@ export default config({
             <div
                 styleName={styleName}
                 ref={mainRef}
-                style={{width: componentTreeWidth}}
             >
-                <DragBar onDragging={handleDragging}/>
                 <Tree
                     expandedKeys={componentTreeExpendedKeys}
                     onExpand={handleExpand}

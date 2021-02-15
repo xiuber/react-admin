@@ -16,6 +16,8 @@ export default function NodeRender(props) {
         nodeSelectType, // 节点选中方式
         // iframeDocument,
         isPreview = true,
+        // eslint-disable-next-line
+        state, // eval 函数中会用到这个变量
     } = props;
 
     if (!config) return null;
