@@ -158,12 +158,7 @@ export default [
                                 },
                                 children: [
                                     {
-                                        componentName: 'div',
-                                        children: [
-                                            {
-                                                componentName: 'DragHolder',
-                                            },
-                                        ],
+                                        componentName: 'DragHolder',
                                     },
                                 ],
                             };

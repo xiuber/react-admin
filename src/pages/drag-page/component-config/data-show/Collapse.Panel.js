@@ -10,18 +10,10 @@ export default {
 
             const ele = iframeDocument.querySelector(`.id_${id}`);
 
-            const props = {
-                ...dragProps,
-            };
-
-            Object.entries(props)
+            Object.entries(dragProps)
                 .forEach(([key, value]) => {
-                    if (key === 'onClick') return;
-
                     ele.setAttribute(key, value);
                 });
-
-            ele.onclick = dragProps.onClick;
         },
     },
     fields: [],

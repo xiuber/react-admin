@@ -23,6 +23,7 @@ export default function DragAction(props) {
         iframeDocument,
         draggingNode,
         dragPageAction,
+        nodeSelectType,
         children,
     } = props;
 
@@ -150,6 +151,27 @@ export default function DragAction(props) {
         });
     }
 
+    function handleClick(e) {
+        const ele = getNodeEle(e.target);
+        if (!ele) return;
+
+        const componentId = ele.getAttribute('data-componentId');
+
+        if (nodeSelectType === 'meta' && (e.metaKey || e.ctrlKey)) {
+            e.stopPropagation && e.stopPropagation();
+            e.preventDefault && e.preventDefault();
+            // 单纯选中节点，不进行其他操作
+            dragPageAction.setSelectedNodeId(componentId);
+        }
+
+        // 单击模式
+        if (nodeSelectType === 'click') {
+            // e.stopPropagation && e.stopPropagation();
+            // e.preventDefault && e.preventDefault();
+            dragPageAction.setSelectedNodeId(componentId);
+        }
+    }
+
     useEffect(() => {
         if (!iframeDocument) return;
         iframeDocument.body.addEventListener('dragstart', handleDragStart);
@@ -157,6 +179,7 @@ export default function DragAction(props) {
         iframeDocument.body.addEventListener('dragleave', handleDragLeave);
         iframeDocument.body.addEventListener('dragend', handleDragEnd);
         iframeDocument.body.addEventListener('drop', handleDrop);
+        iframeDocument.body.addEventListener('click', handleClick);
 
         return () => {
             iframeDocument.body.removeEventListener('dragstart', handleDragStart);
@@ -164,6 +187,7 @@ export default function DragAction(props) {
             iframeDocument.body.removeEventListener('dragleave', handleDragLeave);
             iframeDocument.body.removeEventListener('dragend', handleDragEnd);
             iframeDocument.body.removeEventListener('drop', handleDrop);
+            iframeDocument.body.removeEventListener('click', handleClick);
         };
     });
 

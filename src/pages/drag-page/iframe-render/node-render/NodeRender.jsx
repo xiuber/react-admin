@@ -5,6 +5,41 @@ import {getComponentDisplayName, getComponentConfig} from 'src/pages/drag-page/c
 import {cloneDeep} from 'lodash';
 import styles from './style.less';
 
+function getDragInfo(options) {
+    const {config, selectedNodeId, draggingNode} = options;
+    const {componentName, id: componentId} = config;
+    const componentConfig = getComponentConfig(componentName);
+
+    let {
+        draggable,
+        componentDesc,
+        isContainer,
+    } = componentConfig;
+
+    componentDesc = componentDesc || componentName;
+    const componentDisplayName = getComponentDisplayName(config);
+
+
+    const dragClassName = classNames({
+        [styles.draggableElement]: true,
+        [styles.selected]: selectedNodeId === componentId,
+        [styles.dragging]: draggingNode?.id === componentId,
+        [styles.unDraggable]: !draggable,
+
+        [`id_${componentId}`]: true,
+    });
+
+    const dragProps = {
+        draggable,
+        'data-componentDesc': componentDesc,
+        'data-componentDisplayName': componentDisplayName,
+        'data-componentId': componentId,
+        'data-isContainer': isContainer,
+    };
+
+    return {dragProps, dragClassName};
+}
+
 export default function NodeRender(props) {
     let {
         config,
@@ -28,7 +63,6 @@ export default function NodeRender(props) {
 
     let {
         wrapper,
-        id: componentId,
         componentName,
         children,
         props: componentProps,
@@ -44,9 +78,6 @@ export default function NodeRender(props) {
 
     let {
         render,
-        isContainer,
-        draggable,
-        componentDesc,
         withWrapper,
         wrapperStyle = {},
         actions = {},
@@ -55,15 +86,12 @@ export default function NodeRender(props) {
         fields,
     } = componentConfig;
 
-    const isRender = hooks.beforeRender && hooks.beforeRender({node: config, iframeDocument});
+    const isRender = hooks.beforeRender && hooks.beforeRender({node: config, dragPageAction, iframeDocument});
 
     if (isRender === false) return null;
     if (render === false) return null;
 
-    componentDesc = componentDesc || componentName;
-    const componentDisplayName = getComponentDisplayName(config);
     const component = getComponent(config);
-
 
     // 组件属性中的事件
     const propsActions = {};
@@ -79,46 +107,7 @@ export default function NodeRender(props) {
             }
         });
 
-    const onNodeClick = (e) => {
-        if (nodeSelectType === 'meta') {
-            if ((e.metaKey || e.ctrlKey)) {
-                e.stopPropagation && e.stopPropagation();
-                e.preventDefault && e.preventDefault();
-                // 单纯选中节点，不进行其他操作
-                dragPageAction.setSelectedNodeId(componentId);
-                // console.log(e.nativeEvent.path);
-            } else {
-                propsActions.onClick && propsActions.onClick(e);
-            }
-        }
-
-        // 单击模式
-        if (nodeSelectType === 'click') {
-            propsActions.onClick && propsActions.onClick(e);
-
-            e.stopPropagation && e.stopPropagation();
-            e.preventDefault && e.preventDefault();
-            dragPageAction.setSelectedNodeId(componentId);
-        }
-    };
-
-    const dragClassName = classNames({
-        [styles.draggableElement]: true,
-        [styles.selected]: selectedNodeId === componentId,
-        [styles.dragging]: draggingNode?.id === componentId,
-        [styles.unDraggable]: !draggable,
-
-        [`id_${componentId}`]: true,
-    });
-
-    const dragProps = {
-        draggable,
-        'data-componentDesc': componentDesc,
-        'data-componentDisplayName': componentDisplayName,
-        'data-componentId': componentId,
-        'data-isContainer': isContainer,
-        onClick: onNodeClick,
-    };
+    const {dragClassName, dragProps} = getDragInfo({config, selectedNodeId, draggingNode});
 
     const _props = Object.entries(props).reduce((prev, curr) => {
         const [key, value] = curr;
@@ -153,6 +142,27 @@ export default function NodeRender(props) {
 
         // 比较特殊，需要作为父级的直接子节点，不能使用 NodeRender
         if (['Tabs.TabPane'].includes(item.componentName)) {
+            const itemConfig = getComponentConfig(item.componentName);
+            let {hooks = {}} = itemConfig;
+            const {dragClassName, dragProps} = getDragInfo({config: item, selectedNodeId, draggingNode});
+            const isRender = hooks.beforeRender && hooks.beforeRender({node: item, dragPageAction, iframeDocument});
+
+            if (isRender === false) return null;
+
+            if (hooks.afterRender) {
+                setTimeout(() => {
+                    hooks.afterRender({
+                        node: item,
+                        iframeDocument,
+                        dragProps,
+                        dragClassName,
+                        dragPageAction,
+                        pageConfig,
+                        styles,
+                    });
+                });
+            }
+
             const Component = getComponent(item);
             return (
                 <Component {...item.props}>
@@ -228,6 +238,8 @@ export default function NodeRender(props) {
                 iframeDocument,
                 dragProps,
                 dragClassName,
+                dragPageAction,
+                styles,
             });
         });
     }
