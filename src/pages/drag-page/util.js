@@ -496,8 +496,8 @@ export function getParentIds(root, id) {
 
     // 深度遍历查找
     function dfs(data, id, parents) {
-        for (var i = 0; i < data.length; i++) {
-            var item = data[i];
+        for (let i = 0; i < data.length; i++) {
+            const item = data[i];
             // 找到id则返回父级id
             if (item.id === id) return parents;
             // children不存在或为空则不递归
