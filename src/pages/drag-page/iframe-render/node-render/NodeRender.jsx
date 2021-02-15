@@ -89,6 +89,13 @@ export default function NodeRender(props) {
     componentProps = cloneDeep(componentProps || {});
     if (!componentProps.className) componentProps.className = '';
 
+    Object.entries(componentProps)
+        .filter(([, value]) => typeof value === 'string' && value.startsWith('state.'))
+        .forEach(([key, value]) => {
+            // eslint-disable-next-line
+            componentProps[key] = eval(value);
+        });
+
     // 组件属性中的事件
     const propsActions = {};
     Object.entries(componentProps)

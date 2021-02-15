@@ -22,6 +22,25 @@ export function isFunctionString(value) {
         && (value.includes('function') || value.includes('=>'));
 }
 
+// 获取obj中字段名，比如 field = visible, obj中存在obj.visible,将得到 visible2
+export function getNextField(obj, field) {
+    if (!(field in obj)) return field;
+
+    const nums = [0];
+    Object.keys(obj).forEach(key => {
+        console.log(key);
+        const result = RegExp(`${field}(\\d+$)`).exec(key);
+        if (result) {
+            console.log(result);
+            nums.push(window.parseInt(result[1]));
+        }
+    });
+
+    const num = Math.max(...nums) + 1;
+
+    return `${field}${num}`;
+}
+
 // 节点渲染之后，统一处理函数，用于给没有透传props属性的组件，添加拖拽相关属性
 export function handleAfterRender(options) {
     const {node, dragProps, iframeDocument, isPreview, element} = options;
@@ -176,6 +195,7 @@ export function findLinkSourceComponentIds(pageConfig) {
         if (propsToSet) {
             const targetIds = Object.entries(propsToSet)
                 .map(([key, value]) => {
+                    if (typeof value !== 'string') return;
                     const str = value.replace(/\$\{componentId}/g, componentId);
                     return findLinkTargetComponentIds({
                         key,
@@ -253,18 +273,18 @@ function findLinkTargetComponentIds(options) {
 export function findLinkTargetsPosition(options) {
     const {pageConfig, selectedNode, iframeDocument} = options;
 
-    const componentId = selectedNode?.id;
-    const propsToSet = getComponentConfig(selectedNode.componentName).propsToSet;
+    if (!selectedNode) return;
+
+    const {id: componentId, propsToSet} = selectedNode;
 
     if (!propsToSet) return;
 
     return Object.entries(propsToSet)
         .map(([key, value]) => {
-            const str = value.replace(/\$\{componentId}/g, componentId);
             return findElementPosition({
                 pageConfig,
                 key,
-                value: str,
+                value,
                 componentId,
                 iframeDocument,
             }) || [];
@@ -280,6 +300,7 @@ function findElementPosition(options) {
         iframeDocument,
         pageConfig,
     } = options;
+
     const targetIds = findLinkTargetComponentIds({
         key,
         value,

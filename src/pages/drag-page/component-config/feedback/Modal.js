@@ -1,5 +1,6 @@
 import React from 'react';
-import {SHOW_MODAL_FUNCTION} from 'src/pages/drag-page/util';
+import {SHOW_MODAL_FUNCTION, getNextField} from 'src/pages/drag-page/util';
+import inflection from 'inflection';
 // import {buttonTypeOptions} from '../options';
 
 export default {
@@ -34,7 +35,42 @@ export default {
     },
 
     propsToSet: {
-        onClick: SHOW_MODAL_FUNCTION,
+        onClick: '() => state.setVisible(true)',
+        onCancel: '() => state.setVisible(false)',
+        setState: state => {
+            state.visible = false;
+            state.setVisible = (visible) => {
+                state.visible = visible;
+            };
+        },
+    },
+
+    // 需要使用的state数据
+    state: (options) => {
+        const {state, node} = options;
+
+        if (!node.props) node.props = {};
+
+        const field = getNextField(state, 'visible');
+
+        // 首字母大写
+        const Field = inflection.camelize(field);
+
+        node.props.visible = `state.${field}`;
+
+        // 关联给其他组件使用的
+        node.propsToSet = {
+            onClick: `() => state.set${Field}(true)`,
+        };
+
+        node.props.onCancel = `() => state.set${Field}(false)`;
+
+        node.state = {
+            field,
+            fieldValue: false,
+            funcField: `set${Field}`,
+            funcValue: 'visible => {state[field] = visible; dragPageAction.render();}',
+        };
     },
     actions: {
         onCancel: event => options => {

@@ -28,9 +28,7 @@ export default config({
         ...others
     } = props;
 
-    const nodeConfig = getComponentConfig(selectedNode?.componentName);
-
-    const propsToSet = nodeConfig.propsToSet;
+    const propsToSet = selectedNode?.propsToSet;
 
     const startRef = useRef(null);
     const lineRef = useRef(null);

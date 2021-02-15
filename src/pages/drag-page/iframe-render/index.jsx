@@ -4,13 +4,14 @@ import {ConfigProvider} from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import config from 'src/commons/config-hoc';
 import NodeRender from './node-render/NodeRender';
-import {scrollElement} from 'src/pages/drag-page/util';
+import {isComponentConfig, scrollElement} from 'src/pages/drag-page/util';
 import Scale from './scale';
 import DragOver from './drag-over';
 import DragAction from './drag-action';
 import EditableAction from './editable-action';
 import NodePath from './node-path';
 import './style.less';
+import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 // 构建iframe内容
 function getIframeSrcDoc() {
@@ -103,15 +104,64 @@ export default config({
     }, []);
 
     useEffect(() => {
+        if (!pageConfig) return;
 
-        const state = {
-            visible: false,
-            setVisible: visible => {
-                state.visible = visible;
-                alert(state.visible);
-            },
+        const loop = (node, cb) => {
+            cb(node);
+
+            if (node.children?.length) {
+                node.children.forEach(item => loop(item, cb));
+            }
+            // props中有可能也有节点
+            Object.values(node.props || {})
+                .filter(value => isComponentConfig(value))
+                .forEach(value => loop(value, cb));
+
+            // wrapper中有节点
+            if (node.wrapper?.length) {
+                node.wrapper.forEach(item => loop(item, cb));
+            }
         };
 
+        // 设置所有已存在的
+        loop(pageConfig, node => {
+            const {state: nodeState} = node;
+            if (nodeState) {
+                const {
+                    field,
+                    fieldValue,
+                    funcField,
+                    funcValue,
+                } = nodeState;
+                if (!(field in state)) {
+                    state[field] = fieldValue;
+                    state[funcField] = eval(funcValue);
+                }
+            }
+        });
+
+        // 设置新的
+        loop(pageConfig, node => {
+            const nodeConfig = getComponentConfig(node.componentName);
+
+            const {state: setNodeState} = nodeConfig;
+            const {state: nodeState} = node;
+            if (!nodeState && setNodeState) {
+                setNodeState({state, node, dragPageAction});
+
+                const {
+                    field,
+                    fieldValue,
+                    funcField,
+                    funcValue,
+                } = node.state;
+
+                state[field] = fieldValue;
+                state[funcField] = eval(funcValue);
+            }
+        });
+
+        console.log('state', state);
         setState(state);
     }, [pageConfig]);
 
@@ -134,6 +184,7 @@ export default config({
 
         if (!iframeRootEle) return;
 
+        console.log('draggableNodeProps', draggableNodeProps.state);
         ReactDOM.render(
             <ConfigProvider locale={zhCN} getPopupContainer={() => iframeRootRef.current}>
                 {isPreview || !contentEditable ? null : <EditableAction {...draggableNodeProps}/>}
