@@ -55,7 +55,7 @@ export default function NodeRender(props) {
         fields,
     } = componentConfig;
 
-    const isRender = hooks.beforeRender && hooks.beforeRender({node: config});
+    const isRender = hooks.beforeRender && hooks.beforeRender({node: config, iframeDocument});
 
     if (isRender === false) return null;
     if (render === false) return null;
@@ -63,89 +63,6 @@ export default function NodeRender(props) {
     componentDesc = componentDesc || componentName;
     const componentDisplayName = getComponentDisplayName(config);
     const component = getComponent(config);
-
-    // 处理属性中的节点
-    if (fields?.length) {
-        fields.filter(item => item.type === 'ReactNode').forEach(item => {
-            const {field} = item;
-            const propsNode = componentProps[field];
-
-            if (isComponentConfig(propsNode)) {
-                componentProps[field] = (
-                    <NodeRender
-                        {...props}
-                        config={propsNode}
-                    />
-                );
-            }
-        });
-    }
-
-    // 处理子节点
-    let childrenEle = children?.length ? children.map(item => {
-        isPreview = isPreview || !childrenDraggable;
-
-        // 比较特殊，需要作为父级的直接子节点，不能使用 NodeRender
-        if (['Collapse.Panel', 'Tabs.TabPane'].includes(item.componentName)) {
-            const Component = getComponent(item);
-            return (
-                <Component {...item.props}>
-                    {item?.children?.map(it => {
-                        return (
-                            <NodeRender
-                                {...props}
-                                config={it}
-                                isPreview={isPreview}
-                            />
-                        );
-                    })}
-                </Component>
-            );
-        }
-
-        return (
-            <NodeRender
-                {...props}
-                config={item}
-                isPreview={isPreview}
-            />
-        );
-    }) : undefined;
-
-    // Form.Item 会用到
-    if (childrenEle?.length === 1) childrenEle = childrenEle[0];
-
-    // 处理当前节点上的包装节点
-    if (wrapper?.length) {
-        wrapper = cloneDeep(wrapper);
-
-        wrapper[0].children = [{...config, wrapper: null}];
-
-        const nextConfig = wrapper.reduce((prev, wrapperConfig) => {
-            wrapperConfig.children = [prev];
-
-            return wrapperConfig;
-        });
-
-        return (
-            <NodeRender
-                {...props}
-                config={nextConfig}
-            />
-        );
-    }
-
-    // 组件配置中定义的事件
-    const componentActions = Object.entries(actions)
-        .reduce((prev, curr) => {
-            const [key, value] = curr;
-            prev[key] = (...args) => value(...args)({
-                pageConfig,
-                dragPageAction,
-                node: config,
-            });
-            return prev;
-        }, {});
 
 
     // 组件属性中的事件
@@ -162,22 +79,7 @@ export default function NodeRender(props) {
             }
         });
 
-    const commonProps = {
-        ...others,
-        children: childrenEle,
-        ...componentActions,
-    };
-
-    if (isPreview) {
-        return createElement(component, {
-            ...commonProps,
-            ...componentProps,
-            ...propsActions,
-        });
-    }
-
     const onNodeClick = (e) => {
-
         if (nodeSelectType === 'meta') {
             if ((e.metaKey || e.ctrlKey)) {
                 e.stopPropagation && e.stopPropagation();
@@ -217,6 +119,127 @@ export default function NodeRender(props) {
         'data-isContainer': isContainer,
         onClick: onNodeClick,
     };
+
+    const _props = Object.entries(props).reduce((prev, curr) => {
+        const [key, value] = curr;
+
+        if (!Object.keys(others).includes(key)) {
+            prev[key] = value;
+        }
+
+        return prev;
+    }, {});
+
+    // 处理属性中的节点
+    if (fields?.length) {
+        fields.filter(item => item.type === 'ReactNode').forEach(item => {
+            const {field} = item;
+            const propsNode = componentProps[field];
+
+            if (isComponentConfig(propsNode)) {
+                componentProps[field] = (
+                    <NodeRender
+                        {..._props}
+                        config={propsNode}
+                    />
+                );
+            }
+        });
+    }
+
+    // 处理子节点
+    let childrenEle = children?.length ? children.map(item => {
+        isPreview = isPreview || !childrenDraggable;
+
+        // 比较特殊，需要作为父级的直接子节点，不能使用 NodeRender
+        if (['Tabs.TabPane'].includes(item.componentName)) {
+            const Component = getComponent(item);
+            return (
+                <Component {...item.props}>
+
+                    {item?.children?.map(it => {
+                        return (
+                            <NodeRender
+                                {..._props}
+                                config={it}
+                                isPreview={isPreview}
+                            />
+                        );
+                    })}
+
+                </Component>
+            );
+        }
+
+        return (
+            <NodeRender
+                {..._props}
+                config={item}
+                isPreview={isPreview}
+            />
+        );
+    }) : undefined;
+
+    // Form.Item 会用到
+    if (childrenEle?.length === 1) childrenEle = childrenEle[0];
+
+    // 处理当前节点上的包装节点
+    if (wrapper?.length) {
+        wrapper = cloneDeep(wrapper);
+
+        wrapper[0].children = [{...config, wrapper: null}];
+
+        const nextConfig = wrapper.reduce((prev, wrapperConfig) => {
+            wrapperConfig.children = [prev];
+
+            return wrapperConfig;
+        });
+
+        return (
+            <NodeRender
+                {..._props}
+                config={nextConfig}
+            />
+        );
+    }
+
+    // 组件配置中定义的事件
+    const componentActions = Object.entries(actions)
+        .reduce((prev, curr) => {
+            const [key, value] = curr;
+            prev[key] = (...args) => value(...args)({
+                pageConfig,
+                dragPageAction,
+                node: config,
+            });
+            return prev;
+        }, {});
+
+    const commonProps = {
+        ...others,
+        children: childrenEle,
+        ...componentActions,
+    };
+
+    if (hooks.afterRender) {
+        setTimeout(() => {
+            hooks.afterRender({
+                node: config,
+                iframeDocument,
+                dragProps,
+                dragClassName,
+            });
+        });
+    }
+
+
+    if (isPreview) {
+        return createElement(component, {
+            ...commonProps,
+            ...componentProps,
+            ...propsActions,
+        });
+    }
 
     if (withWrapper) {
         let {style = {}} = componentProps;

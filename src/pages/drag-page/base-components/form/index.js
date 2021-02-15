@@ -73,6 +73,10 @@ export default [
                     componentName: 'Form',
                     props: {
                         layout: 'inline',
+                        initialValues: {
+                            name: '张三',
+                        },
+                        onValuesChange: '(changeValues, allValues) => console.log(allValues)',
                     },
                     children: formChildren,
                 },
@@ -82,6 +86,12 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Form',
+                    props: {
+                        initialValues: {
+                            name: '张三',
+                        },
+                        onValuesChange: '(changeValues, allValues) => console.log(allValues)',
+                    },
                     children: formChildren,
                 },
             },
