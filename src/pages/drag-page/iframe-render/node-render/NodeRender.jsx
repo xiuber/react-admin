@@ -65,10 +65,6 @@ export default function NodeRender(props) {
         props: componentProps,
     } = config;
 
-    if (!componentProps) componentProps = {};
-
-    componentProps = cloneDeep(componentProps);
-
     if (!componentName) return null;
 
     const componentConfig = getComponentConfig(componentName);
@@ -89,6 +85,7 @@ export default function NodeRender(props) {
     if (render === false) return null;
 
     const component = getComponent(config);
+    componentProps = cloneDeep(componentProps || {});
 
     // 组件属性中的事件
     const propsActions = {};
