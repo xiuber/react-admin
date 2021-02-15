@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import {debounce} from 'lodash';
 import {v4 as uuid} from 'uuid';
-import {isComponentConfig} from 'src/pages/drag-page/util';
+import {loopPageConfig} from 'src/pages/drag-page/util';
 
 export default function EditableAction(props) {
     const {
@@ -11,7 +11,7 @@ export default function EditableAction(props) {
         dragPageAction,
     } = props;
 
-    const loop = (node, cb) => {
+    const loop = cb => loopPageConfig(pageConfig, node => {
         const componentId = node.id;
         const className = `id_${componentId}`;
         const nodeConfig = getComponentConfig(node.componentName);
@@ -36,24 +36,7 @@ export default function EditableAction(props) {
                 eles.forEach((ele, index) => cb(ele, index, node, item));
             });
         }
-
-        if (node.children?.length) {
-            node.children.forEach(item => loop(item, cb));
-        }
-
-        // props中有可能也有节点
-        Object.values(node.props || {})
-            .forEach(value => {
-                if (isComponentConfig(value)) {
-                    loop(value, cb);
-                }
-            });
-
-        // wrapper中有节点
-        if (node?.wrapper?.length) {
-            node.wrapper.forEach(item => loop(item, cb));
-        }
-    };
+    });
 
     useEffect(() => {
         if (!iframeDocument) return;
@@ -61,7 +44,7 @@ export default function EditableAction(props) {
         const actions = {};
 
         let tabIndex = 1000;
-        loop(pageConfig, (ele, index, node, item) => {
+        loop((ele, index, node, item) => {
             let {onInput, onBlur, onClick, propsField} = item;
             tabIndex++;
 
@@ -132,9 +115,8 @@ export default function EditableAction(props) {
 
             actions[actionKey] = eventMap;
         });
-
         return () => {
-            loop(pageConfig, (ele) => {
+            loop((ele) => {
                 // ele.style.userModify = '';
                 ele.setAttribute('contenteditable', 'false');
                 ele.removeAttribute('tabindex');

@@ -1,5 +1,5 @@
 import React from 'react';
-import {SHOW_MODAL_FUNCTION, getNextField} from 'src/pages/drag-page/util';
+import {getNextField} from 'src/pages/drag-page/util';
 import inflection from 'inflection';
 // import {buttonTypeOptions} from '../options';
 

@@ -6,7 +6,6 @@ import {getEleCenterInWindow, findNodeById, findLinkTargetsPosition} from 'src/p
 import {throttle} from 'lodash';
 
 import styles from './style.less';
-import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 export default config({
     connect: state => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {AppstoreOutlined} from '@ant-design/icons';
 import NodeRender from 'src/pages/drag-page/iframe-render/node-render/NodeRender';
-import {isComponentConfig} from 'src/pages/drag-page/util';
+import {loopPageConfig} from 'src/pages/drag-page/util';
 
 const result = {};
 const req = require.context('./', true, /\.js$/);
@@ -142,8 +142,8 @@ export function showFieldByAppend(values, appendField) {
 
 // 删除默认属性
 export function deleteDefaultProps(component) {
-    const loop = node => {
-        let {componentName, props, children} = node;
+    loopPageConfig(component, node => {
+        let {componentName, props} = node;
 
         if (!props) props = {};
         const propsConfig = getComponentConfig(componentName);
@@ -176,26 +176,7 @@ export function deleteDefaultProps(component) {
                     }
                 });
         }
-
-        if (children?.length) {
-            children.forEach(item => loop(item));
-        }
-
-        // props中有可能也有节点
-        Object.values(node.props || {})
-            .forEach(value => {
-                if (isComponentConfig(value)) {
-                    loop(value);
-                }
-            });
-
-        // wrapper中有节点
-        if (node?.wrapper?.length) {
-            node.wrapper.forEach(item => loop(item));
-        }
-    };
-
-    loop(component);
+    })
 }
 
 // 获取组件配置

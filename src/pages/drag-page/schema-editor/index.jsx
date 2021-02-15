@@ -9,8 +9,8 @@ import {
     loopIdToFirst,
     deleteUnLinkedIds,
     setNodeId,
-    isComponentConfig,
     isFunctionString,
+    loopPageConfig,
 } from '../util';
 import {deleteDefaultProps, getComponentConfig} from '../component-config';
 import {cloneDeep} from 'lodash';
@@ -58,28 +58,9 @@ export default config({
         if (nodeConfig instanceof Error) return;
 
         const ids = [];
-        const loopGetId = node => {
+        loopPageConfig(nodeConfig, node => {
             if (node.id) ids.push(node.id);
-
-            if (node.children?.length) {
-                node.children.forEach(item => loopGetId(item));
-            }
-
-            // props中有可能也有节点
-            Object.values(node.props || {})
-                .forEach(value => {
-                    if (isComponentConfig(value)) {
-                        loopGetId(value);
-                    }
-                });
-
-            // wrapper中有节点
-            if (node?.wrapper?.length) {
-                node.wrapper.forEach(item => loopGetId(item));
-            }
-        };
-
-        loopGetId(nodeConfig);
+        });
 
         // 查询所有id在value中出现的位置
         const idPosition = [];
@@ -214,7 +195,6 @@ export default config({
 
         saveRef.current = true;
 
-        console.log(nextPageConfig);
         dragPageAction.setPageConfig({...nextPageConfig});
         // 右侧样式、属性面板没有关联pageConfig，需要刷新同步一下
         dragPageAction.refreshProps();
@@ -258,10 +238,9 @@ export default config({
         // id 属性调整到首位
         loopIdToFirst(editNode);
 
-
         const FUNCTION_HOLDER = '___function___';
 
-        const loop = node => {
+        loopPageConfig(editNode, node => {
             const nodeConfig = getComponentConfig(node.componentName);
             const beforeSchemaEdit = nodeConfig?.hooks?.beforeSchemaEdit;
             beforeSchemaEdit && beforeSchemaEdit({node});
@@ -278,26 +257,7 @@ export default config({
                         }
                     });
             }
-
-            if (node.children?.length) {
-                node.children.forEach(item => loop(item));
-            }
-
-            // props中有可能也有节点
-            Object.values(node.props || {})
-                .forEach(value => {
-                    if (isComponentConfig(value)) {
-                        loop(value);
-                    }
-                });
-
-            // wrapper中有节点
-            if (node?.wrapper?.length) {
-                node.wrapper.forEach(item => loop(item));
-            }
-        };
-
-        loop(editNode);
+        });
 
         let nextCode = `export default ${JSON5.stringify(editNode, null, 2)}`;
         nextCode = nextCode.replace(RegExp(`'${FUNCTION_HOLDER}`, 'g'), '');

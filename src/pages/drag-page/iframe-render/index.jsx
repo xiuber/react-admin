@@ -4,7 +4,7 @@ import {ConfigProvider} from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import config from 'src/commons/config-hoc';
 import NodeRender from './node-render/NodeRender';
-import {isComponentConfig, scrollElement} from 'src/pages/drag-page/util';
+import {loopPageConfig, scrollElement} from 'src/pages/drag-page/util';
 import Scale from './scale';
 import DragOver from './drag-over';
 import DragAction from './drag-action';
@@ -106,25 +106,8 @@ export default config({
     useEffect(() => {
         if (!pageConfig) return;
 
-        const loop = (node, cb) => {
-            cb(node);
-
-            if (node.children?.length) {
-                node.children.forEach(item => loop(item, cb));
-            }
-            // props中有可能也有节点
-            Object.values(node.props || {})
-                .filter(value => isComponentConfig(value))
-                .forEach(value => loop(value, cb));
-
-            // wrapper中有节点
-            if (node.wrapper?.length) {
-                node.wrapper.forEach(item => loop(item, cb));
-            }
-        };
-
         // 设置所有已存在的
-        loop(pageConfig, node => {
+        loopPageConfig(pageConfig, node => {
             const {state: nodeState} = node;
             if (nodeState) {
                 const {
@@ -135,13 +118,14 @@ export default config({
                 } = nodeState;
                 if (!(field in state)) {
                     state[field] = fieldValue;
+                    // eslint-disable-next-line
                     state[funcField] = eval(funcValue);
                 }
             }
         });
 
         // 设置新的
-        loop(pageConfig, node => {
+        loopPageConfig(pageConfig, node => {
             const nodeConfig = getComponentConfig(node.componentName);
 
             const {state: setNodeState} = nodeConfig;
@@ -157,11 +141,11 @@ export default config({
                 } = node.state;
 
                 state[field] = fieldValue;
+                // eslint-disable-next-line
                 state[funcField] = eval(funcValue);
             }
         });
 
-        console.log('state', state);
         setState(state);
     }, [pageConfig]);
 
@@ -184,7 +168,6 @@ export default config({
 
         if (!iframeRootEle) return;
 
-        console.log('draggableNodeProps', draggableNodeProps.state);
         ReactDOM.render(
             <ConfigProvider locale={zhCN} getPopupContainer={() => iframeRootRef.current}>
                 {isPreview || !contentEditable ? null : <EditableAction {...draggableNodeProps}/>}

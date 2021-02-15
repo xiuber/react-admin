@@ -16,6 +16,23 @@ export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 // eslint-disable-next-line
 export const SHOW_MODAL_FUNCTION = 'e => dragPageAction.showModal("${componentId}")';
 
+export function loopPageConfig(node, cb) {
+    cb(node);
+
+    if (node.children?.length) {
+        node.children.forEach(item => loopPageConfig(item, cb));
+    }
+    // props中有可能也有节点
+    Object.values(node.props || {})
+        .filter(value => isComponentConfig(value))
+        .forEach(value => loopPageConfig(value, cb));
+
+    // wrapper中有节点
+    if (node.wrapper?.length) {
+        node.wrapper.forEach(item => loopPageConfig(item, cb));
+    }
+}
+
 export function isFunctionString(value) {
     return value
         && typeof value === 'string'
@@ -74,69 +91,34 @@ export function isComponentConfig(node) {
 
 // 设置id
 export function setNodeId(node, force) {
-    const loopId = (node) => {
-        if (force) {
-            node.id = uuid();
-        } else {
-            if (!node.id) node.id = uuid();
-        }
+    loopPageConfig(node, node => {
+        if (force) return node.id = uuid();
 
-        if (node.children?.length) {
-            node.children.forEach(item => loopId(item));
-        }
-
-        // props中有可能也有节点
-        Object.values(node.props || {})
-            .forEach(value => {
-                if (isComponentConfig(value)) {
-                    loopId(value);
-                }
-            });
-
-        // wrapper中有节点
-        if (node.wrapper?.length) {
-            node.wrapper.forEach(item => loopId(item));
-        }
-    };
-
-    loopId(node);
+        if (!node.id) node.id = uuid();
+    });
 }
 
 // 调整id为首位
 export function loopIdToFirst(node) {
-    const id = node.id;
-    Reflect.deleteProperty(node, 'id');
+    loopPageConfig(node, node => {
+        const id = node.id;
+        Reflect.deleteProperty(node, 'id');
 
-    const entries = Object.entries(node);
-    if (!entries?.length) return;
+        const entries = Object.entries(node);
+        if (!entries?.length) return;
 
-    // 如果第一个key 不是 id
-    if (entries[0][0] !== id) {
-        // id 放首位
-        entries.unshift(['id', id]);
+        // 如果第一个key 不是 id
+        if (entries[0][0] !== id) {
+            // id 放首位
+            entries.unshift(['id', id]);
 
-        // 删除所有属性，保留引用
-        entries.forEach(([key]) => Reflect.deleteProperty(node, key));
+            // 删除所有属性，保留引用
+            entries.forEach(([key]) => Reflect.deleteProperty(node, key));
 
-        // 从新赋值
-        entries.forEach(([key, value]) => node[key] = value);
-    }
-
-    if (node.children?.length) {
-        node.children.forEach(item => loopIdToFirst(item));
-    }
-
-    // props中有可能也有节点
-    Object.values(node.props || {})
-        .forEach(value => {
-            if (isComponentConfig(value)) {
-                loopIdToFirst(value);
-            }
-        });
-    // wrapper中有节点
-    if (node.wrapper?.length) {
-        node.wrapper.forEach(item => loopIdToFirst(item));
-    }
+            // 从新赋值
+            entries.forEach(([key, value]) => node[key] = value);
+        }
+    });
 }
 
 // 同步设置对象，将newObj中属性，对应设置到oldObj中
@@ -163,43 +145,25 @@ export function deleteUnLinkedIds(nodeConfig, keepIds = []) {
 
     linkedIds = linkedIds.concat(keepIds);
 
-    const loop = node => {
+    loopPageConfig(nodeConfig, node => {
         if (!linkedIds.includes(node.id)) Reflect.deleteProperty(node, 'id');
-
-        if (node.children?.length) {
-            node.children.forEach(item => loop(item));
-        }
-
-        // props中有可能也有节点
-        Object.values(node.props || {})
-            .forEach(value => {
-                if (isComponentConfig(value)) {
-                    loop(value);
-                }
-            });
-        // wrapper中有节点
-        if (node.wrapper?.length) {
-            node.wrapper.forEach(item => loop(item));
-        }
-    };
-    loop(nodeConfig);
+    });
 }
 
 // 获取含有关联元素的ids
 export function findLinkSourceComponentIds(pageConfig) {
     const ids = [];
-    const loop = node => {
+    loopPageConfig(pageConfig, node => {
         const propsToSet = getComponentConfig(node.componentName).propsToSet;
         const componentId = node.id;
 
         if (propsToSet) {
             const targetIds = Object.entries(propsToSet)
+                .filter(([, value]) => (typeof value === 'string'))
                 .map(([key, value]) => {
-                    if (typeof value !== 'string') return;
-                    const str = value.replace(/\$\{componentId}/g, componentId);
                     return findLinkTargetComponentIds({
                         key,
-                        value: str,
+                        value,
                         pageConfig,
                     });
                 }).flat();
@@ -209,24 +173,7 @@ export function findLinkSourceComponentIds(pageConfig) {
                 ids.push(componentId);
             }
         }
-
-        if (node.children?.length) {
-            node.children.forEach(item => loop(item));
-        }
-
-        // props中有可能也有节点
-        Object.values(node.props || {})
-            .forEach(value => {
-                if (isComponentConfig(value)) {
-                    loop(value);
-                }
-            });
-        // wrapper中有节点
-        if (node.wrapper?.length) {
-            node.wrapper.forEach(item => loop(item));
-        }
-    };
-    loop(pageConfig);
+    });
 
     return ids;
 }
@@ -240,7 +187,8 @@ function findLinkTargetComponentIds(options) {
     } = options;
 
     const result = [];
-    const loop = (node) => {
+
+    loopPageConfig(pageConfig, node => {
         let {props} = node;
         if (!props) props = {};
 
@@ -248,23 +196,7 @@ function findLinkTargetComponentIds(options) {
             const targetComponentId = node?.id;
             result.push(targetComponentId);
         }
-        if (node.children?.length) {
-            node.children.forEach(item => loop(item));
-        }
-        // props中有可能也有节点
-        Object.values(node.props || {})
-            .forEach(value => {
-                if (isComponentConfig(value)) {
-                    loop(value);
-                }
-            });
-        // wrapper中有节点
-        if (node.wrapper?.length) {
-            node.wrapper.forEach(item => loop(item));
-        }
-    };
-
-    loop(pageConfig);
+    });
 
     return result;
 }
@@ -807,31 +739,11 @@ export function isChildrenNode(parentNode, childrenNode) {
 // 查找所有的父级节点
 export function findParentNodes(root, id) {
     const nodes = [];
-
-    const loop = node => {
+    loopPageConfig(root, node => {
         const has = findNodeById(node, id);
 
         if (has) nodes.push(node);
-
-        if (node?.children?.length) {
-            node.children.forEach(item => loop(item));
-        }
-
-        // props中有可能也有节点
-        Object.values(node.props || {})
-            .forEach(value => {
-                if (isComponentConfig(value)) {
-                    loop(value);
-                }
-            });
-
-        // wrapper中有节点
-        if (node.wrapper?.length) {
-            node.wrapper.forEach(item => loop(item));
-        }
-    };
-
-    loop(root);
+    });
 
     return nodes;
 }
