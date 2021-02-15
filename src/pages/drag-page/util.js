@@ -267,7 +267,7 @@ function findElementPosition(options) {
     });
 
     return targetIds.map(targetComponentId => {
-        const ele = iframeDocument.querySelector(`[data-componentId="${targetComponentId}"]`);
+        const ele = iframeDocument.querySelector(`[data-component-id="${targetComponentId}"]`);
         if (!ele) return false;
         const {x, y, width, height} = ele.getBoundingClientRect();
         return {
@@ -503,11 +503,11 @@ export function getNodeEle(target) {
     if (typeof target.getAttribute !== 'function') return null;
 
     // 当前是组件节点
-    let isNodeEle = target.getAttribute('data-componentId');
+    let isNodeEle = target.getAttribute('data-component-id');
 
     // 父级是容器
     if (!isNodeEle && target.parentNode?.getAttribute) {
-        isNodeEle = target.getAttribute('data-componentId');
+        isNodeEle = target.getAttribute('data-component-id');
     }
 
     if (isNodeEle) return target;
@@ -523,7 +523,7 @@ export function getDroppableEle(target) {
         if (!node) return null;
         if (
             node?.getAttribute
-            && node.getAttribute('data-componentId')
+            && node.getAttribute('data-component-id')
         ) {
 
             return node;
@@ -537,12 +537,12 @@ export function getDroppableEle(target) {
     if (!componentEle) return null;
 
     // 当前是容器
-    let draggable = componentEle.getAttribute('data-isContainer') === 'true';
+    let draggable = componentEle.getAttribute('data-is-container') === 'true';
     if (draggable) return componentEle;
 
     // 父组件是容器
     const parentComponent = loop(componentEle.parentNode);
-    if (parentComponent?.getAttribute('data-isContainer') === 'true') {
+    if (parentComponent?.getAttribute('data-is-container') === 'true') {
         return componentEle;
     }
 
@@ -567,7 +567,7 @@ export function handleNodDrop(options) {
         if (!nodeEle) return end();
 
         const newProps = JSON.parse(propsToSet);
-        const componentId = nodeEle.getAttribute('data-componentId');
+        const componentId = nodeEle.getAttribute('data-component-id');
 
         dragPageAction.setNewProps({componentId, newProps});
 
@@ -585,7 +585,7 @@ export function handleNodDrop(options) {
     const targetElement = isWrapper ? e.target : getDroppableEle(e.target);
 
     if (!targetElement) return end();
-    const targetComponentId = targetElement.getAttribute('data-componentId');
+    const targetComponentId = targetElement.getAttribute('data-component-id');
 
     if (isWrapper) {
         if (sourceComponentId) {
@@ -900,7 +900,7 @@ export function getDropGuidePosition(options) {
         },
     };
 
-    const targetIsContainer = targetElement.getAttribute('data-isContainer') === 'true';
+    const targetIsContainer = targetElement.getAttribute('data-is-container') === 'true';
     const targetRect = targetElement.getBoundingClientRect();
 
     const documentElement = frameDocument.documentElement || frameDocument.body;

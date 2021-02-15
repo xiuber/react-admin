@@ -223,8 +223,8 @@ export default config({
             id={`treeNode_${key}`}
             styleName={styleNames}
             draggable
-            data-componentId={key}
-            data-isContainer={isContainer}
+            data-component-id={key}
+            data-is-container={isContainer}
             onDragStart={handleDragStart}
             onDragEnter={handleDragEnter}
             onDragOver={handleDragOver}

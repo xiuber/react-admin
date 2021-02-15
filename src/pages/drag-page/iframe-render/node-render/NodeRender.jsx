@@ -12,35 +12,26 @@ function getDragInfo(options) {
 
     let {
         draggable,
-        componentDesc,
         isContainer,
     } = componentConfig;
 
-    componentDesc = componentDesc || componentName;
     const componentDisplayName = getComponentDisplayName(config);
 
-
     const dragClassName = classNames({
-        [styles.draggableElement]: true,
-        [styles.selected]: selectedNodeId === componentId,
-        [styles.dragging]: draggingNode?.id === componentId,
-        [styles.unDraggable]: !draggable,
-
         [`id_${componentId}`]: true,
     });
 
     const dragProps = {
         draggable,
-        'data-componentDesc': componentDesc,
-        'data-componentDisplayName': componentDisplayName,
-        'data-componentId': componentId,
-        'data-isContainer': isContainer,
+        'data-component-display-name': componentDisplayName,
+        'data-component-id': componentId,
+        'data-is-container': isContainer,
 
         // 控制样式，将相关样式通过属性控制，可以解决有些组件className被修改，样式丢失问题，比如 Tabs.Panel
-        'data-draggableElement': true,
-        'data-dragSelected': selectedNodeId === componentId,
-        'data-dragDragging': draggingNode?.id === componentId,
-        'data-dragUnDraggable': !draggable,
+        'data-draggable-element': true,
+        'data-draggable-selected': selectedNodeId === componentId,
+        'data-draggable-dragging': draggingNode?.id === componentId,
+        'data-draggable-un-draggable': !draggable,
     };
 
     return {dragProps, dragClassName};

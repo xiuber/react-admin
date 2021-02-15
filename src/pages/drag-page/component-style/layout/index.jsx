@@ -92,7 +92,7 @@ export default function Layout(props) {
     useEffect(() => {
         if (!iframeDocument || !componentId) return;
 
-        const ele = iframeDocument.querySelector(`[data-componentId="${componentId}"]`);
+        const ele = iframeDocument.querySelector(`[data-component-id="${componentId}"]`);
         if (!ele?.parentNode) return;
 
         const display = window.getComputedStyle(ele.parentNode).display;

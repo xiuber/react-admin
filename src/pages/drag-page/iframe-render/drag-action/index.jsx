@@ -34,7 +34,7 @@ export default function DragAction(props) {
         e.stopPropagation();
         const dragEle = e.target;
 
-        const componentId = dragEle.getAttribute('data-componentId');
+        const componentId = dragEle.getAttribute('data-component-id');
         const node = findNodeById(pageConfig, componentId);
 
         dragPageAction.setDraggingNode(node);
@@ -73,7 +73,7 @@ export default function DragAction(props) {
 
         if (!targetElement) return;
 
-        const targetComponentId = targetElement.getAttribute('data-componentId');
+        const targetComponentId = targetElement.getAttribute('data-component-id');
 
         // 放在自身上
         if (draggingNode?.id === targetComponentId) return;
@@ -155,7 +155,7 @@ export default function DragAction(props) {
         const ele = getNodeEle(e.target);
         if (!ele) return;
 
-        const componentId = ele.getAttribute('data-componentId');
+        const componentId = ele.getAttribute('data-component-id');
 
         if (nodeSelectType === 'meta' && (e.metaKey || e.ctrlKey)) {
             e.stopPropagation && e.stopPropagation();

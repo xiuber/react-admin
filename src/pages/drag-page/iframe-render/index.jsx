@@ -156,7 +156,7 @@ export default config({
 
         // 等待树展开
         setTimeout(() => {
-            const element = containerEle.querySelector(`[data-componentid="${selectedNodeId}"]`);
+            const element = containerEle.querySelector(`[data-component-id="${selectedNodeId}"]`);
 
             scrollElement(containerEle, element);
         }, 200);

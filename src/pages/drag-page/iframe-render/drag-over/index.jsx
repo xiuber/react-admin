@@ -49,7 +49,7 @@ export default config({
             const toSelectTarget = isPropsToSet || isWrapper;
 
             if (isTree) {
-                targetElement = frameDocument.querySelector(`[data-componentid="${targetElementId}"]`);
+                targetElement = frameDocument.querySelector(`[data-component-id="${targetElementId}"]`);
                 guidePosition = getDropGuidePosition({
                     targetElement,
                     frameDocument,
@@ -91,7 +91,7 @@ export default config({
             } = prevDragOverInfo;
 
             if (isTree) {
-                targetElement = frameDocument.querySelector(`[data-componentid="${targetElementId}"]`);
+                targetElement = frameDocument.querySelector(`[data-component-id="${targetElementId}"]`);
             }
 
             leaveElement(targetElement);
@@ -118,7 +118,7 @@ function overElement(options) {
     if (!targetElement) return;
 
     targetElement.classList.add(styles.dragOver);
-    const isContainer = targetElement.getAttribute('data-isContainer') === 'true';
+    const isContainer = targetElement.getAttribute('data-is-container') === 'true';
 
     // 如果是容器 鼠标悬停 放大
     if (isContainer) {
@@ -163,9 +163,9 @@ function showDropGuideLine(position) {
     if (!guideLineEle) return;
 
     const guideBgEle = frameDocument.getElementById('drop-guide-bg');
-    const componentDisplayName = targetElement?.getAttribute('data-componentDisplayName');
+    const componentDisplayName = targetElement?.getAttribute('data-component-display-name');
 
-    guideBgEle.setAttribute('data-componentDisplayName', componentDisplayName);
+    guideBgEle.setAttribute('data-component-display-name', componentDisplayName);
     guideBgEle.classList.add(styles.guideBgActive);
     guideBgEle.style.top = `${targetY}px`;
     guideBgEle.style.left = `${targetX}px`;
