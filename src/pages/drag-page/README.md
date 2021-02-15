@@ -5,7 +5,7 @@
 1. [ ] onDragHover 优化 enter leave 添加延迟
 1. [ ] icon 优化，选择更加适合的图标
 1. [ ] ctrl + c ctrl + v 复制赞贴组件
-1. [x] 部分组件无法拖拽，可以添加 withWrapper: true 配置
+1. [x] 部分组件无法拖拽，可以添加 withDragProps: false, hooks.afterRender修复
 1. [ ] dragPage.activeView 标记当前视图，用于快捷键判断
 1. [ ] component store 中深层组件不要写__config，源码编辑之后，会被干掉，可以编写特殊组件，放入drag-page/components中 或者通过props控制行为
 1. [ ] 组件库中配置的组件，尽量只是用原生html 和 antd 组件库，不要引入ra-lib

@@ -22,6 +22,20 @@ export function isFunctionString(value) {
         && (value.includes('function') || value.includes('=>'));
 }
 
+// 节点渲染之后，统一处理函数，用于给没有透传props属性的组件，添加拖拽相关属性
+export function handleAfterRender(options) {
+    const {node, dragProps, iframeDocument} = options;
+    if (!iframeDocument) return;
+    const {id} = node;
+
+    const ele = iframeDocument.querySelector(`.id_${id}`);
+
+    Object.entries(dragProps)
+        .forEach(([key, value]) => {
+            ele.setAttribute(key, value);
+        });
+}
+
 // 设置拖拽图片
 export function setDragImage(e, node) {
     // const img = new Image();

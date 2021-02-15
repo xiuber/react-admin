@@ -1,6 +1,8 @@
+import {handleAfterRender} from 'src/pages/drag-page/util';
+
 export default {
     dropAccept: 'Column',
-    withWrapper: true,
+    withDragProps: false,
     hooks: {
         beforeRender: options => {
             const {node} = options;
@@ -12,6 +14,7 @@ export default {
                 Reflect.deleteProperty(node.props, 'columns');
             }
         },
+        afterRender: handleAfterRender,
     },
     fields: [
         {label: '边框', category: '选项', field: 'bordered', type: 'boolean', defaultValue: false, version: '', desc: '是否展示外边框和列边框'},

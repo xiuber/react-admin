@@ -1,3 +1,5 @@
+import {handleAfterRender} from 'src/pages/drag-page/util';
+
 export default {
     editableContents: [
         {
@@ -9,7 +11,10 @@ export default {
         },
     ],
     isContainer: true,
-    withWrapper: true,
+    withDragProps: false,
+    hooks: {
+        afterRender: handleAfterRender,
+    },
     dropAccept: ['Collapse.Panel'],
     fields: [],
 };

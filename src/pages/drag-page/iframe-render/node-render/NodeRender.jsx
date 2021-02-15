@@ -71,11 +71,12 @@ export default function NodeRender(props) {
 
     let {
         render,
-        withWrapper,
+        // withWrapper,
         wrapperStyle = {},
         actions = {},
         childrenDraggable,
         hooks = {},
+        withDragProps,
         fields,
     } = componentConfig;
 
@@ -137,7 +138,7 @@ export default function NodeRender(props) {
         // 比较特殊，需要作为父级的直接子节点，不能使用 NodeRender
         if (['Tabs.TabPane'].includes(item.componentName)) {
             const itemConfig = getComponentConfig(item.componentName);
-            let {hooks = {}} = itemConfig;
+            let {hooks = {}, withDragProps} = itemConfig;
             const {dragClassName, dragProps} = getDragInfo({config: item, selectedNodeId, draggingNode});
             const isRender = hooks.beforeRender && hooks.beforeRender({node: item, dragPageAction, iframeDocument});
 
@@ -148,7 +149,7 @@ export default function NodeRender(props) {
                     hooks.afterRender({
                         node: item,
                         iframeDocument,
-                        dragProps,
+                        dragProps: withDragProps ? dragProps : {},
                         dragClassName,
                         dragPageAction,
                         pageConfig,
@@ -245,7 +246,7 @@ export default function NodeRender(props) {
             ...propsActions,
         });
     }
-
+    /*
     if (withWrapper) {
         let {style = {}} = componentProps;
         const wStyle = {...wrapperStyle};
@@ -294,11 +295,13 @@ export default function NodeRender(props) {
             ],
         });
     }
+*/
+
     return createElement(component, {
         ...commonProps,
         ...componentProps,
         ...propsActions,
-        ...dragProps,
+        ...(withDragProps ? dragProps : {}),
         className: [dragClassName, componentProps.className].join(' '),
     });
 }

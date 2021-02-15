@@ -1,5 +1,9 @@
+import {handleAfterRender} from 'src/pages/drag-page/util';
+
 export default {
     isFormElement: true,
     isContainer: false,
-    withWrapper: true,
+    hooks: {
+        afterRender: handleAfterRender,
+    },
 };

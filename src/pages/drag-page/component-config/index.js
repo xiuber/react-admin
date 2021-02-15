@@ -57,8 +57,7 @@ const defaultConfig = {
     draggable: true, // 组件是否可拖拽 默认 true
     isWrapper: false, // 是否是包裹类组件，比如Tooltip、Badge ，包裹其他组件的
     isContainer: true, // 组件是否是容器，默认true，如果是容器，则可托放入子节点
-    withWrapper: false, // 是否需要拖拽包裹元素，默认 false，有些组件拖拽无效，需要包裹一下
-    // wrapperStyle: undefined, // {display: 'inline-block'}, // 拖拽包裹元素样式，一般用来设置 display width height 等
+    withDragProps: true, // 不使用dragProps 有些组件dragProps添加的位置不准确或者没有添加上，通过 afterRender修复，这时候可能不需要NodeRender中添加dragProps了
 
     // propsToSet: '', // 连接时，要设置的属性
 
