@@ -232,7 +232,6 @@ export default function NodeRender(props) {
         });
     }
 
-
     if (isPreview) {
         return createElement(component, {
             ...commonProps,

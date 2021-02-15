@@ -6,6 +6,7 @@ const formChildren = [
         componentName: 'Form.Item',
         props: {
             label: '姓名',
+            name: 'name',
         },
         children: [
             {
@@ -20,6 +21,7 @@ const formChildren = [
         componentName: 'Form.Item',
         props: {
             label: '年龄',
+            name: 'age',
         },
         children: [
             {
@@ -40,6 +42,7 @@ const formChildren = [
                 componentName: 'Button',
                 props: {
                     type: 'primary',
+                    htmlType: 'submit',
                 },
                 children: [
                     {
@@ -61,6 +64,14 @@ const formChildren = [
     },
 ];
 
+const commonProps = {
+    initialValues: {
+        name: '张三',
+    },
+    onFinish: 'values => alert(JSON.stringify(values))',
+    onValuesChange: '(changeValues, allValues) => console.log(allValues)',
+};
+
 export default [
     {
         title: '表单',
@@ -73,10 +84,8 @@ export default [
                     componentName: 'Form',
                     props: {
                         layout: 'inline',
-                        initialValues: {
-                            name: '张三',
-                        },
-                        onValuesChange: '(changeValues, allValues) => console.log(allValues)',
+                        name: 'inline',
+                        ...commonProps,
                     },
                     children: formChildren,
                 },
@@ -87,10 +96,8 @@ export default [
                 config: {
                     componentName: 'Form',
                     props: {
-                        initialValues: {
-                            name: '张三',
-                        },
-                        onValuesChange: '(changeValues, allValues) => console.log(allValues)',
+                        name: 'demo',
+                        ...commonProps,
                     },
                     children: formChildren,
                 },
