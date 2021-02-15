@@ -11,7 +11,9 @@ export default [
                 config: {
                     componentName: 'PageContent',
                     props: {
+                        className: 'PageContent',
                         style: {
+                            position: 'relative',
                             flexGrow: 1,
                             flexShrink: 1,
                             // display: 'flex',

@@ -1,6 +1,7 @@
 export default {
     isContainer: true,
     dropInTo: ['Tabs'],
+    withHolder: true,
     fields: [
         {label: '隐藏渲染', field: 'forceRender', type: 'boolean', defaultValue: false, desc: '被隐藏时是否渲染 DOM 结构'},
         {label: 'key', field: 'key', type: 'string', desc: '对应 activeKey'},

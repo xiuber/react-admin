@@ -176,23 +176,6 @@ export default function NodeRender(props) {
         });
     }
 
-    const dragClassName = classNames({
-        [styles.draggableElement]: true,
-        [styles.selected]: selectedNodeId === componentId,
-        [styles.dragging]: draggingNode?.id === componentId,
-        [styles.unDraggable]: !draggable,
-
-        [`id_${componentId}`]: true,
-    });
-
-    const dragProps = {
-        draggable,
-        'data-componentDesc': componentDesc,
-        'data-componentDisplayName': componentDisplayName,
-        'data-componentId': componentId,
-        'data-isContainer': isContainer,
-    };
-
     const onNodeClick = (e) => {
 
         if (nodeSelectType === 'meta') {
@@ -215,6 +198,24 @@ export default function NodeRender(props) {
             e.preventDefault && e.preventDefault();
             dragPageAction.setSelectedNodeId(componentId);
         }
+    };
+
+    const dragClassName = classNames({
+        [styles.draggableElement]: true,
+        [styles.selected]: selectedNodeId === componentId,
+        [styles.dragging]: draggingNode?.id === componentId,
+        [styles.unDraggable]: !draggable,
+
+        [`id_${componentId}`]: true,
+    });
+
+    const dragProps = {
+        draggable,
+        'data-componentDesc': componentDesc,
+        'data-componentDisplayName': componentDisplayName,
+        'data-componentId': componentId,
+        'data-isContainer': isContainer,
+        onClick: onNodeClick,
     };
 
     if (withWrapper) {
@@ -255,7 +256,6 @@ export default function NodeRender(props) {
             ...dragProps,
             className: dragClassName + ' dragWrapper',
             style: wStyle,
-            onClick: onNodeClick,
             children: [
                 createElement(component, {
                     ...commonProps,
@@ -266,14 +266,12 @@ export default function NodeRender(props) {
             ],
         });
     }
-
     return createElement(component, {
         ...commonProps,
         ...componentProps,
         ...propsActions,
         ...dragProps,
         className: [dragClassName, componentProps.className].join(' '),
-        onClick: onNodeClick,
     });
 }
 
