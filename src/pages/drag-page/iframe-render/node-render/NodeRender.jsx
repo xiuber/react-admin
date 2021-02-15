@@ -18,9 +18,7 @@ export default function NodeRender(props) {
         isPreview = true,
         // eslint-disable-next-line
         state, // eval 函数中会用到这个变量
-        ...others
     } = props;
-    console.log(others);
 
     if (!config) return null;
 
@@ -64,30 +62,32 @@ export default function NodeRender(props) {
     const componentDisplayName = getComponentDisplayName(config);
     const component = getComponent(config);
 
-    // 处理属性
+    // 处理属性中的节点
     if (fields?.length) {
         fields.filter(item => item.type === 'ReactNode').forEach(item => {
             const {field} = item;
-            const propsConfig = componentProps[field];
+            const propsNode = componentProps[field];
 
-            if (isComponentConfig(propsConfig)) {
+            if (isComponentConfig(propsNode)) {
                 componentProps[field] = (
                     <NodeRender
                         {...props}
-                        config={propsConfig}
+                        config={propsNode}
                     />
                 );
             }
         });
     }
 
+    // 处理子节点
     let childrenEle = children?.length ? children.map(item => {
+        // 比较特殊，需要作为父级的直接子节点，不能使用 NodeRender
         if (['Collapse.Panel', 'Tabs.TabPane'].includes(item.componentName)) {
             const Component = getComponent(item);
             isPreview = isPreview || !childrenDraggable;
             return (
                 <Component {...item.props}>
-                    {item.children.map(it => {
+                    {item?.children?.map(it => {
                         return (
                             <NodeRender
                                 {...props}
@@ -108,6 +108,27 @@ export default function NodeRender(props) {
             />
         );
     }) : undefined;
+
+
+    // 处理当前节点上的包装节点
+    if (wrapper?.length) {
+        wrapper = cloneDeep(wrapper);
+
+        wrapper[0].children = [{...config, wrapper: null}];
+
+        const nextConfig = wrapper.reduce((prev, wrapperConfig) => {
+            wrapperConfig.children = [prev];
+
+            return wrapperConfig;
+        });
+
+        return (
+            <NodeRender
+                {...props}
+                config={nextConfig}
+            />
+        );
+    }
 
     const componentActions = Object.entries(actions)
         .reduce((prev, curr) => {
@@ -138,26 +159,6 @@ export default function NodeRender(props) {
         children: childrenEle,
         ...componentActions,
     };
-
-    if (wrapper?.length) {
-        wrapper = cloneDeep(wrapper);
-
-        wrapper[0].children = [{...config, wrapper: null}];
-
-        const nextConfig = wrapper.reduce((prev, wrapperConfig) => {
-            wrapperConfig.children = [prev];
-
-            return wrapperConfig;
-        });
-
-        return (
-            <NodeRender
-                {...props}
-                config={nextConfig}
-            />
-        );
-    }
-
 
     if (isPreview) {
         return createElement(component, {
