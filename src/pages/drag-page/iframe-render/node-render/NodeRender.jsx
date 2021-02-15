@@ -12,12 +12,14 @@ export default function NodeRender(props) {
         selectedNodeId,
         draggingNode,
         dragPageAction,
-        // activeSideKey, // 左侧激活面板
+        activeSideKey, // 左侧激活面板
         nodeSelectType, // 节点选中方式
-        // iframeDocument,
+        iframeDocument,
         isPreview = true,
         // eslint-disable-next-line
         state, // eval 函数中会用到这个变量
+        contentEditable,
+        ...others
     } = props;
 
     if (!config) return null;
@@ -81,10 +83,11 @@ export default function NodeRender(props) {
 
     // 处理子节点
     let childrenEle = children?.length ? children.map(item => {
+        isPreview = isPreview || !childrenDraggable;
+
         // 比较特殊，需要作为父级的直接子节点，不能使用 NodeRender
         if (['Collapse.Panel', 'Tabs.TabPane'].includes(item.componentName)) {
             const Component = getComponent(item);
-            isPreview = isPreview || !childrenDraggable;
             return (
                 <Component {...item.props}>
                     {item?.children?.map(it => {
@@ -109,6 +112,8 @@ export default function NodeRender(props) {
         );
     }) : undefined;
 
+    // Form.Item 会用到
+    if (childrenEle?.length === 1) childrenEle = childrenEle[0];
 
     // 处理当前节点上的包装节点
     if (wrapper?.length) {
@@ -158,6 +163,7 @@ export default function NodeRender(props) {
         });
 
     const commonProps = {
+        ...others,
         children: childrenEle,
         ...componentActions,
     };
