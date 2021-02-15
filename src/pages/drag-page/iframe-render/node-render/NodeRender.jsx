@@ -130,6 +130,7 @@ export default function NodeRender(props) {
         );
     }
 
+    // 组件配置中定义的事件
     const componentActions = Object.entries(actions)
         .reduce((prev, curr) => {
             const [key, value] = curr;
@@ -142,6 +143,7 @@ export default function NodeRender(props) {
         }, {});
 
 
+    // 组件属性中的事件
     const propsActions = {};
     Object.entries(componentProps)
         .forEach(([key, value]) => {
