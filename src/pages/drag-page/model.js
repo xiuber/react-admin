@@ -362,6 +362,53 @@ export default {
 
         return {pageConfig: {...pageConfig}, refreshProps: {}};
     },
+    moveReplace: (options, state) => {
+        const {pageConfig} = state;
+
+        const {sourceId, targetId} = options;
+
+        const sourceNode = deleteComponentById(pageConfig, sourceId);
+        const targetNode = findNodeById(pageConfig, targetId);
+
+        if (!targetNode) return;
+
+        // 删除所有属性，保留引用
+        Object.keys(targetNode)
+            .forEach(key => {
+                if (key === 'id') return;
+                Reflect.deleteProperty(targetNode, key);
+            });
+        Object.entries(sourceNode).forEach(([key, value]) => {
+            if (key === 'id') return;
+            targetNode[key] = value;
+        });
+
+        return {pageConfig: {...pageConfig}, refreshProps: {}};
+    },
+    addReplace: (options, state) => {
+        const {pageConfig} = state;
+        const {node, targetId} = options;
+
+        // 新增节点，添加id
+        setNodeId(node, true);
+
+        const targetNode = findNodeById(pageConfig, targetId);
+
+        if (!targetNode) return;
+
+        // 删除所有属性，保留引用
+        Object.keys(targetNode)
+            .forEach(key => {
+                if (key === 'id') return;
+                Reflect.deleteProperty(targetNode, key);
+            });
+        Object.entries(node).forEach(([key, value]) => {
+            if (key === 'id') return;
+            targetNode[key] = value;
+        });
+
+        return {pageConfig: {...pageConfig}, refreshProps: {}};
+    },
     addNode: (options, state) => {
         const {node, targetId, isBefore, isAfter, isChildren} = options;
         const {pageConfig} = state;

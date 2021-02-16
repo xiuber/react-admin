@@ -26,11 +26,17 @@ const toggleIsToSetProps = debounce((draggingNode) => {
     draggingNode.toSetProps = !draggingNode.toSetProps;
 }, 100);
 
+const toggleIsReplace = debounce((draggingNode) => {
+    draggingNode.isReplace = !draggingNode.isReplace;
+}, 100);
+
+
 export function getDraggingNodeInfo({e, draggingNode}) {
     if (!e) return draggingNode || {};
 
     const isMetaOrCtrl = (e.metaKey || e.ctrlKey);
     const isAltKey = e.altKey;
+    const isShiftKey = e.shiftKey;
 
     if (isMetaOrCtrl) {
         toggleIsWrapper(draggingNode);
@@ -39,6 +45,13 @@ export function getDraggingNodeInfo({e, draggingNode}) {
     if (isAltKey) {
         toggleIsToSetProps(draggingNode);
     }
+
+    if (isShiftKey) {
+        toggleIsReplace(draggingNode);
+    }
+
+    const {isWrapper, toSetProps, isReplace} = draggingNode;
+    draggingNode.toSelectTarget = isWrapper || toSetProps || isReplace
 
     return draggingNode || {};
 }
@@ -557,6 +570,7 @@ export function handleNodeDrop(options) {
     } = options;
 
     const {
+        isReplace,
         isWrapper,
         toSetProps,
         targetElement,
@@ -576,7 +590,11 @@ export function handleNodeDrop(options) {
     const isChildren = isCenter;
 
     if (!targetElement) return end();
+    const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
+    let componentConfig = e.dataTransfer.getData('componentConfig');
+    componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
 
+    // 设置目标属性
     if (toSetProps) {
         const propsToSet = e.dataTransfer.getData('propsToSet') || draggingNode.propsToSet;
         // 组件节点
@@ -595,10 +613,7 @@ export function handleNodeDrop(options) {
         return end();
     }
 
-    const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
-    let componentConfig = e.dataTransfer.getData('componentConfig');
-    componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
-
+    // 包裹目标
     if (isWrapper) {
         if (sourceComponentId) {
             dragPageAction.moveWrapper({
@@ -610,6 +625,25 @@ export function handleNodeDrop(options) {
 
         if (componentConfig) {
             dragPageAction.addWrapper({
+                targetId: targetComponentId,
+                node: componentConfig,
+            });
+            return end();
+        }
+    }
+
+    // 替换目标
+    if(isReplace) {
+        if (sourceComponentId) {
+            dragPageAction.moveReplace({
+                sourceId: sourceComponentId,
+                targetId: targetComponentId,
+            });
+            return end();
+        }
+
+        if (componentConfig) {
+            dragPageAction.addReplace({
                 targetId: targetComponentId,
                 node: componentConfig,
             });
@@ -695,11 +729,9 @@ export function isDropAccept(options) {
 
     if (!draggingNode) return false;
 
-    const {isWrapper, toSetProps} = getDraggingNodeInfo({e, draggingNode});
+    const {toSelectTarget} = getDraggingNodeInfo({e, draggingNode});
 
-    if (toSetProps) return true;
-
-    if (isWrapper) return true;
+    if (toSelectTarget) return true;
 
     let targetNode;
     if (isChildren) targetNode = findNodeById(pageConfig, targetComponentId);

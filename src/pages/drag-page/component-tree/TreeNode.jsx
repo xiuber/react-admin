@@ -130,10 +130,9 @@ export default config({
         if (isBottom) setDropPosition('bottom');
         if (accept && isCenter) setDropPosition('center');
 
-        const {isWrapper, toSetProps} = getDraggingNodeInfo({e, draggingNode});
-        const isToSelectTarget = isWrapper || toSetProps;
+        const {toSelectTarget} = getDraggingNodeInfo({e, draggingNode});
 
-        if (isToSelectTarget) {
+        if (toSelectTarget) {
             setDropPosition(false);
         }
     }, THROTTLE_TIME, {trailing: false});
