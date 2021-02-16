@@ -73,7 +73,7 @@ export default {
             // eslint-disable-next-line
             fieldDesc: 'node => `弹框「${node.props.title}」是否可见`',
             funcField: `set${Field}`,
-            funcValue: `${propsField} => state[field] = ${propsField}`,
+            funcValue: `${propsField} => state.${field} = ${propsField}`,
         };
     },
     actions: {
