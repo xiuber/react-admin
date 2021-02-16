@@ -337,6 +337,9 @@ export default {
 
         const sourceNode = deleteComponentById(pageConfig, sourceId);
         const targetNode = findNodeById(pageConfig, targetId);
+
+        if (!targetNode) return;
+
         if (!targetNode?.wrapper?.length) targetNode.wrapper = [];
 
         targetNode.wrapper.push(sourceNode);
@@ -352,6 +355,9 @@ export default {
         setNodeId(node, true);
 
         const targetNode = findNodeById(pageConfig, targetId);
+
+        if (!targetNode) return;
+
         if (!targetNode?.wrapper?.length) targetNode.wrapper = [];
         targetNode.wrapper.push(node);
 

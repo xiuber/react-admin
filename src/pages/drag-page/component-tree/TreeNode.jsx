@@ -5,6 +5,7 @@ import {
     getDropGuidePosition,
     isDropAccept,
     setDragImage,
+    getDraggingNodeIsWrapper,
 } from 'src/pages/drag-page/util';
 import {getComponentConfig} from '../component-config';
 import {throttle} from 'lodash';
@@ -94,6 +95,7 @@ export default config({
         const {isTop, isBottom, isCenter} = position;
 
         const accept = isDropAccept({
+            e,
             draggingNode,
             pageConfig,
             targetComponentId: key,
@@ -109,6 +111,7 @@ export default config({
         if (!accept) return;
 
         dragPageAction.setDragOverInfo({
+            e,
             targetElementId: key,
             isTree: true,
             isTop,
@@ -121,7 +124,7 @@ export default config({
         if (accept && isCenter) setDropPosition('center');
 
         const isPropsToSet = draggingNode?.propsToSet;
-        const isWrapper = draggingNode?.isWrapper;
+        const isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
         const isToSelectTarget = isWrapper || isPropsToSet;
 
         if (isToSelectTarget) {

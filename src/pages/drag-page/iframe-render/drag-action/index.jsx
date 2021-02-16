@@ -6,7 +6,9 @@ import {
     isDropAccept,
     getNodeEle,
     getDroppableEle,
-    setDragImage, handleNodDrop,
+    setDragImage,
+    handleNodDrop,
+    getDraggingNodeIsWrapper,
 } from 'src/pages/drag-page/util';
 
 /**
@@ -64,7 +66,8 @@ export default function DragAction(props) {
     const THROTTLE_TIME = 50; // 如果卡顿，可以调整大一些
     const throttleOver = throttle((e) => {
         const isPropsToSet = draggingNode?.propsToSet;
-        const isWrapper = draggingNode?.isWrapper;
+
+        let isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
 
         // 选择一个目标，非投放
         const toSelectedTarget = isPropsToSet || isWrapper;
@@ -92,6 +95,7 @@ export default function DragAction(props) {
         if (!position) return;
 
         const accept = isDropAccept({
+            e,
             draggingNode,
             pageConfig,
             targetComponentId,
@@ -105,6 +109,7 @@ export default function DragAction(props) {
         }
 
         dragPageAction.setDragOverInfo({
+            e,
             targetElement,
             pageX,
             pageY,
@@ -172,6 +177,12 @@ export default function DragAction(props) {
         }
     }
 
+    function handleKeyDown(e) {
+    }
+
+    function handleKeyUp(e) {
+    }
+
     useEffect(() => {
         if (!iframeDocument) return;
         iframeDocument.body.addEventListener('dragstart', handleDragStart);
@@ -180,6 +191,8 @@ export default function DragAction(props) {
         iframeDocument.body.addEventListener('dragend', handleDragEnd);
         iframeDocument.body.addEventListener('drop', handleDrop);
         iframeDocument.body.addEventListener('click', handleClick);
+        iframeDocument.body.addEventListener('keydown', handleKeyDown);
+        iframeDocument.body.addEventListener('keyup', handleKeyUp);
 
         return () => {
             iframeDocument.body.removeEventListener('dragstart', handleDragStart);
@@ -188,6 +201,8 @@ export default function DragAction(props) {
             iframeDocument.body.removeEventListener('dragend', handleDragEnd);
             iframeDocument.body.removeEventListener('drop', handleDrop);
             iframeDocument.body.removeEventListener('click', handleClick);
+            iframeDocument.body.removeEventListener('keydown', handleKeyDown);
+            iframeDocument.body.removeEventListener('keyup', handleKeyUp);
         };
     });
 

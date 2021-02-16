@@ -16,6 +16,17 @@ export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 // eslint-disable-next-line
 export const SHOW_MODAL_FUNCTION = 'e => dragPageAction.showModal("${componentId}")';
 
+export function getDraggingNodeIsWrapper({e, draggingNode}) {
+    let isWrapper = draggingNode?.isWrapper;
+    if (!e) return isWrapper;
+    const isMetaOrCtrl = (e.metaKey || e.ctrlKey);
+    isWrapper = isMetaOrCtrl ? !isWrapper : isWrapper;
+
+    draggingNode.isWrapper = isWrapper;
+    console.log(isWrapper);
+    return isWrapper;
+}
+
 export function loopPageConfig(node, cb) {
     cb(node);
 
@@ -551,8 +562,8 @@ export function handleNodDrop(options) {
     let componentConfig = e.dataTransfer.getData('componentConfig');
     componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
 
-    const sourceNode = componentConfig ? componentConfig : findNodeById(pageConfig, sourceComponentId);
-    const isWrapper = getComponentConfig(sourceNode?.componentName)?.isWrapper;
+    // const sourceNode = componentConfig ? componentConfig : findNodeById(pageConfig, sourceComponentId);
+    const isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
 
     // 可投放元素
     const targetElement = isWrapper ? e.target : getDroppableEle(e.target);
@@ -584,6 +595,7 @@ export function handleNodDrop(options) {
     const {pageX, pageY, clientX, clientY} = e;
 
     const position = getDropPosition({
+        e,
         pageX,
         pageY,
         clientX,
@@ -594,6 +606,7 @@ export function handleNodDrop(options) {
 
     if (!position) return end();
     const accept = isDropAccept({
+        e,
         draggingNode,
         pageConfig,
         targetComponentId,
@@ -660,6 +673,7 @@ export function getDropPosition(options) {
 // 是否接受放入
 export function isDropAccept(options) {
     const {
+        e,
         draggingNode,
         pageConfig,
         targetComponentId,
@@ -672,7 +686,8 @@ export function isDropAccept(options) {
 
     if (draggingNode.propsToSet) return true;
 
-    if (draggingNode?.isWrapper) return true;
+    const isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
+    if (isWrapper) return true;
 
     let targetNode;
     if (isChildren) targetNode = findNodeById(pageConfig, targetComponentId);

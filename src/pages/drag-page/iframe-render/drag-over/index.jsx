@@ -1,7 +1,13 @@
 import {useEffect, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import styles from './style.less';
-import {getDropGuidePosition, LINE_SIZE, /*TRIGGER_SIZE,*/ usePrevious} from 'src/pages/drag-page/util';
+import {
+    getDropGuidePosition,
+    LINE_SIZE,
+    /*TRIGGER_SIZE,*/
+    usePrevious,
+    getDraggingNodeIsWrapper,
+} from 'src/pages/drag-page/util';
 
 export default config({
     connect: state => {
@@ -34,6 +40,7 @@ export default config({
 
         if (dragOverInfo) {
             let {
+                e,
                 targetElement,
                 guidePosition,
 
@@ -45,7 +52,7 @@ export default config({
             } = dragOverInfo;
 
             const isPropsToSet = draggingNode?.propsToSet;
-            const isWrapper = draggingNode?.isWrapper;
+            const isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
             const toSelectTarget = isPropsToSet || isWrapper;
 
             if (isTree) {
