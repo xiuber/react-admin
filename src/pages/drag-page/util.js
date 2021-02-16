@@ -104,6 +104,12 @@ export function isComponentConfig(node) {
     return !!node?.componentName;
 }
 
+export function deleteNodeId(node) {
+    loopPageConfig(node, node => {
+        Reflect.deleteProperty(node, 'id');
+    });
+}
+
 // 设置id
 export function setNodeId(node, force) {
     loopPageConfig(node, node => {

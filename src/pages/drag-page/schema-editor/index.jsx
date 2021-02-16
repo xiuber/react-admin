@@ -6,8 +6,7 @@ import CodeEditor from 'src/pages/drag-page/code-editor';
 import {
     findNodeById,
     usePrevious,
-    loopIdToFirst,
-    deleteUnLinkedIds,
+    deleteNodeId,
     setNodeId,
     isFunctionString,
     loopPageConfig,
@@ -53,46 +52,14 @@ export default config({
         setVisible(visible);
     }, [activeSideKey]);
 
-    function findIdPosition(value) {
-        const nodeConfig = codeToObject(value);
-        if (nodeConfig instanceof Error) return;
-
-        const ids = [];
-        loopPageConfig(nodeConfig, node => {
-            if (node.id) ids.push(node.id);
-        });
-
-        // 查询所有id在value中出现的位置
-        const idPosition = [];
-
-        const values = value.split('\n');
-        let n = 0;
-        values.forEach((val, index) => {
-            if (val.includes('/*')) n++;
-            if (val.includes('*/')) n--;
-            // 多行注释中
-            if (n > 0) return;
-            // 单行注释中
-            if (val.trim().startsWith('//')) return;
-
-            if (val.trim().startsWith('id')) {
-                const id = ids.find(id => val.includes(id));
-                if (id) {
-                    idPosition.push({id, index});
-                }
-            }
-        });
-
-        return idPosition;
-
-    }
-
+    // 将代码转换为对象
     function codeToObject(code) {
         if (!code) return null;
 
         const val = code.replace('export', '').replace('default', '');
         try {
             let obj;
+            // 直接通过eval执行，保留函数
             // eslint-disable-next-line
             eval(`obj = ${val}`);
 
@@ -146,44 +113,21 @@ export default config({
         const nodeConfig = codeToObject(value);
         if (nodeConfig instanceof Error) return message.error(nodeConfig.message);
 
-        const idPosition = findIdPosition(value);
-        const ids = [];
-        const repeatIds = [];
-        idPosition.forEach(item => {
-            if (!ids.some(it => it.id === item.id)) {
-                ids.push(item);
-            } else {
-                repeatIds.push(item);
-            }
-        });
-
-        if (repeatIds?.length) {
-            const messages = [];
-            repeatIds.forEach(item => {
-                const prevId = ids.find(it => it.id === item.id);
-                messages.push(`第 ${prevId.index + 1} 行 与 第 ${item.index + 1} 行「id」重复！`);
-            });
-            messages.push('请修改后保存！');
-            const msg = messages.map(item => <div>{item}</div>);
-            return message.error(msg);
-        }
-
         let nextPageConfig;
 
         // 编辑单独节点
         if (editType !== EDIT_TYPE.ALL) {
-            const componentId = nodeConfig?.id;
-            const node = findNodeById(pageConfig, componentId);
-
-            if (!node) return message.error('节点无法对应，您是否修改了根节点的id?');
-
             // 删除所有数据，保留引用
-            Object.keys(node).forEach(key => {
-                Reflect.deleteProperty(node, key);
+            Object.keys(selectedNode).forEach(key => {
+
+                // 不删除
+                if (['id'].includes(key)) return;
+
+                Reflect.deleteProperty(selectedNode, key);
             });
             // 赋值
             Object.entries(nodeConfig).forEach(([key, value]) => {
-                node[key] = value;
+                selectedNode[key] = value;
             });
             nextPageConfig = pageConfig;
         } else {
@@ -218,10 +162,7 @@ export default config({
         }
 
         const allNodes = cloneDeep(pageConfig);
-        const node = findNodeById(allNodes, selectedNode?.id);
-
-        // 清除非关联id， 当前选中节点id不能删
-        deleteUnLinkedIds(allNodes, [node?.id]);
+        const node = cloneDeep(selectedNode);
 
         let editNode;
         if (editType === EDIT_TYPE.CURRENT_NODE) editNode = node;
@@ -235,11 +176,11 @@ export default config({
         // 清除默认值
         deleteDefaultProps(editNode);
 
-        // id 属性调整到首位
-        loopIdToFirst(editNode);
+        // 清除所有id
+        deleteNodeId(editNode);
 
+        // 函数处理成非字符串形式
         const FUNCTION_HOLDER = '___function___';
-
         loopPageConfig(editNode, node => {
             const nodeConfig = getComponentConfig(node.componentName);
             const beforeSchemaEdit = nodeConfig?.hooks?.beforeSchemaEdit;
@@ -259,6 +200,7 @@ export default config({
             }
         });
 
+        // 拼接代码
         let nextCode = `export default ${JSON5.stringify(editNode, null, 2)}`;
         nextCode = nextCode.replace(RegExp(`'${FUNCTION_HOLDER}`, 'g'), '');
         nextCode = nextCode.replace(RegExp(`${FUNCTION_HOLDER}'`, 'g'), '');
