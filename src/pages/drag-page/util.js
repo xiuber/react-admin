@@ -175,7 +175,7 @@ export function deleteUnLinkedIds(nodeConfig, keepIds = []) {
 export function findLinkSourceComponentIds(pageConfig) {
     const ids = [];
     loopPageConfig(pageConfig, node => {
-        const propsToSet = getComponentConfig(node.componentName).propsToSet;
+        const propsToSet = node.propsToSet;
         const componentId = node.id;
 
         if (propsToSet) {
@@ -694,7 +694,7 @@ export function isDropAccept(options) {
 
     if (!draggingNode) return false;
 
-    if (draggingNode.propsToSet) return true;
+    if (draggingNode.toSetProps) return true;
 
     const isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
     if (isWrapper) return true;

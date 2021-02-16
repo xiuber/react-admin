@@ -17,7 +17,7 @@ export default config({
 
     selectedNode = node || selectedNode;
 
-    const hasPropsToSet = getComponentConfig(selectedNode?.componentName).propsToSet;
+    const hasPropsToSet = selectedNode?.propsToSet;
 
     const name = getComponentDisplayName(selectedNode);
 

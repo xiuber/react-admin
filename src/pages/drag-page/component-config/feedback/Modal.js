@@ -34,17 +34,6 @@ export default {
         );
     },
 
-    propsToSet: {
-        onClick: '() => state.setVisible(true)',
-        onCancel: '() => state.setVisible(false)',
-        setState: state => {
-            state.visible = false;
-            state.setVisible = (visible) => {
-                state.visible = visible;
-            };
-        },
-    },
-
     // 需要使用的state数据
     state: (options) => {
         const {state, node} = options;

@@ -170,11 +170,11 @@ export default [
     },
 
     {
-        title: '折叠面板页面',
-        subTitle: '折叠面板页面 Collapse.Panel',
+        title: '折叠面板页',
+        subTitle: '折叠面板页 Collapse.Panel',
         children: [
             {
-                title: '折叠面板页面',
+                title: '折叠面板页',
                 renderPreview: false,
                 config: {
                     componentName: 'Collapse.Panel',

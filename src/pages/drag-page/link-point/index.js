@@ -60,7 +60,7 @@ export default config({
 
         e.dataTransfer.setData('propsToSet', str);
 
-        dragPageAction.setDraggingNode({propsToSet: true});
+        dragPageAction.setDraggingNode({toSetProps: true});
 
         const center = getEleCenterInWindow(e.target);
         if (center) {

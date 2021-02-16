@@ -59,8 +59,6 @@ const defaultConfig = {
     isContainer: true, // 组件是否是容器，默认true，如果是容器，则可托放入子节点
     withDragProps: true, // 不使用dragProps 有些组件dragProps添加的位置不准确或者没有添加上，通过 afterRender修复，这时候可能不需要NodeRender中添加dragProps了
 
-    // propsToSet: '', // 连接时，要设置的属性
-
     // dropAccept: undefined, // 'text' || ['Text'] || function({draggingNode, targetNode, pageConfig,}), // 可接受拖入的组件，默认 任意组件都接收
     // dropInto: undefined, // 'text' || ['Text'] || function({draggingNode, targetNode, pageConfig,}), // 可放入的目标组件，默认 可以放入任何组件中
     // 如果某个组件必须存在子元素，可以添加 withHolder: true, 提示用户必须拖入子元素，比如 Form.Item，但是div不要设置true，有些情况div不需要子元素

@@ -65,12 +65,12 @@ export default function DragAction(props) {
 
     const THROTTLE_TIME = 50; // 如果卡顿，可以调整大一些
     const throttleOver = throttle((e) => {
-        const isPropsToSet = draggingNode?.propsToSet;
+        const isToSetProps = draggingNode?.toSetProps;
 
         let isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
 
         // 选择一个目标，非投放
-        const toSelectedTarget = isPropsToSet || isWrapper;
+        const toSelectedTarget = isToSetProps || isWrapper;
 
         const targetElement = toSelectedTarget ? getNodeEle(e.target) : getDroppableEle(e.target);
 
@@ -129,8 +129,8 @@ export default function DragAction(props) {
         const isCopy = draggingNode?.isNewAdd;
         if (isCopy) cursor = 'copy';
 
-        const isPropsToSet = draggingNode?.propsToSet;
-        if (isPropsToSet) cursor = 'link';
+        const isToSetProps = draggingNode?.toSetProps;
+        if (isToSetProps) cursor = 'link';
 
         e.dataTransfer.dropEffect = cursor;
 

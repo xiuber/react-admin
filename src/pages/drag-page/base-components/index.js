@@ -6,6 +6,7 @@ import dataInput from './data-input';
 import dataShow from './data-show';
 import feedback from './feedback';
 import other from './other';
+import icon from './icon';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 const defaultConfig = {
@@ -30,6 +31,7 @@ export default [
     {title: '数据展示', children: dataShow},
     {title: '反馈', children: feedback},
     {title: '其他', children: other},
+    {title: '图标', children: icon},
 ].map(item => {
     item.id = uuid();
     item.children = setDefaultOptions(item.children);

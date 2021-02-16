@@ -123,9 +123,9 @@ export default config({
         if (isBottom) setDropPosition('bottom');
         if (accept && isCenter) setDropPosition('center');
 
-        const isPropsToSet = draggingNode?.propsToSet;
+        const isToSetProps = draggingNode?.toSetProps;
         const isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
-        const isToSelectTarget = isWrapper || isPropsToSet;
+        const isToSelectTarget = isWrapper || isToSetProps;
 
         if (isToSelectTarget) {
             setDropPosition(false);
@@ -141,12 +141,12 @@ export default config({
         const isCopy = draggingNode?.isNewAdd;
         if (isCopy) cursor = 'copy';
 
-        const isPropsToSet = draggingNode?.propsToSet;
-        if (isPropsToSet) cursor = 'link';
+        const isToSetProps = draggingNode?.toSetProps;
+        if (isToSetProps) cursor = 'link';
 
         e.dataTransfer.dropEffect = cursor;
 
-        if (!isPropsToSet && !draggable) return;
+        if (!isToSetProps && !draggable) return;
 
         throttleOver(e);
     }

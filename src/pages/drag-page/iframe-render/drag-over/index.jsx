@@ -51,9 +51,9 @@ export default config({
                 isCenter,
             } = dragOverInfo;
 
-            const isPropsToSet = draggingNode?.propsToSet;
+            const isToSetProps = draggingNode?.toSetProps;
             const isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
-            const toSelectTarget = isPropsToSet || isWrapper;
+            const toSelectTarget = isToSetProps || isWrapper;
 
             if (isTree) {
                 targetElement = frameDocument.querySelector(`[data-component-id="${targetElementId}"]`);

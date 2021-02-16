@@ -31,8 +31,8 @@ export default config({
         iframeDocument,
     } = props;
 
-    const nodeConfig = getComponentConfig(selectedNode?.componentName);
-    const propsToSet = nodeConfig.propsToSet;
+    const propsToSet = selectedNode?.propsToSet;
+
     const sourceLinkPointEle = document.getElementById('sourceLinkPoint');
 
     function getStyle(item) {
