@@ -7,6 +7,7 @@ import * as antdComponent from 'antd/es';
 import * as antdIcon from '@ant-design/icons';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import {v4 as uuid} from 'uuid';
+import {debounce} from 'lodash';
 
 export const OTHER_HEIGHT = 0;
 
@@ -14,17 +15,20 @@ export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 // eslint-disable-next-line
-export const SHOW_MODAL_FUNCTION = 'e => dragPageAction.showModal("${componentId}")';
+
+const toggleIsWrapper = debounce((draggingNode) => {
+    draggingNode.isWrapper = !draggingNode.isWrapper;
+}, 100);
 
 export function getDraggingNodeIsWrapper({e, draggingNode}) {
-    let isWrapper = draggingNode?.isWrapper;
-    if (!e) return isWrapper;
-    const isMetaOrCtrl = (e.metaKey || e.ctrlKey);
-    isWrapper = isMetaOrCtrl ? !isWrapper : isWrapper;
+    if (!e) return draggingNode?.isWrapper;
 
-    draggingNode.isWrapper = isWrapper;
-    console.log(isWrapper);
-    return isWrapper;
+    const isMetaOrCtrl = (e.metaKey || e.ctrlKey);
+    if (isMetaOrCtrl) {
+        toggleIsWrapper(draggingNode);
+    }
+
+    return draggingNode?.isWrapper;
 }
 
 export function loopPageConfig(node, cb) {

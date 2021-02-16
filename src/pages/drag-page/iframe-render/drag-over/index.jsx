@@ -179,10 +179,13 @@ function showDropGuideLine(position) {
     guideBgEle.style.width = `${targetWidth}px`;
     guideBgEle.style.height = `${targetHeight}px`;
 
-
-    if (!guideLine) return;
-
     const guildTipEle = guideLineEle.querySelector('span');
+
+    if (!guideLine) {
+        guideLineEle.classList.remove(styles.guideActive);
+        return;
+    }
+
     guideLineEle.classList.add(styles.guideActive);
     guideLineEle.classList.remove(styles.gLeft);
     guideLineEle.classList.remove(styles.gRight);
