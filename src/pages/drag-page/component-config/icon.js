@@ -11,6 +11,11 @@ Object.keys(antdIcon)
         antdIconConfig[key] = {
             isContainer: false,
             icon: <Icon/>,
+            propsToSet: {
+                icon: {
+                    componentName: key,
+                },
+            },
         };
     });
 

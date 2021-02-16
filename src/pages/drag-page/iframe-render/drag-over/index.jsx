@@ -49,6 +49,7 @@ export default config({
                 isTop,
                 isBottom,
                 isCenter,
+                accept,
             } = dragOverInfo;
 
             const {isWrapper, toSetProps} = getDraggingNodeInfo({e, draggingNode});
@@ -89,6 +90,18 @@ export default config({
                 targetElement,
                 targetRect: guidePosition.target.targetRect,
             });
+
+            if (draggingNode) {
+                draggingNode.targetElementId = targetElementId;
+                draggingNode.targetElement = targetElement;
+                draggingNode.isTree = isTree;
+                draggingNode.accept = accept;
+                Object.entries(guidePosition.position)
+                    .forEach(([key, value]) => {
+                        draggingNode[key] = value;
+                    });
+            }
+
         } else if (prevDragOverInfo) {
             let {
                 targetElement,

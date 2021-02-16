@@ -19,11 +19,6 @@ export default [
                         previewStyle: {fontSize: 20},
                         icon: false,
                         config: {
-                            propsToSet: {
-                                icon: {
-                                    componentName,
-                                },
-                            },
                             componentName: componentName,
                         },
                     };

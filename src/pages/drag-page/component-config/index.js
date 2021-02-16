@@ -198,6 +198,14 @@ export function getComponentConfig(componentName) {
     return config;
 }
 
+// 设置节点的默认值
+export function setNodeDefault(node) {
+    loopPageConfig(node, node => {
+        const config = getComponentConfig(node.componentName);
+        if (!('propsToSet' in node) && config.propsToSet) node.propsToSet = config.propsToSet;
+    });
+}
+
 // 获取组件展示名称
 export function getComponentDisplayName(node, render) {
     if (!node) return '';

@@ -258,7 +258,6 @@ export default {
 
         return {pageConfig};
     },
-
     deleteNodeById: (id, state) => {
         let {pageConfig, selectedNodeId, selectedNode} = state;
 
@@ -440,7 +439,6 @@ export default {
         return result;
     },
 };
-
 
 function addOrMoveNode(options) {
     const {

@@ -117,6 +117,7 @@ export default config({
             isTop,
             isBottom,
             isCenter,
+            accept,
         });
 
         if (isTop) setDropPosition('top');

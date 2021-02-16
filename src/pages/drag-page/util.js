@@ -5,7 +5,7 @@ import * as raLibComponent from 'ra-lib';
 import * as components from './components';
 import * as antdComponent from 'antd/es';
 import * as antdIcon from '@ant-design/icons';
-import {getComponentConfig} from 'src/pages/drag-page/component-config';
+import {getComponentConfig, setNodeDefault} from 'src/pages/drag-page/component-config';
 import {v4 as uuid} from 'uuid';
 import {debounce} from 'lodash';
 
@@ -72,10 +72,8 @@ export function getNextField(obj, field) {
 
     const nums = [0];
     Object.keys(obj).forEach(key => {
-        console.log(key);
         const result = RegExp(`${field}(\\d+$)`).exec(key);
         if (result) {
-            console.log(result);
             nums.push(window.parseInt(result[1]));
         }
     });
@@ -553,22 +551,31 @@ export function getDroppableEle(target) {
 export function handleNodeDrop(options) {
     const {
         e,
-        iframeDocument,
         end,
-        pageConfig,
         draggingNode,
         dragPageAction,
-        isTree,
     } = options;
 
-    const {isWrapper, toSetProps} = getDraggingNodeInfo({e, draggingNode});
+    const {
+        isWrapper,
+        toSetProps,
+        targetElement,
+        targetElementId: targetComponentId,
 
-    // 可投放元素
-    const targetElement = (isWrapper || toSetProps || isTree) ? getNodeEle(e.target) : getDroppableEle(e.target);
+        isBottom,
+        isCenter,
+        isLeft,
+        isRight,
+        isTop,
+
+        accept,
+    } = getDraggingNodeInfo({e, draggingNode});
+
+    const isBefore = isTop || isLeft;
+    const isAfter = isBottom || isRight;
+    const isChildren = isCenter;
 
     if (!targetElement) return end();
-
-    const targetComponentId = targetElement.getAttribute('data-component-id');
 
     if (toSetProps) {
         const propsToSet = e.dataTransfer.getData('propsToSet') || draggingNode.propsToSet;
@@ -579,6 +586,7 @@ export function handleNodeDrop(options) {
         Object.values(newProps)
             .filter(value => isComponentConfig(value))
             .forEach(value => {
+                setNodeDefault(value);
                 setNodeId(value, true);
             });
 
@@ -592,7 +600,6 @@ export function handleNodeDrop(options) {
     componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
 
     if (isWrapper) {
-
         if (sourceComponentId) {
             dragPageAction.moveWrapper({
                 sourceId: sourceComponentId,
@@ -613,43 +620,15 @@ export function handleNodeDrop(options) {
     // 放在自身上
     if (targetComponentId === sourceComponentId) return end();
 
-    const {pageX, pageY, clientX, clientY} = e;
-
-    const position = getDropPosition({
-        e,
-        pageX,
-        pageY,
-        clientX,
-        clientY,
-        targetElement,
-        frameDocument: iframeDocument,
-    });
-
-    if (!position) return end();
-
-    if (isTree) {
-        position.isLeft = false;
-        position.isRight = false;
-        position.isBefore = position.isTop;
-        position.isAfter = position.isBottom;
-        position.isChildren = position.isCenter;
-    }
-
-    const accept = isDropAccept({
-        e,
-        draggingNode,
-        pageConfig,
-        targetComponentId,
-        ...position,
-    });
-
     if (!accept) return end();
 
     if (sourceComponentId) {
         dragPageAction.moveNode({
             sourceId: sourceComponentId,
             targetId: targetComponentId,
-            ...position,
+            isBefore,
+            isAfter,
+            isChildren,
         });
         // dragPageAction.setSelectedNodeId(sourceComponentId);
     }
@@ -658,7 +637,9 @@ export function handleNodeDrop(options) {
         dragPageAction.addNode({
             targetId: targetComponentId,
             node: componentConfig,
-            ...position,
+            isBefore,
+            isAfter,
+            isChildren,
         });
         // dragPageAction.setSelectedNodeId(componentConfig.id);
     }

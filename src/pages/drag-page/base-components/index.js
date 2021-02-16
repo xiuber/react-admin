@@ -7,7 +7,7 @@ import dataShow from './data-show';
 import feedback from './feedback';
 import other from './other';
 import icon from './icon';
-import {getComponentConfig} from 'src/pages/drag-page/component-config';
+import {getComponentConfig, setNodeDefault} from 'src/pages/drag-page/component-config';
 
 const defaultConfig = {
     // title: '页面容器', // 组件
@@ -53,8 +53,10 @@ export function setDefaultOptions(nodes) {
                     if (!(key in item)) item[key] = value;
                 });
 
-            const {config: {componentName}} = item;
-            if (!item.icon && item.icon !== false) item.icon = getComponentConfig(componentName).icon;
+            const {config} = item;
+
+            if (!item.icon && item.icon !== false) item.icon = getComponentConfig(config.componentName).icon;
+            setNodeDefault(config);
         });
     });
     return nodes;

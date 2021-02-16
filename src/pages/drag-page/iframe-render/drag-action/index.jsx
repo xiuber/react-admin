@@ -109,11 +109,13 @@ export default function DragAction(props) {
         dragPageAction.setDragOverInfo({
             e,
             targetElement,
+            targetElementId: targetComponentId,
             pageX,
             pageY,
             clientX,
             clientY,
             guidePosition: position.guidePosition,
+            accept,
         });
     }, THROTTLE_TIME, {trailing: false});
 
