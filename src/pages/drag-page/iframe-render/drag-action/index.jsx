@@ -7,7 +7,7 @@ import {
     getNodeEle,
     getDroppableEle,
     setDragImage,
-    handleNodDrop,
+    handleNodeDrop,
     getDraggingNodeInfo,
 } from 'src/pages/drag-page/util';
 
@@ -144,7 +144,7 @@ export default function DragAction(props) {
             handleDragEnd();
         };
 
-        handleNodDrop({
+        handleNodeDrop({
             e,
             iframeDocument,
             end,

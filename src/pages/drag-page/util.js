@@ -518,7 +518,7 @@ export function getNodeEle(target) {
 
     if (isNodeEle) return target;
 
-    return getDroppableEle(target.parentNode);
+    return getNodeEle(target.parentNode);
 }
 
 // 可投放元素 自身是容器，或则父级组件是容器
@@ -556,7 +556,7 @@ export function getDroppableEle(target) {
     return getDroppableEle(parentComponent);
 }
 
-export function handleNodDrop(options) {
+export function handleNodeDrop(options) {
     const {
         e,
         iframeDocument,
@@ -564,15 +564,21 @@ export function handleNodDrop(options) {
         pageConfig,
         draggingNode,
         dragPageAction,
+        isTree,
     } = options;
 
     const {isWrapper, toSetProps} = getDraggingNodeInfo({e, draggingNode});
+
+    // 可投放元素
+    const targetElement = (isWrapper || toSetProps || isTree) ? getNodeEle(e.target) : getDroppableEle(e.target);
+
+    if (!targetElement) return end();
+
+    const targetComponentId = targetElement.getAttribute('data-component-id');
+
     if (toSetProps) {
         const propsToSet = e.dataTransfer.getData('propsToSet') || draggingNode.propsToSet;
         // 组件节点
-        const nodeEle = getNodeEle(e.target);
-        if (!nodeEle) return end();
-
         const newProps = typeof propsToSet === 'string' ? JSON.parse(propsToSet) : propsToSet;
 
         // 如果是组件节点，设置id
@@ -582,9 +588,7 @@ export function handleNodDrop(options) {
                 setNodeId(value, true);
             });
 
-        const componentId = nodeEle.getAttribute('data-component-id');
-
-        dragPageAction.setNewProps({componentId, newProps});
+        dragPageAction.setNewProps({componentId: targetComponentId, newProps});
 
         return end();
     }
@@ -593,14 +597,8 @@ export function handleNodDrop(options) {
     let componentConfig = e.dataTransfer.getData('componentConfig');
     componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
 
-
-    // 可投放元素
-    const targetElement = isWrapper ? e.target : getDroppableEle(e.target);
-
-    if (!targetElement) return end();
-    const targetComponentId = targetElement.getAttribute('data-component-id');
-
     if (isWrapper) {
+
         if (sourceComponentId) {
             dragPageAction.moveWrapper({
                 sourceId: sourceComponentId,
@@ -634,6 +632,15 @@ export function handleNodDrop(options) {
     });
 
     if (!position) return end();
+
+    if (isTree) {
+        position.isLeft = false;
+        position.isRight = false;
+        position.isBefore = position.isTop;
+        position.isAfter = position.isBottom;
+        position.isChildren = position.isCenter;
+    }
+    
     const accept = isDropAccept({
         e,
         draggingNode,

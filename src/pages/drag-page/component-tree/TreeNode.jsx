@@ -1,7 +1,7 @@
 import React, {useState, useRef} from 'react';
 import config from 'src/commons/config-hoc';
 import {
-    handleNodDrop,
+    handleNodeDrop,
     getDropGuidePosition,
     isDropAccept,
     setDragImage,
@@ -178,13 +178,14 @@ export default config({
 
         const iframeDocument = window.document;
 
-        handleNodDrop({
+        handleNodeDrop({
             e,
             iframeDocument,
             end,
             pageConfig,
             draggingNode,
             dragPageAction,
+            isTree: true,
         });
     }
 
