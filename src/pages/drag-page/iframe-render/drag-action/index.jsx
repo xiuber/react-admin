@@ -103,6 +103,8 @@ export default function DragAction(props) {
         if (!accept) {
             // e.dataTransfer.dropEffect = 'move';
             // e.dataTransfer.effectAllowed = 'copy';
+            draggingNode.accept = false;
+            dragPageAction.setDragOverInfo(null);
             return;
         }
 

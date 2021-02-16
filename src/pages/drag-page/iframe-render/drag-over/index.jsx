@@ -114,7 +114,7 @@ export default config({
             }
 
             leaveElement(targetElement);
-            timeRef.current = setTimeout(() => hideDropGuide(), 100);
+            timeRef.current = setTimeout(() => hideDropGuide(), 300);
         }
     }, [dragOverInfo, draggingNode]);
 

@@ -104,11 +104,17 @@ export default config({
             isChildren: isCenter,
         });
 
+        // 如果父级是 wrapper_ ??
+
         setDropPosition('');
         setDragIn(true);
         setAccept(accept);
 
-        if (!accept) return;
+        if (!accept) {
+            draggingNode.accept = accept;
+            dragPageAction.setDragOverInfo(null);
+            return;
+        }
 
         dragPageAction.setDragOverInfo({
             e,

@@ -97,6 +97,7 @@ export default config({
                     title: '',
                     name: 'wrapper',
                     draggable: false,
+                    isContainer: true,
                     nodeData: {},
                     children: cloneDeep(wrapper).map((w, index) => {
                         Reflect.deleteProperty(w, 'children');
