@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect} from 'react';
 import config from 'src/commons/config-hoc';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import FieldEditor from './field-editor';
@@ -25,6 +25,7 @@ export default config({
         action: {dragPage: dragPageAction},
     } = props;
     const rootRef = useRef(null);
+    const spaceRef = useRef(null);
 
     const [height] = useHeight(rootRef, OTHER_HEIGHT);
 
@@ -73,10 +74,29 @@ export default config({
         dragPageAction.render();
     }
 
+    // 设置组件列表底部站位高度
+    useEffect(() => {
+        if (!selectedNode) return;
+        if (!rootRef.current) return;
+
+        const elements = Array.from(document.querySelectorAll('#component-props > section'));
+
+        if (!elements?.length) return;
+
+        const element = elements[elements.length - 1];
+        const elementRect = element.getBoundingClientRect();
+        const {height} = elementRect;
+
+        spaceRef.current.style.height = `calc(100% - ${height}px)`;
+
+    }, [selectedNode, spaceRef.current, rootRef.current]);
+
     return (
         <div
+            id="component-props"
             ref={rootRef}
             style={{
+                position: 'relative',
                 height,
                 overflow: 'auto',
             }}
@@ -91,24 +111,27 @@ export default config({
             />
             {selectedNode?.wrapper?.length ? selectedNode.wrapper.map((node, index) => {
                 return (
-                    <FieldEditor
-                        tip="相关："
-                        tool={(
-                            <Button
-                                style={{marginRight: 8}}
-                                type="text"
-                                danger
-                                onClick={() => handleDelete(index)}
-                            >删除</Button>
-                        )}
-                        dragPageAction={dragPageAction}
-                        rightSideWidth={rightSideWidth}
-                        selectedNode={node}
-                        refreshProps={refreshProps}
-                        onChange={(...args) => handleChange(node, ...args)}
-                    />
+                    <section>
+                        <FieldEditor
+                            tip="相关："
+                            tool={(
+                                <Button
+                                    style={{marginRight: 8}}
+                                    type="text"
+                                    danger
+                                    onClick={() => handleDelete(index)}
+                                >删除</Button>
+                            )}
+                            dragPageAction={dragPageAction}
+                            rightSideWidth={rightSideWidth}
+                            selectedNode={node}
+                            refreshProps={refreshProps}
+                            onChange={(...args) => handleChange(node, ...args)}
+                        />
+                    </section>
                 );
             }) : null}
+            <div ref={spaceRef}/>
         </div>
     );
 });

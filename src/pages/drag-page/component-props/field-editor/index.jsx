@@ -32,6 +32,7 @@ export default function ComponentProps(props) {
 
     const [form] = Form.useForm();
     const rootRef = useRef(null);
+    const containerRef = useRef(null);
     const [propFields, setPropFields] = useState([]);
     const [labelCol, setLabelCol] = useState({flex: '80px'});
     const [propsEditorVisible, setPropsEditorVisible] = useState(false);
@@ -214,48 +215,50 @@ export default function ComponentProps(props) {
     }, [propsEditorVisible, rightSideWidth]);
 
     return (
-        <Pane
-            fitHeight={fitHeight}
-            header={(
-                <div styleName="header">
-                    <CurrentSelectedNode tip={tip} node={selectedNode}/>
-                    <div>
-                        {tool}
-                        <DesktopOutlined
-                            disabled={!selectedNode}
-                            styleName="tool"
-                            onClick={() => setPropsEditorVisible(!propsEditorVisible)}
-                        />
-                    </div>
-                </div>
-            )}
-        >
+        <div ref={containerRef}>
             <PropsEditor
+                editorRootEle={containerRef.current}
                 onChange={values => onChange({}, values, true)}
                 visible={propsEditorVisible}
                 onCancel={() => setPropsEditorVisible(false)}
                 selectedNode={selectedNode}
             />
+            <Pane
+                fitHeight={fitHeight}
+                header={(
+                    <div styleName="header">
+                        <CurrentSelectedNode tip={tip} node={selectedNode}/>
+                        <div>
+                            {tool}
+                            <DesktopOutlined
+                                disabled={!selectedNode}
+                                styleName="tool"
+                                onClick={() => setPropsEditorVisible(!propsEditorVisible)}
+                            />
+                        </div>
+                    </div>
+                )}
+            >
+                <div styleName="root" ref={rootRef}>
+                    <ConfigProvider autoInsertSpaceInButton={false} getPopupContainer={() => rootRef.current}>
+                        <Form
+                            form={form}
+                            onValuesChange={onChange}
+                            name={selectedNode?.componentName || 'props'}
+                        >
+                            <Row>
+                                {propFields.filter(item => !item.category)
+                                    .map((item, index) => {
+                                        let category = renderCategory(index);
+                                        const field = renderField(item);
 
-            <div styleName="root" ref={rootRef}>
-                <ConfigProvider autoInsertSpaceInButton={false} getPopupContainer={() => rootRef.current}>
-                    <Form
-                        form={form}
-                        onValuesChange={onChange}
-                        name={selectedNode?.componentName || 'props'}
-                    >
-                        <Row>
-                            {propFields.filter(item => !item.category)
-                                .map((item, index) => {
-                                    let category = renderCategory(index);
-                                    const field = renderField(item);
-
-                                    return [category, field];
-                                })}
-                        </Row>
-                    </Form>
-                </ConfigProvider>
-            </div>
-        </Pane>
+                                        return [category, field];
+                                    })}
+                            </Row>
+                        </Form>
+                    </ConfigProvider>
+                </div>
+            </Pane>
+        </div>
     );
 }

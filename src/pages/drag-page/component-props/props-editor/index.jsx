@@ -6,6 +6,7 @@ import JSON5 from 'json5';
 import {cloneDeep} from 'lodash';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import './style.less';
+import {scrollElement} from 'src/pages/drag-page/util';
 
 export default config({
     connect: state => {
@@ -18,6 +19,7 @@ export default config({
 })(function StyleEditor(props) {
     const {
         visible,
+        editorRootEle,
         onChange,
         onCancel,
         draggingNode,
@@ -26,6 +28,7 @@ export default config({
     } = props;
 
     const saveRef = useRef(false);
+    const rootRef = useRef(null);
 
     const [code, setCode] = useState('');
 
@@ -85,10 +88,30 @@ export default config({
         setCode(nextCode);
     }, [visible, selectedNode]);
 
+    useEffect(() => {
+        const ele = document.getElementById('component-props');
+
+        if (!ele) return;
+
+        // ele.style.overflow = visible ? 'hidden' : 'auto';
+
+
+        if (!editorRootEle) return;
+        if (!rootRef.current) return;
+        console.log(editorRootEle);
+
+        console.log(ele);
+        scrollElement(ele, editorRootEle, true, true);
+
+        rootRef.current.style.top = `${ele.scrollTop + 45}px`;
+        rootRef.current.style.bottom = `-${ele.scrollTop}px`;
+
+    }, [visible, editorRootEle, rootRef.current]);
+
     if (!visible) return null;
 
     return (
-        <div styleName="root">
+        <div styleName="root" ref={rootRef}>
             <CodeEditor
                 title="属性源码开发"
                 editorWidth={rightSideWidth}
