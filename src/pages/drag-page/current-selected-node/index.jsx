@@ -1,5 +1,5 @@
 import React from 'react';
-import {getComponentConfig, getComponentDisplayName} from 'src/pages/drag-page/component-config';
+import {getComponentDisplayName} from 'src/pages/drag-page/component-config';
 import config from 'src/commons/config-hoc';
 import LinkPoint from '../link-point';
 
@@ -25,6 +25,7 @@ export default config({
         <div style={{display: 'flex', alignItems: 'center'}}>
             {hasPropsToSet ? (
                 <LinkPoint
+                    source
                     id="sourceLinkPoint"
                     style={{marginRight: 4}}
                 />

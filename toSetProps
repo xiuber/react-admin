@@ -1,3 +1,13 @@
 🌴 current branch: drag-page
 
 ✨  git add .
+
+🔥 git commit
+[drag-page 99248e3] propsToSet- undefined
+ 13 files changed, 52 insertions(+), 33 deletions(-)
+ create mode 100644 src/pages/drag-page/base-components/icon/index.js
+ create mode 100644 toSetProps
+
+🚀 git push origin drag-page 
+
+🎉 Successfully!

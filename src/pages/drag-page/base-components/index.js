@@ -11,7 +11,7 @@ import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
 const defaultConfig = {
     // title: '页面容器', // 组件
-    // icon: '', // 组件库中显示的icon，默认为 config icon
+    // icon: '', // false标识不显示 组件库中显示的icon，默认为 config icon
     // hiddenInStore: false, // 组件库中不显示
     // image: '', // 预览图片
     renderPreview: true, // 直接渲染 config配置
@@ -54,7 +54,7 @@ export function setDefaultOptions(nodes) {
                 });
 
             const {config: {componentName}} = item;
-            if (!item.icon) item.icon = getComponentConfig(componentName).icon;
+            if (!item.icon && item.icon !== false) item.icon = getComponentConfig(componentName).icon;
         });
     });
     return nodes;

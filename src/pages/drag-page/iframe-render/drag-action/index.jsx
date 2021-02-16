@@ -8,7 +8,7 @@ import {
     getDroppableEle,
     setDragImage,
     handleNodDrop,
-    getDraggingNodeIsWrapper,
+    getDraggingNodeInfo,
 } from 'src/pages/drag-page/util';
 
 /**
@@ -65,12 +65,10 @@ export default function DragAction(props) {
 
     const THROTTLE_TIME = 50; // 如果卡顿，可以调整大一些
     const throttleOver = throttle((e) => {
-        const isToSetProps = draggingNode?.toSetProps;
-
-        let isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
+        const {isWrapper, toSetProps} = getDraggingNodeInfo({e, draggingNode});
 
         // 选择一个目标，非投放
-        const toSelectedTarget = isToSetProps || isWrapper;
+        const toSelectedTarget = toSetProps || isWrapper;
 
         const targetElement = toSelectedTarget ? getNodeEle(e.target) : getDroppableEle(e.target);
 

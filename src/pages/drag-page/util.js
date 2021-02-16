@@ -20,15 +20,27 @@ const toggleIsWrapper = debounce((draggingNode) => {
     draggingNode.isWrapper = !draggingNode.isWrapper;
 }, 100);
 
-export function getDraggingNodeIsWrapper({e, draggingNode}) {
-    if (!e) return draggingNode?.isWrapper;
+const toggleIsToSetProps = debounce((draggingNode) => {
+    if (!draggingNode.propsToSet) return;
+
+    draggingNode.toSetProps = !draggingNode.toSetProps;
+}, 100);
+
+export function getDraggingNodeInfo({e, draggingNode}) {
+    if (!e) return draggingNode || {};
 
     const isMetaOrCtrl = (e.metaKey || e.ctrlKey);
+    const isAltKey = e.altKey;
+
     if (isMetaOrCtrl) {
         toggleIsWrapper(draggingNode);
     }
 
-    return draggingNode?.isWrapper;
+    if (isAltKey) {
+        toggleIsToSetProps(draggingNode);
+    }
+
+    return draggingNode || {};
 }
 
 export function loopPageConfig(node, cb) {
@@ -554,13 +566,22 @@ export function handleNodDrop(options) {
         dragPageAction,
     } = options;
 
-    const propsToSet = e.dataTransfer.getData('propsToSet');
-    if (propsToSet) {
+    const {isWrapper, toSetProps} = getDraggingNodeInfo({e, draggingNode});
+    if (toSetProps) {
+        const propsToSet = e.dataTransfer.getData('propsToSet') || draggingNode.propsToSet;
         // 组件节点
         const nodeEle = getNodeEle(e.target);
         if (!nodeEle) return end();
 
-        const newProps = JSON.parse(propsToSet);
+        const newProps = typeof propsToSet === 'string' ? JSON.parse(propsToSet) : propsToSet;
+
+        // 如果是组件节点，设置id
+        Object.values(newProps)
+            .filter(value => isComponentConfig(value))
+            .forEach(value => {
+                setNodeId(value, true);
+            });
+
         const componentId = nodeEle.getAttribute('data-component-id');
 
         dragPageAction.setNewProps({componentId, newProps});
@@ -572,8 +593,6 @@ export function handleNodDrop(options) {
     let componentConfig = e.dataTransfer.getData('componentConfig');
     componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
 
-    // const sourceNode = componentConfig ? componentConfig : findNodeById(pageConfig, sourceComponentId);
-    const isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
 
     // 可投放元素
     const targetElement = isWrapper ? e.target : getDroppableEle(e.target);
@@ -694,9 +713,10 @@ export function isDropAccept(options) {
 
     if (!draggingNode) return false;
 
-    if (draggingNode.toSetProps) return true;
+    const {isWrapper, toSetProps} = getDraggingNodeInfo({e, draggingNode});
 
-    const isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
+    if (toSetProps) return true;
+
     if (isWrapper) return true;
 
     let targetNode;

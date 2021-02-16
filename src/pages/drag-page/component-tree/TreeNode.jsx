@@ -5,7 +5,7 @@ import {
     getDropGuidePosition,
     isDropAccept,
     setDragImage,
-    getDraggingNodeIsWrapper,
+    getDraggingNodeInfo,
 } from 'src/pages/drag-page/util';
 import {getComponentConfig} from '../component-config';
 import {throttle} from 'lodash';
@@ -123,9 +123,8 @@ export default config({
         if (isBottom) setDropPosition('bottom');
         if (accept && isCenter) setDropPosition('center');
 
-        const isToSetProps = draggingNode?.toSetProps;
-        const isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
-        const isToSelectTarget = isWrapper || isToSetProps;
+        const {isWrapper, toSetProps} = getDraggingNodeInfo({e, draggingNode});
+        const isToSelectTarget = isWrapper || toSetProps;
 
         if (isToSelectTarget) {
             setDropPosition(false);

@@ -6,7 +6,7 @@ import {
     LINE_SIZE,
     /*TRIGGER_SIZE,*/
     usePrevious,
-    getDraggingNodeIsWrapper,
+    getDraggingNodeInfo,
 } from 'src/pages/drag-page/util';
 
 export default config({
@@ -51,9 +51,8 @@ export default config({
                 isCenter,
             } = dragOverInfo;
 
-            const isToSetProps = draggingNode?.toSetProps;
-            const isWrapper = getDraggingNodeIsWrapper({e, draggingNode});
-            const toSelectTarget = isToSetProps || isWrapper;
+            const {isWrapper, toSetProps} = getDraggingNodeInfo({e, draggingNode});
+            const toSelectTarget = toSetProps || isWrapper;
 
             if (isTree) {
                 targetElement = frameDocument.querySelector(`[data-component-id="${targetElementId}"]`);

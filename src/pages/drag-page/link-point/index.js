@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Tooltip} from 'antd';
+import {AimOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import {getEleCenterInWindow, findNodeById, findLinkTargetsPosition} from 'src/pages/drag-page/util';
 // import {v4 as uuid} from 'uuid';
@@ -24,6 +25,7 @@ export default config({
         onDragStart,
         movingPoint,
         pageConfig,
+        source = false,
         ...others
     } = props;
 
@@ -168,7 +170,7 @@ export default config({
             onClick={handleClick}
             {...others}
         >
-            <div className={styles.point} ref={pointRef}/>
+            {source ? <div className={styles.sourcePoint} ref={pointRef}><AimOutlined/></div> : <div className={styles.point} ref={pointRef}/>}
         </div>
     );
 

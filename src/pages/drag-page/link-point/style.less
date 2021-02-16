@@ -11,6 +11,10 @@
     pointer-events: all;
 
     &.noLink {
+        .sourcePoint {
+            color: @noLinkColor;
+        }
+
         .point {
             border-color: @noLinkColor;
 
@@ -23,6 +27,12 @@
             }
         }
     }
+}
+
+.sourcePoint {
+    font-size: 16px;
+    color: @linkPointColor;
+    cursor: move;
 }
 
 .point {
