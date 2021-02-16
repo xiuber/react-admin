@@ -45,9 +45,8 @@ const initialState = {
     activeSideKey: 'componentStore',
     sideWidth: 300,
     // activeSideKey: 'schemaEditor',
-    // activeTabKey: 'attribute', // 右侧激活tab key
-    // activeTabKey: 'style', // 右侧激活tab key
-    activeTabKey: 'props',
+    activeTabKey: 'style', // 右侧激活tab key
+    // activeTabKey: 'props',
 
     componentTreeExpendedKeys: [], // 组件树 展开节点
 

@@ -74,6 +74,7 @@ function CodeEditor(props) {
         onChange = () => undefined,
         onSave,
         onClose = () => undefined,
+        readOnly,
     } = props;
 
     const mainRef = useRef(null);
@@ -143,10 +144,18 @@ function CodeEditor(props) {
     // 检测错误
     useEffect(() => {
         const si = setInterval(() => {
-            let errors = monacoRef.current.editor.getModelMarkers();
-
+            // 获取当前窗口错误标记
+            let errors = monacoRef.current.editor.getModelMarkers({
+                resource: editorRef.current.getModel().uri,
+            });
             // 严重程度
-            errors = errors.filter(item => item.severity > 1);
+            /*
+            Hint = 1,
+            Info = 2,
+            Warning = 4,
+            Error = 8
+            * */
+            errors = errors.filter(item => item.severity > 4);
 
             setErrors(errors);
         }, 300);
@@ -184,6 +193,7 @@ function CodeEditor(props) {
     const options = {
         selectOnLineNumbers: true,
         tabSize: 2,
+        readOnly,
         minimap: {
             enabled: fullScreen,
         },
@@ -267,6 +277,7 @@ CodeEditor.propTypes = {
     onSave: PropTypes.func,
     onClose: PropTypes.func,
     editorWidth: PropTypes.number,
+    readOnly: PropTypes.bool,
 };
 
 CodeEditor.defaultProps = {

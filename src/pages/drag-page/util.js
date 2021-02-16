@@ -51,7 +51,7 @@ export function getDraggingNodeInfo({e, draggingNode}) {
     }
 
     const {isWrapper, toSetProps, isReplace} = draggingNode;
-    draggingNode.toSelectTarget = isWrapper || toSetProps || isReplace
+    draggingNode.toSelectTarget = isWrapper || toSetProps || isReplace;
 
     return draggingNode || {};
 }
@@ -633,7 +633,7 @@ export function handleNodeDrop(options) {
     }
 
     // 替换目标
-    if(isReplace) {
+    if (isReplace) {
         if (sourceComponentId) {
             dragPageAction.moveReplace({
                 sourceId: sourceComponentId,
@@ -651,7 +651,6 @@ export function handleNodeDrop(options) {
         }
     }
 
-    console.log(123);
     // 放在自身上
     if (targetComponentId === sourceComponentId) return end();
 
