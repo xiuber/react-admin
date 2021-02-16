@@ -508,13 +508,7 @@ export function getNodeEle(target) {
 
     if (typeof target.getAttribute !== 'function') return null;
 
-    // 当前是组件节点
     let isNodeEle = target.getAttribute('data-component-id');
-
-    // 父级是容器
-    if (!isNodeEle && target.parentNode?.getAttribute) {
-        isNodeEle = target.getAttribute('data-component-id');
-    }
 
     if (isNodeEle) return target;
 
@@ -640,7 +634,7 @@ export function handleNodeDrop(options) {
         position.isAfter = position.isBottom;
         position.isChildren = position.isCenter;
     }
-    
+
     const accept = isDropAccept({
         e,
         draggingNode,
