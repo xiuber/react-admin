@@ -2,14 +2,18 @@ import React from 'react';
 import {AppstoreOutlined} from '@ant-design/icons';
 import NodeRender from 'src/pages/drag-page/iframe-render/node-render/NodeRender';
 import {loopPageConfig} from 'src/pages/drag-page/util';
+import Icons from './icon';
 
-const result = {};
+const result = {
+    ...Icons,
+};
 const req = require.context('./', true, /\.js$/);
 
 req.keys().forEach(key => {
     if ([
         './options.js',
         './index.js',
+        './icon.js',
     ].includes(key)) return;
 
     const model = req(key);
@@ -174,7 +178,7 @@ export function deleteDefaultProps(component) {
                     }
                 });
         }
-    })
+    });
 }
 
 // 获取组件配置
