@@ -651,6 +651,7 @@ export function handleNodeDrop(options) {
         }
     }
 
+    console.log(123);
     // 放在自身上
     if (targetComponentId === sourceComponentId) return end();
 

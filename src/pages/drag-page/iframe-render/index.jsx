@@ -272,7 +272,7 @@ export default config({
                     <NodePath/>
                 </footer>
             </main>
-            <DragOver frameDocument={iframeRef.current?.contentDocument}/>
+            <DragOver/>
         </div>
     );
 });

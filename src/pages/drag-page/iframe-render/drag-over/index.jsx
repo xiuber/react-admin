@@ -11,17 +11,17 @@ import {
 
 export default config({
     connect: state => {
-
         return {
             dragOverInfo: state.dragPage.dragOverInfo,
             draggingNode: state.dragPage.draggingNode,
+            iframeDocument: state.dragPage.iframeDocument,
         };
     },
 })(function DragOver(props) {
     const {
-        frameDocument,
         dragOverInfo,
         draggingNode,
+        iframeDocument,
     } = props;
     const guideLineRef = useRef(null);
     const guideBgRef = useRef(null);
@@ -29,11 +29,11 @@ export default config({
     const prevDragOverInfo = usePrevious(dragOverInfo);
 
     useEffect(() => {
-        if (!frameDocument) return;
+        if (!iframeDocument) return;
 
-        guideLineRef.current = frameDocument.getElementById('drop-guide-line');
-        guideBgRef.current = frameDocument.getElementById('drop-guide-bg');
-    }, [frameDocument]);
+        guideLineRef.current = iframeDocument.getElementById('drop-guide-line');
+        guideBgRef.current = iframeDocument.getElementById('drop-guide-bg');
+    }, [iframeDocument]);
 
     useEffect(() => {
         if (!guideLineRef.current) return;
@@ -55,10 +55,10 @@ export default config({
             const {toSelectTarget} = getDraggingNodeInfo({e, draggingNode});
 
             if (isTree) {
-                targetElement = frameDocument.querySelector(`[data-component-id="${targetElementId}"]`);
+                targetElement = iframeDocument.querySelector(`[data-component-id="${targetElementId}"]`);
                 guidePosition = getDropGuidePosition({
                     targetElement,
-                    frameDocument,
+                    frameDocument: iframeDocument,
                 });
                 guidePosition.position = {
                     isTop,
@@ -109,13 +109,13 @@ export default config({
             } = prevDragOverInfo;
 
             if (isTree) {
-                targetElement = frameDocument.querySelector(`[data-component-id="${targetElementId}"]`);
+                targetElement = iframeDocument.querySelector(`[data-component-id="${targetElementId}"]`);
             }
 
             leaveElement(targetElement);
             timeRef.current = setTimeout(() => hideDropGuide(), 300);
         }
-    }, [dragOverInfo, draggingNode]);
+    }, [dragOverInfo, draggingNode, iframeDocument]);
 
     return null;
 });
