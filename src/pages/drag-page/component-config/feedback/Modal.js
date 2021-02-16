@@ -51,7 +51,9 @@ export default {
 
         if (!node.props) node.props = {};
 
-        const field = getNextField(state, 'visible');
+        const propsField = 'visible';
+
+        const field = getNextField(state, propsField);
 
         // 首字母大写
         const Field = inflection.camelize(field);
@@ -68,8 +70,10 @@ export default {
         node.state = {
             field,
             fieldValue: false,
+            // eslint-disable-next-line
+            fieldDesc: 'node => `弹框「${node.props.title}」是否可见`',
             funcField: `set${Field}`,
-            funcValue: 'visible => {state[field] = visible; dragPageAction.render();}',
+            funcValue: `${propsField} => state[field] = ${propsField}`,
         };
     },
     actions: {

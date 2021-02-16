@@ -106,21 +106,44 @@ export default config({
     useEffect(() => {
         if (!pageConfig) return;
 
+        function setNodeStateToState(state, nodeState, force = true) {
+            const {
+                field,
+                fieldValue,
+                fieldDesc,
+                funcField,
+                funcValue,
+            } = nodeState;
+
+            const set = () => {
+                if (!state.desc) state.desc = {};
+                // eslint-disable-next-line
+                state.desc[field] = fieldDesc ? eval(fieldDesc) : undefined;
+                state[field] = fieldValue;
+                // eslint-disable-next-line
+                const fn = funcValue ? eval(funcValue) : undefined;
+                state[funcField] = (...args) => {
+                    if (fn) {
+                        fn(...args);
+                        dragPageAction.render();
+                    }
+                };
+            };
+
+            // 不管是否存在，强制设置
+            if (force) set();
+
+            // 检测是否存在，存在就不设置了
+            if (!force && !(field in state)) {
+                set();
+            }
+        }
+
         // 设置所有已存在的
         loopPageConfig(pageConfig, node => {
             const {state: nodeState} = node;
             if (nodeState) {
-                const {
-                    field,
-                    fieldValue,
-                    funcField,
-                    funcValue,
-                } = nodeState;
-                if (!(field in state)) {
-                    state[field] = fieldValue;
-                    // eslint-disable-next-line
-                    state[funcField] = eval(funcValue);
-                }
+                setNodeStateToState(state, nodeState, false);
             }
         });
 
@@ -133,16 +156,7 @@ export default config({
             if (!nodeState && setNodeState) {
                 setNodeState({state, node, dragPageAction});
 
-                const {
-                    field,
-                    fieldValue,
-                    funcField,
-                    funcValue,
-                } = node.state;
-
-                state[field] = fieldValue;
-                // eslint-disable-next-line
-                state[funcField] = eval(funcValue);
+                setNodeStateToState(state, node.state);
             }
         });
 
