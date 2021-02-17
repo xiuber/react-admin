@@ -132,77 +132,7 @@ export default {
     showCode: (showCode) => {
         return {showCode};
     },
-    setNewProps: ({componentId, newProps = {}}, state) => {
-        const {pageConfig} = state;
 
-        const node = findNodeById(pageConfig, componentId);
-        if (node) {
-            if (!node.props) node.props = {};
-            node.props = {
-                ...node.props,
-                ...newProps,
-                // key: uuid(), // 设置新key，保证组件重新创建
-            };
-        }
-        return {pageConfig: {...pageConfig}, refreshProps: {}};
-    },
-    showModal: (componentId, state) => {
-        const {pageConfig} = state;
-
-        const node = findNodeById(pageConfig, componentId);
-        if (node) {
-            if (!node.props) node.props = {};
-            node.props.visible = true;
-        }
-
-        return {pageConfig: {...pageConfig}, refreshProps: {}};
-    },
-    syncOffspringProps: (options, state) => {
-        const {pageConfig} = state;
-
-        const {
-            node, // 当前
-            ancestorComponentName, // 祖先
-            props, // 要同步的属性
-        } = options;
-        const {componentName} = node;
-
-        // 祖先节点
-        let ancestorNode = findParentNodeByParentName(pageConfig, ancestorComponentName, node.id);
-
-        // 不存在，就从根节点开始
-        if (!ancestorNode) ancestorNode = pageConfig;
-
-        // 获取祖先下所有同名节点
-        const nodes = getAllNodesByName(ancestorNode, componentName);
-
-        // 设置新属性
-        nodes.forEach(item => {
-            if (!item.props) item.props = {};
-            syncObject(item.props, props);
-        });
-
-        return {pageConfig: {...pageConfig}};
-    },
-    syncFormItemLabelColFlex: ({node, flex}, state) => {
-        const {pageConfig} = state;
-        // 获取父级Form
-        let formNode = findParentNodeByParentName(pageConfig, 'Form', node.id);
-
-        // 不存在，就从根节点开始
-        if (!formNode) formNode = pageConfig;
-
-        // 获取Form下所有的Form.Item
-        const fromItems = getAllNodesByName(formNode, 'Form.Item');
-
-        // 设置labelCol.flex
-        fromItems.forEach(item => {
-            if (!item.props) item.props = {};
-            if (!item.props.labelCol) item.props.labelCol = {};
-            item.props.labelCol.flex = flex;
-        });
-        return {pageConfig: {...pageConfig}};
-    },
     saveSchema: () => {
         // TODO
         console.log('TODO saveSchema');
@@ -243,6 +173,48 @@ export default {
             selectedNode,
             activeSideKey: nextActiveKey,
         };
+    },
+
+    setNewProps: ({componentId, newProps = {}}, state) => {
+        const {pageConfig} = state;
+
+        const node = findNodeById(pageConfig, componentId);
+        if (node) {
+            if (!node.props) node.props = {};
+            node.props = {
+                ...node.props,
+                ...newProps,
+                // key: uuid(), // 设置新key，保证组件重新创建
+            };
+        }
+        return {pageConfig: {...pageConfig}, refreshProps: {}};
+    },
+    syncOffspringProps: (options, state) => {
+        const {pageConfig} = state;
+
+        const {
+            node, // 当前
+            ancestorComponentName, // 祖先
+            props, // 要同步的属性
+        } = options;
+        const {componentName} = node;
+
+        // 祖先节点
+        let ancestorNode = findParentNodeByParentName(pageConfig, ancestorComponentName, node.id);
+
+        // 不存在，就从根节点开始
+        if (!ancestorNode) ancestorNode = pageConfig;
+
+        // 获取祖先下所有同名节点
+        const nodes = getAllNodesByName(ancestorNode, componentName);
+
+        // 设置新属性
+        nodes.forEach(item => {
+            if (!item.props) item.props = {};
+            syncObject(item.props, props);
+        });
+
+        return {pageConfig: {...pageConfig}};
     },
     render: (_, state) => {
         const {pageConfig} = state;
@@ -486,6 +458,7 @@ export default {
     },
 };
 
+// 添加或移动节点
 function addOrMoveNode(options) {
     const {
         pageConfig,
@@ -641,7 +614,6 @@ function deleteComponentById(root, id) {
 
     return deletedNode;
 }
-
 
 // 添加占位符
 function addDragHolder(node) {
