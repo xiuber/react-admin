@@ -42,7 +42,6 @@ export default config({
     const rootRef = useRef(null);
     const categoryRef = useRef(null);
     const componentRef = useRef(null);
-    const componentSpaceRef = useRef(null);
 
     useEffect(() => {
         (async () => {
@@ -54,23 +53,6 @@ export default config({
             }
         })();
     }, []);
-
-    // 设置组件列表底部站位高度
-    useEffect(() => {
-        if (!components?.length || !componentSpaceRef.current) return;
-
-        const elements = Array.from(document.querySelectorAll('.componentCategory'));
-
-        if (!elements?.length) return;
-
-        const element = elements[elements.length - 1];
-        const elementRect = element.getBoundingClientRect();
-        const {height} = elementRect;
-
-        componentSpaceRef.current.style.height = `calc(100% - ${height}px)`;
-
-    }, [components, componentSpaceRef.current]);
-
 
     const handleComponentScroll = debounce(() => {
         const all = document.querySelectorAll('.componentCategory');
@@ -215,17 +197,25 @@ export default config({
                             ref={componentRef}
                             onScroll={handleComponentScroll}
                         >
-                            {components.map(baseCategory => {
-                                const {id: baseCategoryId, children = [], hiddenInStore} = baseCategory;
+                            {components.map((baseCategory, index) => {
+                                const {id: baseCategoryId, children: categories = [], hiddenInStore} = baseCategory;
+                                const isBaseLast = index === components.length - 1;
+
                                 if (hiddenInStore) return null;
-                                return children.map(category => {
-                                    const {id: subCategoryId, subTitle, children = [], hiddenInStore} = category;
+
+                                return categories.map((category, i) => {
+                                    const {id: subCategoryId, subTitle, children: nodes = [], hiddenInStore} = category;
+
+                                    const isLast = isBaseLast && (i === categories.length - 1);
+
                                     if (hiddenInStore) return null;
+
                                     return (
                                         <div
                                             className="componentCategory"
                                             key={`${baseCategoryId}_${subCategoryId}`}
                                             data-subCategoryId={subCategoryId}
+                                            style={{height: isLast ? '100%' : 'auto'}}
                                         >
                                             <div
                                                 id={`componentCategory_${subCategoryId}`}
@@ -233,8 +223,9 @@ export default config({
                                             >
                                                 {subTitle}
                                             </div>
-                                            {children.map(item => {
+                                            {nodes.map(item => {
                                                 if (item.hiddenInStore) return null;
+
                                                 return (
                                                     <div
                                                         id={`component_${item.id}`}
@@ -252,7 +243,6 @@ export default config({
                                     );
                                 });
                             })}
-                            <div ref={componentSpaceRef}/>
                         </div>
                     </main>
                 )}

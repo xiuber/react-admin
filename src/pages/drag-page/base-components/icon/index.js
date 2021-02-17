@@ -8,7 +8,7 @@ export default [
             ...(Object.keys(antdIcon)
                 .filter((key, index) => {
                     // TODO 测试
-                    return index < 10;
+                    return index < 2;
                     // // 首字母大写
                     // return /^[A-Z]/.test(key);
                 })

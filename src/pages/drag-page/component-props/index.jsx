@@ -77,7 +77,7 @@ export default config({
     }
 
     function handleEdit(node) {
-        setEditVisible(true);
+        setEditVisible(!editVisible);
         setEditNode(node);
     }
 
@@ -132,11 +132,11 @@ export default config({
                     />
                 </section>
                 {selectedNode?.wrapper?.length ? selectedNode.wrapper.map((node, index) => {
-                    const isLast = index = selectedNode.wrapper.length - 1;
+                    const isLast = index === selectedNode.wrapper.length - 1;
                     return (
                         <section id={`fieldEditor_${node.id}`} style={{height: isLast ? '100%' : 'auto'}}>
                             <FormEditor
-                                tip="相关："
+                                tip="相关包裹："
                                 tool={(
                                     <Button
                                         style={{marginRight: 8}}
