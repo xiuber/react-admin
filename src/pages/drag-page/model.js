@@ -156,22 +156,40 @@ export default {
         return {pageConfigHistory: nextHistory, historyCursor: nextCursor};
     },
     prevStep: (_, state) => {
-        const {pageConfigHistory, historyCursor} = state;
+        const {pageConfigHistory, historyCursor, selectedNodeId} = state;
 
         let nextCursor = historyCursor - 1;
 
         if (nextCursor >= 0 && nextCursor < pageConfigHistory?.length) {
 
-            return {pageConfig: cloneDeep(pageConfigHistory[nextCursor]), historyCursor: nextCursor};
+            const pageConfig = cloneDeep(pageConfigHistory[nextCursor]);
+
+            const selectedNode = findNodeById(pageConfig, selectedNodeId);
+
+            return {
+                pageConfig,
+                selectedNode,
+                refreshProps: {},
+                historyCursor: nextCursor,
+            };
         }
     },
     nextStep: (_, state) => {
-        const {pageConfigHistory, historyCursor} = state;
+        const {pageConfigHistory, historyCursor, selectedNodeId} = state;
 
         let nextCursor = historyCursor + 1;
 
         if (nextCursor >= 0 && nextCursor <= pageConfigHistory?.length) {
-            return {pageConfig: cloneDeep(pageConfigHistory[nextCursor]), historyCursor: nextCursor};
+
+            const pageConfig = cloneDeep(pageConfigHistory[nextCursor]);
+
+            const selectedNode = findNodeById(pageConfig, selectedNodeId);
+
+            return {
+                pageConfig,
+                selectedNode,
+                historyCursor: nextCursor,
+            };
         }
     },
 
