@@ -15,6 +15,7 @@ import OptionsEditor from 'src/pages/drag-page/component-props/options-editor';
 import FooterSwitch from './FooterSwitch';
 import OffsetInput from 'src/pages/drag-page/component-props/offset-input';
 import Placement from 'src/pages/drag-page/component-props/placement';
+import ReactNode from 'src/pages/drag-page/component-props/ReactNode';
 
 function getPlaceholder(options, props) {
     const {field, placeholder} = options;
@@ -25,6 +26,11 @@ function getPlaceholder(options, props) {
 }
 
 export default {
+    ReactNode: (options) => props => {
+        const {node} = options;
+
+        return <ReactNode {...props} node={node}/>;
+    },
     placement: (options) => props => {
         return (
             <Placement

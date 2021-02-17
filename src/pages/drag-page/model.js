@@ -8,7 +8,7 @@ import {
     getAllNodesByName,
     syncObject,
     setNodeId,
-    isComponentConfig,
+    deleteComponentById,
 } from './util';
 
 // 历史记录数量
@@ -50,8 +50,8 @@ const initialState = {
     activeSideKey: 'componentStore',
     sideWidth: 300,
     // activeSideKey: 'schemaEditor',
-    activeTabKey: 'style', // 右侧激活tab key
-    // activeTabKey: 'props',
+    // activeTabKey: 'style', // 右侧激活tab key
+    activeTabKey: 'props',
     componentTreeExpendedKeys: [], // 组件树 展开节点
     rightSideWidth: 385,
     rightSideExpended: true,
@@ -617,57 +617,6 @@ function findChildrenCollection(root, id) {
             if (result) return result;
         }
     }
-}
-
-/**
- * 根据id 删除 root 中节点，并返回删除节点
- * @param root
- * @param id
- * @returns {any} 被删除的节点
- */
-function deleteComponentById(root, id) {
-    const dataSource = Array.isArray(root) ? root : [root];
-
-    let deletedNode = undefined;
-    const loop = nodes => {
-        for (const node of nodes) {
-            if (node?.id === id) {
-                const index = nodes.findIndex(item => item?.id === id);
-                deletedNode = (nodes.splice(index, 1))[0];
-                return;
-            } else {
-                if (node?.children?.length) {
-                    loop(node.children);
-                }
-
-                // props中有可能也有节点
-                const propsKeyValue = Object.entries(node.props || {})
-                    .filter(([, item]) => isComponentConfig(item));
-
-                for (let item of propsKeyValue) {
-                    const [key, value] = item;
-                    if (value.id === id) {
-                        Reflect.deleteProperty(node.props, key);
-                        deletedNode = value;
-                        return;
-                    } else {
-                        if (value?.children?.length) {
-                            loop(value.children);
-                        }
-                    }
-                }
-
-                // wrapper中有节点
-                if (node?.wrapper?.length) {
-                    loop(node.wrapper);
-                }
-            }
-        }
-    };
-
-    loop(dataSource);
-
-    return deletedNode;
 }
 
 // 添加占位符

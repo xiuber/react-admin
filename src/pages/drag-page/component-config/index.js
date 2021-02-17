@@ -208,7 +208,7 @@ export function setNodeDefault(node) {
 
 // 获取组件展示名称
 export function getComponentDisplayName(node, render) {
-    if (!node) return '';
+    if (!node || typeof node !== 'object' || Array.isArray(node)) return '';
 
     const {componentName} = node;
     const config = getComponentConfig(componentName);

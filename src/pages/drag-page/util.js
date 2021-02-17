@@ -134,6 +134,10 @@ export function setDragImage(e, node) {
 }
 
 export function isComponentConfig(node) {
+    if (typeof node !== 'object') return false;
+    if (node === null) return false;
+    if (Array.isArray(node)) return false;
+
     return !!node?.componentName;
 }
 
@@ -570,6 +574,59 @@ export function getDroppableEle(target) {
     // 继续向上找
     return getDroppableEle(parentComponent);
 }
+
+
+/**
+ * 根据id 删除 root 中节点，并返回删除节点
+ * @param root
+ * @param id
+ * @returns {any} 被删除的节点
+ */
+export function deleteComponentById(root, id) {
+    const dataSource = Array.isArray(root) ? root : [root];
+
+    let deletedNode = undefined;
+    const loop = nodes => {
+        for (const node of nodes) {
+            if (node?.id === id) {
+                const index = nodes.findIndex(item => item?.id === id);
+                deletedNode = (nodes.splice(index, 1))[0];
+                return;
+            } else {
+                if (node?.children?.length) {
+                    loop(node.children);
+                }
+
+                // props中有可能也有节点
+                const propsKeyValue = Object.entries(node.props || {})
+                    .filter(([, item]) => isComponentConfig(item));
+
+                for (let item of propsKeyValue) {
+                    const [key, value] = item;
+                    if (value.id === id) {
+                        Reflect.deleteProperty(node.props, key);
+                        deletedNode = value;
+                        return;
+                    } else {
+                        if (value?.children?.length) {
+                            loop(value.children);
+                        }
+                    }
+                }
+
+                // wrapper中有节点
+                if (node?.wrapper?.length) {
+                    loop(node.wrapper);
+                }
+            }
+        }
+    };
+
+    loop(dataSource);
+
+    return deletedNode;
+}
+
 
 export function handleNodeDrop(options) {
     const {

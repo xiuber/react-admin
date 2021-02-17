@@ -77,7 +77,7 @@ export default function NodeRender(props) {
         childrenDraggable,
         hooks = {},
         withDragProps,
-        fields,
+        // fields,
     } = componentConfig;
 
     const isRender = hooks.beforeRender && hooks.beforeRender({node: config, dragPageAction, iframeDocument});
@@ -123,21 +123,16 @@ export default function NodeRender(props) {
     }, {});
 
     // 处理属性中的节点
-    if (fields?.length) {
-        fields.filter(item => item.type === 'ReactNode').forEach(item => {
-            const {field} = item;
-            const propsNode = componentProps[field];
-
-            if (isComponentConfig(propsNode)) {
-                componentProps[field] = (
-                    <NodeRender
-                        {..._props}
-                        config={propsNode}
-                    />
-                );
-            }
+    Object.entries(componentProps)
+        .filter(([key, value]) => isComponentConfig(value))
+        .forEach(([key, value]) => {
+            componentProps[key] = (
+                <NodeRender
+                    {..._props}
+                    config={value}
+                />
+            );
         });
-    }
 
     // 处理子节点
     let childrenEle = children?.length ? children.map(item => {

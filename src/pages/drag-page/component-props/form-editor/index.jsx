@@ -6,6 +6,7 @@ import CurrentSelectedNode from '../../current-selected-node';
 import {getComponentConfig, showFieldByAppend} from 'src/pages/drag-page/component-config';
 import {getLabelWidth} from 'src/pages/drag-page/util';
 import {DesktopOutlined} from '@ant-design/icons';
+import MultipleElement from '../multiple-element';
 import './style.less';
 
 export default function PropsFormEditor(props) {
@@ -97,7 +98,7 @@ export default function PropsFormEditor(props) {
                         <div styleName="wrapper">
                             {fields.map(it => {
                                 const {field} = it;
-                                const FormElement = elementMap.button(it);
+                                const FormElement = elementMap.button({...it, node: selectedNode});
 
                                 return (
                                     <Form.Item
@@ -129,13 +130,19 @@ export default function PropsFormEditor(props) {
             span = 24,
             onKeyDown,
         } = item;
-        const getElement = elementMap[type];
         const title = tip || desc || label;
+
 
         let FormElement = () => <span style={{color: 'red'}}>TODO {type} 对应的表单元素不存在</span>;
 
-        if (getElement) {
-            FormElement = elementMap[type](item);
+        if (Array.isArray(type)) {
+            FormElement = MultipleElement;
+        } else {
+            const getElement = elementMap[type];
+
+            if (getElement) {
+                FormElement = getElement({...item, node: selectedNode});
+            }
         }
 
         const labelEle = (
@@ -160,7 +167,7 @@ export default function PropsFormEditor(props) {
                     name={field}
                     colon={false}
                 >
-                    <FormElement onKeyDown={handleKeyDown}/>
+                    <FormElement onKeyDown={handleKeyDown} fieldOption={item} node={selectedNode}/>
                 </Form.Item>
             </Col>
         );
