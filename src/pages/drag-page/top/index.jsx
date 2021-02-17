@@ -2,8 +2,6 @@ import React from 'react';
 import {
     EyeOutlined,
     FormOutlined,
-    SwapLeftOutlined,
-    SwapRightOutlined,
     CodeOutlined,
     SaveOutlined,
     DeleteOutlined,
@@ -13,6 +11,7 @@ import {
 import config from 'src/commons/config-hoc';
 import './style.less';
 import {isMac} from '../util';
+import Undo from '../undo';
 
 export default config({
     connect: state => {
@@ -43,16 +42,7 @@ export default config({
         },
         'divider',
         {
-            key: 'prevStep',
-            icon: <SwapLeftOutlined/>,
-            label: '上一步',
-            onClick: () => dragPageAction.prevStep(),
-        },
-        {
-            key: 'nextStep',
-            icon: <SwapRightOutlined/>,
-            label: '下一步',
-            onClick: () => dragPageAction.nextStep(),
+            key: 'undo',
         },
         'divider',
         {
@@ -92,7 +82,10 @@ export default config({
                     if (item === 'divider') {
                         return <div styleName="divider"/>;
                     }
+
                     let {key, icon, label, onClick, disabled} = item;
+                    if (key === 'undo') return <Undo/>;
+
                     const isActive = key === activeToolKey;
 
                     if (disabled) onClick = undefined;

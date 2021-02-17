@@ -69,6 +69,7 @@ export default function EditableAction(props) {
             const options = {index, node, pageConfig, dragPageAction, iframeDocument};
 
             function handleClick(e) {
+                e.preventDefault();
                 onClick && onClick(e)(options);
             }
 
@@ -76,18 +77,14 @@ export default function EditableAction(props) {
                 ele.style.outline = prevOutline;
             }
 
+            let changed = false;
             const handleInputDebounce = debounce(e => {
                 if (onInput) {
                     onInput(e)(options);
                 } else {
                     handleInput(e);
                 }
-
-                // 弹框内容编辑会光标跳动
-                dragPageAction.refreshProps();
-
-                // 都会导致焦点跳动
-                // dragPageAction.render();
+                changed = true;
             }, 300);
 
             function handleBlur(e) {
@@ -95,7 +92,12 @@ export default function EditableAction(props) {
                 if (onBlur) {
                     onBlur(e)(options);
                 }
-                dragPageAction.render();
+
+                // 失去焦点，如果有改变内容，触发渲染
+                if (changed) {
+                    dragPageAction.render(true);
+                    changed = false;
+                }
             }
 
             const eventMap = {

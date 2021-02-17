@@ -11,14 +11,14 @@ import {
     isComponentConfig,
 } from './util';
 
-const rootHolderNode = () => (
-    {
-        id: uuid(),
-        componentName: 'RootDragHolder',
-    }
-);
+// 历史记录数量
+const LIMIT = 20;
 
-const initialState = {
+const rootHolderNode = () => ({id: uuid(), componentName: 'RootDragHolder'});
+
+const pageConfigInitialState = {
+    draggingNode: null, // 正在拖动的节点 key
+    dragOverInfo: null, // 悬停节点信息
     arrowLines: [
         {
             startX: 0,
@@ -28,16 +28,21 @@ const initialState = {
             showEndPoint: false, // 显示结束点
         },
     ],
-    contentEditable: true,
     showArrowLines: false,
     refreshArrowLines: null,
     refreshProps: null,
-    activeToolKey: 'layout', // 头部激活 key
+    pageConfigHistory: [],
+    historyCursor: 0,
     selectedNodeId: null,
     selectedNode: null,
+    pageConfig: rootHolderNode(),
+};
+
+const initialState = {
+    contentEditable: true,
+    activeToolKey: 'layout', // 头部激活 key
+
     nodeSelectType: 'meta', // 画布上节点选中方式 click: 单击 or  meta: mate(ctrl) + 单击
-    draggingNode: null, // 正在拖动的节点 key
-    dragOverInfo: null, // 悬停节点信息
     showCode: false, // 显示代码
     // showSide: false, // 左侧是否显示
     showSide: true,
@@ -47,18 +52,14 @@ const initialState = {
     // activeSideKey: 'schemaEditor',
     activeTabKey: 'style', // 右侧激活tab key
     // activeTabKey: 'props',
-
     componentTreeExpendedKeys: [], // 组件树 展开节点
-
     rightSideWidth: 385,
-
     rightSideExpended: true,
-
     canvasWidth: '100%',
     canvasHeight: '100%',
-
-    pageConfig: rootHolderNode(),
     iframeDocument: null,
+
+    ...pageConfigInitialState,
 };
 
 const syncStorage = {
@@ -68,13 +69,14 @@ const syncStorage = {
     nodeSelectType: true,
 
     pageConfig: true,
-
+    pageConfigHistory: true,
+    historyCursor: true,
 };
 
 export default {
     initialState,
     syncStorage,
-    init: () => cloneDeep(initialState),
+    initDesignPage: () => cloneDeep(pageConfigInitialState),
     setSideWidth: sideWidth => ({sideWidth}),
     setContentEditable: contentEditable => ({contentEditable}),
     setArrowLines: arrowLines => ({arrowLines}),
@@ -132,6 +134,46 @@ export default {
     showCode: (showCode) => {
         return {showCode};
     },
+    addPageConfigHistory: (pageConfig, state) => {
+        const {historyCursor, pageConfigHistory} = state;
+
+        const historyConfig = cloneDeep(pageConfig);
+
+        let nextHistory = [];
+
+        if (pageConfigHistory?.length) {
+            nextHistory = pageConfigHistory.slice(0, historyCursor + 1);
+        }
+
+        nextHistory.push(historyConfig);
+
+        if (nextHistory.length > LIMIT) nextHistory.shift();
+
+        const nextCursor = nextHistory.length - 1;
+
+        console.log('addPageConfigHistory', nextHistory);
+
+        return {pageConfigHistory: nextHistory, historyCursor: nextCursor};
+    },
+    prevStep: (_, state) => {
+        const {pageConfigHistory, historyCursor} = state;
+
+        let nextCursor = historyCursor - 1;
+
+        if (nextCursor >= 0 && nextCursor < pageConfigHistory?.length) {
+
+            return {pageConfig: cloneDeep(pageConfigHistory[nextCursor]), historyCursor: nextCursor};
+        }
+    },
+    nextStep: (_, state) => {
+        const {pageConfigHistory, historyCursor} = state;
+
+        let nextCursor = historyCursor + 1;
+
+        if (nextCursor >= 0 && nextCursor <= pageConfigHistory?.length) {
+            return {pageConfig: cloneDeep(pageConfigHistory[nextCursor]), historyCursor: nextCursor};
+        }
+    },
 
     saveSchema: () => {
         // TODO
@@ -140,12 +182,6 @@ export default {
     save: () => {
         // TODO
         console.log('TODO save');
-    },
-    prevStep: () => {
-        // TODO
-    },
-    nextStep: () => {
-        // TODO
     },
     setActiveTookKey: activeToolKey => {
         return {activeToolKey};
