@@ -1,10 +1,11 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import config from 'src/commons/config-hoc';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
-import FieldEditor from './field-editor';
+import FormEditor from './form-editor';
 import {useHeight} from 'ra-lib';
 import {Button} from 'antd';
-import {OTHER_HEIGHT} from 'src/pages/drag-page/util';
+import {OTHER_HEIGHT, scrollElement} from 'src/pages/drag-page/util';
+import CodeEditor from 'src/pages/drag-page/component-props/code-editor';
 // import {v4 as uuid} from 'uuid';
 
 export default config({
@@ -25,7 +26,8 @@ export default config({
         action: {dragPage: dragPageAction},
     } = props;
     const rootRef = useRef(null);
-    const spaceRef = useRef(null);
+    const [editNode, setEditNode] = useState(null);
+    const [editVisible, setEditVisible] = useState(false);
 
     const [height] = useHeight(rootRef, OTHER_HEIGHT);
 
@@ -74,64 +76,85 @@ export default config({
         dragPageAction.render();
     }
 
-    // 设置组件列表底部站位高度
+    function handleEdit(node) {
+        setEditVisible(true);
+        setEditNode(node);
+    }
+
+    // 编辑当前选中节点
     useEffect(() => {
-        if (!selectedNode) return;
-        if (!rootRef.current) return;
+        setEditNode(selectedNode);
+    }, [selectedNode]);
 
-        const elements = Array.from(document.querySelectorAll('#component-props > section'));
+    // 调整面板宽度
+    useEffect(() => {
+        if (editVisible && rightSideWidth < 440) {
+            dragPageAction.setRightSideWidth(440);
+        }
+    }, [editVisible, rightSideWidth]);
 
-        if (!elements?.length) return;
+    // 将属性面板滚动到顶部，并隐藏滚动条
+    useEffect(() => {
+        const rootEle = rootRef.current;
 
-        const element = elements[elements.length - 1];
-        const elementRect = element.getBoundingClientRect();
-        const {height} = elementRect;
+        if (!rootEle) return;
+        if (!editNode) return;
 
-        spaceRef.current.style.height = `calc(100% - ${height}px)`;
+        const editorRootEle = document.getElementById(`fieldEditor_${editNode.id}`);
+        if (!editorRootEle) return;
 
-    }, [selectedNode, spaceRef.current, rootRef.current]);
+        rootEle.style.overflow = editVisible ? 'hidden' : 'auto';
+
+        scrollElement(rootEle, editorRootEle, true, true);
+
+    }, [editVisible, editNode, rootRef.current]);
 
     return (
-        <div
-            id="component-props"
-            ref={rootRef}
-            style={{
-                position: 'relative',
-                height,
-                overflow: 'auto',
-            }}
-        >
-            <FieldEditor
-                fitHeight={!selectedNode?.wrapper?.length}
-                dragPageAction={dragPageAction}
-                rightSideWidth={rightSideWidth}
-                selectedNode={selectedNode}
-                refreshProps={refreshProps}
-                onChange={(...args) => handleChange(selectedNode, ...args)}
+        <div style={{height: '100%', position: 'relative'}}>
+            <CodeEditor
+                onChange={values => handleChange(editNode, {}, values, true)}
+                visible={editVisible}
+                onCancel={() => setEditVisible(false)}
+                selectedNode={editNode}
             />
-            {selectedNode?.wrapper?.length ? selectedNode.wrapper.map((node, index) => {
-                return (
-                    <section>
-                        <FieldEditor
-                            tip="相关："
-                            tool={(
-                                <Button
-                                    style={{marginRight: 8}}
-                                    type="text"
-                                    danger
-                                    onClick={() => handleDelete(index)}
-                                >删除</Button>
-                            )}
-                            dragPageAction={dragPageAction}
-                            rightSideWidth={rightSideWidth}
-                            selectedNode={node}
-                            refreshProps={refreshProps}
-                            onChange={(...args) => handleChange(node, ...args)}
-                        />
-                    </section>
-                );
-            }) : null}
-            <div ref={spaceRef}/>
+            <div
+                ref={rootRef}
+                style={{height, overflow: 'auto'}}
+            >
+                <section id={`fieldEditor_${selectedNode?.id}`}>
+                    <FormEditor
+                        fitHeight={!selectedNode?.wrapper?.length}
+                        dragPageAction={dragPageAction}
+                        selectedNode={selectedNode}
+                        onEdit={() => handleEdit(selectedNode)}
+                        refreshProps={refreshProps}
+                        onChange={(...args) => handleChange(selectedNode, ...args)}
+                    />
+                </section>
+                {selectedNode?.wrapper?.length ? selectedNode.wrapper.map((node, index) => {
+                    const isLast = index = selectedNode.wrapper.length - 1;
+                    return (
+                        <section id={`fieldEditor_${node.id}`} style={{height: isLast ? '100%' : 'auto'}}>
+                            <FormEditor
+                                tip="相关："
+                                tool={(
+                                    <Button
+                                        style={{marginRight: 8}}
+                                        type="text"
+                                        danger
+                                        onClick={() => handleDelete(index)}
+                                    >删除</Button>
+                                )}
+                                dragPageAction={dragPageAction}
+                                selectedNode={node}
+                                onEdit={() => handleEdit(node)}
+                                refreshProps={refreshProps}
+                                onChange={(...args) => handleChange(node, ...args)}
+                            />
+                        </section>
+                    );
+                }) : null}
+            </div>
         </div>
     );
 });

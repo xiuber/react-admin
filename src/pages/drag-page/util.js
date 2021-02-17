@@ -14,7 +14,17 @@ export const OTHER_HEIGHT = 0;
 export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
-// eslint-disable-next-line
+
+// 获取label宽度
+export function getLabelWidth(label) {
+    if (!label?.length) return 0;
+
+    // 统计汉字数，不包括标点符号
+    const m = label.match(/[\u4e00-\u9fff\uf900-\ufaff]/g);
+    const chineseCount = (!m ? 0 : m.length);
+    const otherCount = label.length - chineseCount;
+    return (chineseCount + otherCount / 2) * 12 + 30;
+}
 
 const toggleIsWrapper = debounce((draggingNode) => {
     draggingNode.isWrapper = !draggingNode.isWrapper;

@@ -8,7 +8,6 @@ import './style.less';
 export default config({
     connect: state => {
         return {
-            draggingNode: state.dragPage.draggingNode,
             activeSideKey: state.dragPage.activeSideKey,
             rightSideWidth: state.dragPage.rightSideWidth,
         };
@@ -19,7 +18,6 @@ export default config({
         value,
         onChange,
         onCancel,
-        draggingNode,
         rightSideWidth,
     } = props;
 
@@ -60,7 +58,7 @@ export default config({
                 editorWidth={rightSideWidth}
                 language="css"
                 title="样式源码开发"
-                value={draggingNode ? '\'拖拽中...\'' : code}
+                value={code}
                 onClose={onCancel}
                 onSave={handleSave}
             />

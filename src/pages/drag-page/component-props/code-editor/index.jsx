@@ -6,23 +6,19 @@ import JSON5 from 'json5';
 import {cloneDeep} from 'lodash';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import './style.less';
-import {scrollElement} from 'src/pages/drag-page/util';
 
 export default config({
     connect: state => {
         return {
-            draggingNode: state.dragPage.draggingNode,
             activeSideKey: state.dragPage.activeSideKey,
             rightSideWidth: state.dragPage.rightSideWidth,
         };
     },
-})(function StyleEditor(props) {
+})(function PropsCodeEditor(props) {
     const {
         visible,
-        editorRootEle,
         onChange,
         onCancel,
-        draggingNode,
         rightSideWidth,
         selectedNode,
     } = props;
@@ -31,7 +27,6 @@ export default config({
     const rootRef = useRef(null);
 
     const [code, setCode] = useState('');
-
 
     function codeToObject(code) {
         if (!code) return null;
@@ -88,26 +83,6 @@ export default config({
         setCode(nextCode);
     }, [visible, selectedNode]);
 
-    useEffect(() => {
-        const ele = document.getElementById('component-props');
-
-        if (!ele) return;
-
-        // ele.style.overflow = visible ? 'hidden' : 'auto';
-
-
-        if (!editorRootEle) return;
-        if (!rootRef.current) return;
-        console.log(editorRootEle);
-
-        console.log(ele);
-        scrollElement(ele, editorRootEle, true, true);
-
-        rootRef.current.style.top = `${ele.scrollTop + 45}px`;
-        rootRef.current.style.bottom = `-${ele.scrollTop}px`;
-
-    }, [visible, editorRootEle, rootRef.current]);
-
     if (!visible) return null;
 
     return (
@@ -115,7 +90,7 @@ export default config({
             <CodeEditor
                 title="属性源码开发"
                 editorWidth={rightSideWidth}
-                value={draggingNode ? '\'拖拽中...\'' : code}
+                value={code}
                 onSave={handleSave}
                 onClose={onCancel}
             />

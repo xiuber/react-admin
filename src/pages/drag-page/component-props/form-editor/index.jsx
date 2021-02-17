@@ -4,27 +4,17 @@ import Pane from '../../pane';
 import elementMap from '../form-element';
 import CurrentSelectedNode from '../../current-selected-node';
 import {getComponentConfig, showFieldByAppend} from 'src/pages/drag-page/component-config';
+import {getLabelWidth} from 'src/pages/drag-page/util';
 import {DesktopOutlined} from '@ant-design/icons';
-import PropsEditor from '../props-editor';
 import './style.less';
 
-function getLabelWidth(label) {
-    if (!label?.length) return 0;
-
-    // 统计汉字数，不包括标点符号
-    const m = label.match(/[\u4e00-\u9fff\uf900-\ufaff]/g);
-    const chineseCount = (!m ? 0 : m.length);
-    const otherCount = label.length - chineseCount;
-    return (chineseCount + otherCount / 2) * 12 + 30;
-}
-
-export default function ComponentProps(props) {
+export default function PropsFormEditor(props) {
     const {
-        rightSideWidth,
         selectedNode,
         refreshProps,
         dragPageAction,
         onChange,
+        onEdit,
         fitHeight,
         tip,
         tool,
@@ -32,10 +22,8 @@ export default function ComponentProps(props) {
 
     const [form] = Form.useForm();
     const rootRef = useRef(null);
-    const containerRef = useRef(null);
     const [propFields, setPropFields] = useState([]);
     const [labelCol, setLabelCol] = useState({flex: '80px'});
-    const [propsEditorVisible, setPropsEditorVisible] = useState(false);
 
     const wrapperCol = {flex: '1 1 0%'};
 
@@ -72,7 +60,7 @@ export default function ComponentProps(props) {
 
         setLabelCol({flex: `${labelWidth}px`});
 
-    }, [selectedNode, refreshProps, propsEditorVisible]);
+    }, [selectedNode, refreshProps]);
 
     const categories = [];
 
@@ -208,57 +196,42 @@ export default function ComponentProps(props) {
     }
 
 
-    useEffect(() => {
-        if (propsEditorVisible && rightSideWidth < 440) {
-            dragPageAction.setRightSideWidth(440);
-        }
-    }, [propsEditorVisible, rightSideWidth]);
-
     return (
-        <div ref={containerRef}>
-            <PropsEditor
-                editorRootEle={containerRef.current}
-                onChange={values => onChange({}, values, true)}
-                visible={propsEditorVisible}
-                onCancel={() => setPropsEditorVisible(false)}
-                selectedNode={selectedNode}
-            />
-            <Pane
-                fitHeight={fitHeight}
-                header={(
-                    <div styleName="header">
-                        <CurrentSelectedNode tip={tip} node={selectedNode}/>
-                        <div>
-                            {tool}
-                            <DesktopOutlined
-                                disabled={!selectedNode}
-                                styleName="tool"
-                                onClick={() => setPropsEditorVisible(!propsEditorVisible)}
-                            />
-                        </div>
+        <Pane
+            fitHeight={fitHeight}
+            header={(
+                <div styleName="header">
+                    <CurrentSelectedNode tip={tip} node={selectedNode}/>
+                    <div>
+                        {tool}
+                        <DesktopOutlined
+                            disabled={!selectedNode}
+                            styleName="tool"
+                            onClick={() => onEdit()}
+                        />
                     </div>
-                )}
-            >
-                <div styleName="root" ref={rootRef}>
-                    <ConfigProvider autoInsertSpaceInButton={false} getPopupContainer={() => rootRef.current}>
-                        <Form
-                            form={form}
-                            onValuesChange={onChange}
-                            name={selectedNode?.componentName || 'props'}
-                        >
-                            <Row>
-                                {propFields.filter(item => !item.category)
-                                    .map((item, index) => {
-                                        let category = renderCategory(index);
-                                        const field = renderField(item);
-
-                                        return [category, field];
-                                    })}
-                            </Row>
-                        </Form>
-                    </ConfigProvider>
                 </div>
-            </Pane>
-        </div>
+            )}
+        >
+            <div styleName="root" ref={rootRef}>
+                <ConfigProvider autoInsertSpaceInButton={false} getPopupContainer={() => rootRef.current}>
+                    <Form
+                        form={form}
+                        onValuesChange={onChange}
+                        name={selectedNode?.componentName || 'props'}
+                    >
+                        <Row>
+                            {propFields.filter(item => !item.category)
+                                .map((item, index) => {
+                                    let category = renderCategory(index);
+                                    const field = renderField(item);
+
+                                    return [category, field];
+                                })}
+                        </Row>
+                    </Form>
+                </ConfigProvider>
+            </div>
+        </Pane>
     );
 }
