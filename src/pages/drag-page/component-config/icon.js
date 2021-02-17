@@ -16,6 +16,10 @@ Object.keys(antdIcon)
                     componentName: key,
                 },
             },
+            fields: [
+                {label: '颜色', field: ['style', 'color'], type: 'color', version: '', desc: '图标颜色'},
+                {label: '大小', field: ['style', 'fontSize'], type: 'unit', version: '', desc: '图标大小'},
+            ],
         };
     });
 

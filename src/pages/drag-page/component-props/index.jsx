@@ -4,7 +4,7 @@ import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import FormEditor from './form-editor';
 import {useHeight} from 'ra-lib';
 import {Button} from 'antd';
-import {OTHER_HEIGHT, scrollElement} from 'src/pages/drag-page/util';
+import {isComponentConfig, OTHER_HEIGHT, scrollElement} from 'src/pages/drag-page/util';
 import CodeEditor from 'src/pages/drag-page/component-props/code-editor';
 // import {v4 as uuid} from 'uuid';
 
@@ -70,8 +70,13 @@ export default config({
         dragPageAction.render(replace);
     }
 
-    function handleDelete(index) {
+    function handleDeleteWrapper(index) {
         selectedNode.wrapper.splice(index, 1);
+        dragPageAction.render(true);
+    }
+
+    function handleDeleteProps(key) {
+        Reflect.deleteProperty(selectedNode.props, key);
         dragPageAction.render(true);
     }
 
@@ -108,6 +113,9 @@ export default config({
 
     }, [editVisible, editNode, rootRef.current]);
 
+    const propsNodes = selectedNode?.props ? Object.entries(selectedNode?.props)
+        .filter(([, value]) => isComponentConfig(value)) : [];
+
     return (
         <div style={{height: '100%', position: 'relative'}}>
             <CodeEditor
@@ -122,7 +130,7 @@ export default config({
             >
                 <section id={`fieldEditor_${selectedNode?.id}`}>
                     <FormEditor
-                        fitHeight={!selectedNode?.wrapper?.length}
+                        fitHeight={!selectedNode?.wrapper?.length && !propsNodes?.length}
                         dragPageAction={dragPageAction}
                         selectedNode={selectedNode}
                         onEdit={() => handleEdit(selectedNode)}
@@ -131,9 +139,9 @@ export default config({
                     />
                 </section>
                 {selectedNode?.wrapper?.length ? selectedNode.wrapper.map((node, index) => {
-                    const isLast = index === selectedNode.wrapper.length - 1;
+                    const isLast = !propsNodes.length && index === selectedNode.wrapper.length - 1;
                     return (
-                        <section id={`fieldEditor_${node.id}`} style={{height: isLast ? '100%' : 'auto'}}>
+                        <section key={node.id} id={`fieldEditor_${node.id}`} style={{height: isLast ? '100%' : 'auto'}}>
                             <FormEditor
                                 tip="相关包裹："
                                 tool={(
@@ -141,7 +149,7 @@ export default config({
                                         style={{marginRight: 8}}
                                         type="text"
                                         danger
-                                        onClick={() => handleDelete(index)}
+                                        onClick={() => handleDeleteWrapper(index)}
                                     >删除</Button>
                                 )}
                                 dragPageAction={dragPageAction}
@@ -153,6 +161,31 @@ export default config({
                         </section>
                     );
                 }) : null}
+
+                {propsNodes.map(([key, node], index) => {
+                    const isLast = index === propsNodes.length - 1;
+
+                    return (
+                        <section key={node.id} id={`fieldEditor_${node.id}`} style={{height: isLast ? '100%' : 'auto'}}>
+                            <FormEditor
+                                tip={`相关属性「${key}」：`}
+                                tool={(
+                                    <Button
+                                        style={{marginRight: 8}}
+                                        type="text"
+                                        danger
+                                        onClick={() => handleDeleteProps(key)}
+                                    >删除</Button>
+                                )}
+                                dragPageAction={dragPageAction}
+                                selectedNode={node}
+                                onEdit={() => handleEdit(node)}
+                                refreshProps={refreshProps}
+                                onChange={(...args) => handleChange(node, ...args)}
+                            />
+                        </section>
+                    );
+                })}
             </div>
         </div>
     );
