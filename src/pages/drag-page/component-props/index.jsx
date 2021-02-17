@@ -67,7 +67,7 @@ export default config({
         afterPropsChange && afterPropsChange({node: node, dragPageAction});
 
         console.log('props', JSON.stringify(node.props, null, 4));
-        dragPageAction.render();
+        dragPageAction.render(replace);
     }
 
     function handleDelete(index) {
