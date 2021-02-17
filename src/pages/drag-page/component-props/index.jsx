@@ -72,8 +72,7 @@ export default config({
 
     function handleDelete(index) {
         selectedNode.wrapper.splice(index, 1);
-        dragPageAction.refreshProps();
-        dragPageAction.render();
+        dragPageAction.render(true);
     }
 
     function handleEdit(node) {

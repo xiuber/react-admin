@@ -11,8 +11,7 @@ export default {
                 setTimeout(() => {
                     Reflect.deleteProperty(node.props, 'visible');
 
-                    dragPageAction.render();
-                    dragPageAction.refreshProps();
+                    dragPageAction.render(true);
                 });
             }
         },

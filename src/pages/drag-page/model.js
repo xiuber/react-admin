@@ -216,8 +216,9 @@ export default {
 
         return {pageConfig: {...pageConfig}};
     },
-    render: (_, state) => {
+    render: (refreshProps, state) => {
         const {pageConfig} = state;
+        if (refreshProps) return {pageConfig: {...pageConfig}, refreshProps: {}};
 
         return {pageConfig: {...pageConfig}};
     },
