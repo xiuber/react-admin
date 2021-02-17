@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Tabs, Tooltip} from 'antd';
+import {Tabs, Tooltip, Empty} from 'antd';
 import config from 'src/commons/config-hoc';
 import ComponentStyle from '../component-style';
 import ComponentProps from '../component-props';
@@ -28,7 +28,7 @@ export default config({
 })(function Right(props) {
     const {
         activeTabKey,
-        // selectedNode,
+        selectedNode,
         // draggingNode,
         rightSideWidth,
         rightSideExpended,
@@ -119,9 +119,10 @@ export default config({
                 >
                     {panes.map(item => {
                         const {key, title, component} = item;
+
                         return (
                             <TabPane tab={title} key={key}>
-                                {component}
+                                {selectedNode ? component : <Empty style={{marginTop: 100}} description="未选中节点"/>}
                             </TabPane>
                         );
                     })}
