@@ -3,10 +3,10 @@ import {isMac} from 'src/pages/drag-page/util';
 export const colFields = [
     {label: '弹性布局', field: 'flex', type: 'unit', version: '', desc: 'flex 布局属性'},
     {label: '占位格数', field: 'span', type: 'number', version: '', desc: '栅格占位格数，为 0 时相当于 display: none'},
-    {label: '左间隔数', span: 12, field: 'offset', type: 'number', defaultValue: '0', version: '', desc: '栅格左侧的间隔格数，间隔内不可以有栅格'},
-    {label: '栅格顺序', span: 12, labelWidth: '80px', field: 'order', type: 'number', defaultValue: '0', version: '', desc: '栅格顺序'},
-    {label: '左移格数', span: 12, field: 'pull', type: 'number', defaultValue: '0', version: '', desc: '栅格向左移动格数'},
-    {label: '右移格数', span: 12, labelWidth: '80px', field: 'push', type: 'number', defaultValue: '0', version: '', desc: '栅格向右移动格数'},
+    {label: '左间隔数', span: 12, field: 'offset', type: 'number', defaultValue: 0, version: '', desc: '栅格左侧的间隔格数，间隔内不可以有栅格'},
+    {label: '栅格顺序', span: 12, labelWidth: '80px', field: 'order', type: 'number', defaultValue: 0, version: '', desc: '栅格顺序'},
+    {label: '左移格数', span: 12, field: 'pull', type: 'number', defaultValue: 0, version: '', desc: '栅格向左移动格数'},
+    {label: '右移格数', span: 12, labelWidth: '80px', field: 'push', type: 'number', defaultValue: 0, version: '', desc: '栅格向右移动格数'},
 ];
 
 const screenType = (field) => [

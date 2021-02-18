@@ -59,7 +59,17 @@ const MultipleElement = props => {
 
                     // 切换成 对象
                     if (val === 'object') {
-                        return onChange({});
+                        // 设置默认值
+                        const option = type.find(item => item.value === val);
+                        const {fields} = option;
+
+                        const fieldsValue = fields.reduce((prev, curr) => {
+                            const {field, defaultValue} = curr;
+                            prev[field] = defaultValue;
+                            return prev;
+                        }, {});
+
+                        return onChange(fieldsValue);
                     }
 
                     // 以前是组件节点，现在切换成其他
