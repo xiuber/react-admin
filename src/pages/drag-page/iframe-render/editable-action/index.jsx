@@ -20,20 +20,20 @@ export default function EditableAction(props) {
             editableContents.forEach(item => {
                 let {selector} = item;
 
-                let eles;
+                let elements;
                 if (selector) {
                     if (typeof selector === 'function') {
-                        eles = iframeDocument.querySelectorAll(selector({node, pageConfig}));
+                        elements = iframeDocument.querySelectorAll(selector({node, pageConfig}));
                     } else {
-                        eles = iframeDocument.querySelectorAll(`.${className} ${selector}`);
+                        elements = iframeDocument.querySelectorAll(`.${className} ${selector}`);
                     }
                 } else {
-                    eles = iframeDocument.querySelectorAll(`.${className}`);
+                    elements = iframeDocument.querySelectorAll(`.${className}`);
                 }
 
-                if (!eles?.length) return;
+                if (!elements?.length) return;
 
-                eles.forEach((ele, index) => cb({eles, ele, index, node, item}));
+                elements.forEach((ele, index) => cb({elements, ele, index, node, item}));
             });
         }
     });
@@ -44,16 +44,10 @@ export default function EditableAction(props) {
         const actions = {};
 
         let tabIndex = 1000;
-        loop(({eles, ele, index, node, item}) => {
-            const hasText = Array.from(ele.childNodes).some(node => {
-                return node.nodeType === Node.TEXT_NODE;
-            });
-
+        loop(({elements, ele, index, node, item}) => {
             // 如果没有纯文本节点，直接返回
-            if (!hasText) {
-                ele.removeAttribute('contenteditable');
-                return;
-            }
+            const hasText = Array.from(ele.childNodes).some(node => node.nodeType === Node.TEXT_NODE);
+            if (!hasText) return;
 
             let {onInput, onBlur, onClick, propsField} = item;
             tabIndex++;
@@ -65,7 +59,7 @@ export default function EditableAction(props) {
                     // 多个，说明设置的是子节点
                     if (!node.props) node.props = {};
                     let props = node.props;
-                    if (eles.length > 1) {
+                    if (elements.length > 1) {
                         const childNode = node.children[index];
                         if (!childNode.props) childNode.props = {};
                         props = childNode.props;
@@ -89,8 +83,6 @@ export default function EditableAction(props) {
             const options = {index, node, pageConfig, dragPageAction, iframeDocument};
 
             function handleClick(e) {
-                e.preventDefault();
-                console.log(e);
                 onClick && onClick(e)(options);
             }
 
