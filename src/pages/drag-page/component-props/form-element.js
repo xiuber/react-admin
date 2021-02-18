@@ -16,22 +16,28 @@ import FooterSwitch from './FooterSwitch';
 import OffsetInput from 'src/pages/drag-page/component-props/offset-input';
 import Placement from 'src/pages/drag-page/component-props/placement';
 import ReactNode from 'src/pages/drag-page/component-props/ReactNode';
+import MultipleElement from 'src/pages/drag-page/component-props/multiple-element';
+import ObjectElement from 'src/pages/drag-page/component-props/object-element';
 
-function getPlaceholder(options, props) {
-    const {field, placeholder} = options;
+function getPlaceholder(option, props) {
+    const {field, placeholder} = option;
     if (placeholder) return placeholder;
     if (Array.isArray(field)) return field.join('.');
 
     return field;
 }
 
-export default {
-    ReactNode: (options) => props => {
-        const {node} = options;
+const elementMap = {
+    object: (option) => props => {
+        console.log(props);
+        return <ObjectElement {...props}/>;
+    },
+    ReactNode: (option) => props => {
+        const {node} = option;
 
         return <ReactNode {...props} node={node}/>;
     },
-    placement: (options) => props => {
+    placement: (option) => props => {
         return (
             <Placement
                 allowClear
@@ -39,7 +45,7 @@ export default {
             />
         );
     },
-    offset: (options) => props => {
+    offset: (option) => props => {
         return (
             <OffsetInput
                 allowClear
@@ -47,31 +53,31 @@ export default {
             />
         );
     },
-    color: (options) => props => {
+    color: (option) => props => {
         return (
             <ColorInput
                 allowClear
-                placeholder={getPlaceholder(options, props)}
+                placeholder={getPlaceholder(option, props)}
                 {...props}
             />
         );
     },
-    FooterSwitch: (options) => props => {
+    FooterSwitch: (option) => props => {
         return (
             <FooterSwitch {...props}/>
         );
     },
-    options: (options) => props => {
-        const {withLabel} = options;
+    options: (option) => props => {
+        const {withLabel} = option;
         return (
             <OptionsEditor withLabel={withLabel} {...props}/>
         );
     },
-    unit: (options) => props => {
+    unit: (option) => props => {
         return (
             <UnitInput
                 allowClear
-                placeholder={getPlaceholder(options, props)}
+                placeholder={getPlaceholder(option, props)}
                 {...props}
             />
         );
@@ -82,35 +88,35 @@ export default {
             <Switch checked={value} {...props}/>
         );
     },
-    string: options => props => {
+    string: option => props => {
         return (
-            <Input allowClear placeholder={getPlaceholder(options, props)} {...props}/>
+            <Input allowClear placeholder={getPlaceholder(option, props)} {...props}/>
         );
     },
-    number: options => props => {
+    number: option => props => {
         const {style} = props;
         return (
             <InputNumber
                 allowClear
-                placeholder={getPlaceholder(options, props)}
+                placeholder={getPlaceholder(option, props)}
                 style={{width: '100%', ...style}}
                 {...props}
             />
         );
     },
-    select: options => props => {
-        const {options: _options} = options;
+    select: option => props => {
+        const {options: _options} = option;
         return (
             <Select
                 allowClear
-                placeholder={getPlaceholder(options, props)}
+                placeholder={getPlaceholder(option, props)}
                 options={_options}
                 {...props}
             />
         );
     },
-    'radio-group': options => props => {
-        const {options: _options} = options;
+    'radio-group': option => props => {
+        const {options: _options} = option;
         return (
             <RadioGroup
                 allowClear
@@ -120,8 +126,8 @@ export default {
             />
         );
     },
-    button: options => props => {
-        const {label, field} = options;
+    button: option => props => {
+        const {label, field} = option;
         const {value, onChange} = props;
         return (
             <Tooltip
@@ -139,8 +145,33 @@ export default {
             </Tooltip>
         );
     },
-    IconReactNode: options => props => {
+    IconReactNode: option => props => {
         // TODO
         return <span style={{color: 'red'}}>TODO 请选择图标</span>;
     },
 };
+
+export default elementMap;
+
+
+export function getElement(option) {
+    const {type} = option;
+
+
+    if (Array.isArray(type)) {
+        return (props) => <MultipleElement fieldOption={option} {...props}/>;
+    }
+
+    if (typeof type === 'object') {
+        const {fields} = type;
+        return (props) => <ObjectElement fields={fields} {...props}/>;
+    }
+
+    const elementFunction = elementMap[type];
+
+    if (elementFunction) {
+        return elementFunction({...option});
+    }
+
+    return (props) => <span style={{color: 'red'}}>TODO {type} 对应的表单元素不存在</span>;
+}

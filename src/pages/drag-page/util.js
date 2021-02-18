@@ -915,7 +915,7 @@ export function findParentNodeById(root, id) {
     }
 }
 
-// 根据id查找具体名称对应的祖先节点
+// 根据id查找具体名称对应的最近祖先节点
 export function findParentNodeByParentName(node, name, id) {
     const child = findNodeById(node, id);
     if (node.componentName === name && child) return node;
@@ -935,11 +935,14 @@ export function getAllNodesByName(node, name) {
             nodes.push(n);
         }
 
-        if (n?.children?.length) {
-            n.children.forEach(i => loop(i));
+        if (n.componentName !== node.componentName) {
+            if (n?.children?.length) {
+                n.children.forEach(i => loop(i));
+            }
         }
     };
-    loop(node);
+
+    node.children.forEach(item => loop(item));
 
     return nodes;
 }

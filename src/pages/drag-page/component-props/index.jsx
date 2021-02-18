@@ -32,7 +32,7 @@ export default config({
     const [height] = useHeight(rootRef, OTHER_HEIGHT);
 
 
-    function handleChange(node, changedValues, allValues, replace) {
+    function handleChange(node, allValues, replace) {
         if (!node?.componentName) return;
 
         if (!node?.props) node.props = {};
@@ -119,7 +119,7 @@ export default config({
     return (
         <div style={{height: '100%', position: 'relative'}}>
             <CodeEditor
-                onChange={values => handleChange(editNode, {}, values, true)}
+                onChange={values => handleChange(editNode, values, true)}
                 visible={editVisible}
                 onCancel={() => setEditVisible(false)}
                 selectedNode={editNode}

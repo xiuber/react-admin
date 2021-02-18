@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {isComponentConfig} from 'src/pages/drag-page/util';
-import elementMap from 'src/pages/drag-page/component-props/form-element';
+import {getElement} from 'src/pages/drag-page/component-props/form-element';
 import {Select} from 'antd';
 import {v4 as uuid} from 'uuid';
 
@@ -28,15 +28,16 @@ const MultipleElement = props => {
     }
 
     const Ele = useMemo(() => {
-        const getElement = elementMap[currentType];
+        let type = currentType;
 
-        if (!getElement) return () => (<span style={{color: 'red'}}>TODO {type} 对应的表单元素不存在</span>);
-
-        return getElement({...fieldOption, node});
+        if (currentType === 'object') {
+            type = typeOption;
+        }
+        return getElement({...fieldOption, type, node});
     }, [currentType]);
 
     return (
-        <div style={{display: 'flex', alignItems: 'center'}}>
+        <div style={{display: 'flex', alignItems: 'flex-start'}}>
             <Select
                 style={{flex: '0 0 80px', marginRight: 4}}
                 value={currentType}
@@ -56,6 +57,11 @@ const MultipleElement = props => {
                         return onChange(nextValue);
                     }
 
+                    // 切换成 对象
+                    if (val === 'object') {
+                        return onChange({});
+                    }
+
                     // 以前是组件节点，现在切换成其他
                     if (isComponentConfig(value)) {
                         const iframeDocument = document.getElementById('dnd-iframe').contentDocument;
@@ -70,11 +76,13 @@ const MultipleElement = props => {
                         nextValue = ele.innerText;
                         return onChange(nextValue);
                     }
+
+                    return onChange(nextValue);
                 }}
                 options={type}
             />
             <div style={{flex: 1}}>
-                <Ele value={value} onChange={onChange} {...others}/>
+                <Ele value={value} onChange={onChange}  {...others}/>
             </div>
         </div>
     );
