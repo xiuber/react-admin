@@ -393,7 +393,12 @@ export default {
 
         const {sourceId, targetId} = options;
 
+        const parentNode = findParentNodeById(pageConfig, sourceId);
         const sourceNode = deleteComponentById(pageConfig, sourceId);
+
+        // 添加占位符
+        addDragHolder(parentNode);
+
         const targetNode = findNodeById(pageConfig, targetId);
 
         replaceNode({sourceNode, targetNode, pageConfig});
