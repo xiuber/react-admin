@@ -201,13 +201,18 @@ export default config({
             return element;
         }
 
-        return fields.filter(item => !item.category)
-            .map((item, index) => {
-                let category = renderCategory(index);
-                const field = renderField(item);
+        const commonFields = fields.filter(item => !item.category);
 
-                return [category, field];
-            });
+        if (!commonFields.length) {
+            return renderCategory(0);
+        }
+
+        return commonFields.map((item, index) => {
+            let category = renderCategory(index);
+            const field = renderField(item);
+
+            return [category, field];
+        });
 
     }, [fields, selectedNode]);
 

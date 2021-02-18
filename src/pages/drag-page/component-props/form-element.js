@@ -18,6 +18,7 @@ import Placement from 'src/pages/drag-page/component-props/placement';
 import ReactNode from 'src/pages/drag-page/component-props/ReactNode';
 import MultipleElement from 'src/pages/drag-page/component-props/multiple-element';
 import ObjectElement from 'src/pages/drag-page/component-props/object-element';
+import ArrayElement from 'src/pages/drag-page/component-props/array-element';
 
 function getPlaceholder(option, props) {
     const {field, placeholder} = option;
@@ -158,9 +159,14 @@ export function getElement(option) {
         return (props) => <MultipleElement fieldOption={option} {...props}/>;
     }
 
-    if (typeof type === 'object' || type === 'object') {
+    if ((typeof type === 'object' && type.value === 'object') || type === 'object') {
         const {fields} = type;
         return (props) => <ObjectElement fields={fields} {...props}/>;
+    }
+
+    if (typeof type === 'object' && type.value === 'array') {
+
+        return (props) => <ArrayElement length={type.length} type={type.type} {...props}/>;
     }
 
     const elementFunction = elementMap[type];

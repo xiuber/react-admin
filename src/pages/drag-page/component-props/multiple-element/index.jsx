@@ -14,7 +14,10 @@ const MultipleElement = props => {
     } = props;
     const {type} = fieldOption;
 
-    const valueType = typeof value;
+    let valueType = typeof value;
+
+    if (Array.isArray(value)) valueType = 'array';
+
     const typeOption = type.find(item => item.value === valueType);
 
     let currentType = type[0].value;
@@ -30,7 +33,7 @@ const MultipleElement = props => {
     const Ele = useMemo(() => {
         let type = currentType;
 
-        if (currentType === 'object') {
+        if (currentType === 'object' || currentType === 'array') {
             type = typeOption;
         }
         return getElement({...fieldOption, type, node});
@@ -70,6 +73,12 @@ const MultipleElement = props => {
                         }, {});
 
                         return onChange(fieldsValue);
+                    }
+
+                    // 切换成数组
+                    if (val === 'array') {
+
+                        return onChange([]);
                     }
 
                     // 以前是组件节点，现在切换成其他

@@ -86,6 +86,20 @@ export default [
                     componentName: 'Checkbox',
                 },
             },
+            {
+                title: '多选框组',
+                renderPreview: true,
+                previewProps: {checked: ['1', '2']},
+                config: {
+                    componentName: 'Checkbox.Group',
+                    props: {
+                        options: [
+                            {value: '1', label: '唱歌'},
+                            {value: '2', label: '跳舞'},
+                        ],
+                    },
+                },
+            },
         ],
     },
     {
@@ -97,6 +111,13 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'DatePicker',
+                },
+            },
+            {
+                title: '日期区间',
+                renderPreview: true,
+                config: {
+                    componentName: 'DatePicker.RangePicker',
                 },
             },
         ],
