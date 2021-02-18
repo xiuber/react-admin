@@ -54,6 +54,6 @@ export default {
             options: targetOptions,
         },
         {label: 'htmlType', field: 'htmlType', type: 'string', defaultValue: 'button', version: '', desc: '设置 button 原生的 type 值，可选值请参考 HTML 标准'},
-        // {label: '按钮事件', field: 'onClick', type: '(event) => void', version: '', desc: '点击按钮时的回调'},
+        {label: '点击事件', field: 'onClick', type: 'function', version: '', desc: '点击按钮时的回调'},
     ],
 };

@@ -18,7 +18,7 @@ export default {
             desc: '垂直对齐方式',
         },
         {
-            label: '栅格间隔',
+            label: '栅格水平间隔',
             field: 'gutter',
             type: 'number',
             defaultValue: '0',

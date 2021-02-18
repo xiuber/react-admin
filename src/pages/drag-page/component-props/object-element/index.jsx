@@ -32,14 +32,13 @@ export default config({
 
     const wrapperCol = {flex: '1 1 0%'};
 
+    // 过滤掉函数
+    fields = fields.filter(item => item.type !== 'function');
+
     function handleChange(values) {
         if (!value) value = {};
 
-        // 删除所有属性，保留value引用
-        Object.keys(value)
-            .forEach(key => Reflect.deleteProperty(value, key));
-
-        // 赋值
+        // 赋值 保留value引用
         Object.entries(values)
             .forEach(([key, val]) => {
                 value[key] = val;

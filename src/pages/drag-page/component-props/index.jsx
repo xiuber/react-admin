@@ -50,7 +50,7 @@ export default config({
         // 清除空属性
         Object.entries(node.props)
             .forEach(([key, value]) => {
-                if (value === undefined || value === '') {
+                if (value === undefined || value === '' || value === null) {
                     Reflect.deleteProperty(node.props, key);
                 }
             });
