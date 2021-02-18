@@ -3,11 +3,8 @@ export default {
     dropAccept: ['Tabs.TabPane'],
     editableContents: [
         {
-            selector: '.ant-tabs-tab',
-            onInput: e => options => {
-                const {node, index} = options;
-                node.children[index].props.tab = e.target.innerText;
-            },
+            selector: '.ant-tabs-tab .ant-tabs-tab-btn',
+            propsField: 'tab',
         },
     ],
     fields: [

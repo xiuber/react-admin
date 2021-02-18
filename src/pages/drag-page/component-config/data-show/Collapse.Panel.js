@@ -1,6 +1,12 @@
 import {handleAfterRender} from 'src/pages/drag-page/util';
 
 export default {
+    editableContents: [
+        {
+            selector: '.ant-collapse-header',
+            propsField: 'header',
+        },
+    ],
     isContainer: true,
     dropInTo: 'Collapse',
     withHolder: true,

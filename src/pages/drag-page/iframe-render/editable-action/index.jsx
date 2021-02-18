@@ -33,7 +33,7 @@ export default function EditableAction(props) {
 
                 if (!eles?.length) return;
 
-                eles.forEach((ele, index) => cb(ele, index, node, item));
+                eles.forEach((ele, index) => cb({eles, ele, index, node, item}));
             });
         }
     });
@@ -44,7 +44,17 @@ export default function EditableAction(props) {
         const actions = {};
 
         let tabIndex = 1000;
-        loop((ele, index, node, item) => {
+        loop(({eles, ele, index, node, item}) => {
+            const hasText = Array.from(ele.childNodes).some(node => {
+                return node.nodeType === Node.TEXT_NODE;
+            });
+
+            // 如果没有纯文本节点，直接返回
+            if (!hasText) {
+                ele.removeAttribute('contenteditable');
+                return;
+            }
+
             let {onInput, onBlur, onClick, propsField} = item;
             tabIndex++;
 
@@ -52,8 +62,18 @@ export default function EditableAction(props) {
 
             if (propsField) {
                 handleInput = (e) => {
+                    // 多个，说明设置的是子节点
                     if (!node.props) node.props = {};
-                    node.props[propsField] = e.target.innerText;
+                    let props = node.props;
+                    if (eles.length > 1) {
+                        const childNode = node.children[index];
+                        if (!childNode.props) childNode.props = {};
+                        props = childNode.props;
+                    }
+
+                    if (!props[propsField] || typeof props[propsField] !== 'object') {
+                        props[propsField] = e.target.innerText;
+                    }
                 };
             }
 
@@ -118,9 +138,9 @@ export default function EditableAction(props) {
             actions[actionKey] = eventMap;
         });
         return () => {
-            loop((ele) => {
+            loop(({ele}) => {
                 // ele.style.userModify = '';
-                ele.setAttribute('contenteditable', 'false');
+                ele.removeAttribute('contenteditable');
                 ele.removeAttribute('tabindex');
                 const actionKey = ele.getAttribute('data-actionKey');
 

@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Form, ConfigProvider, Row, Col, Tooltip} from 'antd';
 import Pane from '../../pane';
 import elementMap from '../form-element';
@@ -11,8 +11,8 @@ import './style.less';
 
 export default function PropsFormEditor(props) {
     const {
-        selectedNode,
         refreshProps,
+        selectedNode,
         dragPageAction,
         onChange,
         onEdit,
@@ -23,11 +23,10 @@ export default function PropsFormEditor(props) {
 
     const [form] = Form.useForm();
     const rootRef = useRef(null);
-    const [propFields, setPropFields] = useState([]);
-    const [labelCol, setLabelCol] = useState({flex: '80px'});
 
     const wrapperCol = {flex: '1 1 0%'};
 
+    // 表单回显
     useEffect(() => {
         form.resetFields();
 
@@ -36,18 +35,12 @@ export default function PropsFormEditor(props) {
 
         const {fields = []} = componentConfig || {};
 
-        setPropFields(fields);
-
         // 回显表单 设置默认值
         const fieldValues = {...nodeProps};
 
-        // 自大字符标签
-        let maxLabel = '';
-
         // 设置默认属性
         fields.forEach(item => {
-            const {field, label, defaultValue} = item;
-            if (label.length > maxLabel.length) maxLabel = label;
+            const {field, defaultValue} = item;
             if (fieldValues[field] === undefined) {
                 fieldValues[field] = defaultValue;
             }
@@ -56,15 +49,22 @@ export default function PropsFormEditor(props) {
         // 设置表单
         form.setFieldsValue(fieldValues);
 
-        // 设置label宽度
-        const labelWidth = getLabelWidth(maxLabel);
+    }, [refreshProps, selectedNode]);
 
-        setLabelCol({flex: `${labelWidth}px`});
+    const {fields: propFields = []} = getComponentConfig(selectedNode?.componentName);
 
-    }, [selectedNode, refreshProps]);
+    // 最大字符标签
+    let maxLabel = '';
+    propFields.forEach(item => {
+        const {label} = item;
+        if (label.length > maxLabel.length) maxLabel = label;
+    });
+    // 设置label宽度
+    const labelWidth = getLabelWidth(maxLabel);
+    const labelCol = {flex: `${labelWidth}px`};
 
+    // 获取分类字段
     const categories = [];
-
     propFields.forEach(item => {
         const {category, categoryOrder} = item;
         if (!category) return;
@@ -80,6 +80,7 @@ export default function PropsFormEditor(props) {
         node.fields.push(item);
     });
 
+    // 渲染分类字段
     function renderCategory(index) {
         const _categories = categories.filter(item => {
             const {categoryOrder = 0} = item;
@@ -119,6 +120,7 @@ export default function PropsFormEditor(props) {
         });
     }
 
+    // 渲染字段
     function renderField(item) {
         const {
             label,
@@ -201,7 +203,6 @@ export default function PropsFormEditor(props) {
         }
         return element;
     }
-
 
     return (
         <Pane

@@ -8,8 +8,7 @@ export default {
         //
         //     if (!node.props.dot) {
         //         Reflect.deleteProperty(node.props, 'color');
-        //         dragPageAction.refreshProps();
-        //         dragPageAction.render();
+        //         dragPageAction.render(true);
         //     }
         // },
     },
