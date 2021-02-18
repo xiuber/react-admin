@@ -8,7 +8,7 @@ import {
     getAllNodesByName,
     syncObject,
     setNodeId,
-    deleteComponentById,
+    deleteComponentById, isDropAccept,
 } from './util';
 
 // 历史记录数量
@@ -396,42 +396,20 @@ export default {
         const sourceNode = deleteComponentById(pageConfig, sourceId);
         const targetNode = findNodeById(pageConfig, targetId);
 
-        if (!targetNode) return;
-
-        // 删除所有属性，保留引用
-        Object.keys(targetNode)
-            .forEach(key => {
-                if (key === 'id') return;
-                Reflect.deleteProperty(targetNode, key);
-            });
-        Object.entries(sourceNode).forEach(([key, value]) => {
-            if (key === 'id') return;
-            targetNode[key] = value;
-        });
+        replaceNode({sourceNode, targetNode, pageConfig});
 
         return {pageConfig: {...pageConfig}, refreshProps: {}};
     },
     addReplace: (options, state) => {
         const {pageConfig} = state;
-        const {node, targetId} = options;
+        const {node: sourceNode, targetId} = options;
 
         // 新增节点，添加id
-        setNodeId(node, true);
+        setNodeId(sourceNode, true);
 
         const targetNode = findNodeById(pageConfig, targetId);
 
-        if (!targetNode) return;
-
-        // 删除所有属性，保留引用
-        Object.keys(targetNode)
-            .forEach(key => {
-                if (key === 'id') return;
-                Reflect.deleteProperty(targetNode, key);
-            });
-        Object.entries(node).forEach(([key, value]) => {
-            if (key === 'id') return;
-            targetNode[key] = value;
-        });
+        replaceNode({sourceNode, targetNode, pageConfig});
 
         return {pageConfig: {...pageConfig}, refreshProps: {}};
     },
@@ -635,5 +613,42 @@ function addDragHolder(node) {
                 props: {...holderProps},
             },
         ];
+    }
+}
+
+// 替换节点
+
+function replaceNode(options) {
+    const {
+        pageConfig,
+        sourceNode,
+        targetNode,
+    } = options;
+
+    if (!targetNode) return;
+
+    // 删除所有属性，保留引用
+    const {children} = targetNode;
+    Object.keys(targetNode)
+        .forEach(key => {
+            if (key === 'id') return;
+            Reflect.deleteProperty(targetNode, key);
+        });
+    Object.entries(sourceNode).forEach(([key, value]) => {
+        if (key === 'id') return;
+        targetNode[key] = value;
+    });
+
+    if (children?.length) {
+        targetNode.children = children.filter(item => {
+            const options = {
+                draggingNode: item,
+                pageConfig,
+                targetComponentId: targetNode.id,
+                isChildren: true,
+            };
+
+            return isDropAccept(options);
+        });
     }
 }

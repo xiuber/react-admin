@@ -796,13 +796,13 @@ export function isDropAccept(options) {
 
     if (!draggingNode) return false;
 
-    const {toSelectTarget} = getDraggingNodeInfo({e, draggingNode});
+    const {toSelectTarget, isReplace} = getDraggingNodeInfo({e, draggingNode});
 
-    if (toSelectTarget) return true;
+    if (toSelectTarget && !isReplace) return true;
 
     let targetNode;
     if (isChildren) targetNode = findNodeById(pageConfig, targetComponentId);
-    if (isBefore || isAfter) targetNode = findParentNodeById(pageConfig, targetComponentId);
+    if (isBefore || isAfter || isReplace) targetNode = findParentNodeById(pageConfig, targetComponentId);
     if (!targetNode) return false;
 
     // 不允许父节点拖入子节点

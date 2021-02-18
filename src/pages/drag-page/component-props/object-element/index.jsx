@@ -21,7 +21,7 @@ export default config({
         refreshProps,
         action: {dragPage: dragPageAction},
 
-        fields,
+        fields = [],
         value,
         onChange,
     } = props;

@@ -1,5 +1,5 @@
 export default {
-    dropAccept: ['Col', 'DragHolder'],
+    dropAccept: ['Col'],
     withHolder: true,
     componentDisplayName: ({node}) => {
         const count = node?.children?.filter(item => item.componentName === 'Col').length || 0;
