@@ -28,7 +28,7 @@ const defaultConfig = {
     //     {
     //         selector: '.ant-modal-title', // string || function  基于当前元素的选择器，缺省标识当前节点
     //         propsField: 'title', // 要修改的props属性
-    //
+    //          onClick: event => options => {},
     //          onInput: event => options => { // 输入事件
     //              const {node, pageConfig, dragPageAction} = options;
     //              const value = event.target.innerText;

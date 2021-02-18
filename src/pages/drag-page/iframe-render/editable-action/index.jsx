@@ -90,6 +90,7 @@ export default function EditableAction(props) {
 
             function handleClick(e) {
                 e.preventDefault();
+                console.log(e);
                 onClick && onClick(e)(options);
             }
 

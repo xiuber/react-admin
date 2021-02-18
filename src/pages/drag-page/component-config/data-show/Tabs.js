@@ -4,7 +4,7 @@ export default {
     editableContents: [
         {
             selector: '.ant-tabs-tab .ant-tabs-tab-btn',
-            propsField: 'tab',
+            propsField: 'tab', // 可以直接定位到直接子节点
         },
     ],
     fields: [
