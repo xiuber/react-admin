@@ -28,10 +28,6 @@ function getPlaceholder(option, props) {
 }
 
 const elementMap = {
-    object: (option) => props => {
-        console.log(props);
-        return <ObjectElement {...props}/>;
-    },
     ReactNode: (option) => props => {
         const {node} = option;
 
@@ -162,7 +158,7 @@ export function getElement(option) {
         return (props) => <MultipleElement fieldOption={option} {...props}/>;
     }
 
-    if (typeof type === 'object') {
+    if (typeof type === 'object' || type === 'object') {
         const {fields} = type;
         return (props) => <ObjectElement fields={fields} {...props}/>;
     }

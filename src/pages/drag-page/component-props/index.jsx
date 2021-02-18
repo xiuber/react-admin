@@ -131,7 +131,6 @@ export default config({
                 <section id={`fieldEditor_${selectedNode?.id}`}>
                     <FormEditor
                         fitHeight={!selectedNode?.wrapper?.length && !propsNodes?.length}
-                        dragPageAction={dragPageAction}
                         selectedNode={selectedNode}
                         onEdit={() => handleEdit(selectedNode)}
                         refreshProps={refreshProps}
@@ -152,7 +151,6 @@ export default config({
                                         onClick={() => handleDeleteWrapper(index)}
                                     >删除</Button>
                                 )}
-                                dragPageAction={dragPageAction}
                                 selectedNode={node}
                                 onEdit={() => handleEdit(node)}
                                 refreshProps={refreshProps}
@@ -177,7 +175,6 @@ export default config({
                                         onClick={() => handleDeleteProps(key)}
                                     >删除</Button>
                                 )}
-                                dragPageAction={dragPageAction}
                                 selectedNode={node}
                                 onEdit={() => handleEdit(node)}
                                 refreshProps={refreshProps}

@@ -9,7 +9,6 @@ import './style.less';
 export default function PropsFormEditor(props) {
     const {
         selectedNode,
-        dragPageAction,
         onChange,
 
         onEdit,
@@ -40,8 +39,6 @@ export default function PropsFormEditor(props) {
         >
             <div styleName="root">
                 <ObjectElement
-                    selectedNode={selectedNode}
-                    dragPageAction={dragPageAction}
                     fields={fields}
                     value={value}
                     onChange={onChange}

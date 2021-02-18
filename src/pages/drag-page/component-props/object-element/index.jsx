@@ -4,12 +4,22 @@ import elementMap, {getElement} from '../form-element';
 import {showFieldByAppend} from 'src/pages/drag-page/component-config';
 import {getLabelWidth} from 'src/pages/drag-page/util';
 import {v4 as uuid} from 'uuid';
+import config from 'src/commons/config-hoc';
 import './style.less';
 
-export default function ObjectElement(props) {
+export default config({
+    connect: state => {
+
+        return {
+            selectedNode: state.dragPage.selectedNode,
+            refreshProps: state.dragPage.refreshProps,
+        };
+    },
+})(function ObjectElement(props) {
     let {
         selectedNode,
-        dragPageAction,
+        refreshProps,
+        action: {dragPage: dragPageAction},
 
         fields,
         value,
@@ -40,7 +50,6 @@ export default function ObjectElement(props) {
 
     // 表单回显
     useEffect(() => {
-        console.log(value);
         form.resetFields();
 
         // 回显表单
@@ -57,7 +66,7 @@ export default function ObjectElement(props) {
         // 设置表单
         form.setFieldsValue(fieldValues);
 
-    }, [value]);
+    }, [value, selectedNode, refreshProps]);
 
     // 基于fields 构建表单
     const element = useMemo(() => {
@@ -165,7 +174,7 @@ export default function ObjectElement(props) {
                         name={field}
                         colon={false}
                     >
-                        <FormElement onKeyDown={handleKeyDown} node={selectedNode}/>
+                        <FormElement onKeyDown={handleKeyDown}/>
                     </Form.Item>
                 </Col>
             );
@@ -201,7 +210,7 @@ export default function ObjectElement(props) {
                 return [category, field];
             });
 
-    }, [fields]);
+    }, [fields, selectedNode]);
 
     return (
         <div ref={rootRef}>
@@ -218,4 +227,4 @@ export default function ObjectElement(props) {
             </ConfigProvider>
         </div>
     );
-}
+});

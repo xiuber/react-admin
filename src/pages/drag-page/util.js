@@ -916,15 +916,14 @@ export function findParentNodeById(root, id) {
 }
 
 // 根据id查找具体名称对应的最近祖先节点
-export function findParentNodeByParentName(node, name, id) {
-    const child = findNodeById(node, id);
-    if (node.componentName === name && child) return node;
-    if (node?.children?.length) {
-        for (let n of node.children) {
-            const result = findParentNodeByParentName(n, name, id);
-            if (result) return result;
-        }
-    }
+export function findParentNodeByParentName(pageConfig, name, id) {
+    const parentNode = findParentNodeById(pageConfig, id);
+
+    if (!parentNode) return pageConfig;
+
+    if (parentNode.componentName === name) return parentNode;
+
+    return findParentNodeByParentName(pageConfig, name, parentNode.id);
 }
 
 // 根据componentName获取所有节点

@@ -54,8 +54,6 @@ const ReactNode = config({
             // 删除拖过来的节点
             deleteComponentById(pageConfig, sourceComponentId);
 
-            console.log('sourceNode', sourceNode);
-
             onChange(sourceNode);
         }
 
