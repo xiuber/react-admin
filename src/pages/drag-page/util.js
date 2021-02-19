@@ -606,7 +606,6 @@ export function deleteComponentById(root, id) {
                     if (value.id === id) {
                         Reflect.deleteProperty(node.props, key);
                         deletedNode = value;
-                        console.log('deletedNode', deletedNode);
                         return;
                     } else {
                         if (value?.children?.length) {

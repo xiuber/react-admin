@@ -10,6 +10,15 @@ export default {
         {label: '后置标签', field: 'addonAfter', type: 'ReactNode', version: '', desc: '带标签的 input，设置后置标签'},
         {label: '前缀图标', field: 'prefix', type: 'ReactNode', version: '', desc: '带有前缀图标的 input'},
         {label: '后缀图标', field: 'suffix', type: 'ReactNode', version: '', desc: '带有后缀图标的 input'},
+        {
+            label: '控件大小', field: 'size', type: 'radio-group', version: '',
+            options: [
+                {value: 'large', label: '大号'},
+                {value: 'middle', label: '中号'},
+                {value: 'small', label: '小号'},
+            ],
+            desc: '控件大小。注：标准表单内的输入框大小限制为 large',
+        },
     ],
 };
 

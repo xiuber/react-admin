@@ -137,6 +137,36 @@ export default [
                 },
             },
             {
+                title: '文本输入框',
+                renderPreview: true,
+                config: {
+                    componentName: 'Input.TextArea',
+                    props: {
+                        placeholder: '请输入',
+                    },
+                },
+            },
+            {
+                title: '搜索输入框',
+                renderPreview: true,
+                config: {
+                    componentName: 'Input.Search',
+                    props: {
+                        placeholder: '请输入',
+                    },
+                },
+            },
+            {
+                title: '密码输入框',
+                renderPreview: true,
+                config: {
+                    componentName: 'Input.Password',
+                    props: {
+                        placeholder: '请输入',
+                    },
+                },
+            },
+            {
                 title: '数字输入框',
                 renderPreview: true,
                 config: {

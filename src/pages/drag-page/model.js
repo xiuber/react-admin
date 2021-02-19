@@ -539,7 +539,7 @@ function addOrMoveNode(options) {
 
         afterAddChildren && afterAddChildren(args);
 
-        return {pageConfig: {...pageConfig}};
+        return {pageConfig: {...pageConfig}, refreshProps: {}};
     }
 
     if (!targetCollection) return;
@@ -558,7 +558,7 @@ function addOrMoveNode(options) {
 
         afterAddChildren && afterAddChildren(args);
 
-        return {pageConfig: {...pageConfig}};
+        return {pageConfig: {...pageConfig}, refreshProps: {}};
     }
 
     if (isAfter) {
@@ -575,7 +575,7 @@ function addOrMoveNode(options) {
 
         afterAddChildren && afterAddChildren(args);
 
-        return {pageConfig: {...pageConfig}};
+        return {pageConfig: {...pageConfig}, refreshProps: {}};
     }
 
     return {pageConfig: {...pageConfig}, refreshProps: {}};

@@ -40,7 +40,7 @@ const MultipleElement = props => {
     }, [currentType]);
 
     return (
-        <div style={{display: 'flex', alignItems: 'flex-start'}}>
+        <div style={{display: 'flex', alignItems: currentType === 'object' ? 'flex-start' : 'center'}}>
             <Select
                 style={{flex: '0 0 80px', marginRight: 4}}
                 value={currentType}
@@ -107,6 +107,8 @@ const MultipleElement = props => {
     );
 };
 
-MultipleElement.propTypes = {};
+MultipleElement.propTypes =
+{
+};
 
 export default MultipleElement;
