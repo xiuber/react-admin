@@ -6,7 +6,7 @@ export default {
     fields: [
         ...(DatePicker.fields.filter(item => item.field !== 'placeholder')),
         {
-            label: '输入框提示文字', field: 'placeholder',
+            label: '输入框提示', field: 'placeholder',
             type: {value: 'array', label: '分别设置', length: 2, type: 'string'},
             version: '',
             desc: '输入框提示文字',

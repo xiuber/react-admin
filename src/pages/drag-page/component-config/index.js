@@ -135,7 +135,8 @@ export function showFieldByAppend(values, appendField) {
 
     if (typeof appendField === 'object') {
         isShow = Object.entries(appendField).some(([k, v]) => {
-            return values[k] === v;
+            const arrayValue = Array.isArray(v) ? v : [v];
+            return arrayValue.includes(values[k]);
         });
     }
 

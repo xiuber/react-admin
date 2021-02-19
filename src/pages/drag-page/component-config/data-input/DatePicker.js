@@ -26,7 +26,7 @@ export default {
             desc: '设置选择器类型',
         },
         {
-            label: '输入框提示文字', field: 'placeholder', type: 'string',
+            label: '输入框提示', field: 'placeholder', type: 'string',
             version: '',
             desc: '输入框提示文字',
         },

@@ -12,7 +12,7 @@ export default {
         {label: '边框', category: '选项', field: 'bordered', type: 'boolean', defaultValue: true, version: '', desc: '是否有边框'},
         {label: '禁用', category: '选项', field: 'disabled', type: 'boolean', defaultValue: false, version: '', desc: '禁用'},
         {label: '可搜索', category: '选项', field: 'showSearch', type: 'boolean', defaultValue: false, version: '', desc: '在选择框中显示搜索框'},
-        {label: '输入框占位文本', field: 'placeholder', type: 'string', defaultValue: '请选择', version: '', desc: '输入框占位文本'},
+        {label: '输入框提示', field: 'placeholder', type: 'string', defaultValue: '请选择', version: '', desc: '输入框占位文本'},
         {
             label: '输入框大小', field: 'size', type: 'radio-group', version: '',
             options: [

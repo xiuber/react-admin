@@ -122,7 +122,6 @@ export function handleAfterRender(options) {
     Object.entries(dragProps)
         .forEach(([key, value]) => {
             oldEle && oldEle.removeAttribute(key);
-
             if (isPreview) {
                 ele.removeAttribute(key);
             } else {

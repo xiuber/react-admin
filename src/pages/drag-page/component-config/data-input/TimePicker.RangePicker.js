@@ -1,4 +1,5 @@
 import {handleAfterRender} from 'src/pages/drag-page/util';
+import timePickerConfig from './TimePicker';
 
 export default {
     isFormElement: true,
@@ -8,22 +9,9 @@ export default {
         afterRender: handleAfterRender,
     },
     fields: [
-        {label: '可清除', category: '选项', field: 'allowClear', type: 'boolean', defaultValue: true, version: '', desc: '是否展示清除按钮'},
-        {label: '边框', category: '选项', field: 'bordered', type: 'boolean', defaultValue: true, version: '', desc: '是否有边框'},
-        {label: '禁用', category: '选项', field: 'disabled', type: 'boolean', defaultValue: false, version: '', desc: '禁用全部操作'},
-        {label: '时间格式', field: 'format', type: 'string', defaultValue: 'HH:mm:ss', version: '', desc: '展示的时间格式'},
-        {label: '清除图标', field: 'clearIcon', type: 'ReactNode', version: '', desc: '自定义的清除图标'},
-        {label: '清除按钮文案', field: 'clearText', type: 'string', defaultValue: 'clear', version: '', desc: '清除按钮的提示文案'},
-        {label: '隐藏禁止选项', field: 'hideDisabledOptions', type: 'boolean', defaultValue: false, version: '', desc: '隐藏禁止选择的选项'},
-        {label: '小时选项间隔', field: 'hourStep', type: 'number', defaultValue: 1, version: '', desc: '小时选项间隔'},
-        {label: '分钟选项间隔', field: 'minuteStep', type: 'number', defaultValue: 1, version: '', desc: '分钟选项间隔'},
-        {label: '秒选项间隔', field: 'secondStep', type: 'number', defaultValue: 1, version: '', desc: '秒选项间隔'},
-        {label: '显示此刻按钮', field: 'showNow', type: 'boolean', version: '4.4.0', desc: '面板是否显示“此刻”按钮'},
-        {label: '选框后缀图标', field: 'suffixIcon', type: 'ReactNode', version: '', desc: '自定义的选择框后缀图标'},
-        {label: '12 小时制', field: 'use12Hours', type: 'boolean', defaultValue: false, version: '', desc: '使用 12 小时制，为 true 时 format 默认为 h:mm:ss a'},
-
-        {label: '输入框只读', field: 'inputReadOnly', type: 'boolean', defaultValue: false, version: '', desc: '设置输入框为只读（避免在移动设备上打开虚拟键盘）'},
+        ...timePickerConfig.fields.filter(item => item.field !== 'placeholder'),
         {label: '输入框提示', field: 'placeholder', type: 'string', defaultValue: '请选择时间', version: '', desc: '没有值的时候显示的内容'},
+        {label: '自动排序', field: 'order', type: 'boolean', defaultValue: true, version: '4.1.0', desc: '始末时间是否自动排序'},
     ],
 };
 

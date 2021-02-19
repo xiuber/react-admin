@@ -64,7 +64,7 @@ document.getElementById('Form.Item').nextElementSibling.querySelectorAll('tr')
         field.forEach((key, index) => {
             obj[key] = tds[index].innerText;
         });
-        if (obj.type === 'boolean' && obj.defaultValue !== '-') {
+        if (obj.type === 'boolean' && obj.defaultValue === 'false' || obj.defaultValue === 'true') {
             obj.defaultValue = JSON.parse(obj.defaultValue);
         }
         if (obj.defaultValue === '-') {

@@ -254,10 +254,13 @@ export default [
             {
                 title: '评分',
                 renderPreview: true,
-                previewProps: {allowHalf: true, value: 2.5},
                 previewZoom: .7,
                 config: {
                     componentName: 'Rate',
+                    props: {
+                        allowHalf: true,
+                        value: 2.5,
+                    },
                 },
             },
         ],
@@ -315,6 +318,19 @@ export default [
                     },
                 },
             },
+            {
+                title: '双滑动',
+                renderPreview: true,
+                previewStyle: {width: '100%'},
+                // previewWrapperStyle: {background: 'red'},
+                config: {
+                    componentName: 'Slider',
+                    props: {
+                        value: [20, 70],
+                        range: true,
+                    },
+                },
+            },
         ],
     },
     {
@@ -339,6 +355,13 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'TimePicker',
+                },
+            },
+            {
+                title: '时间区间选择框',
+                renderPreview: true,
+                config: {
+                    componentName: 'TimePicker.RangePicker',
                 },
             },
         ],
@@ -369,6 +392,26 @@ export default [
                     props: {
                         style: {width: '100%'},
                         placeholder: '请选择',
+                        treeData: [
+                            {
+                                title: 'Node1',
+                                value: '0-0',
+                                children: [
+                                    {
+                                        title: 'Child Node1',
+                                        value: '0-0-1',
+                                    },
+                                    {
+                                        title: 'Child Node2',
+                                        value: '0-0-2',
+                                    },
+                                ],
+                            },
+                            {
+                                title: 'Node2',
+                                value: '0-1',
+                            },
+                        ],
                     },
                 },
             },

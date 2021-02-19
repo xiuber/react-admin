@@ -71,8 +71,8 @@ export default config({
         // 最大字符标签
         let maxLabel = '';
         fields.forEach(item => {
-            const {label} = item;
-            if (label.length > maxLabel.length) maxLabel = label;
+            const {label, category} = item;
+            if (!category && label.length > maxLabel.length) maxLabel = label;
         });
         // 设置label宽度
         const labelWidth = getLabelWidth(maxLabel);

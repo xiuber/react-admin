@@ -136,7 +136,7 @@ export default function NodeRender(props) {
 
     // 处理子节点
     let childrenEle = children?.length ? children.map(item => {
-        isPreview = isPreview || !childrenDraggable;
+        const childrenIsPreview = isPreview || !childrenDraggable;
 
         // 比较特殊，需要作为父级的直接子节点，不能使用 NodeRender
         if (['Tabs.TabPane'].includes(item.componentName)) {
@@ -157,7 +157,7 @@ export default function NodeRender(props) {
                         dragPageAction,
                         pageConfig,
                         styles,
-                        isPreview,
+                        isPreview: childrenIsPreview,
                     });
                 });
             }
@@ -171,7 +171,7 @@ export default function NodeRender(props) {
                             <NodeRender
                                 {..._props}
                                 config={it}
-                                isPreview={isPreview}
+                                isPreview={childrenIsPreview}
                             />
                         );
                     })}
@@ -184,7 +184,7 @@ export default function NodeRender(props) {
             <NodeRender
                 {..._props}
                 config={item}
-                isPreview={isPreview}
+                isPreview={childrenIsPreview}
             />
         );
     }) : undefined;
