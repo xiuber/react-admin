@@ -664,7 +664,8 @@ export function handleNodeDrop(options) {
     const isAfter = isBottom || isRight;
     const isChildren = isCenter;
 
-    if (!targetElement) return end();
+    if (!targetElement && !targetComponentId) return end();
+
     const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
     let componentConfig = e.dataTransfer.getData('componentConfig');
     componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
@@ -728,7 +729,6 @@ export function handleNodeDrop(options) {
 
     // 放在自身上
     if (targetComponentId === sourceComponentId) return end();
-
     if (!accept) return end();
 
     if (sourceComponentId) {
