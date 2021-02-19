@@ -11,7 +11,6 @@ export default config({
     connect: state => {
 
         return {
-            selectedNode: state.dragPage.selectedNode,
             refreshProps: state.dragPage.refreshProps,
         };
     },
@@ -149,7 +148,7 @@ export default config({
             } = option;
             const title = tip || desc || label;
 
-            let FormElement = getElement(option);
+            let FormElement = getElement({...option, node: selectedNode});
 
             const labelEle = (
                 <Tooltip placement="topRight" title={title} mouseLeaveDelay={0}>

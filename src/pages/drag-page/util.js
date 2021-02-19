@@ -599,13 +599,14 @@ export function deleteComponentById(root, id) {
 
                 // props中有可能也有节点
                 const propsKeyValue = Object.entries(node.props || {})
-                    .filter(([, item]) => isComponentConfig(item));
+                    .filter(([, value]) => isComponentConfig(value));
 
                 for (let item of propsKeyValue) {
                     const [key, value] = item;
                     if (value.id === id) {
                         Reflect.deleteProperty(node.props, key);
                         deletedNode = value;
+                        console.log('deletedNode', deletedNode);
                         return;
                     } else {
                         if (value?.children?.length) {

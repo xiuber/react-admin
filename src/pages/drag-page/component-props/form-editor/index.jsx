@@ -39,6 +39,7 @@ export default function PropsFormEditor(props) {
         >
             <div styleName="root">
                 <ObjectElement
+                    selectedNode={selectedNode}
                     fields={fields}
                     value={value}
                     onChange={onChange}

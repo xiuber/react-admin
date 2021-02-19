@@ -13,7 +13,6 @@ export default {
         },
         {label: '允许为空', field: 'allowEmpty', type: {value: 'array', type: 'boolean', length: 2}, defaultValue: [false, false], version: '', desc: '允许起始项部分为空'},
         {label: '禁用', field: 'disabled', type: {value: 'array', type: 'boolean', length: 2}, version: '', desc: '禁用起始项'},
-        {label: '日期格式', field: 'format', type: 'string', version: '', desc: '展示的日期格式'},
         {label: '显示时间', field: 'showTime', type: 'boolean', version: '', desc: '增加时间选择功能'},
     ],
 };

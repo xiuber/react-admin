@@ -35,8 +35,20 @@ export default {
             ],
             desc: '输入框大小，large 高度为 40px，small 为 24px，默认是 32px',
         },
+        {label: '日期格式', field: 'format', type: 'string', version: '', desc: '展示的日期格式'},
     ],
 };
+/*
+DatePicker[picker=year] quarter month week
+[
+    {label:'默认面板日期',field:'defaultPickerValue',type:'moment',version:'',desc:'默认面板日期'},
+    {label:'默认日期',field:'defaultValue',type:'moment',version:'',desc:'默认日期'},
+    {label:'展示的日期格式，配置参考 moment.js',field:'format',type:'string',defaultValue:'YYYY',version:'',desc:'展示的日期格式，配置参考 moment.js'},
+    {label:'在面板中添加额外的页脚',field:'renderExtraFooter',type:'() => React.ReactNode',version:'',desc:'在面板中添加额外的页脚'},
+    {label:'日期',field:'value',type:'moment',version:'',desc:'日期'},
+    {label:'时间发生变化的回调，发生在用户选择时间时',field:'onChange',type:'function(date: moment, dateString: string)',version:'',desc:'时间发生变化的回调，发生在用户选择时间时'}
+]
+* */
 /*
 [
     {label:'是否显示清除按钮',field:'allowClear',type:'boolean',defaultValue:true,version:'',desc:'是否显示清除按钮'},

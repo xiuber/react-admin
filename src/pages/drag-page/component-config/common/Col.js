@@ -1,7 +1,7 @@
 import {isMac} from 'src/pages/drag-page/util';
 
 export const colFields = [
-    {label: '弹性布局', field: 'flex', type: 'unit', version: '', desc: 'flex 布局属性'},
+    {label: '弹性布局', field: 'flex', type: 'unit', placeholder: 'flex 比如 1 或 100px', version: '', desc: 'flex 布局属性'},
     {label: '占位格数', field: 'span', type: 'number', version: '', desc: '栅格占位格数，为 0 时相当于 display: none'},
     {label: '左间隔数', span: 12, field: 'offset', type: 'number', defaultValue: 0, version: '', desc: '栅格左侧的间隔格数，间隔内不可以有栅格'},
     {label: '栅格顺序', span: 12, labelWidth: '80px', field: 'order', type: 'number', defaultValue: 0, version: '', desc: '栅格顺序'},
@@ -23,7 +23,7 @@ const screenType = (field) => [
     },
 ];
 
-function getOnKeyDown(cb) {
+export function getOnKeyDown(cb, ancestorComponentName='Row') {
 
     return (e, options) => {
         const {metaKey, ctrlKey, key, target: {value}} = e;
@@ -41,7 +41,7 @@ function getOnKeyDown(cb) {
 
             dragPageAction.syncOffspringProps({
                 node,
-                ancestorComponentName: 'Row',
+                ancestorComponentName,
                 props,
             });
         }

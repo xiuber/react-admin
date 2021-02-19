@@ -72,7 +72,7 @@ document.getElementById('Form.Item').nextElementSibling.querySelectorAll('tr')
         }
         if (obj.type.includes(' | ')) {
             obj.options = obj.type.split(' | ').map(value => ({value, label: value}));
-            obj.type = 'enum';
+            obj.type = 'radio-group';
         }
 
         // 调整一下顺序

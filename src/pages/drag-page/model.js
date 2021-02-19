@@ -578,7 +578,7 @@ function addOrMoveNode(options) {
         return {pageConfig: {...pageConfig}};
     }
 
-    return {pageConfig: {...pageConfig}};
+    return {pageConfig: {...pageConfig}, refreshProps: {}};
 }
 
 /**
