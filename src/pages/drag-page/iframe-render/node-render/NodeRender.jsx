@@ -124,14 +124,25 @@ export default function NodeRender(props) {
 
     // 处理属性中的节点
     Object.entries(componentProps)
-        .filter(([key, value]) => isComponentConfig(value))
+        .filter(([, value]) => isComponentConfig(value) || Array.isArray(value) && value.every(item => isComponentConfig(item)))
         .forEach(([key, value]) => {
-            componentProps[key] = (
-                <NodeRender
-                    {..._props}
-                    config={value}
-                />
-            );
+            if (Array.isArray(value)) {
+                componentProps[key] = value.map(item => {
+                    return (
+                        <NodeRender
+                            {..._props}
+                            config={item}
+                        />
+                    );
+                });
+            } else {
+                componentProps[key] = (
+                    <NodeRender
+                        {..._props}
+                        config={value}
+                    />
+                );
+            }
         });
 
     // 处理子节点

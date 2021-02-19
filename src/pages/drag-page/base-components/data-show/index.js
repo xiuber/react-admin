@@ -2,6 +2,7 @@ import BadgeImage from './Badge.png';
 import PopoverImage from './Popover.png';
 import TabsImage from './Tabs.png';
 import CarouselImage from './Carousel.png';
+import AvatarImage from './Avatar.jpeg';
 
 export default [
     {
@@ -14,7 +15,7 @@ export default [
                 config: {
                     componentName: 'Avatar',
                     props: {
-                        src: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+                        src: AvatarImage,
                     },
                 },
             },
@@ -33,14 +34,6 @@ export default [
                     props: {
                         count: 5,
                     },
-                    children: [
-                        {
-                            componentName: 'Text',
-                            props: {
-                                text: '消息',
-                            },
-                        },
-                    ],
                 },
             },
         ],

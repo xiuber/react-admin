@@ -74,8 +74,12 @@ export function loopPageConfig(node, cb) {
     }
     // props中有可能也有节点
     Object.values(node.props || {})
-        .filter(value => isComponentConfig(value))
-        .forEach(value => loopPageConfig(value, cb));
+        .filter(value => isComponentConfig(value) || Array.isArray(value) && value.every(item => isComponentConfig(item)))
+        .forEach(value => {
+            if (Array.isArray(value)) return value.forEach(item => loopPageConfig(item, cb));
+
+            loopPageConfig(value, cb);
+        });
 
     // wrapper中有节点
     if (node.wrapper?.length) {
