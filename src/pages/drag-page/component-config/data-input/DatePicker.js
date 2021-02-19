@@ -1,6 +1,11 @@
+import {handleAfterRender} from 'src/pages/drag-page/util';
+
 export default {
     isFormElement: true,
     isContainer: false,
+    hooks: {
+        afterRender: handleAfterRender,
+    },
     fields: [
         {label: '可清除', category: '选项', field: 'allowClear', type: 'boolean', defaultValue: true, version: '', desc: '是否显示清除按钮'},
         {label: '边框', category: '选项', field: 'bordered', type: 'boolean', defaultValue: true, version: '', desc: '是否有边框'},

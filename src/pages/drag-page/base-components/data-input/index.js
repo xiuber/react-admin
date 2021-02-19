@@ -205,6 +205,44 @@ export default [
                 previewProps: {checked: true},
                 config: {
                     componentName: 'Radio',
+                    children: [
+                        {
+                            componentName: 'Text',
+                            props: {
+                                text: '选项',
+                            },
+                        },
+                    ],
+                },
+            },
+            {
+                title: '单选框按钮',
+                renderPreview: true,
+                previewProps: {checked: true},
+                config: {
+                    componentName: 'Radio.Button',
+                    children: [
+                        {
+                            componentName: 'Text',
+                            props: {
+                                text: '选项',
+                            },
+                        },
+                    ],
+                },
+            },
+            {
+                title: '单选组',
+                renderPreview: true,
+                previewProps: {value: '1'},
+                config: {
+                    componentName: 'Radio.Group',
+                    props: {
+                        options: [
+                            {value: '1', label: '选项1'},
+                            {value: '2', label: '选项2'},
+                        ],
+                    },
                 },
             },
         ],

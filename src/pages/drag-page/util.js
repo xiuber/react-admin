@@ -116,8 +116,13 @@ export function handleAfterRender(options) {
 
     if (!ele) return;
 
+    const oldEle = ele.querySelector('[data-component-id]')
+        || ele.querySelector('[data-draggable-selected]');
+
     Object.entries(dragProps)
         .forEach(([key, value]) => {
+            oldEle && oldEle.removeAttribute(key);
+
             if (isPreview) {
                 ele.removeAttribute(key);
             } else {
