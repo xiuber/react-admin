@@ -28,8 +28,8 @@ export default {
         },
     ],
     render: false,
-    dropAccept: 'Column',
-    dropInTo: ['Table', 'Column'],
+    dropAccept: 'Table.Column',
+    dropInTo: ['Table', 'Table.Column'],
     componentDisplayName: ({node}) => {
         const title = node.props?.title || '';
 

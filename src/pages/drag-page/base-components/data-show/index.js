@@ -3,6 +3,8 @@ import PopoverImage from './Popover.png';
 import TabsImage from './Tabs.png';
 import CarouselImage from './Carousel.png';
 import AvatarImage from './Avatar.jpeg';
+import ImageImage from './Image.png';
+import moment from 'moment';
 
 export default [
     {
@@ -237,6 +239,9 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Image',
+                    props: {
+                        src: ImageImage,
+                    },
                 },
             },
         ],
@@ -302,6 +307,21 @@ export default [
                 renderPreview: true,
                 config: {
                     componentName: 'Statistic',
+                    props: {
+                        title: '标题',
+                        value: 888,
+                    },
+                },
+            },
+            {
+                title: '倒计时',
+                renderPreview: true,
+                config: {
+                    componentName: 'Statistic.Countdown',
+                    props: {
+                        title: '倒计时',
+                        value: Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30,
+                    },
                 },
             },
         ],
@@ -325,9 +345,9 @@ export default [
                         ],
                     },
                     children: [ // 与 props.columns 对应
-                        {componentName: 'Column', props: {title: '姓名', dataIndex: 'name'}},
-                        {componentName: 'Column', props: {title: '年龄', dataIndex: 'age'}},
-                        {componentName: 'Column', props: {title: '操作', dataIndex: 'operator'}},
+                        {componentName: 'Table.Column', props: {title: '姓名', dataIndex: 'name'}},
+                        {componentName: 'Table.Column', props: {title: '年龄', dataIndex: 'age'}},
+                        {componentName: 'Table.Column', props: {title: '操作', dataIndex: 'operator'}},
                     ],
                 },
             },
@@ -335,13 +355,13 @@ export default [
     },
     {
         title: '表格列',
-        subTitle: '表格列 Column',
+        subTitle: '表格列 Table.Column',
         children: [
             {
                 title: '表格列',
                 renderPreview: false,
                 config: {
-                    componentName: 'Column',
+                    componentName: 'Table.Column',
                     props: {
                         title: '新增列',
                         dataIndex: 'newColumn',
