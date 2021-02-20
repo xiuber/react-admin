@@ -17,7 +17,8 @@ export default config({
         };
     },
 })(function LinkProps(props) {
-    const {
+    let {
+        node,
         selectedNode,
         iframeDocument,
         action: {dragPage: dragPageAction},
@@ -28,6 +29,8 @@ export default config({
         source = false,
         ...others
     } = props;
+
+    selectedNode = node || selectedNode;
 
     const propsToSet = selectedNode?.propsToSet;
 

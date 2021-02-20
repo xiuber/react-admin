@@ -32,7 +32,7 @@ export default config({
 
     const propsToSet = selectedNode?.propsToSet;
 
-    const sourceLinkPointEle = document.getElementById('sourceLinkPoint');
+    const sourceLinkPointEle = document.getElementById(`sourceLinkPoint_${selectedNode?.id}`);
 
     function getStyle(item) {
         const {

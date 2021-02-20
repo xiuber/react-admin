@@ -50,7 +50,8 @@ export default config({
         // 清除空属性
         Object.entries(node.props)
             .forEach(([key, value]) => {
-                if (value === undefined || value === '' || value === null) {
+                // null 不要删，modal footer null 是个有效属性
+                if (value === undefined || value === ''/* || value === null*/) {
                     Reflect.deleteProperty(node.props, key);
                 }
             });

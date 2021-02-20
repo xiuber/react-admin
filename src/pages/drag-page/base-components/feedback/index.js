@@ -62,10 +62,12 @@ export default [
                         {
                             componentName: 'div',
                             props: {
-                                paddingTop: 16,
-                                paddingRight: 16,
-                                paddingBottom: 16,
-                                paddingLeft: 16,
+                                style: {
+                                    paddingTop: 16,
+                                    paddingRight: 16,
+                                    paddingBottom: 16,
+                                    paddingLeft: 16,
+                                },
                             },
                             children: [
                                 {

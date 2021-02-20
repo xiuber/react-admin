@@ -41,6 +41,7 @@ function UnitInput(props) {
     }
 
     function handleDoubleClick(e) {
+        e.preventDefault();
         let nextValue = getNextValue(e, e.shiftKey ? -8 : 8);
 
         // 有处理过，重新触发onChange

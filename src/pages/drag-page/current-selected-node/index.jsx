@@ -21,12 +21,15 @@ export default config({
 
     const name = getComponentDisplayName(selectedNode);
 
+    console.log(selectedNode);
+
     return (
         <div style={{display: 'flex', alignItems: 'center'}}>
             {hasPropsToSet ? (
                 <LinkPoint
                     source
-                    id="sourceLinkPoint"
+                    node={selectedNode}
+                    id={`sourceLinkPoint_${selectedNode?.id}`}
                     style={{marginRight: 4}}
                 />
             ) : null}
