@@ -15,6 +15,36 @@ export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
+export function getFieldOption(node, field) {
+    const config = getComponentConfig(node?.componentName);
+    if (!config) return null;
+
+    const {fields} = config;
+
+
+    const loopFields = fields => {
+        if (!fields?.length) return null;
+        for (let opt of fields) {
+            if (opt.field === field) return opt;
+
+            if (Array.isArray(opt.type)) {
+                const fs = opt.type.find(item => item.value === 'object');
+                if (fs) {
+                    const result = loopFields(fs.fields);
+                    if (result) return result;
+                }
+            }
+
+            if (typeof opt.type === 'object' && opt.type.value === 'object') {
+                const result = loopFields(opt.type.fields);
+                if (result) return result;
+            }
+        }
+    };
+
+    return loopFields(fields);
+}
+
 // 获取label宽度
 export function getLabelWidth(label) {
     if (!label?.length) return 0;
@@ -67,19 +97,36 @@ export function getDraggingNodeInfo({e, draggingNode}) {
 }
 
 export function loopPageConfig(node, cb) {
+    if (!node) return;
+
     cb(node);
 
     if (node.children?.length) {
         node.children.forEach(item => loopPageConfig(item, cb));
     }
-    // props中有可能也有节点
-    Object.values(node.props || {})
-        .filter(value => isComponentConfig(value) || Array.isArray(value) && value.every(item => isComponentConfig(item)))
-        .forEach(value => {
-            if (Array.isArray(value)) return value.forEach(item => loopPageConfig(item, cb));
 
+    const loopValue = value => {
+        if (isComponentConfig(value)) {
             loopPageConfig(value, cb);
-        });
+        }
+
+        // 深层
+        if (Array.isArray(value)) {
+            value.forEach(item => loopValue(item));
+        }
+        if (
+            typeof value === 'object'
+            && !Array.isArray(value)
+            && value !== null
+            && !isComponentConfig(value)
+        ) {
+            Object.values(val => loopValue(val));
+        }
+
+    };
+
+    // props中有可能也有节点
+    loopValue(node.props || {});
 
     // wrapper中有节点
     if (node.wrapper?.length) {
@@ -602,21 +649,50 @@ export function deleteComponentById(root, id) {
                 }
 
                 // props中有可能也有节点
-                const propsKeyValue = Object.entries(node.props || {})
-                    .filter(([, value]) => isComponentConfig(value));
+                const loopValue = value => {
+                    if (isComponentConfig(value)) {
+                        const result = deleteComponentById(value, id);
+                        if (result) return result;
+                    }
 
-                for (let item of propsKeyValue) {
-                    const [key, value] = item;
-                    if (value.id === id) {
-                        Reflect.deleteProperty(node.props, key);
-                        deletedNode = value;
-                        return;
-                    } else {
-                        if (value?.children?.length) {
-                            loop(value.children);
+                    if (Array.isArray(value)) {
+                        for (let val of value) {
+                            const result = loopValue(val);
+                            if (result) return result;
                         }
                     }
-                }
+                    if (typeof value === 'object') {
+                        for (let val of Object.values(value)) {
+                            const result = loopValue(val);
+                            if (result) return result;
+                        }
+                    }
+                };
+
+                const loopObj = obj => {
+                    const propsKeyValue = Object.entries(obj || {});
+
+                    for (let item of propsKeyValue) {
+                        const [key, value] = item;
+                        if (isComponentConfig(value)) {
+                            if (value.id === id) {
+                                Reflect.deleteProperty(obj, key);
+                                return value;
+                            } else {
+                                if (value?.children?.length) {
+                                    loop(value.children);
+                                }
+                            }
+                        } else if (value && typeof value === 'object' && !Array.isArray(value)) {
+                            const result = loopObj(value);
+                            if (result) return result;
+                        }
+                    }
+                };
+
+                const result = loopObj(node.props || {});
+
+                if (result) return;
 
                 // wrapper中有节点
                 if (node?.wrapper?.length) {
@@ -838,9 +914,7 @@ export function isDropAccept(options) {
         if (!dropInTo.includes(targetNode.componentName)) return false;
     }
 
-
     let {dropAccept} = targetConfig;
-
 
     if (typeof dropAccept === 'function') {
 
@@ -887,13 +961,35 @@ export function findNodeById(root, id) {
         if (result) return result;
     }
 
-    // props中有可能也有节点
-    for (let node of Object.values(root?.props || {})) {
-        if (isComponentConfig(node)) {
-            const result = findNodeById(node, id);
+    const loopValue = value => {
+        if (isComponentConfig(value)) {
+            const result = findNodeById(value, id);
             if (result) return result;
         }
-    }
+
+        // 深层查找
+        if (typeof value === 'object'
+            && !Array.isArray(value)
+            && value !== null
+            && !isComponentConfig(value)
+        ) {
+            for (let n of Object.values(value)) {
+                const result = loopValue(n);
+                if (result) return result;
+            }
+        }
+        if (Array.isArray(value)) {
+            for (let n of value) {
+                const result = loopValue(n);
+                if (result) return result;
+            }
+        }
+    };
+
+    // props中有可能也有节点
+    const result = loopValue(root?.props);
+    if (result) return result;
+
     // wrapper中有节点
     for (let node of (root.wrapper || [])) {
         if (isComponentConfig(node)) {

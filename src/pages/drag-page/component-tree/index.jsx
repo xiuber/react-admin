@@ -54,7 +54,8 @@ export default config({
         const treeData = {};
         let nodeCount = 0;
         const allKeys = [];
-        const loop = (prev, next, _draggable) => {
+        const loop = (prev, next, _draggable = true) => {
+            if (!prev) return;
             const {id, props, wrapper, children, componentName} = prev;
             const componentConfig = getComponentConfig(componentName);
             let {
@@ -107,15 +108,35 @@ export default config({
                     }),
                 });
             }
-            Object.entries(props || {})
-                .filter(([, value]) => isComponentConfig(value))
-                .forEach(([field, value]) => {
-                    if (!next.children) next.children = [];
-                    const node = {};
-                    loop(value, node);
-                    node.name = `${field}: ${node.name}`;
-                    next.children.unshift(node);
-                });
+
+            // 属性中的节点
+            const loopObj = obj => {
+                Object.entries(obj)
+                    .forEach(([field, value]) => {
+                        if (isComponentConfig(value)) {
+                            if (!next.children) next.children = [];
+                            const node = {};
+
+                            loop(value, node);
+
+                            node.name = `${field}: ${node.name}`;
+                            next.children.unshift(node);
+                        } else if (value && typeof value === 'object' && !Array.isArray(value)) {
+                            loopObj(value);
+                        }
+                    });
+            };
+            loopObj(props || {});
+            //
+            // Object.entries(props || {})
+            //     .filter(([, value]) => isComponentConfig(value))
+            //     .forEach(([field, value]) => {
+            //         if (!next.children) next.children = [];
+            //         const node = {};
+            //         loop(value, node);
+            //         node.name = `${field}: ${node.name}`;
+            //         next.children.unshift(node);
+            //     });
         };
 
         loop(pageConfig, treeData);

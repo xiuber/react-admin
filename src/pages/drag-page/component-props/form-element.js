@@ -152,59 +152,27 @@ export default elementMap;
 
 
 export function getElement(option) {
-    const {type, functionType} = option;
-
-    let Element = (props) => <span style={{color: 'red'}}>TODO {type} 对应的表单元素不存在</span>;
-
+    const {type} = option;
 
     if (Array.isArray(type)) {
-        Element = (props) => <MultipleElement fieldOption={option} {...props}/>;
+        return (props) => <MultipleElement fieldOption={option} {...props}/>;
     }
 
     if ((typeof type === 'object' && type.value === 'object') || type === 'object') {
         const {fields} = type;
-        Element = (props) => <ObjectElement fields={fields} {...props}/>;
+        return (props) => <ObjectElement fields={fields} {...props}/>;
     }
 
     if (typeof type === 'object' && type.value === 'array') {
 
-        Element = (props) => <ArrayElement length={type.length} type={type.type} {...props}/>;
+        return (props) => <ArrayElement length={type.length} type={type.type} {...props}/>;
     }
 
     const elementFunction = elementMap[type];
 
     if (elementFunction) {
-        Element = elementFunction({...option});
+        return elementFunction({...option});
     }
 
-    if (functionType) {
-        return props => {
-            let {value, onChange} = props;
-            if (value) {
-                value = value.replace('() =>', '');
-                // 去括号
-                value = value.substring(2, value.length - 1);
-
-                value = JSON.parse(value);
-            }
-
-            function handleChange(e) {
-                let value = e;
-                if ('target' in e) {
-                    value = e.target.value;
-                }
-
-                value = JSON.stringify(value);
-
-                value = `() => (${value})`;
-
-                onChange(value);
-            }
-
-
-            return <Element {...props} value={value} onChange={handleChange}/>;
-        };
-    }
-
-    return Element;
+    return (props) => <span style={{color: 'red'}}>TODO {type} 对应的表单元素不存在</span>;
 }

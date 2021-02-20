@@ -1,6 +1,6 @@
 import React, {createElement} from 'react';
 import classNames from 'classnames';
-import {getComponent, isComponentConfig, isFunctionString} from '../../util';
+import {getComponent, isComponentConfig, isFunctionString, getFieldOption} from '../../util';
 import {getComponentDisplayName, getComponentConfig} from 'src/pages/drag-page/component-config';
 import {cloneDeep} from 'lodash';
 import styles from './style.less';
@@ -98,7 +98,7 @@ export default function NodeRender(props) {
         } else {
             Object.entries(obj)
                 .forEach(([key, value]) => {
-                    if (typeof value === 'object') {
+                    if (typeof value === 'object' && !isComponentConfig(value)) {
                         loop(value, cb);
                     } else {
                         cb(obj, key, value);
@@ -118,31 +118,34 @@ export default function NodeRender(props) {
             }
         }
 
+        const fieldOption = getFieldOption(config, key);
+
+        if(key === 'expandedRowRender') {
+            console.log(key, fieldOption);
+        }
+
+        // 字段是函数类型
+        if (fieldOption?.functionType) {
+            if (isComponentConfig(value)) {
+                obj[key] = () => (
+                    <NodeRender
+                        {..._props}
+                        config={value}
+                    />
+                );
+            } else {
+                obj[key] = () => value;
+            }
+            console.log('fieldOption?.functionType', obj);
+        }
+
+
         // 属性中的函数
         if (isFunctionString(value)) {
             let fn;
             try {
                 // eslint-disable-next-line
-                eval(`let fn = ${value}`);
-
-                // 函数返回值是 ReactNode
-                if (value.startsWith('() => (')) {
-
-                    // 去括号，取值
-                    value = value.substring(7, value.length - 1);
-
-                    const valueJson = JSON.parse(value);
-
-                    // 是组件配置
-                    if (isComponentConfig(valueJson)) {
-                        fn = () => (
-                            <NodeRender
-                                {..._props}
-                                config={valueJson}
-                            />
-                        );
-                    }
-                }
+                eval(`fn = ${value}`);
 
                 if (typeof fn === 'function') {
                     obj[key] = fn;
