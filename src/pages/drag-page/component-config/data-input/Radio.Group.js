@@ -1,10 +1,11 @@
-import {handleAfterRender} from 'src/pages/drag-page/util';
+import {fixDragProps} from 'src/pages/drag-page/util';
 
 export default {
     isFormElement: true,
     isContainer: false,
+    withDragProps: false,
     hooks: {
-        afterRender: handleAfterRender,
+        afterRender: fixDragProps,
     },
     fields: [
         {label: '禁用', field: 'disabled', type: 'boolean'},

@@ -1,11 +1,11 @@
-import {handleAfterRender} from 'src/pages/drag-page/util';
+import {fixDragProps} from 'src/pages/drag-page/util';
 
 export default {
     isFormElement: true,
     isContainer: false,
     withDragProps: false,
     hooks: {
-        afterRender: handleAfterRender,
+        afterRender: fixDragProps,
     },
     fields: [
         {label: '边框', category: '选项', field: 'bordered', type: 'boolean', defaultValue: true, version: '4.12.0', desc: '是否有边框'},

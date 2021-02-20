@@ -1,11 +1,11 @@
-import {handleAfterRender} from 'src/pages/drag-page/util';
+import {fixDragProps} from 'src/pages/drag-page/util';
 
 export default {
     isFormElement: true,
     isContainer: false,
-    widthDragProps: false,
+    withDragProps: false,
     hooks: {
-        afterRender: handleAfterRender,
+        afterRender: fixDragProps,
     },
     fields: [
         {label: '可清除', category: '选项', field: 'allowClear', type: 'boolean', defaultValue: true, version: '', desc: '是否支持清除'},

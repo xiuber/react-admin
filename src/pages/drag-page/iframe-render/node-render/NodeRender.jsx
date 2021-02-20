@@ -89,26 +89,91 @@ export default function NodeRender(props) {
     componentProps = cloneDeep(componentProps || {});
     if (!componentProps.className) componentProps.className = '';
 
-    Object.entries(componentProps)
-        .filter(([, value]) => typeof value === 'string' && value.startsWith('state.'))
-        .forEach(([key, value]) => {
-            // eslint-disable-next-line
-            componentProps[key] = eval(value);
-        });
 
-    // 组件属性中的事件
-    const propsActions = {};
-    Object.entries(componentProps)
-        .forEach(([key, value]) => {
-            if (isFunctionString(value)) {
-                let fn;
-                // eslint-disable-next-line
-                eval(`fn = ${value}`);
-                if (typeof fn === 'function') {
-                    propsActions[key] = fn;
-                }
+    const loop = (obj, cb) => {
+        if (typeof obj !== 'object' || obj === null) return;
+
+        if (Array.isArray(obj)) {
+            obj.forEach(item => loop(item, cb));
+        } else {
+            Object.entries(obj)
+                .forEach(([key, value]) => {
+                    if (typeof value === 'object') {
+                        loop(value, cb);
+                    } else {
+                        cb(obj, key, value);
+                    }
+                });
+        }
+    };
+
+    loop(componentProps, (obj, key, value) => {
+        // 属性中的state数据处理
+        if (typeof value === 'string' && value.startsWith('state.')) {
+            // eslint-disable-next-line
+            try {
+                obj[key] = eval(value);
+            } catch (e) {
+                console.error(e);
             }
-        });
+        }
+
+        // 属性中的函数
+        if (isFunctionString(value)) {
+            let fn;
+            try {
+                // eslint-disable-next-line
+                eval(`let fn = ${value}`);
+
+                // 函数返回值是 ReactNode
+                if (value.startsWith('() => (')) {
+
+                    // 去括号，取值
+                    value = value.substring(7, value.length - 1);
+
+                    const valueJson = JSON.parse(value);
+
+                    // 是组件配置
+                    if (isComponentConfig(valueJson)) {
+                        fn = () => (
+                            <NodeRender
+                                {..._props}
+                                config={valueJson}
+                            />
+                        );
+                    }
+                }
+
+                if (typeof fn === 'function') {
+                    obj[key] = fn;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    });
+    //
+    // // 属性中的state数据处理
+    // Object.entries(componentProps)
+    //     .filter(([, value]) => typeof value === 'string' && value.startsWith('state.'))
+    //     .forEach(([key, value]) => {
+    //         // eslint-disable-next-line
+    //         componentProps[key] = eval(value);
+    //     });
+    //
+    // // 属性中的函数处理
+    // const propsActions = {};
+    // Object.entries(componentProps)
+    //     .forEach(([key, value]) => {
+    //         if (isFunctionString(value)) {
+    //             let fn;
+    //             // eslint-disable-next-line
+    //             eval(`fn = ${value}`);
+    //             if (typeof fn === 'function') {
+    //                 propsActions[key] = fn;
+    //             }
+    //         }
+    //     });
 
     const {dragClassName, dragProps} = getDragInfo({config, selectedNodeId, draggingNode});
 
@@ -259,7 +324,6 @@ export default function NodeRender(props) {
         return createElement(component, {
             ...commonProps,
             ...componentProps,
-            ...propsActions,
             className: [dragClassName, componentProps.className].join(' '),
         });
     }
@@ -306,7 +370,6 @@ export default function NodeRender(props) {
                 createElement(component, {
                     ...commonProps,
                     ...componentProps,
-                    ...propsActions,
                     style,
                 }),
             ],
@@ -317,7 +380,6 @@ export default function NodeRender(props) {
     return createElement(component, {
         ...commonProps,
         ...componentProps,
-        ...propsActions,
         ...(withDragProps ? dragProps : {}),
         className: [dragClassName, componentProps.className].join(' '),
     });

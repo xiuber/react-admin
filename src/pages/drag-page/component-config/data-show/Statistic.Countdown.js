@@ -1,9 +1,10 @@
-import {handleAfterRender} from 'src/pages/drag-page/util';
+import {fixDragProps} from 'src/pages/drag-page/util';
 
 export default {
     isContainer: false,
+    withDragProps: false,
     hooks: {
-        afterRender: handleAfterRender,
+        afterRender: fixDragProps,
     },
     fields: [
         {label: '格式化t', field: 'format', type: 'string', defaultValue: 'HH:mm:ss', version: '', desc: '格式化倒计时展示，参考 moment'},

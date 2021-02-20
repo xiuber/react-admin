@@ -340,8 +340,8 @@ export default [
                     props: {
                         pagination: false,
                         dataSource: [
-                            {name: '张三', age: 25, operator: '修改'},
-                            {name: '李四', age: 26, operator: '修改'},
+                            {key: '1', name: '张三', age: 25, operator: '修改'},
+                            {key: '2', name: '李四', age: 26, operator: '修改'},
                         ],
                     },
                     children: [ // 与 props.columns 对应

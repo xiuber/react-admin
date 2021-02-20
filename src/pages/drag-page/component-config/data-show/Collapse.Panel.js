@@ -1,4 +1,4 @@
-import {handleAfterRender} from 'src/pages/drag-page/util';
+import {fixDragProps} from 'src/pages/drag-page/util';
 
 export default {
     editableContents: [
@@ -10,8 +10,9 @@ export default {
     isContainer: true,
     dropInTo: 'Collapse',
     withHolder: true,
+    withDragProps: false,
     hooks: {
-        afterRender: handleAfterRender,
+        afterRender: fixDragProps,
     },
     fields: [
         // { // 不好用

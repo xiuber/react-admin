@@ -111,7 +111,7 @@ export function getNextField(obj, field) {
 }
 
 // 节点渲染之后，统一处理函数，用于给没有透传props属性的组件，添加拖拽相关属性
-export function handleAfterRender(options) {
+export function fixDragProps(options) {
     const {node, dragProps, iframeDocument, isPreview, element} = options;
     if (!iframeDocument) return;
     const {id} = node;
@@ -120,12 +120,8 @@ export function handleAfterRender(options) {
 
     if (!ele) return;
 
-    const oldEle = ele.querySelector('[data-component-id]')
-        || ele.querySelector('[data-draggable-selected]');
-
     Object.entries(dragProps)
         .forEach(([key, value]) => {
-            oldEle && oldEle.removeAttribute(key);
             if (isPreview) {
                 ele.removeAttribute(key);
             } else {

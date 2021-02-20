@@ -1,9 +1,10 @@
-import {handleAfterRender} from 'src/pages/drag-page/util';
+import {fixDragProps} from 'src/pages/drag-page/util';
 
 export default {
     isContainer: false,
+    withDragProps: false,
     hooks: {
-        afterRender: handleAfterRender,
+        afterRender: fixDragProps,
     },
     fields: [
         {label: '是否全屏显示', field: 'fullscreen', type: 'boolean', defaultValue: true, version: '', desc: '是否全屏显示'},

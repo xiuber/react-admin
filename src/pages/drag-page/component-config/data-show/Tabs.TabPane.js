@@ -1,9 +1,10 @@
-import {findParentNodeById, handleAfterRender} from 'src/pages/drag-page/util';
+import {findParentNodeById, fixDragProps} from 'src/pages/drag-page/util';
 
 export default {
     isContainer: true,
     dropInTo: ['Tabs'],
     withHolder: true,
+    withDragProps: false,
     hooks: {
         afterRender: options => {
             const {node, pageConfig, iframeDocument} = options;
@@ -15,7 +16,7 @@ export default {
             const elements = iframeDocument.querySelectorAll(selectors);
             const ele = elements[index];
 
-            handleAfterRender({...options, element: ele});
+            fixDragProps({...options, element: ele});
         },
     },
     fields: [
