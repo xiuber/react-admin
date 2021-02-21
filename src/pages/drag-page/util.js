@@ -61,7 +61,7 @@ const toggleIsWrapper = debounce((draggingNode) => {
 }, 100);
 
 const toggleIsToSetProps = debounce((draggingNode) => {
-    if (!draggingNode.propsToSet) return;
+    if (!draggingNode?.nodeData?.propsToSet) return;
 
     draggingNode.toSetProps = !draggingNode.toSetProps;
 }, 100);
@@ -863,10 +863,10 @@ export function isDropAccept(options) {
     if (!targetNode) return false;
 
     // 不允许父节点拖入子节点
-    if (isChildrenNode(draggingNode, targetNode)) return false;
+    if (isChildrenNode(draggingNode?.nodeData, targetNode)) return false;
 
     const targetConfig = getComponentConfig(targetNode.componentName);
-    const sourceConfig = getComponentConfig(draggingNode.componentName);
+    const sourceConfig = getComponentConfig(draggingNode?.nodeData?.componentName);
 
     const {isContainer = true} = targetConfig;
 
@@ -902,7 +902,7 @@ export function isDropAccept(options) {
 
     if (!Array.isArray(dropAccept)) return true;
 
-    const {componentName} = draggingNode;
+    const componentName = draggingNode?.nodeData?.componentName;
 
     return dropAccept.some(name => name === componentName);
 }

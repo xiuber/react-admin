@@ -2,6 +2,7 @@ import React from 'react';
 import {cloneDeep} from 'lodash';
 import config from 'src/commons/config-hoc';
 import {setDragImage} from 'src/pages/drag-page/util';
+import {setNodeId} from 'src/pages/drag-page/node-util';
 
 export default config({
     connect: true,
@@ -30,9 +31,13 @@ export default config({
         setDragImage(e, config);
         e.dataTransfer.setData('componentConfig', JSON.stringify(config));
 
-        // 标记当前拖动组件,为添加
-        config.isNewAdd = true;
-        dragPageAction.setDraggingNode(config);
+        setNodeId(config);
+
+        dragPageAction.setDraggingNode({
+            id: config.id,
+            isNewAdd: true,
+            nodeData: config,
+        });
     }
 
     function handleDragEnd(e) {

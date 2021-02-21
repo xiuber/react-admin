@@ -13,6 +13,7 @@
 1. [ ] 拖拽用户自定义模块时，替换componentId，但是要注意 modal类型id的同步问题
 1. [ ] 支持用户上传 vs code 的快捷键配置
 1. [x] 元素拖拽过程中，点击 command 或 ctrl 可以在 wrapper 非 wrapper 模式下切换
+1. [ ] 左侧组件列表比较多，使用虚拟列表或者虚拟Table优化
 
 
 1. number | object | array

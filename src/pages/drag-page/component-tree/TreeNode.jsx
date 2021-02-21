@@ -48,7 +48,10 @@ export default config({
             return;
         }
 
-        dragPageAction.setDraggingNode(nodeData);
+        dragPageAction.setDraggingNode({
+            id: nodeData.id,
+            nodeData,
+        });
 
         e.dataTransfer.setData('sourceComponentId', key);
 

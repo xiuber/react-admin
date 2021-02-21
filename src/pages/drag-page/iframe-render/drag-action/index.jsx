@@ -39,7 +39,10 @@ export default function DragAction(props) {
         const componentId = dragEle.getAttribute('data-component-id');
         const node = findNodeById(pageConfig, componentId);
 
-        dragPageAction.setDraggingNode(node);
+        dragPageAction.setDraggingNode({
+            id: node.id,
+            nodeData: node,
+        });
         prevSideKeyRef.current = activeSideKey;
         dragPageAction.setActiveSideKey('componentTree');
 

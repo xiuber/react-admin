@@ -112,7 +112,7 @@ export default {
         const node = cloneDeep(draggingNode);
 
         if (node) {
-            const componentConfig = getComponentConfig(node?.componentName);
+            const componentConfig = getComponentConfig(node?.nodeData?.componentName);
             const {isWrapper} = componentConfig;
 
             node.isWrapper = isWrapper;
@@ -647,7 +647,7 @@ function replaceNode(options) {
     if (children?.length) {
         targetNode.children = children.filter(item => {
             const options = {
-                draggingNode: item,
+                draggingNode: {id: item.id, nodeData: item},
                 pageConfig,
                 targetComponentId: targetNode.id,
                 isChildren: true,

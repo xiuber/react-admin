@@ -17,7 +17,7 @@ export default {
     // childrenDraggable: true, // 子节点不可拖拽
     // dropAccept: options => { // 值接受表单元素
     //     const {draggingNode} = options;
-    //     const nodeConfig = getComponentConfig(draggingNode?.componentName);
+    //     const nodeConfig = getComponentConfig(draggingNode?.nodeData?.componentName);
     //
     //     return nodeConfig?.isFormElement;
     // },
