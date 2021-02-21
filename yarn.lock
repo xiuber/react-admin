@@ -7731,6 +7731,11 @@ mem@^4.0.0:
     mimic-fn "^2.0.0"
     p-is-promise "^2.0.0"
 
+"memoize-one@>=3.1.1 <6":
+  version "5.1.1"
+  resolved "https://registry.npm.taobao.org/memoize-one/download/memoize-one-5.1.1.tgz#047b6e3199b508eaec03504de71229b8eb1d75c0"
+  integrity sha1-BHtuMZm1COrsA1BN5xIpuOsddcA=
+
 memory-fs@^0.4.0, memory-fs@^0.4.1:
   version "0.4.1"
   resolved "https://registry.npm.taobao.org/memory-fs/-/memory-fs-0.4.1.tgz#3a9a20b8462523e447cfbc7e8bb80ed667bfc552"
@@ -10086,6 +10091,16 @@ rc-resize-observer@^0.2.0, rc-resize-observer@^0.2.1, rc-resize-observer@^0.2.3:
     rc-util "^5.0.0"
     resize-observer-polyfill "^1.5.1"
 
+rc-resize-observer@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/rc-resize-observer/download/rc-resize-observer-1.0.0.tgz#97fb89856f62fec32ab6e40933935cf58e2e102d"
+  integrity sha1-l/uJhW9i/sMqtuQJM5Nc9Y4uEC0=
+  dependencies:
+    "@babel/runtime" "^7.10.1"
+    classnames "^2.2.1"
+    rc-util "^5.0.0"
+    resize-observer-polyfill "^1.5.1"
+
 rc-select@^11.1.1:
   version "11.5.0"
   resolved "https://registry.npm.taobao.org/rc-select/download/rc-select-11.5.0.tgz?cache=0&sync_timestamp=1604409445326&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Frc-select%2Fdownload%2Frc-select-11.5.0.tgz#360d2762207c2fef2622e7fcc542fc94dfc9d10f"
@@ -10451,6 +10466,14 @@ react-use@^15.1.0:
     throttle-debounce "^2.1.0"
     ts-easing "^0.2.0"
     tslib "^2.0.0"
+
+react-window@^1.8.6:
+  version "1.8.6"
+  resolved "https://registry.npm.taobao.org/react-window/download/react-window-1.8.6.tgz#d011950ac643a994118632665aad0c6382e2a112"
+  integrity sha1-0BGVCsZDqZQRhjJmWq0MY4LioRI=
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    memoize-one ">=3.1.1 <6"
 
 react@^16.13.1:
   version "16.13.1"
