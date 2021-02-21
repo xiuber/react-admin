@@ -1,4 +1,5 @@
-import {findParentNodeById, fixDragProps} from 'src/pages/drag-page/util';
+import {fixDragProps} from 'src/pages/drag-page/util';
+import {findParentNodeById} from 'src/pages/drag-page/node-util';
 
 export default {
     isContainer: true,

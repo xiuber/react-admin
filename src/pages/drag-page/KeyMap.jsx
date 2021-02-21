@@ -1,7 +1,8 @@
 import {useEffect} from 'react';
 import config from 'src/commons/config-hoc';
 // import {v4 as uuid} from 'uuid';
-import {copyTextToClipboard, getTextFromClipboard, setNodeId} from './util';
+import {copyTextToClipboard, getTextFromClipboard} from './util';
+import {setNodeId} from './node-util';
 
 /**
  ### 快捷键说明
@@ -104,12 +105,12 @@ export default config({
             setNodeId(cloneNode, true);
 
             const options = {
-                node: cloneNode,
-                targetId,
+                sourceNode: cloneNode,
+                targetNodeId: targetId,
                 isAfter: true,
             };
 
-            dragPageAction.addNode(options);
+            dragPageAction.addOrMoveNode(options);
 
         } catch (e) {
             console.error(e);

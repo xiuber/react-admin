@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import {debounce} from 'lodash';
 import {v4 as uuid} from 'uuid';
-import {loopPageConfig} from 'src/pages/drag-page/util';
+import {loopNode} from 'src/pages/drag-page/node-util';
 
 export default function EditableAction(props) {
     const {
@@ -11,7 +11,7 @@ export default function EditableAction(props) {
         dragPageAction,
     } = props;
 
-    const loop = cb => loopPageConfig(pageConfig, node => {
+    const loop = cb => loopNode(pageConfig, node => {
         const componentId = node.id;
         const className = `id_${componentId}`;
         const nodeConfig = getComponentConfig(node.componentName);

@@ -2,7 +2,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Tooltip} from 'antd';
 import {AimOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
-import {getEleCenterInWindow, findNodeById, findLinkTargetsPosition} from 'src/pages/drag-page/util';
+import {getEleCenterInWindow, findLinkTargetsPosition} from 'src/pages/drag-page/util';
+import {findNodeById} from 'src/pages/drag-page/node-util';
 // import {v4 as uuid} from 'uuid';
 import {throttle} from 'lodash';
 

@@ -55,7 +55,9 @@ export function setDefaultOptions(nodes) {
 
             const {config} = item;
 
-            if (!item.icon && item.icon !== false) item.icon = getComponentConfig(config.componentName).icon;
+            if (!item.icon && item.icon !== false) {
+                item.icon = getComponentConfig(config.componentName).icon;
+            }
             setNodeDefault(config);
         });
     });

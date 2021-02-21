@@ -2,14 +2,19 @@ import {v4 as uuid} from 'uuid';
 import {cloneDeep} from 'lodash';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import {
+    syncObject,
+} from './util';
+import {
+    insertAfter,
+    insertBefore,
+    setNodeId,
     findNodeById,
     findParentNodeById,
-    findParentNodeByParentName,
-    getAllNodesByName,
-    syncObject,
-    deleteComponentById, isDropAccept,
-} from './util';
-import {setNodeId} from './node-util';
+    findParentNodeByName,
+    findNodesByName,
+    deleteNodeById,
+    replaceNode,
+} from './node-util';
 
 // 历史记录数量
 const LIMIT = 20;
@@ -254,13 +259,13 @@ export default {
         const {componentName} = node;
 
         // 祖先节点
-        let ancestorNode = findParentNodeByParentName(pageConfig, ancestorComponentName, node.id);
+        let ancestorNode = findParentNodeByName(pageConfig, ancestorComponentName, node.id);
 
         // 不存在，就从根节点开始
         if (!ancestorNode) ancestorNode = pageConfig;
 
         // 获取祖先下所有同名节点
-        const nodes = getAllNodesByName(ancestorNode, componentName);
+        const nodes = findNodesByName(ancestorNode, componentName);
 
         // 设置新属性
         nodes.forEach(item => {
@@ -325,7 +330,7 @@ export default {
 
         const deleteIndex = targetCollection.findIndex(item => item.id === id);
 
-        deleteComponentById(pageConfig, id);
+        deleteNodeById(pageConfig, id);
 
         // 添加占位符
         addDragHolder(parentNode);
@@ -360,7 +365,7 @@ export default {
 
         const {sourceId, targetId} = options;
 
-        const sourceNode = deleteComponentById(pageConfig, sourceId);
+        const sourceNode = deleteNodeById(pageConfig, sourceId);
         const targetNode = findNodeById(pageConfig, targetId);
 
         if (!targetNode) return;
@@ -394,14 +399,14 @@ export default {
         const {sourceId, targetId} = options;
 
         const parentNode = findParentNodeById(pageConfig, sourceId);
-        const sourceNode = deleteComponentById(pageConfig, sourceId);
+        const sourceNode = deleteNodeById(pageConfig, sourceId);
 
         // 添加占位符
         addDragHolder(parentNode);
 
         const targetNode = findNodeById(pageConfig, targetId);
 
-        replaceNode({sourceNode, targetNode, pageConfig});
+        replaceNode(pageConfig, sourceNode, targetNode);
 
         return {pageConfig: {...pageConfig}, refreshProps: {}};
     },
@@ -414,172 +419,118 @@ export default {
 
         const targetNode = findNodeById(pageConfig, targetId);
 
-        replaceNode({sourceNode, targetNode, pageConfig});
+        replaceNode(pageConfig, sourceNode, targetNode);
 
         return {pageConfig: {...pageConfig}, refreshProps: {}};
     },
-    addNode: (options, state) => {
-        const {node, targetId, isBefore, isAfter, isChildren} = options;
+    addOrMoveNode: (options, state) => {
         const {pageConfig} = state;
-
-        // 拖拽节点 进行了 JSON.stringify, 会导致 actions hooks 函数丢失，重新设置一下
-        const componentConfig = getComponentConfig(node.componentName);
-
-        const {beforeAdd, afterAdd} = componentConfig.hooks || {};
-
-        const args = {
-            node,
-            targetNode: isChildren ? findNodeById(pageConfig, targetId) : findParentNodeById(pageConfig, targetId),
-            pageConfig,
-        };
-        const res = beforeAdd && beforeAdd(args);
-        if (res === false) return {pageConfig};
-
-        // 添加占位符
-        addDragHolder(node);
-
-        // 新增节点，添加id
-        setNodeId(node, true);
-
-        const result = addOrMoveNode({
-            isAdd: true,
-            pageConfig,
-            isAfter,
+        const {
+            sourceNode,
+            targetNodeId,
             isBefore,
+            isAfter,
             isChildren,
-            targetId,
-            node,
-            state,
-        });
+        } = options;
 
-        if (afterAdd) afterAdd(args);
-
-        return result;
-    },
-    moveNode: ({sourceId, targetId, isBefore, isAfter, isChildren}, state) => {
-        const {pageConfig} = state;
-        const sourceNode = findNodeById(pageConfig, sourceId);
+        const isAdd = !findNodeById(pageConfig, sourceNode.id);
         const sourceNodeConfig = getComponentConfig(sourceNode.componentName);
-        const {beforeMove, afterMove} = sourceNodeConfig.hooks || {};
+        const {
+            beforeAdd,
+            afterAdd,
+            beforeMove,
+            afterMove,
+        } = sourceNodeConfig.hooks || {};
+
+        const sourceParentNode = findParentNodeById(pageConfig, sourceNode.id);
+
+        const targetNode = findNodeById(pageConfig, targetNodeId);
+        const targetNodeConfig = getComponentConfig(targetNode.componentName);
+
+        const targetParentNode = findParentNodeById(pageConfig, targetNodeId);
+        const targetParentNodeConfig = getComponentConfig(targetParentNode?.componentName);
 
         const args = {
             node: sourceNode,
+            targetNode: isChildren ? targetNode : targetParentNode,
             pageConfig,
-            targetId,
-            targetNode: isChildren ? findNodeById(pageConfig, targetId) : findParentNodeById(pageConfig, targetId),
+        };
+        if (isAdd) {
+            const res = beforeAdd && beforeAdd(args);
+            if (res === false) return;
+        } else {
+            const res = beforeMove && beforeMove(args);
+            if (res === false) return;
+        }
+
+        const afterAddOrRemove = ({pageConfig}) => {
+            if (isAdd) {
+                afterAdd && afterAdd({...args, pageConfig});
+            } else {
+                // 移动节点，父节点有可能移动空，尝试添加占位符
+                addDragHolder(sourceParentNode);
+                afterMove && afterMove({...args, pageConfig});
+            }
         };
 
-        const res = beforeMove && beforeMove(args);
-        if (res === false) return {pageConfig};
+        // 目标节点为 根占位
+        if (targetNode.componentName === 'RootDragHolder') {
+            const result = {pageConfig: {...sourceNode}};
 
-        const parentNode = findParentNodeById(pageConfig, sourceId);
+            afterAddOrRemove(result);
 
-        const node = deleteComponentById(pageConfig, sourceId);
+            return result;
+        }
 
-        // 添加占位符
-        addDragHolder(parentNode);
+        if (isChildren) {
+            // 目标节点为空 或者只有占位符
+            if (
+                !targetNode.children
+                || (targetNode.children?.length === 1 && targetNode.children[0].componentName === 'DragHolder')
+            ) {
+                targetNode.children = [];
+            }
 
-        const result = addOrMoveNode({
-            isMove: true,
-            pageConfig,
-            isAfter,
-            isBefore,
-            isChildren,
-            targetId,
-            node,
-            state,
-        });
+            const {beforeAddChildren, afterAddChildren} = targetNodeConfig.hooks || {};
 
-        afterMove && afterMove(args);
+            const args = {node: targetNode, targetNode: sourceNode, pageConfig};
 
-        return result;
+            const res = beforeAddChildren && beforeAddChildren(args);
+            if (res === false) return {pageConfig};
+
+            // 删除原先位置的节点
+            deleteNodeById(pageConfig, sourceNode.id);
+
+            targetNode.children.push(sourceNode);
+
+            const result = {pageConfig: {...pageConfig}, refreshProps: {}};
+            afterAddChildren && afterAddChildren({...args, ...result});
+            afterAddOrRemove(result);
+
+            return result;
+        }
+
+        if (isBefore || isAfter) {
+
+            const {beforeAddChildren, afterAddChildren} = targetParentNodeConfig.hooks || {};
+            const args = {node: targetParentNode, targetNode: sourceNode, pageConfig};
+            const result = beforeAddChildren && beforeAddChildren(args);
+            if (result === false) return;
+
+            if (isBefore) {
+                insertBefore(pageConfig, sourceNode, targetNodeId);
+            } else if (isAfter) {
+                insertAfter(pageConfig, sourceNode, targetNodeId);
+            }
+
+            const res = {pageConfig: {...pageConfig}, refreshProps: {}};
+            afterAddChildren && afterAddChildren({...args, ...res});
+            afterAddOrRemove(res);
+
+            return res;
+        }
     },
 };
-
-// 添加或移动节点
-function addOrMoveNode(options) {
-    const {
-        pageConfig,
-        targetId,
-        isChildren,
-        isBefore,
-        isAfter,
-        node,
-    } = options;
-
-    // targetId 节点所在children
-    const targetCollection = findChildrenCollection(pageConfig, targetId);
-
-    const targetNode = findNodeById(pageConfig, targetId);
-    const parentNode = findParentNodeById(pageConfig, targetId);
-    const parentNodeConfig = getComponentConfig(parentNode?.componentName);
-
-    // 目标节点为 根占位
-    if (targetNode.componentName === 'RootDragHolder') {
-        return {pageConfig: {...node}};
-    }
-
-    if (isChildren) {
-        // 目标节点为空
-        if (
-            !targetNode.children
-            || (targetNode.children?.length === 1 && targetNode.children[0].componentName === 'DragHolder')
-        ) targetNode.children = [];
-
-        const targetNodeConfig = getComponentConfig(targetNode.componentName);
-
-        const {beforeAddChildren, afterAddChildren} = targetNodeConfig.hooks || {};
-
-        const args = {node: targetNode, targetNode: node, pageConfig};
-
-        const res = beforeAddChildren && beforeAddChildren(args);
-        if (res === false) return {pageConfig};
-
-        targetNode.children.push(node);
-
-        afterAddChildren && afterAddChildren(args);
-
-        return {pageConfig: {...pageConfig}, refreshProps: {}};
-    }
-
-    if (!targetCollection) return;
-
-    if (isBefore) {
-        const index = targetCollection.findIndex(item => item.id === targetId);
-
-        const {beforeAddChildren, afterAddChildren} = parentNodeConfig.hooks || {};
-        const args = {node: parentNode, targetNode, pageConfig};
-
-        const result = beforeAddChildren && beforeAddChildren(args);
-
-        if (result === false) return {pageConfig};
-
-        targetCollection.splice(index, 0, node);
-
-        afterAddChildren && afterAddChildren(args);
-
-        return {pageConfig: {...pageConfig}, refreshProps: {}};
-    }
-
-    if (isAfter) {
-        const index = targetCollection.findIndex(item => item.id === targetId);
-
-        const {beforeAddChildren, afterAddChildren} = parentNodeConfig.hooks || {};
-        const args = {node: parentNode, targetNode, pageConfig};
-
-        const result = beforeAddChildren && beforeAddChildren(args);
-
-        if (result === false) return {pageConfig};
-
-        targetCollection.splice(index + 1, 0, node);
-
-        afterAddChildren && afterAddChildren(args);
-
-        return {pageConfig: {...pageConfig}, refreshProps: {}};
-    }
-
-    return {pageConfig: {...pageConfig}, refreshProps: {}};
-}
 
 /**
  * 获取id节点所在集合
@@ -618,42 +569,5 @@ function addDragHolder(node) {
                 props: {...holderProps},
             },
         ];
-    }
-}
-
-// 替换节点
-
-function replaceNode(options) {
-    const {
-        pageConfig,
-        sourceNode,
-        targetNode,
-    } = options;
-
-    if (!targetNode) return;
-
-    // 删除所有属性，保留引用
-    const {children} = targetNode;
-    Object.keys(targetNode)
-        .forEach(key => {
-            if (key === 'id') return;
-            Reflect.deleteProperty(targetNode, key);
-        });
-    Object.entries(sourceNode).forEach(([key, value]) => {
-        if (key === 'id') return;
-        targetNode[key] = value;
-    });
-
-    if (children?.length) {
-        targetNode.children = children.filter(item => {
-            const options = {
-                draggingNode: {id: item.id, nodeData: item},
-                pageConfig,
-                targetComponentId: targetNode.id,
-                isChildren: true,
-            };
-
-            return isDropAccept(options);
-        });
     }
 }

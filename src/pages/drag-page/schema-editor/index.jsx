@@ -4,13 +4,15 @@ import JSON5 from 'json5';
 import config from 'src/commons/config-hoc';
 import CodeEditor from 'src/pages/drag-page/code-editor';
 import {
-    findNodeById,
     usePrevious,
+    isFunctionString,
+} from '../util';
+import {
+    findNodeById,
     deleteNodeId,
     setNodeId,
-    isFunctionString,
-    loopPageConfig,
-} from '../util';
+    loopNode,
+} from 'src/pages/drag-page/node-util';
 import {deleteDefaultProps, getComponentConfig} from '../component-config';
 import {cloneDeep} from 'lodash';
 import './style.less';
@@ -181,7 +183,7 @@ export default config({
 
         // 函数处理成非字符串形式
         const FUNCTION_HOLDER = '___function___';
-        loopPageConfig(editNode, node => {
+        loopNode(editNode, node => {
             const nodeConfig = getComponentConfig(node.componentName);
             const beforeSchemaEdit = nodeConfig?.hooks?.beforeSchemaEdit;
             beforeSchemaEdit && beforeSchemaEdit({node});

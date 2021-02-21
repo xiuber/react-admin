@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import config from 'src/commons/config-hoc';
 import styles from './style.less';
-import {findNodeById, deleteComponentById, setNodeId} from 'src/pages/drag-page/util';
+import {findNodeById, deleteNodeById, setNodeId} from 'src/pages/drag-page/node-util';
 import {getComponentConfig, getComponentDisplayName} from 'src/pages/drag-page/component-config';
 import {action} from 'src/models';
 
@@ -53,7 +53,7 @@ const ReactNode = config({
             if (findNodeById(sourceNode, node.id)) return;
 
             // 删除拖过来的节点
-            deleteComponentById(pageConfig, sourceComponentId);
+            deleteNodeById(pageConfig, sourceComponentId);
 
             const {dragPage: dragPageAction} = action;
             dragPageAction.render(true);

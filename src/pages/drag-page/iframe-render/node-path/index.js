@@ -2,7 +2,7 @@ import React, {useEffect, useState, useRef} from 'react';
 import {Tag} from 'antd';
 import {RightOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
-import {findParentNodes} from 'src/pages/drag-page/util';
+import {findParentNodes} from 'src/pages/drag-page/node-util';
 import {getComponentDisplayName} from 'src/pages/drag-page/component-config';
 import './style.less';
 

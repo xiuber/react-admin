@@ -1,7 +1,7 @@
 import React from 'react';
 import {AppstoreOutlined} from '@ant-design/icons';
 import NodeRender from '../iframe-render/node-render/NodeRender';
-import {loopPageConfig} from '../util';
+import {loopNode} from '../node-util';
 import Icons from './icon';
 
 const result = {
@@ -145,7 +145,7 @@ export function showFieldByAppend(values, appendField) {
 
 // 删除默认属性
 export function deleteDefaultProps(component) {
-    loopPageConfig(component, node => {
+    loopNode(component, node => {
         let {componentName, props} = node;
 
         if (!props) props = {};
@@ -200,10 +200,22 @@ export function getComponentConfig(componentName) {
 }
 
 // 设置节点的默认值
-export function setNodeDefault(node) {
-    loopPageConfig(node, node => {
+export function setNodeDefault(root) {
+    const nodes = [];
+    loopNode(root, node => {
         const config = getComponentConfig(node.componentName);
-        if (!('propsToSet' in node) && config.propsToSet) node.propsToSet = config.propsToSet;
+        if (!('propsToSet' in node) && config.propsToSet) {
+            // 无法直接设置，会产生死循环，比如Icon，propsToSet里面还有Icon，有设置，还有。。。。
+            // node.propsToSet = config.propsToSet;
+            nodes.push([node, {propsToSet: config.propsToSet}]);
+        }
+    });
+
+    nodes.forEach(([node, props]) => {
+        Object.entries(props)
+            .forEach(([key, value]) => {
+                node[key] = value;
+            });
     });
 }
 

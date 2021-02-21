@@ -1,4 +1,5 @@
-import {findParentNodeByParentName, isMac} from 'src/pages/drag-page/util';
+import {isMac} from 'src/pages/drag-page/util';
+import {findParentNodeByName} from 'src/pages/drag-page/node-util';
 import {getComponentConfig} from 'src/pages/drag-page/component-config/index';
 import {colFields, getOnKeyDown} from '../common/Col';
 
@@ -24,7 +25,7 @@ export default {
     dropInTo: options => {
         const {targetNode, pageConfig} = options;
 
-        let formNode = findParentNodeByParentName(pageConfig, 'Form', targetNode.id);
+        let formNode = findParentNodeByName(pageConfig, 'Form', targetNode.id);
 
         return !!formNode;
     },

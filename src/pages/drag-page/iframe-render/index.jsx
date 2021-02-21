@@ -4,7 +4,8 @@ import {ConfigProvider} from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
 import config from 'src/commons/config-hoc';
 import NodeRender from './node-render/NodeRender';
-import {loopPageConfig, scrollElement} from 'src/pages/drag-page/util';
+import {scrollElement} from 'src/pages/drag-page/util';
+import {loopNode} from 'src/pages/drag-page/node-util';
 import Scale from './scale';
 import DragOver from './drag-over';
 import DragAction from './drag-action';
@@ -140,7 +141,7 @@ export default config({
         }
 
         // 设置所有已存在的
-        loopPageConfig(pageConfig, node => {
+        loopNode(pageConfig, node => {
             const {state: nodeState} = node;
             if (nodeState) {
                 setNodeStateToState(state, nodeState, false);
@@ -148,7 +149,7 @@ export default config({
         });
 
         // 设置新的
-        loopPageConfig(pageConfig, node => {
+        loopNode(pageConfig, node => {
             const nodeConfig = getComponentConfig(node.componentName);
 
             const {state: setNodeState} = nodeConfig;

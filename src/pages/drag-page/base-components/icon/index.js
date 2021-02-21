@@ -8,9 +8,9 @@ export default [
             ...(Object.keys(antdIcon)
                 .filter((key, index) => {
                     // TODO 测试
-                    // return index < 2;
+                    return index < 2;
                     // 首字母大写
-                    return /^[A-Z]/.test(key);
+                    // return /^[A-Z]/.test(key);
                 })
                 .map(componentName => {
                     return {

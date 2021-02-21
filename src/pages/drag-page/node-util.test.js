@@ -1,7 +1,7 @@
 import {
     replaceNode,
     findNodeById,
-    findParentNode,
+    findParentNodeById,
     findParentNodes,
     findNodeFieldPaths,
     findParentNodeByName,
@@ -249,19 +249,19 @@ const node = {
     });
 
 
-    describe('findParentNode', () => {
-        test('findParentNode', () => {
-            const result = findParentNode(node, '12');
+    describe('findParentNodeById', () => {
+        test('findParentNodeById', () => {
+            const result = findParentNodeById(node, '12');
 
             expect(result?.id).toBe('1');
         });
         test('findParentNode2', () => {
-            const result = findParentNode(node, '11');
+            const result = findParentNodeById(node, '11');
 
             expect(result?.id).toBe('10');
         });
         test('findParentNode3', () => {
-            const result = findParentNode(node, '2');
+            const result = findParentNodeById(node, '2');
 
             expect(result?.id).toBe(undefined);
         });

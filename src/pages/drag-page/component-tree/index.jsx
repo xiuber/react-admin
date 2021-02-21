@@ -8,13 +8,11 @@ import {
 import classNames from 'classnames';
 import config from 'src/commons/config-hoc';
 import TreeNode from './TreeNode';
-import {
-    scrollElement,
-    getParentIds,
-} from '../util';
+import {scrollElement} from '../util';
+import {findParentNodes} from '../node-util';
 import Pane from '../pane';
 
-import {convertNodeToTreeData} from './util'
+import {convertNodeToTreeData} from './util';
 
 import './style.less';
 
@@ -75,7 +73,7 @@ export default config({
             dragPageAction.setComponentTreeExpendedKeys([]);
             return;
         }
-        const keys = getParentIds(treeData[0], selectedNodeId) || [];
+        const keys = findParentNodes(treeData[0], selectedNodeId).map(item => item.id) || [];
         // 去重
         const nextKeys = Array.from(new Set([...componentTreeExpendedKeys, ...keys, selectedNodeId]));
 

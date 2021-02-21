@@ -23,7 +23,6 @@ function isObject(obj) {
  * @param cb 如果 返回值不是 undefined 结束递归
  */
 export function loopNode(node, cb) {
-
     // 是节点，调用cb函数
     if (isNode(node)) {
         const result = cb(node);
@@ -34,18 +33,22 @@ export function loopNode(node, cb) {
     if (isObject(node)) {
         const values = Object.values(node);
 
-        for (const value of values) {
+        if (values?.length) {
+            for (const value of values) {
 
-            const result = loopNode(value, cb);
-            if (result !== undefined) return result;
+                const result = loopNode(value, cb);
+                if (result !== undefined) return result;
+            }
         }
     }
 
     // 是数组，递归数组所有的元素
     if (Array.isArray(node)) {
-        for (const value of node) {
-            const result = loopNode(value, cb);
-            if (result !== undefined) return result;
+        if (node?.length) {
+            for (const value of node) {
+                const result = loopNode(value, cb);
+                if (result !== undefined) return result;
+            }
         }
     }
 }
@@ -60,8 +63,6 @@ export function findNodeFieldPaths(root, id) {
 
     let result = jp.paths(root, `$[?(@.id==='${id}')]`);
     if (!result?.length) result = jp.paths(root, `$..*[?(@.id==='${id}')]`);
-
-    console.log('findNodeFieldPaths', root, id, result);
 
     return result[0];
 }
@@ -96,7 +97,7 @@ export function findNodeById(node, id) {
  * @param id
  * @returns {{}}
  */
-export function findParentNode(root, id) {
+export function findParentNodeById(root, id) {
     const paths = findNodeFieldPaths(root, id);
     if (!paths) return null;
     const key1 = paths.pop();
@@ -145,7 +146,7 @@ export function findParentNodes(root, id) {
  * @param id
  */
 export function findParentNodeByName(root, componentName, id) {
-    const parentNode = findParentNode(root, id);
+    const parentNode = findParentNodeById(root, id);
 
     if (!parentNode) return null;
 
@@ -215,12 +216,11 @@ export function deleteNodeById(root, id) {
  * @param sourceNode
  * @param keepChildren 是否要保留子节点，如果需要保留，会通过 sourceNode 判断，将可接受的字节点保留
  */
-export function replaceNode(root, sourceNode, targetNode, keepChildren = true) {
+export function replaceNode(root, sourceNode, targetNode) {
     if (!root || !sourceNode?.id || !targetNode?.id) return;
 
     // sourceNode 有可能是别处移动过来的，先删掉
     deleteNodeById(root, sourceNode.id);
-
 
     const paths = findNodeFieldPaths(root, targetNode.id);
     if (!paths) return;
@@ -265,7 +265,7 @@ export function insertBefore(root, sourceNode, id) {
     const key = paths.pop();
     if (/^\d+$/.test(key)) {
         const collection = jp.query(root, jp.stringify(paths))[0];
-        collection.splice(key - 1, 0, sourceNode);
+        collection.splice(key, 0, sourceNode);
     }
 }
 
@@ -285,7 +285,7 @@ export function insertAfter(root, sourceNode, id) {
     const key = paths.pop();
     if (/^\d+$/.test(key)) {
         const collection = jp.query(root, jp.stringify(paths))[0];
-        collection.splice(key, 0, sourceNode);
+        collection.splice(key + 1, 0, sourceNode);
     }
 }
 

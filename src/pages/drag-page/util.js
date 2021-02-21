@@ -6,7 +6,7 @@ import * as components from './components';
 import * as antdComponent from 'antd/es';
 import * as antdIcon from '@ant-design/icons';
 import {getComponentConfig, setNodeDefault} from 'src/pages/drag-page/component-config';
-import {v4 as uuid} from 'uuid';
+import {findNodeById, findParentNodeById, setNodeId, loopNode} from 'src/pages/drag-page/node-util';
 import {debounce} from 'lodash';
 
 export const OTHER_HEIGHT = 0;
@@ -70,7 +70,16 @@ const toggleIsReplace = debounce((draggingNode) => {
     draggingNode.isReplace = !draggingNode.isReplace;
 }, 100);
 
-
+/**
+ * 获取拖拽信息，拖拽过程中，根据用户点击键盘，进行投放模式切换
+ *      ctrl(command)：wrapper切换
+ *      alt 设置属性切换
+ *      shift 替换节点切换
+ *
+ * @param e
+ * @param draggingNode
+ * @returns {{}}
+ */
 export function getDraggingNodeInfo({e, draggingNode}) {
     if (!e) return draggingNode || {};
 
@@ -94,44 +103,6 @@ export function getDraggingNodeInfo({e, draggingNode}) {
     draggingNode.toSelectTarget = isWrapper || toSetProps || isReplace;
 
     return draggingNode || {};
-}
-
-export function loopPageConfig(node, cb) {
-    if (!node) return;
-
-    cb(node);
-
-    if (node.children?.length) {
-        node.children.forEach(item => loopPageConfig(item, cb));
-    }
-
-    const loopValue = value => {
-        if (isComponentConfig(value)) {
-            loopPageConfig(value, cb);
-        }
-
-        // 深层
-        if (Array.isArray(value)) {
-            value.forEach(item => loopValue(item));
-        }
-        if (
-            typeof value === 'object'
-            && !Array.isArray(value)
-            && value !== null
-            && !isComponentConfig(value)
-        ) {
-            Object.values(val => loopValue(val));
-        }
-
-    };
-
-    // props中有可能也有节点
-    loopValue(node.props || {});
-
-    // wrapper中有节点
-    if (node.wrapper?.length) {
-        node.wrapper.forEach(item => loopPageConfig(item, cb));
-    }
 }
 
 export function isFunctionString(value) {
@@ -192,44 +163,6 @@ export function isComponentConfig(node) {
     return !!node?.componentName;
 }
 
-export function deleteNodeId(node) {
-    loopPageConfig(node, node => {
-        Reflect.deleteProperty(node, 'id');
-    });
-}
-
-// 设置id
-export function setNodeId(node, force) {
-    loopPageConfig(node, node => {
-        if (force) return node.id = uuid();
-
-        if (!node.id) node.id = uuid();
-    });
-}
-
-// 调整id为首位
-export function loopIdToFirst(node) {
-    loopPageConfig(node, node => {
-        const id = node.id;
-        Reflect.deleteProperty(node, 'id');
-
-        const entries = Object.entries(node);
-        if (!entries?.length) return;
-
-        // 如果第一个key 不是 id
-        if (entries[0][0] !== id) {
-            // id 放首位
-            entries.unshift(['id', id]);
-
-            // 删除所有属性，保留引用
-            entries.forEach(([key]) => Reflect.deleteProperty(node, key));
-
-            // 从新赋值
-            entries.forEach(([key, value]) => node[key] = value);
-        }
-    });
-}
-
 // 同步设置对象，将newObj中属性，对应设置到oldObj中
 export function syncObject(oldObj, newObj) {
     Object.entries(newObj)
@@ -254,7 +187,7 @@ export function deleteUnLinkedIds(nodeConfig, keepIds = []) {
 
     linkedIds = linkedIds.concat(keepIds);
 
-    loopPageConfig(nodeConfig, node => {
+    loopNode(nodeConfig, node => {
         if (!linkedIds.includes(node.id)) Reflect.deleteProperty(node, 'id');
     });
 }
@@ -262,7 +195,7 @@ export function deleteUnLinkedIds(nodeConfig, keepIds = []) {
 // 获取含有关联元素的ids
 export function findLinkSourceComponentIds(pageConfig) {
     const ids = [];
-    loopPageConfig(pageConfig, node => {
+    loopNode(pageConfig, node => {
         const propsToSet = node.propsToSet;
         const componentId = node.id;
 
@@ -297,7 +230,7 @@ function findLinkTargetComponentIds(options) {
 
     const result = [];
 
-    loopPageConfig(pageConfig, node => {
+    loopNode(pageConfig, node => {
         let {props} = node;
         if (!props) props = {};
 
@@ -547,37 +480,6 @@ export function scrollElement(containerEle, element, toTop, force, offset = 0) {
     }
 }
 
-/**
- * 获取 id 对应的所有祖先节点
- * @param root
- * @param id
- * @returns {*|[]}
- */
-export function getParentIds(root, id) {
-    const data = Array.isArray(root) ? root : [root];
-
-    // 深度遍历查找
-    function dfs(data, id, parents) {
-        for (let i = 0; i < data.length; i++) {
-            const item = data[i];
-            // 找到id则返回父级id
-            if (item.id === id) return parents;
-            // children不存在或为空则不递归
-            if (!item.children || !item.children.length) continue;
-            // 往下查找时将当前id入栈
-            parents.push(item.id);
-
-            if (dfs(item.children, id, parents).length) return parents;
-            // 深度遍历查找未找到时当前id 出栈
-            parents.pop();
-        }
-        // 未找到时返回空数组
-        return [];
-    }
-
-    return dfs(data, id, []);
-}
-
 // 获取节点元素
 export function getNodeEle(target) {
     if (!target) return target;
@@ -626,65 +528,6 @@ export function getDroppableEle(target) {
     return getDroppableEle(parentComponent);
 }
 
-/**
- * 根据id 删除 root 中节点，并返回删除节点
- * @param root
- * @param id
- * @returns {any} 被删除的节点
- */
-export function deleteComponentById(root, id) {
-    const dataSource = Array.isArray(root) ? root : [root];
-
-    let deletedNode = undefined;
-    const loop = nodes => {
-        for (const node of nodes) {
-            if (node?.id === id) {
-                const index = nodes.findIndex(item => item?.id === id);
-                deletedNode = (nodes.splice(index, 1))[0];
-                return;
-            } else {
-                if (node?.children?.length) {
-                    loop(node.children);
-                }
-
-                const loopObj = obj => {
-                    const propsKeyValue = Object.entries(obj || {});
-
-                    for (let item of propsKeyValue) {
-                        const [key, value] = item;
-                        if (isComponentConfig(value)) {
-                            if (value.id === id) {
-                                Reflect.deleteProperty(obj, key);
-                                return value;
-                            } else {
-                                if (value?.children?.length) {
-                                    loop(value.children);
-                                }
-                            }
-                        } else if (value && typeof value === 'object' && !Array.isArray(value)) {
-                            const result = loopObj(value);
-                            if (result) return result;
-                        }
-                    }
-                };
-
-                const result = loopObj(node.props || {});
-
-                if (result) return;
-
-                // wrapper中有节点
-                if (node?.wrapper?.length) {
-                    loop(node.wrapper);
-                }
-            }
-        }
-    };
-
-    loop(dataSource);
-
-    return deletedNode;
-}
-
 export function handleNodeDrop(options) {
     const {
         e,
@@ -707,6 +550,7 @@ export function handleNodeDrop(options) {
         isTop,
 
         accept,
+        nodeData,
     } = getDraggingNodeInfo({e, draggingNode});
 
     const isBefore = isTop || isLeft;
@@ -721,9 +565,10 @@ export function handleNodeDrop(options) {
 
     // 设置目标属性
     if (toSetProps) {
-        const propsToSet = e.dataTransfer.getData('propsToSet') || draggingNode.propsToSet;
+        const propsToSet = e.dataTransfer.getData('propsToSet') || draggingNode.nodeData.propsToSet;
         // 组件节点
         const newProps = typeof propsToSet === 'string' ? JSON.parse(propsToSet) : propsToSet;
+        console.log(newProps);
 
         // 如果是组件节点，设置id
         Object.values(newProps)
@@ -780,28 +625,13 @@ export function handleNodeDrop(options) {
     if (targetComponentId === sourceComponentId) return end();
     if (!accept) return end();
 
-    if (sourceComponentId) {
-        dragPageAction.moveNode({
-            sourceId: sourceComponentId,
-            targetId: targetComponentId,
-            isBefore,
-            isAfter,
-            isChildren,
-        });
-        // dragPageAction.setSelectedNodeId(sourceComponentId);
-    }
-
-    if (componentConfig) {
-        dragPageAction.addNode({
-            targetId: targetComponentId,
-            node: componentConfig,
-            isBefore,
-            isAfter,
-            isChildren,
-        });
-        // dragPageAction.setSelectedNodeId(componentConfig.id);
-    }
-
+    dragPageAction.addOrMoveNode({
+        sourceNode: nodeData,
+        targetNodeId: targetComponentId,
+        isBefore,
+        isAfter,
+        isChildren,
+    })
     end();
 }
 
@@ -915,112 +745,6 @@ export function isChildrenNode(parentNode, childrenNode) {
 
     if (!id) return false;
     return !!findNodeById(parentNode, id);
-}
-
-// 查找所有的父级节点
-export function findParentNodes(root, id) {
-    const nodes = [];
-    loopPageConfig(root, node => {
-        const has = findNodeById(node, id);
-
-        if (has) nodes.push(node);
-    });
-
-    return nodes;
-}
-
-// 根据id查找节点
-export function findNodeById(root, id) {
-    if (root.id === id) return root;
-
-    for (let node of (root?.children || [])) {
-        const result = findNodeById(node, id);
-        if (result) return result;
-    }
-
-    const loopValue = value => {
-        if (isComponentConfig(value)) {
-            const result = findNodeById(value, id);
-            if (result) return result;
-        }
-
-        // 深层查找
-        if (typeof value === 'object'
-            && !Array.isArray(value)
-            && value !== null
-            && !isComponentConfig(value)
-        ) {
-            for (let n of Object.values(value)) {
-                const result = loopValue(n);
-                if (result) return result;
-            }
-        }
-        if (Array.isArray(value)) {
-            for (let n of value) {
-                const result = loopValue(n);
-                if (result) return result;
-            }
-        }
-    };
-
-    // props中有可能也有节点
-    const result = loopValue(root?.props);
-    if (result) return result;
-
-    // wrapper中有节点
-    for (let node of (root.wrapper || [])) {
-        if (isComponentConfig(node)) {
-            const result = findNodeById(node, id);
-            if (result) return result;
-        }
-    }
-}
-
-// 根据id查找父节点
-export function findParentNodeById(root, id) {
-    if (root.id === id) return null;
-
-    if (!root.children) return null;
-
-    if (root.children.some(item => item.id === id)) {
-        return root;
-    } else {
-        for (let node of root.children) {
-            const result = findParentNodeById(node, id);
-            if (result) return result;
-        }
-    }
-}
-
-// 根据id查找具体名称对应的最近祖先节点
-export function findParentNodeByParentName(pageConfig, name, id) {
-    const parentNode = findParentNodeById(pageConfig, id);
-
-    if (!parentNode) return pageConfig;
-
-    if (parentNode.componentName === name) return parentNode;
-
-    return findParentNodeByParentName(pageConfig, name, parentNode.id);
-}
-
-// 根据componentName获取所有节点
-export function getAllNodesByName(node, name) {
-    const nodes = [];
-    const loop = n => {
-        if (n.componentName === name) {
-            nodes.push(n);
-        }
-
-        if (n.componentName !== node.componentName) {
-            if (n?.children?.length) {
-                n.children.forEach(i => loop(i));
-            }
-        }
-    };
-
-    node.children.forEach(item => loop(item));
-
-    return nodes;
 }
 
 // 获取拖放提示位置
