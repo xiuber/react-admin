@@ -7,7 +7,6 @@ import {
     setDragImage,
     getDraggingNodeInfo,
 } from 'src/pages/drag-page/util';
-import {getComponentConfig} from '../component-config';
 import {throttle} from 'lodash';
 import classNames from 'classnames';
 
@@ -31,9 +30,7 @@ export default config({
         action: {dragPage: dragPageAction},
     } = props;
 
-    let {key, name, isContainer, draggable, nodeData} = node;
-
-    let icon = getComponentConfig(nodeData.componentName).icon;
+    let {key, name, icon, isContainer, draggable, nodeData} = node;
 
     name = <span styleName="nodeTitle">{icon}{name}</span>;
 

@@ -626,7 +626,6 @@ export function getDroppableEle(target) {
     return getDroppableEle(parentComponent);
 }
 
-
 /**
  * 根据id 删除 root 中节点，并返回删除节点
  * @param root
@@ -647,27 +646,6 @@ export function deleteComponentById(root, id) {
                 if (node?.children?.length) {
                     loop(node.children);
                 }
-
-                // props中有可能也有节点
-                const loopValue = value => {
-                    if (isComponentConfig(value)) {
-                        const result = deleteComponentById(value, id);
-                        if (result) return result;
-                    }
-
-                    if (Array.isArray(value)) {
-                        for (let val of value) {
-                            const result = loopValue(val);
-                            if (result) return result;
-                        }
-                    }
-                    if (typeof value === 'object') {
-                        for (let val of Object.values(value)) {
-                            const result = loopValue(val);
-                            if (result) return result;
-                        }
-                    }
-                };
 
                 const loopObj = obj => {
                     const propsKeyValue = Object.entries(obj || {});
@@ -706,7 +684,6 @@ export function deleteComponentById(root, id) {
 
     return deletedNode;
 }
-
 
 export function handleNodeDrop(options) {
     const {

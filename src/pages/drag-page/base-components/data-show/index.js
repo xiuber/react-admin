@@ -4,7 +4,6 @@ import TabsImage from './Tabs.png';
 import CarouselImage from './Carousel.png';
 import AvatarImage from './Avatar.jpeg';
 import ImageImage from './Image.png';
-import moment from 'moment';
 
 export default [
     {

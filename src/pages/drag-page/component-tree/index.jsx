@@ -6,19 +6,15 @@ import {
     ArrowsAltOutlined,
 } from '@ant-design/icons';
 import classNames from 'classnames';
-import {cloneDeep} from 'lodash';
 import config from 'src/commons/config-hoc';
 import TreeNode from './TreeNode';
 import {
     scrollElement,
     getParentIds,
-    isComponentConfig,
 } from '../util';
 import Pane from '../pane';
-import {
-    getComponentConfig,
-    getComponentDisplayName,
-} from 'src/pages/drag-page/component-config';
+
+import {convertNodeToTreeData} from './util'
 
 import './style.less';
 
@@ -50,96 +46,7 @@ export default config({
 
     useEffect(() => {
         if (!pageConfig) return;
-
-        const treeData = {};
-        let nodeCount = 0;
-        const allKeys = [];
-        const loop = (prev, next, _draggable = true) => {
-            if (!prev) return;
-            const {id, props, wrapper, children, componentName} = prev;
-            const componentConfig = getComponentConfig(componentName);
-            let {
-                isContainer,
-                draggable,
-                childrenDraggable,
-            } = componentConfig;
-
-            if (props?.isDraggable === false) {
-                draggable = false;
-            }
-
-            next.title = ''; // 为了鼠标悬停，不显示原生 html title
-            next.name = getComponentDisplayName(prev);
-            next.isContainer = isContainer;
-            next.key = id;
-            next.id = id;
-            next.draggable = _draggable !== undefined ? _draggable : draggable;
-            next.nodeData = prev;
-
-            allKeys.push(id);
-            nodeCount++;
-
-            if (children?.length) {
-                next.children = children.map(() => ({}));
-
-                const _d = _draggable === false ? false : childrenDraggable;
-
-                children.forEach((item, index) => {
-                    loop(item, next.children[index], _d);
-                });
-            }
-
-            if (wrapper?.length) {
-                if (!next.children) next.children = [];
-
-                next.children.unshift({
-                    key: `wrapper_${id}`,
-                    id: `wrapper_${id}`,
-                    title: '',
-                    name: 'wrapper',
-                    draggable: false,
-                    isContainer: true,
-                    nodeData: {},
-                    children: cloneDeep(wrapper).map((w, index) => {
-                        Reflect.deleteProperty(w, 'children');
-                        const n = {};
-                        loop(w, n);
-                        return n;
-                    }),
-                });
-            }
-
-            // 属性中的节点
-            const loopObj = obj => {
-                Object.entries(obj)
-                    .forEach(([field, value]) => {
-                        if (isComponentConfig(value)) {
-                            if (!next.children) next.children = [];
-                            const node = {};
-
-                            loop(value, node);
-
-                            node.name = `${field}: ${node.name}`;
-                            next.children.unshift(node);
-                        } else if (value && typeof value === 'object' && !Array.isArray(value)) {
-                            loopObj(value);
-                        }
-                    });
-            };
-            loopObj(props || {});
-            //
-            // Object.entries(props || {})
-            //     .filter(([, value]) => isComponentConfig(value))
-            //     .forEach(([field, value]) => {
-            //         if (!next.children) next.children = [];
-            //         const node = {};
-            //         loop(value, node);
-            //         node.name = `${field}: ${node.name}`;
-            //         next.children.unshift(node);
-            //     });
-        };
-
-        loop(pageConfig, treeData);
+        const treeData = convertNodeToTreeData(pageConfig);
 
         setTreeData([treeData]);
         setNodeCount(nodeCount);

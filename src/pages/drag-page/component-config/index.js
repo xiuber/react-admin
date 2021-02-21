@@ -1,7 +1,7 @@
 import React from 'react';
 import {AppstoreOutlined} from '@ant-design/icons';
-import NodeRender from 'src/pages/drag-page/iframe-render/node-render/NodeRender';
-import {loopPageConfig} from 'src/pages/drag-page/util';
+import NodeRender from '../iframe-render/node-render/NodeRender';
+import {loopPageConfig} from '../util';
 import Icons from './icon';
 
 const result = {
@@ -23,7 +23,7 @@ req.keys().forEach(key => {
     result[fileName] = model.default;
 });
 
-const defaultConfig = {
+export const defaultConfig = {
     // editableContents: [ // 可编辑内容
     //     {
     //         selector: '.ant-modal-title', // string || function  基于当前元素的选择器，缺省标识当前节点

@@ -110,8 +110,8 @@ export default function NodeRender(props) {
     loop(componentProps, (obj, key, value) => {
         // 属性中的state数据处理
         if (typeof value === 'string' && value.startsWith('state.')) {
-            // eslint-disable-next-line
             try {
+                // eslint-disable-next-line
                 obj[key] = eval(value);
             } catch (e) {
                 console.error(e);
@@ -120,7 +120,7 @@ export default function NodeRender(props) {
 
         const fieldOption = getFieldOption(config, key);
 
-        if(key === 'expandedRowRender') {
+        if (key === 'expandedRowRender') {
             console.log(key, fieldOption);
         }
 
@@ -192,7 +192,7 @@ export default function NodeRender(props) {
 
     // 处理属性中的节点
     Object.entries(componentProps)
-        .filter(([, value]) => isComponentConfig(value) || Array.isArray(value) && value.every(item => isComponentConfig(item)))
+        .filter(([, value]) => isComponentConfig(value) || (Array.isArray(value) && value.every(item => isComponentConfig(item))))
         .forEach(([key, value]) => {
             if (Array.isArray(value)) {
                 componentProps[key] = value.map(item => {
