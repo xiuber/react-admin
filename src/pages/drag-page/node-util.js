@@ -58,10 +58,10 @@ export function loopNode(node, cb) {
 export function findNodeFieldPaths(root, id) {
     if (!id) return;
 
-    console.log(root, id);
+    let result = jp.paths(root, `$[?(@.id==='${id}')]`);
+    if (!result?.length) result = jp.paths(root, `$..*[?(@.id==='${id}')]`);
 
-    const result = jp.paths(root, `$..*[?(@.id==='${id}')]`);
-    console.log(123);
+    console.log('findNodeFieldPaths', root, id, result);
 
     return result[0];
 }

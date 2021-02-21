@@ -7,9 +7,9 @@ import {
     findParentNodeByParentName,
     getAllNodesByName,
     syncObject,
-    setNodeId,
     deleteComponentById, isDropAccept,
 } from './util';
+import {setNodeId} from './node-util';
 
 // 历史记录数量
 const LIMIT = 20;
