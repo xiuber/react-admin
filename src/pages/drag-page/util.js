@@ -631,7 +631,7 @@ export function handleNodeDrop(options) {
         isBefore,
         isAfter,
         isChildren,
-    })
+    });
     end();
 }
 
@@ -703,7 +703,6 @@ export function isDropAccept(options) {
     if (!isContainer) return false;
 
     let {dropInTo} = sourceConfig;
-
 
     const args = {
         draggingNode,

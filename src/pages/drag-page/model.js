@@ -511,6 +511,8 @@ export default {
         }
 
         if (isBefore || isAfter) {
+            console.log('isBefore', isBefore);
+            console.log('isAfter', isAfter);
 
             const {beforeAddChildren, afterAddChildren} = targetParentNodeConfig.hooks || {};
             const args = {node: targetParentNode, targetNode: sourceNode, pageConfig};

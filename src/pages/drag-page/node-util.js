@@ -256,11 +256,13 @@ export function findNodeCollection(root, id) {
  * @param id
  */
 export function insertBefore(root, sourceNode, id) {
-    const paths = findNodeFieldPaths(root, id);
-    if (!paths || !sourceNode) return null;
+    if (!sourceNode) return null;
 
     // 如果存在，先删除，相当于移动位置
     deleteNodeById(root, sourceNode.id);
+
+    const paths = findNodeFieldPaths(root, id);
+    if (!paths) return null;
 
     const key = paths.pop();
     if (/^\d+$/.test(key)) {
@@ -276,11 +278,13 @@ export function insertBefore(root, sourceNode, id) {
  * @param id
  */
 export function insertAfter(root, sourceNode, id) {
-    const paths = findNodeFieldPaths(root, id);
-    if (!paths || !sourceNode) return null;
+    if (!sourceNode) return null;
 
     // 如果存在，先删除，相当于移动位置
     deleteNodeById(root, sourceNode.id);
+
+    const paths = findNodeFieldPaths(root, id);
+    if (!paths) return null;
 
     const key = paths.pop();
     if (/^\d+$/.test(key)) {
