@@ -22,6 +22,7 @@ export default {
     //
     //     return nodeConfig?.isFormElement;
     // },
+    // 祖先元素中必须有Form
     dropInTo: options => {
         const {targetNode, pageConfig} = options;
 
