@@ -106,7 +106,7 @@ export default config({
         );
 
         storeAction.setComponents(result);
-    }, 300);
+    }, 100);
 
     return (
         <Pane
