@@ -1,5 +1,7 @@
 import React from 'react';
 import {Form, Input} from 'antd';
+import InlineFormImage from './InlineForm.png';
+import FormImage from './Form.png';
 
 const formChildren = [
     {
@@ -118,7 +120,7 @@ export default [
         children: [
             {
                 title: '水平表单',
-                renderPreview: true,
+                image: InlineFormImage,
                 previewZoom: .7,
                 config: {
                     componentName: 'Form',
@@ -137,14 +139,24 @@ export default [
             },
             {
                 title: '垂直表单',
-                renderPreview: true,
+                image: FormImage,
                 config: {
                     componentName: 'Form',
                     props: {
                         name: 'demo',
                         ...commonProps,
                     },
-                    children: formChildren,
+                    children: formChildren.map((item, index) => {
+                        const isLast = formChildren.length - 1 === index;
+                        const props = {...(item.props || {})};
+                        if (isLast) {
+                            props.style = {paddingLeft: '70px'};
+                        } else {
+                            props.labelCol = {flex: '70px'};
+                        }
+
+                        return {...item, props};
+                    }),
                 },
             },
             {
