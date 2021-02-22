@@ -185,6 +185,11 @@ function showDropGuideLine(position) {
 
     guideBgEle.setAttribute('data-component-display-name', componentDisplayName);
     guideBgEle.classList.add(styles.guideBgActive);
+    if (guideLine) {
+        guideBgEle.classList.remove(styles.selectTarget);
+    } else {
+        guideBgEle.classList.add(styles.selectTarget);
+    }
     guideBgEle.style.top = `${targetY}px`;
     guideBgEle.style.left = `${targetX}px`;
     guideBgEle.style.width = `${targetWidth}px`;
@@ -225,5 +230,6 @@ function hideDropGuide() {
     const guideBgEle = frameDocument.getElementById('drop-guide-bg');
 
     guideBgEle && guideBgEle.classList.remove(styles.guideBgActive);
+    guideBgEle && guideBgEle.classList.remove(styles.selectTarget);
     guideLineEle && guideLineEle.classList.remove(styles.guideActive);
 }
