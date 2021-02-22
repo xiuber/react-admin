@@ -25,8 +25,6 @@ const ReactNode = config({
         action: {dragPage: dragPageAction},
     } = props;
 
-    console.log('ReactNode', node);
-
     const [dragIn, setDragIn] = useState(false);
 
     function handleDragEnter(e) {

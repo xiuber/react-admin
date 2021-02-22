@@ -6,7 +6,7 @@ import * as components from './components';
 import * as antdComponent from 'antd/es';
 import * as antdIcon from '@ant-design/icons';
 import {getComponentConfig, setNodeDefault} from 'src/pages/drag-page/component-config';
-import {findNodeById, findParentNodeById,isNode, setNodeId, loopNode} from 'src/pages/drag-page/node-util';
+import {findNodeById, findParentNodeById, isNode, setNodeId, loopNode} from 'src/pages/drag-page/node-util';
 import {debounce} from 'lodash';
 import componentImage from './component-16.png';
 
@@ -107,6 +107,7 @@ export function getDraggingNodeInfo({e, draggingNode}) {
     return draggingNode || {};
 }
 
+// 判断字符串是否是函数
 export function isFunctionString(value) {
     return value
         && typeof value === 'string'
@@ -158,7 +159,6 @@ export function setDragImage(e, node) {
     img.style.width = '30px';
     e.dataTransfer.setDragImage(img, 0, 16);
 }
-
 
 // 同步设置对象，将newObj中属性，对应设置到oldObj中
 export function syncObject(oldObj, newObj) {
@@ -494,37 +494,26 @@ export function getNodeEle(target) {
 export function getDroppableEle(target) {
     if (!target) return target;
 
-    const loop = node => {
-        if (!node) return null;
-        if (
-            node?.getAttribute
-            && node.getAttribute('data-component-id')
-        ) {
+    // 获取节点元素
+    const nodeEle = getNodeEle(target);
 
-            return node;
-        }
-
-        return loop(node.parentNode);
-    };
-
-    const componentEle = loop(target);
-
-    if (!componentEle) return null;
+    if (!nodeEle) return null;
 
     // 当前是容器
-    let draggable = componentEle.getAttribute('data-is-container') === 'true';
-    if (draggable) return componentEle;
+    let draggable = nodeEle.getAttribute('data-is-container') === 'true';
+    if (draggable) return nodeEle;
 
     // 父组件是容器
-    const parentComponent = loop(componentEle.parentNode);
-    if (parentComponent?.getAttribute('data-is-container') === 'true') {
-        return componentEle;
+    const parentNodeEle = getNodeEle(nodeEle.parentNode);
+    if (parentNodeEle?.getAttribute('data-is-container') === 'true') {
+        return nodeEle;
     }
 
     // 继续向上找
-    return getDroppableEle(parentComponent);
+    return getDroppableEle(parentNodeEle);
 }
 
+// 节点投放事件处理函数
 export function handleNodeDrop(options) {
     const {
         e,
