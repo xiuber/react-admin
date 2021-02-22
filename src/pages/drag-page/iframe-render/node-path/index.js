@@ -34,7 +34,7 @@ export default config({
         }
 
         const parentNodes = findParentNodes(pageConfig, selectedNode.id);
-        setPaths(parentNodes);
+        setPaths([...parentNodes, selectedNode]);
     }, [selectedNode]);
 
     const SHOW_COUNT = 5;
