@@ -5,11 +5,13 @@ import {deleteNodeById, findNodeFieldPaths, loopNode} from 'src/pages/drag-page/
 /**
  * 将节点转换为树结构数据
  * @param node
- * @returns {{}}
+ * @returns {{allKeys: [], nodeCount: number, treeData: *}}
  */
 export function convertNodeToTreeData(node) {
 
     const root = cloneDeep(node);
+    let nodeCount = 0;
+    const allKeys = [];
 
     const loop = node => {
         const {id, componentName, wrapper, name, props} = node;
@@ -17,6 +19,9 @@ export function convertNodeToTreeData(node) {
         const {isContainer, draggable, icon} = nodeConfig;
         const componentDisplayName = getComponentDisplayName(node);
         const nodeData = cloneDeep(node);
+
+        nodeCount++;
+        allKeys.push(id);
 
         node.key = id;
         node.title = '';
@@ -79,7 +84,7 @@ export function convertNodeToTreeData(node) {
 
     loop(root);
 
-    return root;
+    return {treeData: root, allKeys, nodeCount};
 
     // wrapper isContainer true
     // props.actions isContainer true

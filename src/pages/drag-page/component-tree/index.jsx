@@ -44,16 +44,7 @@ export default config({
 
     useEffect(() => {
         if (!pageConfig) return;
-        const treeData = convertNodeToTreeData(pageConfig);
-
-        let nodeCount = 0;
-        const allKeys = [];
-        const loop = node => {
-            allKeys.push(node.key);
-            nodeCount++;
-            if (node?.children?.length) node.children.forEach(item => loop(item));
-        };
-        loop(treeData);
+        const {treeData, nodeCount, allKeys} = convertNodeToTreeData(pageConfig);
 
         setTreeData([treeData]);
         setNodeCount(nodeCount);
