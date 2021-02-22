@@ -47,7 +47,6 @@ export function convertNodeToTreeData(node) {
 
         while (true) {
             const r = loopNode(props, node => {
-                console.log(1111, node);
                 const paths = findNodeFieldPaths(props, node.id);
                 deleteNodeById(props, node.id);
                 return [paths.join('.'), node];

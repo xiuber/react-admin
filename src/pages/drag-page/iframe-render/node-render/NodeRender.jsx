@@ -120,10 +120,6 @@ export default function NodeRender(props) {
 
         const fieldOption = getFieldOption(config, key);
 
-        if (key === 'expandedRowRender') {
-            console.log(key, fieldOption);
-        }
-
         // 字段是函数类型
         if (fieldOption?.functionType) {
             if (isComponentConfig(value)) {
@@ -136,9 +132,7 @@ export default function NodeRender(props) {
             } else {
                 obj[key] = () => value;
             }
-            console.log('fieldOption?.functionType', obj);
         }
-
 
         // 属性中的函数
         if (isFunctionString(value)) {
@@ -155,28 +149,6 @@ export default function NodeRender(props) {
             }
         }
     });
-    //
-    // // 属性中的state数据处理
-    // Object.entries(componentProps)
-    //     .filter(([, value]) => typeof value === 'string' && value.startsWith('state.'))
-    //     .forEach(([key, value]) => {
-    //         // eslint-disable-next-line
-    //         componentProps[key] = eval(value);
-    //     });
-    //
-    // // 属性中的函数处理
-    // const propsActions = {};
-    // Object.entries(componentProps)
-    //     .forEach(([key, value]) => {
-    //         if (isFunctionString(value)) {
-    //             let fn;
-    //             // eslint-disable-next-line
-    //             eval(`fn = ${value}`);
-    //             if (typeof fn === 'function') {
-    //                 propsActions[key] = fn;
-    //             }
-    //         }
-    //     });
 
     const {dragClassName, dragProps} = getDragInfo({config, selectedNodeId, draggingNode});
 

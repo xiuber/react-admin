@@ -8,6 +8,7 @@ import * as antdIcon from '@ant-design/icons';
 import {getComponentConfig, setNodeDefault} from 'src/pages/drag-page/component-config';
 import {findNodeById, findParentNodeById, setNodeId, loopNode} from 'src/pages/drag-page/node-util';
 import {debounce} from 'lodash';
+import componentImage from './component-16.png';
 
 export const OTHER_HEIGHT = 0;
 
@@ -150,9 +151,11 @@ export function fixDragProps(options) {
 
 // 设置拖拽图片
 export function setDragImage(e, node) {
-    // const img = new Image();
+    const img = new Image();
     // img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=';
-    // e.dataTransfer.setDragImage(img, -20, -30);
+    img.src = componentImage;
+    img.style.width = '30px';
+    e.dataTransfer.setDragImage(img, 0, 16);
 }
 
 export function isComponentConfig(node) {
