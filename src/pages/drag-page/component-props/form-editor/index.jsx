@@ -8,7 +8,7 @@ import './style.less';
 
 export default function PropsFormEditor(props) {
     const {
-        selectedNode,
+        node,
         onChange,
 
         onEdit,
@@ -17,19 +17,19 @@ export default function PropsFormEditor(props) {
         tool,
     } = props;
 
-    const {fields} = getComponentConfig(selectedNode?.componentName);
-    const value = selectedNode?.props || {};
+    const {fields} = getComponentConfig(node?.componentName);
+    const value = node?.props || {};
 
     return (
         <Pane
             fitHeight={fitHeight}
             header={(
                 <div styleName="header">
-                    <CurrentSelectedNode tip={tip} node={selectedNode}/>
+                    <CurrentSelectedNode tip={tip} node={node}/>
                     <div>
                         {tool}
                         <DesktopOutlined
-                            disabled={!selectedNode}
+                            disabled={!node}
                             styleName="tool"
                             onClick={() => onEdit()}
                         />
@@ -39,7 +39,7 @@ export default function PropsFormEditor(props) {
         >
             <div styleName="root">
                 <ObjectElement
-                    selectedNode={selectedNode}
+                    node={node}
                     fields={fields}
                     value={value}
                     onChange={onChange}

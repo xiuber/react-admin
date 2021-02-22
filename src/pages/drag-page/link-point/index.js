@@ -4,6 +4,7 @@ import {AimOutlined} from '@ant-design/icons';
 import config from 'src/commons/config-hoc';
 import {getEleCenterInWindow, findLinkTargetsPosition} from 'src/pages/drag-page/util';
 import {findNodeById} from 'src/pages/drag-page/node-util';
+import {cloneDeep} from 'lodash';
 // import {v4 as uuid} from 'uuid';
 import {throttle} from 'lodash';
 
@@ -56,17 +57,12 @@ export default config({
         onDragStart && onDragStart(e);
         e.stopPropagation();
         // e.preventDefault();
-        const componentId = selectedNode?.id;
 
         if (!propsToSet) return;
+
         setDragging(true);
-        let str = JSON.stringify(propsToSet);
 
-        str = str.replace(/\$\{componentId}/g, componentId);
-
-        e.dataTransfer.setData('propsToSet', str);
-
-        dragPageAction.setDraggingNode({toSetProps: true});
+        dragPageAction.setDraggingNode({toSetProps: true, nodeData: {propsToSet: cloneDeep(propsToSet)}});
 
         const center = getEleCenterInWindow(e.target);
         if (center) {

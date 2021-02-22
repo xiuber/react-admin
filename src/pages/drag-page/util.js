@@ -550,6 +550,7 @@ export function handleNodeDrop(options) {
         isTop,
 
         accept,
+        isNewAdd,
         nodeData,
     } = getDraggingNodeInfo({e, draggingNode});
 
@@ -559,16 +560,13 @@ export function handleNodeDrop(options) {
 
     if (!targetElement && !targetComponentId) return end();
 
-    const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
-    let componentConfig = e.dataTransfer.getData('componentConfig');
-    componentConfig = componentConfig ? JSON.parse(componentConfig) : null;
+    const sourceNodeId = nodeData.id;
 
     // 设置目标属性
     if (toSetProps) {
-        const propsToSet = e.dataTransfer.getData('propsToSet') || draggingNode.nodeData.propsToSet;
+        const propsToSet = draggingNode.nodeData.propsToSet;
         // 组件节点
         const newProps = typeof propsToSet === 'string' ? JSON.parse(propsToSet) : propsToSet;
-        console.log(newProps);
 
         // 如果是组件节点，设置id
         Object.values(newProps)
@@ -585,18 +583,18 @@ export function handleNodeDrop(options) {
 
     // 包裹目标
     if (isWrapper) {
-        if (sourceComponentId) {
+        if (!isNewAdd) {
             dragPageAction.moveWrapper({
-                sourceId: sourceComponentId,
+                sourceId: sourceNodeId,
                 targetId: targetComponentId,
             });
             return end();
         }
 
-        if (componentConfig) {
+        if (isNewAdd) {
             dragPageAction.addWrapper({
                 targetId: targetComponentId,
-                node: componentConfig,
+                node: nodeData,
             });
             return end();
         }
@@ -604,25 +602,25 @@ export function handleNodeDrop(options) {
 
     // 替换目标
     if (isReplace) {
-        if (sourceComponentId) {
+        if (!isNewAdd) {
             dragPageAction.moveReplace({
-                sourceId: sourceComponentId,
+                sourceId: sourceNodeId,
                 targetId: targetComponentId,
             });
             return end();
         }
 
-        if (componentConfig) {
+        if (isNewAdd) {
             dragPageAction.addReplace({
                 targetId: targetComponentId,
-                node: componentConfig,
+                node: nodeData,
             });
             return end();
         }
     }
 
     // 放在自身上
-    if (targetComponentId === sourceComponentId) return end();
+    if (targetComponentId === sourceNodeId) return end();
     if (!accept) return end();
 
     dragPageAction.addOrMoveNode({

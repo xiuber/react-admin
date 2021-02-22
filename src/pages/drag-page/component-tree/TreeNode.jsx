@@ -53,8 +53,6 @@ export default config({
             nodeData,
         });
 
-        e.dataTransfer.setData('sourceComponentId', key);
-
         setDragImage(e, nodeData);
     }
 

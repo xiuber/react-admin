@@ -29,10 +29,7 @@ export default config({
         const config = cloneDeep(data.config);
 
         setDragImage(e, config);
-        e.dataTransfer.setData('componentConfig', JSON.stringify(config));
-
         setNodeId(config);
-
         dragPageAction.setDraggingNode({
             id: config.id,
             isNewAdd: true,

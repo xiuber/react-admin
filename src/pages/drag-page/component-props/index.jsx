@@ -132,7 +132,7 @@ export default config({
                 <section id={`fieldEditor_${selectedNode?.id}`}>
                     <FormEditor
                         fitHeight={!selectedNode?.wrapper?.length && !propsNodes?.length}
-                        selectedNode={selectedNode}
+                        node={selectedNode}
                         onEdit={() => handleEdit(selectedNode)}
                         refreshProps={refreshProps}
                         onChange={(...args) => handleChange(selectedNode, ...args)}
@@ -152,7 +152,7 @@ export default config({
                                         onClick={() => handleDeleteWrapper(index)}
                                     >删除</Button>
                                 )}
-                                selectedNode={node}
+                                node={node}
                                 onEdit={() => handleEdit(node)}
                                 refreshProps={refreshProps}
                                 onChange={(...args) => handleChange(node, ...args)}
@@ -176,7 +176,7 @@ export default config({
                                         onClick={() => handleDeleteProps(key)}
                                     >删除</Button>
                                 )}
-                                selectedNode={node}
+                                node={node}
                                 onEdit={() => handleEdit(node)}
                                 refreshProps={refreshProps}
                                 onChange={(...args) => handleChange(node, ...args)}

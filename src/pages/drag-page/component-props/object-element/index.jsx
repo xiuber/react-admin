@@ -16,7 +16,7 @@ export default config({
     },
 })(function ObjectElement(props) {
     let {
-        selectedNode,
+        node,
         refreshProps,
         action: {dragPage: dragPageAction},
 
@@ -64,7 +64,7 @@ export default config({
         // 设置表单
         form.setFieldsValue(fieldValues);
 
-    }, [value, selectedNode, refreshProps]);
+    }, [value, node, refreshProps]);
 
     // 基于fields 构建表单
     const element = useMemo(() => {
@@ -114,7 +114,7 @@ export default config({
                             <div styleName="wrapper">
                                 {fields.map(it => {
                                     const {field} = it;
-                                    const FormElement = elementMap.button({...it, node: selectedNode});
+                                    const FormElement = elementMap.button({...it, node});
 
                                     return (
                                         <Form.Item
@@ -148,7 +148,7 @@ export default config({
             } = option;
             const title = tip || desc || label;
 
-            let FormElement = getElement({...option, node: selectedNode});
+            let FormElement = getElement({...option, node});
 
             const labelEle = (
                 <Tooltip placement="topRight" title={title} mouseLeaveDelay={0}>
@@ -158,7 +158,7 @@ export default config({
 
             function handleKeyDown(e) {
                 onKeyDown && onKeyDown(e, {
-                    node: selectedNode,
+                    node,
                     dragPageAction,
                 });
             }
@@ -213,7 +213,7 @@ export default config({
             return [category, field];
         });
 
-    }, [fields, selectedNode]);
+    }, [fields, node]);
 
     return (
         <div ref={rootRef}>

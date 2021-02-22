@@ -49,8 +49,6 @@ export default function DragAction(props) {
         prevSideKeyRef.current = activeSideKey;
         dragPageAction.setActiveSideKey('componentTree');
 
-        // 拖拽携带的数据
-        e.dataTransfer.setData('sourceComponentId', componentId);
         setDragImage(e, node);
     }
 

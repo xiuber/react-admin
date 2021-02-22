@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import config from 'src/commons/config-hoc';
 import styles from './style.less';
-import {findNodeById, deleteNodeById, setNodeId} from 'src/pages/drag-page/node-util';
+import {findNodeById, deleteNodeById} from 'src/pages/drag-page/node-util';
 import {getComponentConfig, getComponentDisplayName} from 'src/pages/drag-page/component-config';
 import {action} from 'src/models';
 
@@ -12,16 +12,20 @@ const ReactNode = config({
 
         return {
             pageConfig: state.dragPage.pageConfig,
+            draggingNode: state.dragPage.draggingNode,
         };
     },
 })(props => {
     const {
         node,
         pageConfig,
+        draggingNode,
         value,
         onChange,
         action: {dragPage: dragPageAction},
     } = props;
+
+    console.log('ReactNode', node);
 
     const [dragIn, setDragIn] = useState(false);
 
@@ -38,22 +42,24 @@ const ReactNode = config({
         e.preventDefault();
         e.stopPropagation();
 
+        const {isNewAdd, nodeData} = draggingNode;
+        const sourceNodeId = nodeData.id;
+
         setDragIn(false);
         dragPageAction.setDraggingNode(null);
 
-        const sourceComponentId = e.dataTransfer.getData('sourceComponentId');
-        let componentConfig = e.dataTransfer.getData('componentConfig');
-        if (sourceComponentId) {
+        // 移动
+        if (!isNewAdd) {
             // 拖过来的是 当前节点
-            if (sourceComponentId === node.id) return;
+            if (sourceNodeId === node.id) return;
 
-            const sourceNode = findNodeById(pageConfig, sourceComponentId);
+            const sourceNode = findNodeById(pageConfig, sourceNodeId);
             // 拖过来的是当前节点的父级
 
             if (findNodeById(sourceNode, node.id)) return;
 
             // 删除拖过来的节点
-            deleteNodeById(pageConfig, sourceComponentId);
+            deleteNodeById(pageConfig, sourceNodeId);
 
             const {dragPage: dragPageAction} = action;
             dragPageAction.render(true);
@@ -62,10 +68,9 @@ const ReactNode = config({
             setTimeout(() => onChange(sourceNode));
         }
 
-        if (componentConfig) {
-            componentConfig = JSON.parse(componentConfig);
-            setNodeId(componentConfig, true);
-            onChange(componentConfig);
+        // 新增
+        if (isNewAdd) {
+            onChange(nodeData);
         }
     }
 
