@@ -500,14 +500,14 @@ export function getDroppableEle(target) {
     if (!nodeEle) return null;
 
     // 当前是容器
-    let draggable = nodeEle.getAttribute('data-is-container') === 'true';
-    if (draggable) return nodeEle;
+    let isContainer = nodeEle.getAttribute('data-is-container') === 'true';
+    if (isContainer) return nodeEle;
 
     // 父组件是容器
     const parentNodeEle = getNodeEle(nodeEle.parentNode);
-    if (parentNodeEle?.getAttribute('data-is-container') === 'true') {
-        return nodeEle;
-    }
+    const parentNodeIsContainer = parentNodeEle?.getAttribute('data-is-container') === 'true';
+
+    if (parentNodeIsContainer) return nodeEle;
 
     // 继续向上找
     return getDroppableEle(parentNodeEle);
