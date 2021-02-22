@@ -4,7 +4,8 @@ import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import FormEditor from './form-editor';
 import {useHeight} from 'ra-lib';
 import {Button} from 'antd';
-import {isComponentConfig, OTHER_HEIGHT, scrollElement} from 'src/pages/drag-page/util';
+import {OTHER_HEIGHT, scrollElement} from 'src/pages/drag-page/util';
+import {isNode} from 'src/pages/drag-page/node-util';
 import CodeEditor from 'src/pages/drag-page/component-props/code-editor';
 // import {v4 as uuid} from 'uuid';
 
@@ -115,7 +116,7 @@ export default config({
     }, [editVisible, editNode, rootRef.current]);
 
     const propsNodes = selectedNode?.props ? Object.entries(selectedNode?.props)
-        .filter(([, value]) => isComponentConfig(value)) : [];
+        .filter(([, value]) => isNode(value)) : [];
 
     return (
         <div style={{height: '100%', position: 'relative'}}>

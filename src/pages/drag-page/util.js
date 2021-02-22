@@ -6,7 +6,7 @@ import * as components from './components';
 import * as antdComponent from 'antd/es';
 import * as antdIcon from '@ant-design/icons';
 import {getComponentConfig, setNodeDefault} from 'src/pages/drag-page/component-config';
-import {findNodeById, findParentNodeById, setNodeId, loopNode} from 'src/pages/drag-page/node-util';
+import {findNodeById, findParentNodeById,isNode, setNodeId, loopNode} from 'src/pages/drag-page/node-util';
 import {debounce} from 'lodash';
 import componentImage from './component-16.png';
 
@@ -16,6 +16,7 @@ export const LINE_SIZE = 1;
 export const TRIGGER_SIZE = 20;
 export const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
+// 获取字段配置信息
 export function getFieldOption(node, field) {
     const config = getComponentConfig(node?.componentName);
     if (!config) return null;
@@ -158,13 +159,6 @@ export function setDragImage(e, node) {
     e.dataTransfer.setDragImage(img, 0, 16);
 }
 
-export function isComponentConfig(node) {
-    if (typeof node !== 'object') return false;
-    if (node === null) return false;
-    if (Array.isArray(node)) return false;
-
-    return !!node?.componentName;
-}
 
 // 同步设置对象，将newObj中属性，对应设置到oldObj中
 export function syncObject(oldObj, newObj) {
@@ -573,7 +567,7 @@ export function handleNodeDrop(options) {
 
         // 如果是组件节点，设置id
         Object.values(newProps)
-            .filter(value => isComponentConfig(value))
+            .filter(value => isNode(value))
             .forEach(value => {
                 setNodeDefault(value);
                 setNodeId(value, true);

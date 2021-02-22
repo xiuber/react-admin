@@ -1,6 +1,7 @@
 import React, {createElement} from 'react';
 import classNames from 'classnames';
-import {getComponent, isComponentConfig, isFunctionString, getFieldOption} from '../../util';
+import {getComponent, isFunctionString, getFieldOption} from '../../util';
+import {isNode} from 'src/pages/drag-page/node-util';
 import {getComponentDisplayName, getComponentConfig} from 'src/pages/drag-page/component-config';
 import {cloneDeep} from 'lodash';
 import styles from './style.less';
@@ -98,7 +99,7 @@ export default function NodeRender(props) {
         } else {
             Object.entries(obj)
                 .forEach(([key, value]) => {
-                    if (typeof value === 'object' && !isComponentConfig(value)) {
+                    if (typeof value === 'object' && !isNode(value)) {
                         loop(value, cb);
                     } else {
                         cb(obj, key, value);
@@ -122,7 +123,7 @@ export default function NodeRender(props) {
 
         // 字段是函数类型
         if (fieldOption?.functionType) {
-            if (isComponentConfig(value)) {
+            if (isNode(value)) {
                 obj[key] = () => (
                     <NodeRender
                         {..._props}
@@ -164,7 +165,7 @@ export default function NodeRender(props) {
 
     // 处理属性中的节点
     Object.entries(componentProps)
-        .filter(([, value]) => isComponentConfig(value) || (Array.isArray(value) && value.every(item => isComponentConfig(item))))
+        .filter(([, value]) => isNode(value) || (Array.isArray(value) && value.every(item => isNode(item))))
         .forEach(([key, value]) => {
             if (Array.isArray(value)) {
                 componentProps[key] = value.map(item => {

@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {isComponentConfig} from 'src/pages/drag-page/util';
+import {isNode} from 'src/pages/drag-page/node-util';
 import {getElement} from 'src/pages/drag-page/component-props/form-element';
 import {Select} from 'antd';
 import {v4 as uuid} from 'uuid';
@@ -26,7 +26,7 @@ const MultipleElement = props => {
         currentType = typeOption.value;
     }
 
-    if (isComponentConfig(value)) {
+    if (isNode(value)) {
         currentType = 'ReactNode';
     }
 
@@ -82,7 +82,7 @@ const MultipleElement = props => {
                     }
 
                     // 以前是组件节点，现在切换成其他
-                    if (isComponentConfig(value)) {
+                    if (isNode(value)) {
                         const iframeDocument = document.getElementById('dnd-iframe').contentDocument;
                         if (!iframeDocument) return onChange(nextValue);
 
