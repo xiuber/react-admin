@@ -83,6 +83,7 @@ export default function EditableAction(props) {
             const options = {index, node, pageConfig, dragPageAction, iframeDocument};
 
             function handleClick(e) {
+                e.preventDefault();
                 onClick && onClick(e)(options);
             }
 

@@ -105,12 +105,12 @@ const formChildren = [
     },
 ];
 
-const commonProps = {
+const formProps = {
     initialValues: {
         name: '张三',
     },
     onFinish: 'values => alert(JSON.stringify(values))',
-    onValuesChange: '(changeValues, allValues) => console.log(allValues)',
+    // onValuesChange: '(changeValues, allValues) => console.log(allValues)',
 };
 
 export default [
@@ -127,7 +127,7 @@ export default [
                     props: {
                         layout: 'inline',
                         name: 'inline',
-                        ...commonProps,
+                        ...formProps,
                     },
                     children: [
                         {
@@ -144,7 +144,7 @@ export default [
                     componentName: 'Form',
                     props: {
                         name: 'demo',
-                        ...commonProps,
+                        ...formProps,
                     },
                     children: formChildren.map((item, index) => {
                         const isLast = formChildren.length - 1 === index;
