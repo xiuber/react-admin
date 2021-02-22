@@ -1,5 +1,12 @@
-import ModalImage from './Modal.png';
-import PopconfirmImage from './Popconfirm.png';
+import ModalImage from './images/Modal.png';
+import ModalConfirmImage from './images/ModalConfirm.png';
+import ModalErrorImage from './images/ModalError.png';
+import ModalInfoImage from './images/ModalInfo.png';
+import ModalSuccessImage from './images/ModalSuccess.png';
+import ModalWarningImage from './images/ModalWarning.png';
+import NotificationImage from './images/Notification.png';
+import MessageImage from './images/Message.png';
+import PopconfirmImage from './images/Popconfirm.png';
 
 export default [
     {
@@ -34,9 +41,12 @@ export default [
         children: [
             {
                 title: '全局提示',
-                renderPreview: true,
+                image: MessageImage,
                 config: {
                     componentName: 'Message',
+                    props: {
+                        content: '操作成功',
+                    },
                 },
             },
         ],
@@ -47,7 +57,6 @@ export default [
         children: [
             {
                 title: '对话框',
-                // renderPreview: true,
                 image: ModalImage,
                 config: {
                     componentName: 'Modal',
@@ -159,7 +168,7 @@ export default [
             },
             {
                 title: '确认提示框',
-                renderPreview: false,
+                image: ModalConfirmImage,
                 config: {
                     componentName: 'ModalConfirm',
                     props: {
@@ -170,7 +179,7 @@ export default [
             },
             {
                 title: '成功提示框',
-                renderPreview: false,
+                image: ModalSuccessImage,
                 config: {
                     componentName: 'ModalSuccess',
                     props: {
@@ -181,7 +190,7 @@ export default [
             },
             {
                 title: '错误提示框',
-                renderPreview: false,
+                image: ModalErrorImage,
                 config: {
                     componentName: 'ModalError',
                     props: {
@@ -192,7 +201,7 @@ export default [
             },
             {
                 title: '信息提示框',
-                renderPreview: false,
+                image: ModalInfoImage,
                 config: {
                     componentName: 'ModalInfo',
                     props: {
@@ -203,7 +212,7 @@ export default [
             },
             {
                 title: '警告提示框',
-                renderPreview: false,
+                image: ModalWarningImage,
                 config: {
                     componentName: 'ModalWarning',
                     props: {
@@ -220,9 +229,13 @@ export default [
         children: [
             {
                 title: '通知提醒框',
-                renderPreview: true,
+                image: NotificationImage,
                 config: {
                     componentName: 'Notification',
+                    props: {
+                        message: '通知标题',
+                        description: '通知内容',
+                    },
                 },
             },
         ],

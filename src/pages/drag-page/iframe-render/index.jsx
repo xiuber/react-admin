@@ -184,7 +184,12 @@ export default config({
         if (!iframeRootEle) return;
 
         ReactDOM.render(
-            <ConfigProvider locale={zhCN} getPopupContainer={() => iframeRootRef.current}>
+            <ConfigProvider
+                locale={zhCN}
+                getPopupContainer={() => iframeRootRef.current}
+                getTargetContainer={() => iframeRootRef.current}
+                getContainer={() => iframeRootRef.current}
+            >
                 {isPreview || !contentEditable ? null : <EditableAction {...draggableNodeProps}/>}
                 <DragAction {...draggableNodeProps}>
                     <NodeRender {...draggableNodeProps}/>
