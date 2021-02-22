@@ -47,7 +47,7 @@ const formChildren = [
                 children: [
                     {
                         componentName: 'Text',
-                        props: {text: '提交'},
+                        props: {text: '提交', isDraggable: false},
                     },
                 ],
             },
@@ -56,7 +56,7 @@ const formChildren = [
                 children: [
                     {
                         componentName: 'Text',
-                        props: {text: '重置'},
+                        props: {text: '重置', isDraggable: false},
                     },
                 ],
             },
