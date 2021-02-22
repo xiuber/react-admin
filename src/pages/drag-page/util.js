@@ -7,7 +7,7 @@ import * as antdComponent from 'antd/es';
 import * as antdIcon from '@ant-design/icons';
 import {getComponentConfig, setNodeDefault} from 'src/pages/drag-page/component-config';
 import {findNodeById, findParentNodeById, isNode, setNodeId, loopNode} from 'src/pages/drag-page/node-util';
-import {debounce} from 'lodash';
+import {debounce, cloneDeep} from 'lodash';
 import componentImage from './component-16.png';
 
 export const OTHER_HEIGHT = 0;
@@ -163,7 +163,8 @@ export function setDragImage(e, node) {
 
 // 同步设置对象，将newObj中属性，对应设置到oldObj中
 export function syncObject(oldObj, newObj) {
-    Object.entries(newObj)
+    const cloneNewObj = cloneDeep(newObj);
+    Object.entries(cloneNewObj)
         .forEach(([key, value]) => {
             if (typeof value !== 'object') {
                 oldObj[key] = value;
