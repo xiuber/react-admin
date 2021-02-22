@@ -157,6 +157,17 @@ export default [
                     ],
                 },
             },
+            {
+                title: '确认框',
+                renderPreview: false,
+                config: {
+                    componentName: 'ModalConfirm',
+                    props: {
+                        title: '温馨提示',
+                        content: '您确定吗？',
+                    },
+                },
+            },
         ],
     },
     {
