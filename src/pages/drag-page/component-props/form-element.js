@@ -152,7 +152,7 @@ export default elementMap;
 
 
 export function getElement(option) {
-    const {type} = option;
+    const {type, node} = option;
 
     if (Array.isArray(type)) {
         return (props) => <MultipleElement fieldOption={option} {...props}/>;
@@ -160,7 +160,7 @@ export function getElement(option) {
 
     if ((typeof type === 'object' && type.value === 'object') || type === 'object') {
         const {fields} = type;
-        return (props) => <ObjectElement fields={fields} {...props}/>;
+        return (props) => <ObjectElement fields={fields} node={node} {...props}/>;
     }
 
     if (typeof type === 'object' && type.value === 'array') {

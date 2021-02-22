@@ -159,7 +159,7 @@ export default {
 
         const nextCursor = nextHistory.length - 1;
 
-        console.log('addPageConfigHistory', nextHistory);
+        // console.log('addPageConfigHistory', nextHistory);
 
         return {pageConfigHistory: nextHistory, historyCursor: nextCursor};
     },

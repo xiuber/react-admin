@@ -7,6 +7,9 @@ const formChildren = [
         props: {
             label: '姓名',
             name: 'name',
+            rules: [
+                {required: true, message: '请输入姓名！'},
+            ],
         },
         children: [
             {
@@ -31,6 +34,42 @@ const formChildren = [
                     placeholder: '请输入年龄',
                     min: 0,
                     step: 1,
+                },
+            },
+        ],
+    },
+    {
+        componentName: 'Form.Item',
+        props: {
+            label: '工作',
+            name: 'job',
+        },
+        children: [
+            {
+                componentName: 'Select',
+                props: {
+                    style: {width: '100%'},
+                    placeholder: '请选择工作',
+                    options: [
+                        {value: '1', label: '选项1'},
+                        {value: '2', label: '选项2'},
+                    ],
+                },
+            },
+        ],
+    },
+    {
+        componentName: 'Form.Item',
+        props: {
+            label: '入职日期',
+            name: 'joinTime',
+        },
+        children: [
+            {
+                componentName: 'DatePicker',
+                props: {
+                    style: {width: '100%'},
+                    placeholder: '请选择入职日期',
                 },
             },
         ],
@@ -80,6 +119,7 @@ export default [
             {
                 title: '水平表单',
                 renderPreview: true,
+                previewZoom: .7,
                 config: {
                     componentName: 'Form',
                     props: {
@@ -87,7 +127,12 @@ export default [
                         name: 'inline',
                         ...commonProps,
                     },
-                    children: formChildren,
+                    children: [
+                        {
+                            componentName: 'InlineForm',
+                            children: formChildren,
+                        },
+                    ],
                 },
             },
             {

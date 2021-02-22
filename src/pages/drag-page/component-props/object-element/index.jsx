@@ -15,6 +15,7 @@ export default config({
         };
     },
 })(function ObjectElement(props) {
+
     let {
         node,
         refreshProps,
@@ -32,7 +33,7 @@ export default config({
     const wrapperCol = {flex: '1 1 0%'};
 
     // 过滤掉函数
-    fields = fields.filter(item => item.type !== 'function');
+    // fields = fields.filter(item => item.type !== 'function');
 
     function handleChange(values) {
         if (!value) value = {};
