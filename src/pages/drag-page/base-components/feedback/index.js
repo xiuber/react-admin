@@ -158,13 +158,57 @@ export default [
                 },
             },
             {
-                title: '确认框',
+                title: '确认提示框',
                 renderPreview: false,
                 config: {
                     componentName: 'ModalConfirm',
                     props: {
                         title: '温馨提示',
                         content: '您确定吗？',
+                    },
+                },
+            },
+            {
+                title: '成功提示框',
+                renderPreview: false,
+                config: {
+                    componentName: 'ModalSuccess',
+                    props: {
+                        title: '温馨提示',
+                        content: '操作成功！',
+                    },
+                },
+            },
+            {
+                title: '错误提示框',
+                renderPreview: false,
+                config: {
+                    componentName: 'ModalError',
+                    props: {
+                        title: '温馨提示',
+                        content: '操作失败！',
+                    },
+                },
+            },
+            {
+                title: '信息提示框',
+                renderPreview: false,
+                config: {
+                    componentName: 'ModalInfo',
+                    props: {
+                        title: '信息提示',
+                        content: '这个是信息内容！',
+                    },
+                },
+            },
+            {
+                title: '警告提示框',
+                renderPreview: false,
+                config: {
+                    componentName: 'ModalWarning',
+                    props: {
+                        title: '温馨提示',
+                        content: '警告内容！',
                     },
                 },
             },

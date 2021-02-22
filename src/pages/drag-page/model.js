@@ -120,9 +120,10 @@ export default {
 
         if (node) {
             const componentConfig = getComponentConfig(node?.nodeData?.componentName);
-            const {isWrapper} = componentConfig;
+            const {isWrapper, freezeIsWrapper} = componentConfig;
 
-            node.isWrapper = isWrapper;
+            if (!('isWrapper' in node)) node.isWrapper = isWrapper;
+            if (!('freezeIsWrapper' in node)) node.freezeIsWrapper = freezeIsWrapper;
         }
 
         return {draggingNode: node};

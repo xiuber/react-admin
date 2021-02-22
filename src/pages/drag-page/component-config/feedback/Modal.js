@@ -1,5 +1,6 @@
 import React from 'react';
 import {getNextField} from 'src/pages/drag-page/util';
+import {loopNode} from 'src/pages/drag-page/node-util';
 import inflection from 'inflection';
 // import {buttonTypeOptions} from '../options';
 
@@ -82,6 +83,24 @@ export default {
             // node.props.key = uuid();
 
             dragPageAction.render(true); // props改变了，重新出发页面渲染
+        },
+    },
+    hooks: {
+        afterDelete: options => {
+            // 弹框删除之后，清除关联节点的onClick
+            const {pageConfig} = options;
+            const propsToSet = options?.node?.propsToSet;
+
+            if (propsToSet) {
+                loopNode(pageConfig, node => {
+                    const props = node.props || [];
+
+                    Object.entries(propsToSet)
+                        .forEach(([key, value]) => {
+                            if (props[key] === value) Reflect.deleteProperty(props, key);
+                        });
+                });
+            }
         },
     },
     fields: [

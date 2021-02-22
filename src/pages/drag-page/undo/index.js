@@ -50,7 +50,7 @@ export default config({
             dragPageAction.addPageConfigHistory(pageConfig);
         }, FREQUENCY);
 
-    }, [pageConfig, refreshProps]);
+    }, [JSON.stringify(pageConfig), refreshProps]);
 
     const disabledPrev = !pageConfigHistory?.length || historyCursor <= 0;
     const disabledNext = !pageConfigHistory?.length || historyCursor >= pageConfigHistory?.length - 1;

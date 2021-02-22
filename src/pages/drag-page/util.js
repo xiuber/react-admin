@@ -59,6 +59,7 @@ export function getLabelWidth(label) {
 }
 
 const toggleIsWrapper = debounce((draggingNode) => {
+    if (draggingNode.freezeIsWrapper) return;
     draggingNode.isWrapper = !draggingNode.isWrapper;
 }, 100);
 

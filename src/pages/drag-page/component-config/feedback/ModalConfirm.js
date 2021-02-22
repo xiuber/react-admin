@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default {
     editableContents: [
         {
@@ -7,14 +5,12 @@ export default {
             propsField: 'title',
         },
         {
-            selector: '.ant-modal-confirm-btns .ant-btn-primary span',
-            propsField: 'okText',
-        },
-        {
-            selector: '.ant-modal-confirm-btns .ant-btn:not(.ant-btn-primary) span',
-            propsField: 'cancelText',
+            selector: '.ant-modal-confirm-content',
+            propsField: 'content',
         },
     ],
+    isWrapper: true,
+    freezeIsWrapper: true, // 锁定，不切换
     fields: [
         {label: '弹框标题', field: 'title', type: 'string', version: '', desc: '标题'},
         {label: '弹框内容', field: 'content', type: [{value: 'string', label: '字符串'}, {value: 'ReactNode', label: '组件'}], version: '', desc: '标题'},
