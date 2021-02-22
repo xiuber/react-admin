@@ -4,37 +4,38 @@ import {
     MinusCircleOutlined,
     RetweetOutlined,
 } from '@ant-design/icons';
+import UnitInput from 'src/pages/drag-page/component-style/unit-input';
 import './style.less';
+
+const INIT = 100;
+const STEP = 10;
+const MIN = 10;
+const MAX = 200;
 
 export default function Index(props) {
     const {element} = props;
 
-    const init = 100;
-    const step = 20;
-    const min = 40;
-    const max = 200;
-
-    const [scale, setScale] = useState(init);
+    const [scale, setScale] = useState(INIT);
 
     function handlePlus() {
-        if (scale >= max) return;
-        setScale(scale + step);
+        if (scale >= MAX) return;
+        setScale(scale + STEP);
     }
 
     function handleMinus() {
-        if (scale <= min) return;
+        if (scale <= MIN) return;
 
-        setScale(scale - step);
+        setScale(scale - STEP);
     }
 
     function handleReset() {
-        setScale(init);
+        setScale(INIT);
     }
 
     useEffect(() => {
         if (!element) return;
         let origin = 'left top';
-        if (scale < init) origin = 'top';
+        if (scale < INIT) origin = 'top';
 
         element.style.transformOrigin = origin;
         element.style.transform = `scale(${scale / 100})`;
@@ -42,10 +43,17 @@ export default function Index(props) {
 
     return (
         <div styleName="root">
-            <PlusCircleOutlined disabled={scale >= max} onClick={handlePlus}/>
-            <MinusCircleOutlined disabled={scale <= min} onClick={handleMinus}/>
+            <PlusCircleOutlined disabled={scale >= MAX} onClick={handlePlus}/>
+            <MinusCircleOutlined disabled={scale <= MIN} onClick={handleMinus}/>
             <RetweetOutlined onClick={handleReset}/>
-            <span>{scale}%</span>
+            <span styleName="inputWrapper">
+                <UnitInput
+                    allowClear={false}
+                    value={scale}
+                    onChange={e => setScale(e.target.value)}
+                />
+                %
+            </span>
         </div>
     );
 

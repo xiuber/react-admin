@@ -60,7 +60,7 @@ const initialState = {
     componentTreeExpendedKeys: [], // 组件树 展开节点
     rightSideWidth: 385,
     rightSideExpended: true,
-    canvasWidth: '100%',
+    canvasWidth: '100%', // 画布尺寸，指的是iframe尺寸
     canvasHeight: '100%',
     iframeDocument: null,
 
@@ -72,6 +72,8 @@ const syncStorage = {
     rightSideWidth: true,
     contentEditable: true,
     nodeSelectType: true,
+    canvasWidth: true,
+    canvasHeight: true,
 
     pageConfig: true,
     pageConfigHistory: true,
