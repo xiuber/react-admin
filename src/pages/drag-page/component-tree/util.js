@@ -16,6 +16,7 @@ export function convertNodeToTreeData(node) {
         const nodeConfig = getComponentConfig(componentName);
         const {isContainer, draggable, icon} = nodeConfig;
         const componentDisplayName = getComponentDisplayName(node);
+        const nodeData = cloneDeep(node);
 
         node.key = id;
         node.title = '';
@@ -23,7 +24,7 @@ export function convertNodeToTreeData(node) {
         node.name = name || componentDisplayName;
         node.isContainer = isContainer;
         node.draggable = draggable;
-        node.nodeData = node;
+        node.nodeData = nodeData;
 
         // 处理wrapper
         if (wrapper?.length) {

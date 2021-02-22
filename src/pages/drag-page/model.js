@@ -485,14 +485,6 @@ export default {
         }
 
         if (isChildren) {
-            // 目标节点为空 或者只有占位符
-            if (
-                !targetNode.children
-                || (targetNode.children?.length === 1 && targetNode.children[0].componentName === 'DragHolder')
-            ) {
-                targetNode.children = [];
-            }
-
             const {beforeAddChildren, afterAddChildren} = targetNodeConfig.hooks || {};
 
             const args = {node: targetNode, targetNode: sourceNode, pageConfig};
@@ -504,6 +496,11 @@ export default {
             deleteNodeById(pageConfig, sourceNode.id);
 
             targetNode.children.push(sourceNode);
+
+            // 清除占位符
+            if (targetNode.children?.length > 1) {
+                targetNode.children = targetNode.children.filter(item => item.componentName !== 'DragHolder');
+            }
 
             const result = {pageConfig: {...pageConfig}, refreshProps: {}};
             afterAddChildren && afterAddChildren({...args, ...result});
@@ -522,6 +519,11 @@ export default {
                 insertBefore(pageConfig, sourceNode, targetNodeId);
             } else if (isAfter) {
                 insertAfter(pageConfig, sourceNode, targetNodeId);
+            }
+
+            // 清除占位符
+            if (targetParentNode.children?.length > 1) {
+                targetParentNode.children = targetParentNode.children.filter(item => item.componentName !== 'DragHolder');
             }
 
             const res = {pageConfig: {...pageConfig}, refreshProps: {}};

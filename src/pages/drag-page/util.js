@@ -723,11 +723,10 @@ export function isDropAccept(options) {
 // 检查是否是某个节点的子节点
 export function isChildrenNode(parentNode, childrenNode) {
     if (!parentNode) return false;
+    if (!childrenNode?.id) return false;
+    if (parentNode.id === childrenNode.id) return false;
 
-    const id = childrenNode?.id;
-
-    if (!id) return false;
-    return !!findNodeById(parentNode, id);
+    return !!findNodeById(parentNode, childrenNode.id);
 }
 
 // 获取拖放提示位置

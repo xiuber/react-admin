@@ -7,10 +7,9 @@ export default [
         children: [
             ...(Object.keys(antdIcon)
                 .filter((key, index) => {
-                    // TODO 测试
+                    // TODO 如果图标全部加载，会导致 组件列表渲染卡顿
                     return index < 2;
-                    // 首字母大写
-                    // return /^[A-Z]/.test(key);
+                    // return /^[A-Z]/.test(key); // 首字母大写
                 })
                 .map(componentName => {
                     return {
