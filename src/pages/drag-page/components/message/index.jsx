@@ -33,7 +33,7 @@ export default function Message(props) {
 
     useEffect(() => {
         if (id && iframeDocument) {
-            const element = iframeDocument.querySelector(`[data-component-id="${id}"]`);
+            const element = iframeDocument.querySelector(`.id_${id}`);
             if (element) {
 
                 element.addEventListener('click', handleClick);
