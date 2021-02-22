@@ -3,10 +3,10 @@ import {Tooltip} from 'antd';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    ShareAltOutlined,
     AppstoreOutlined,
-    DesktopOutlined,
+    SettingOutlined,
 } from '@ant-design/icons';
+import FontIcon from 'src/pages/drag-page/font-icon';
 import {useHeight} from 'ra-lib';
 import config from 'src/commons/config-hoc';
 import ComponentTree from '../component-tree';
@@ -65,7 +65,7 @@ export default config({
         {
             title: '组件树',
             key: 'componentTree',
-            icon: <ShareAltOutlined/>,
+            icon: <FontIcon type="icon-tree"/>,
             component: <ComponentTree/>,
         },
         {
@@ -77,14 +77,14 @@ export default config({
         {
             title: '画布设置',
             key: 'canvasSetting',
-            icon: <DesktopOutlined/>,
+            icon: <SettingOutlined/>,
             component: <CanvasSetting/>,
             bottom: true,
         },
         {
             title: 'Schema 源码开发',
             key: 'schemaEditor',
-            icon: <DesktopOutlined/>,
+            icon: <FontIcon type="icon-code"/>,
             component: <SchemaEditor/>,
             bottom: true,
         },

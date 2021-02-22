@@ -6,6 +6,7 @@ import {
 import {
     PicCenterOutlined,
 } from '@ant-design/icons';
+import FontIcon from 'src/pages/drag-page/font-icon';
 import RadioGroup from '../radio-group';
 import UnitInput from '../unit-input';
 import RectInputsWrapper from '../rect-inputs-wrapper';
@@ -13,12 +14,12 @@ import {handleSyncFields} from '../util';
 import './style.less';
 
 const displayOptions = [
-    {value: 'inline', label: '内联布局', icon: <PicCenterOutlined/>},
-    {value: 'flex', label: '弹性布局', icon: <PicCenterOutlined/>},
-    {value: 'inline-flex', label: '内联弹性布局', icon: <PicCenterOutlined/>},
-    {value: 'block', label: '块级布局', icon: <PicCenterOutlined/>},
-    {value: 'inline-block', label: '内联块布局', icon: <PicCenterOutlined/>},
-    {value: 'none', label: '内联块布局', icon: <PicCenterOutlined/>},
+    {value: 'inline', label: '内联布局', icon: <FontIcon type="icon-display-inline"/>},
+    {value: 'flex', label: '弹性布局', icon: <FontIcon type="icon-display-flex"/>},
+    {value: 'inline-flex', label: '内联弹性布局', icon: <FontIcon type="icon-display-inline-flex"/>},
+    {value: 'block', label: '块级布局', icon: <FontIcon type="icon-display-block"/>},
+    {value: 'inline-block', label: '内联块布局', icon: <FontIcon type="icon-display-inline-block"/>},
+    {value: 'none', label: '内联块布局', icon: <FontIcon type="icon-display-none"/>},
 ];
 
 const flexDirectionOptions = [

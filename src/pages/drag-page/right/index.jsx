@@ -4,6 +4,7 @@ import config from 'src/commons/config-hoc';
 import ComponentStyle from '../component-style';
 import ComponentProps from '../component-props';
 import DragBar from '../drag-bar';
+import FontIcon from '../font-icon';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -58,11 +59,11 @@ export default config({
     }
 
     const panes = [
-        {key: 'style', title: '样式', component: <ComponentStyle/>, icon: <AppstoreOutlined/>},
-        {key: 'props', title: '属性', component: <ComponentProps/>, icon: <ShareAltOutlined/>},
-        {key: 'action', title: '事件', component: '事件', icon: <DesktopOutlined/>},
-        {key: 'dataSource', title: '数据', component: '数据', icon: <ShareAltOutlined/>},
-        {key: 'comment', title: '注释', component: '注释', icon: <ShareAltOutlined/>},
+        {key: 'style', title: '样式', component: <ComponentStyle/>, icon: <FontIcon type="icon-style"/>},
+        {key: 'props', title: '属性', component: <ComponentProps/>, icon: <FontIcon type="icon-props"/>},
+        {key: 'action', title: '事件', component: '事件', icon: <FontIcon type="icon-click"/>},
+        {key: 'dataSource', title: '数据', component: '数据', icon: <FontIcon type="icon-data"/>},
+        {key: 'comment', title: '注释', component: '注释', icon: <FontIcon type="icon-comment"/>},
     ];
 
     return (
