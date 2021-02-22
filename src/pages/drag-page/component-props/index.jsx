@@ -7,6 +7,7 @@ import {Button} from 'antd';
 import {OTHER_HEIGHT, scrollElement} from 'src/pages/drag-page/util';
 import {isNode} from 'src/pages/drag-page/node-util';
 import CodeEditor from 'src/pages/drag-page/component-props/code-editor';
+import {debounce} from 'lodash';
 // import {v4 as uuid} from 'uuid';
 
 export default config({
@@ -33,7 +34,8 @@ export default config({
     const [height] = useHeight(rootRef, OTHER_HEIGHT);
 
 
-    function handleChange(node, allValues, replace) {
+    const handleChange = debounce((node, allValues, replace) => {
+
         if (!node?.componentName) return;
 
         if (!node?.props) node.props = {};
@@ -70,7 +72,8 @@ export default config({
 
         // console.log('props', JSON.stringify(node.props, null, 4));
         dragPageAction.render(replace);
-    }
+
+    }, 300);
 
     function handleDeleteWrapper(index) {
         selectedNode.wrapper.splice(index, 1);

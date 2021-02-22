@@ -78,7 +78,6 @@ export default function Layout(props) {
 
         // 同步表单数据
         form.setFieldsValue(allValues);
-        console.log(allValues);
         onChange(allValues);
     }
 

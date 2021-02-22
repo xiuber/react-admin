@@ -15,6 +15,7 @@ import {useHeight} from 'ra-lib';
 import CurrentSelectedNode from '../current-selected-node';
 import './style.less';
 import {OTHER_HEIGHT} from 'src/pages/drag-page/util';
+import {debounce} from 'lodash';
 
 const {Panel} = Collapse;
 
@@ -53,7 +54,7 @@ export default config({
 
     const [height] = useHeight(boxRef, OTHER_HEIGHT);
 
-    function handleChange(values, replace) {
+    const handleChange = debounce((values, replace) => {
         if (!selectedNode?.componentName) return;
 
         if (!selectedNode?.props) selectedNode.props = {};
@@ -82,7 +83,8 @@ export default config({
         console.log('selectedNode style', JSON.stringify(selectedNode.props.style, null, 4));
 
         dragPageAction.render();
-    }
+
+    }, 300);
 
     useEffect(() => {
         if (styleEditorVisible && rightSideWidth < 440) {
