@@ -1,6 +1,14 @@
 export default {
     isContainer: false,
     fields: [
+        {
+            label: '头像图片', field: 'src', type: [
+                {value: 'image', label: '地址'},
+                {value: 'ReactNode', label: '组件'},
+            ],
+            version: 'ReactNode: 4.8.0',
+            desc: '图片类头像的资源地址或者图片元素',
+        },
         {label: '替代文本', field: 'alt', type: 'string', version: '', desc: '图像无法显示时的替代文本'},
         {label: '字符两侧单位', field: 'gap', type: 'number', defaultValue: 4, version: '4.3.0', desc: '字符类型距离左右两侧边界单位像素'},
         {label: '头像图标', field: 'icon', type: 'ReactNode', version: '', desc: '设置头像的自定义图标'},
@@ -21,14 +29,6 @@ export default {
             ],
             defaultValue: 'default',
             desc: '控件大小。注：标准表单内的输入框大小限制为 large',
-        },
-        {
-            label: '头像图片', field: 'src', type: [
-                {value: 'image', label: '地址'},
-                {value: 'ReactNode', label: '组件'},
-            ],
-            version: 'ReactNode: 4.8.0',
-            desc: '图片类头像的资源地址或者图片元素',
         },
     ],
 };
