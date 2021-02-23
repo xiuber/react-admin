@@ -8,9 +8,6 @@ import FontIcon from '../font-icon';
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    ShareAltOutlined,
-    AppstoreOutlined,
-    DesktopOutlined,
 } from '@ant-design/icons';
 import './style.less';
 

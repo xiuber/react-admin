@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {Collapse, ConfigProvider} from 'antd';
-import {DesktopOutlined} from '@ant-design/icons';
+import FontIcon from '../font-icon';
 import config from 'src/commons/config-hoc';
 import Pane from '../pane';
 import Layout from './layout';
@@ -40,11 +40,11 @@ export default config({
     const componentId = selectedNode?.id;
 
     const options = [
-        {key: 'layout', title: '布局', icon: <DesktopOutlined/>, Component: Layout},
-        {key: 'font', title: '文字', icon: <DesktopOutlined/>, Component: Font},
-        {key: 'position', title: '定位', icon: <DesktopOutlined/>, Component: Position},
-        {key: 'background', title: '背景', icon: <DesktopOutlined/>, Component: Background},
-        {key: 'border', title: '边框', icon: <DesktopOutlined/>, Component: Border},
+        {key: 'layout', title: '布局', icon: <FontIcon type="icon-layout"/>, Component: Layout},
+        {key: 'font', title: '文字', icon: <FontIcon type="icon-font"/>, Component: Font},
+        {key: 'position', title: '定位', icon: <FontIcon type="icon-position"/>, Component: Position},
+        {key: 'background', title: '背景', icon: <FontIcon type="icon-background"/>, Component: Background},
+        {key: 'border', title: '边框', icon: <FontIcon type="icon-border"/>, Component: Border},
     ];
 
     const [styleEditorVisible, setStyleEditorVisible] = useState(false);
@@ -100,7 +100,8 @@ export default config({
                 header={(
                     <div styleName="header">
                         <CurrentSelectedNode/>
-                        <DesktopOutlined
+                        <FontIcon
+                            type="icon-code"
                             styleName="tool"
                             onClick={() => setStyleEditorVisible(!styleEditorVisible)}
                         />

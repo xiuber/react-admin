@@ -3,9 +3,6 @@ import {
     Form,
     InputNumber,
 } from 'antd';
-import {
-    PicCenterOutlined,
-} from '@ant-design/icons';
 import FontIcon from 'src/pages/drag-page/font-icon';
 import RadioGroup from '../radio-group';
 import UnitInput from '../unit-input';

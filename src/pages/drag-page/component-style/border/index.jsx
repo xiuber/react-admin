@@ -6,7 +6,7 @@ import {
     Tooltip,
     Select,
 } from 'antd';
-import {PicCenterOutlined} from '@ant-design/icons';
+import FontIcon from '../../font-icon';
 
 import RadioGroup from '../radio-group';
 import UnitInput from '../unit-input';
@@ -21,11 +21,15 @@ const borderStyleOptions = [
     {value: 'dotted', label: '点线'},
 ];
 
-const inputTypeOptions = [
-    {value: 'all', title: '整体设置', icon: <PicCenterOutlined/>},
-    {value: 'separate', title: '单独设置', icon: <PicCenterOutlined/>},
+const radiusInputTypeOptions = [
+    {value: 'all', title: '整体设置', icon: <FontIcon type="icon-radius-all"/>},
+    {value: 'separate', title: '单独设置', icon: <FontIcon type="icon-radius"/>},
 ];
 
+const borderInputTypeOptions = [
+    {value: 'all', title: '整体设置', icon: <FontIcon type="icon-border"/>},
+    {value: 'separate', title: '单独设置', icon: <FontIcon type="icon-border-split"/>},
+];
 
 const radiusKeys = [
     'TopLeft',
@@ -144,7 +148,7 @@ export default function Background(props) {
                     <RadioGroup
                         placement="top"
                         allowClear={false}
-                        options={inputTypeOptions}
+                        options={radiusInputTypeOptions}
                         onChange={() => {
                             setTimeout(() => {
                                 const allValues = form.getFieldsValue();
@@ -188,7 +192,7 @@ export default function Background(props) {
                                     <Form.Item
                                         label={
                                             <Tooltip placement="top" title="左上角">
-                                                <PicCenterOutlined/>
+                                                <FontIcon type="icon-radius-top-left"/>
                                             </Tooltip>
                                         }
                                         name="borderTopLeftRadius"
@@ -201,7 +205,7 @@ export default function Background(props) {
                                     <Form.Item
                                         label={
                                             <Tooltip placement="top" title="右上角">
-                                                <PicCenterOutlined/>
+                                                <FontIcon type="icon-radius-top-right"/>
                                             </Tooltip>
                                         }
                                         name="borderTopRightRadius"
@@ -214,7 +218,7 @@ export default function Background(props) {
                                     <Form.Item
                                         label={
                                             <Tooltip placement="top" title="左下角">
-                                                <PicCenterOutlined/>
+                                                <FontIcon type="icon-radius-bottom-left"/>
                                             </Tooltip>
                                         }
                                         name="borderBottomLeftRadius"
@@ -227,7 +231,7 @@ export default function Background(props) {
                                     <Form.Item
                                         label={
                                             <Tooltip placement="top" title="右下角">
-                                                <PicCenterOutlined/>
+                                                <FontIcon type="icon-radius-bottom-right"/>
                                             </Tooltip>
                                         }
                                         name="borderBottomRightRadius"
@@ -250,7 +254,7 @@ export default function Background(props) {
                 >
                     <RadioGroup
                         allowClear={false}
-                        options={inputTypeOptions}
+                        options={borderInputTypeOptions}
                         onChange={() => {
                             setTimeout(() => {
                                 const allValues = form.getFieldsValue();
@@ -336,10 +340,10 @@ export default function Background(props) {
                         }
 
                         return [
-                            {label: '上边框', icon: <PicCenterOutlined/>, name: 'borderTop', placeholder: 'border-top'},
-                            {label: '右边框', icon: <PicCenterOutlined/>, name: 'borderRight', placeholder: 'border-right'},
-                            {label: '下边框', icon: <PicCenterOutlined/>, name: 'borderBottom', placeholder: 'border-bottom'},
-                            {label: '左边框', icon: <PicCenterOutlined/>, name: 'borderLeft', placeholder: 'border-left'},
+                            {label: '上边框', icon: <FontIcon type="icon-border-top"/>, name: 'borderTop', placeholder: 'border-top'},
+                            {label: '右边框', icon: <FontIcon type="icon-border-right"/>, name: 'borderRight', placeholder: 'border-right'},
+                            {label: '下边框', icon: <FontIcon type="icon-border-bottom"/>, name: 'borderBottom', placeholder: 'border-bottom'},
+                            {label: '左边框', icon: <FontIcon type="icon-border-left"/>, name: 'borderLeft', placeholder: 'border-left'},
                         ].map(item => {
                             const {label, icon, name, placeholder} = item;
 

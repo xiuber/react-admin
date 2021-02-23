@@ -6,9 +6,7 @@ import {
     Row,
     Col,
 } from 'antd';
-import {
-    PicCenterOutlined,
-} from '@ant-design/icons';
+import FontIcon from '../../font-icon';
 import RadioGroup from '../radio-group';
 import SliderInput from '../slider-input';
 import './style.less';
@@ -16,10 +14,10 @@ import UnitInput from 'src/pages/drag-page/component-style/unit-input';
 import ColorInput from 'src/pages/drag-page/component-style/color-input';
 
 const textAlignOptions = [
-    {value: 'left', label: '左对齐', icon: <PicCenterOutlined/>},
-    {value: 'center', label: '居中对齐', icon: <PicCenterOutlined/>},
-    {value: 'right', label: '右对齐', icon: <PicCenterOutlined/>},
-    {value: 'justify', label: '两端对齐', icon: <PicCenterOutlined/>},
+    {value: 'left', label: '左对齐', icon: <FontIcon type="icon-align-left"/>},
+    {value: 'center', label: '居中对齐', icon: <FontIcon type="icon-align-center"/>},
+    {value: 'right', label: '右对齐', icon: <FontIcon type="icon-align-right"/>},
+    {value: 'justify', label: '两端对齐', icon: <FontIcon type="icon-align-justify"/>},
 ];
 const labelCol = {flex: '38px'};
 

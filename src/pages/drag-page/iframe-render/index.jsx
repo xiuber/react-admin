@@ -25,7 +25,7 @@ function getIframeSrcDoc() {
                 ${headHtml}
             </header>
             <body style="scroll-behavior: smooth;overflow: auto">
-                <div id="dnd-container" style="display: flex; flex-direction: column; min-height: 100vh; transition: 300ms"></div>
+                <div id="dnd-container" style="display: flex; flex-direction: column; min-height: 100vh; transition: transform 300ms"></div>
                 <div id="drop-guide-line" style="display: none">
                     <span>前</span>
                 </div>

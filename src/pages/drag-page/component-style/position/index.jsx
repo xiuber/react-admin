@@ -7,6 +7,7 @@ import {
 import {
     PicCenterOutlined,
 } from '@ant-design/icons';
+import FontIcon from '../../font-icon';
 import RadioGroup from '../radio-group';
 import RectInputsWrapper from '../rect-inputs-wrapper';
 import './style.less';
@@ -15,23 +16,23 @@ import {handleSyncFields} from 'src/pages/drag-page/component-style/util';
 import QuickPosition from '../quick-position';
 
 const positionOptions = [
-    {value: 'static', label: '无定位', icon: <PicCenterOutlined/>},
-    {value: 'relative', label: '相对定位', icon: <PicCenterOutlined/>},
-    {value: 'absolute', label: '绝对定位', icon: <PicCenterOutlined/>},
-    {value: 'fixed', label: '固定定位', icon: <PicCenterOutlined/>},
+    {value: 'static', label: '无定位', icon: <FontIcon type="icon-none"/>},
+    {value: 'relative', label: '相对定位', icon: <FontIcon type="icon-position-relative"/>},
+    {value: 'absolute', label: '绝对定位', icon: <FontIcon type="icon-position-absolute"/>},
+    {value: 'fixed', label: '固定定位', icon: <FontIcon type="icon-position-fixed"/>},
     {value: 'sticky', label: '粘性定位', icon: <PicCenterOutlined/>},
 ];
 
 const floatOptions = [
-    {value: 'none', label: '不浮动', icon: <PicCenterOutlined/>},
-    {value: 'left', label: '左浮动', icon: <PicCenterOutlined/>},
-    {value: 'right', label: '右浮动', icon: <PicCenterOutlined/>},
+    {value: 'none', label: '不浮动', icon: <FontIcon type="icon-none"/>},
+    {value: 'left', label: '左浮动', icon: <FontIcon type="icon-float-left"/>},
+    {value: 'right', label: '右浮动', icon: <FontIcon type="icon-float-right"/>},
 ];
 const clearOptions = [
-    {value: 'none', label: '不清除', icon: <PicCenterOutlined/>},
-    {value: 'left', label: '左清除', icon: <PicCenterOutlined/>},
-    {value: 'right', label: '右清除', icon: <PicCenterOutlined/>},
-    {value: 'both', label: '左右清除', icon: <PicCenterOutlined/>},
+    {value: 'none', label: '不清除', icon: <FontIcon type="icon-none"/>},
+    {value: 'left', label: '左清除', icon: <FontIcon type="icon-clear-left"/>},
+    {value: 'right', label: '右清除', icon: <FontIcon type="icon-clear-right"/>},
+    {value: 'both', label: '左右清除', icon: <FontIcon type="icon-clear-both"/>},
 ];
 const directionOptions = ['top', 'right', 'bottom', 'left'];
 const quickPositionFields = {
