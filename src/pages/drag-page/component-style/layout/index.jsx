@@ -30,18 +30,18 @@ const flexDirectionOptions = [
 ];
 
 const justifyContentOptions = [
-    {value: 'flex-start', label: '开始对齐', icon: <PicCenterOutlined/>},
-    {value: 'flex-end', label: '结束对齐', icon: <PicCenterOutlined/>},
-    {value: 'center', label: '居中', icon: <PicCenterOutlined/>},
-    {value: 'space-between', label: '两端对齐', icon: <PicCenterOutlined/>},
-    {value: 'space-around', label: '横向平分', icon: <PicCenterOutlined/>},
+    {value: 'flex-start', label: '开始对齐', icon: <FontIcon type="icon-content-start"/>},
+    {value: 'flex-end', label: '结束对齐', icon: <FontIcon type="icon-content-end"/>},
+    {value: 'center', label: '居中', icon: <FontIcon type="icon-content-center"/>},
+    {value: 'space-between', label: '两端对齐', icon: <FontIcon type="icon-content-between"/>},
+    {value: 'space-around', label: '横向平分', icon: <FontIcon type="icon-content-around"/>},
 ];
 const alignItemsOptions = [
-    {value: 'flex-start', label: '上对齐', icon: <PicCenterOutlined/>},
-    {value: 'flex-end', label: '下对齐', icon: <PicCenterOutlined/>},
-    {value: 'center', label: '居中', icon: <PicCenterOutlined/>},
-    {value: 'baseline', label: '基线对齐', icon: <PicCenterOutlined/>},
-    {value: 'stretch', label: '沾满容器', icon: <PicCenterOutlined/>},
+    {value: 'flex-start', label: '上对齐', icon: <FontIcon type="icon-items-start"/>},
+    {value: 'flex-end', label: '下对齐', icon: <FontIcon type="icon-items-end"/>},
+    {value: 'center', label: '居中', icon: <FontIcon type="icon-items-center"/>},
+    {value: 'baseline', label: '基线对齐', icon: <FontIcon type="icon-items-baseline"/>},
+    {value: 'stretch', label: '沾满容器', icon: <FontIcon type="icon-items-stretch"/>},
 ];
 const flexWrapOptions = [
     {value: 'nowrap', label: '不换行'},
