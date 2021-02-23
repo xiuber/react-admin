@@ -24,7 +24,7 @@ export default {
         },
         {
             label: '头像图片', field: 'src', type: [
-                {value: 'string', label: '地址'},
+                {value: 'image', label: '地址'},
                 {value: 'ReactNode', label: '组件'},
             ],
             version: 'ReactNode: 4.8.0',

@@ -2,7 +2,7 @@ export default {
     isContainer: false,
     fields: [
         {label: '图像描述', field: 'alt', type: 'string', version: '4.6.0', desc: '图像描述'},
-        {label: '图片地址', field: 'src', type: 'string', version: '4.6.0', desc: '图片地址'},
+        {label: '图片地址', field: 'src', type: 'image', version: '4.6.0', desc: '图片地址'},
         {label: '图像宽度', field: 'width', type: 'unit', version: '4.6.0', desc: '图像宽度'},
         {label: '图像高度', field: 'height', type: 'unit', version: '4.6.0', desc: '图像高度'},
     ],

@@ -19,6 +19,7 @@ import ReactNode from 'src/pages/drag-page/component-props/ReactNode';
 import MultipleElement from 'src/pages/drag-page/component-props/multiple-element';
 import ObjectElement from 'src/pages/drag-page/component-props/object-element';
 import ArrayElement from 'src/pages/drag-page/component-props/array-element';
+import ImageElement from 'src/pages/drag-page/component-props/image-element';
 
 function getPlaceholder(option, props) {
     const {field, placeholder} = option;
@@ -29,6 +30,9 @@ function getPlaceholder(option, props) {
 }
 
 const elementMap = {
+    image: () => props => {
+        return <ImageElement allowClear {...props}/>;
+    },
     ReactNode: (option) => props => {
         const {node} = option;
 

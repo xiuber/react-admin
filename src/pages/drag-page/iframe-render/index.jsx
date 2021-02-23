@@ -213,6 +213,7 @@ export default config({
             <main>
                 <div
                     styleName="container"
+                    className="grid-background"
                     ref={containerRef}
                 >
                     <iframe
