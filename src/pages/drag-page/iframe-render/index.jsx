@@ -81,6 +81,7 @@ export default config({
     const iframeRef = useRef(null);
     const iframeRootRef = useRef(null);
     const [scaleElement, setScaleElement] = useState(null);
+    const [scale, setScale] = useState(1);
     const [containerStyle, setContainerStyle] = useState({});
     const [iframeSrcDoc, setIframeSrcDoc] = useState('<html lang="cn"/>');
     const [state, setState] = useState({});
@@ -91,7 +92,7 @@ export default config({
 
         iframeRootRef.current = iframeDocument.getElementById('dnd-container');
 
-        setScaleElement(iframeRootRef.current);
+        setScaleElement(iframeRef.current);
 
         dragPageAction.setIFrameDocument(iframeDocument);
 
@@ -237,6 +238,7 @@ export default config({
         }
 
         setContainerStyle(style);
+        console.log(888);
 
     }, [
         // 所有可能影响到中间部分尺寸变化的操作，都要添加！！！
@@ -248,6 +250,7 @@ export default config({
         canvasWidth,
         canvasHeight,
         iframeRef.current,
+        scale,
     ]);
 
     return (
@@ -266,13 +269,13 @@ export default config({
                         srcDoc={iframeSrcDoc}
                         onLoad={() => handleIframeLoad()}
                         style={{
-                            width: canvasWidth,
-                            height: canvasHeight,
+                            width: canvasWidth || '100%',
+                            height: canvasHeight || '100%',
                         }}
                     />
                 </div>
                 <div styleName="scale">
-                    <Scale element={scaleElement}/>
+                    <Scale element={scaleElement} onChange={scale => setScale(scale)}/>
                 </div>
                 <footer>
                     <NodePath/>

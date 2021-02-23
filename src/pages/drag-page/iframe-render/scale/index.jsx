@@ -9,11 +9,11 @@ import './style.less';
 
 const INIT = 100;
 const STEP = 10;
-const MIN = 10;
+const MIN = 30;
 const MAX = 200;
 
 export default function Index(props) {
-    const {element} = props;
+    const {element, onChange} = props;
 
     const [scale, setScale] = useState(INIT);
 
@@ -36,9 +36,11 @@ export default function Index(props) {
         if (!element) return;
         let origin = 'left top';
         if (scale < INIT) origin = 'top';
-
         element.style.transformOrigin = origin;
+
         element.style.transform = `scale(${scale / 100})`;
+        // element.style.zoom = scale / 100;
+        onChange(scale);
     }, [element, scale]);
 
     return (

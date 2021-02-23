@@ -1,6 +1,7 @@
 import React, {useRef, useEffect} from 'react';
-import config from 'src/commons/config-hoc';
+import {Tooltip} from 'antd';
 import {SwapLeftOutlined, SwapRightOutlined} from '@ant-design/icons';
+import config from 'src/commons/config-hoc';
 import '../top/style.less';
 
 // 触发记录的频率
@@ -22,6 +23,7 @@ export default config({
         pageConfig,
         refreshProps,
         action: {dragPage: dragPageAction},
+        showLabel,
     } = props;
     const fromUndoRef = useRef(true);
     const timeRef = useRef(0);
@@ -54,17 +56,39 @@ export default config({
 
     const disabledPrev = !pageConfigHistory?.length || historyCursor <= 0;
     const disabledNext = !pageConfigHistory?.length || historyCursor >= pageConfigHistory?.length - 1;
+    const styleNames = ['toolItem'];
+    if (showLabel) styleNames.push('showLabel');
 
-    return (
-        <>
-            <div styleName={`toolItem ${disabledPrev ? 'disabled' : ''}`} onClick={disabledPrev ? undefined : handlePrev}>
-                <span styleName="icon"><SwapLeftOutlined/></span>
-                <span styleName="label">上一步</span>
+    const tools = [
+        {
+            key: 'prev',
+            label: '上一步',
+            icon: <SwapLeftOutlined/>,
+            disabled: disabledPrev,
+            onClick: handlePrev,
+        },
+        {
+            key: 'next',
+            label: '下一步',
+            icon: <SwapRightOutlined/>,
+            disabled: disabledNext,
+            onClick: handleNext,
+        },
+    ];
+
+    return tools.map(item => {
+        const {key, label, icon, disabled, onClick} = item;
+        const itemComponent = (
+            <div key={key} styleName={[...styleNames, disabled ? 'disabled' : ''].join(' ')} onClick={disabled ? undefined : onClick}>
+                <span styleName="icon">{icon}</span>
+                {showLabel ? <span styleName="label">{label}</span> : null}
             </div>
-            <div styleName={`toolItem ${disabledNext ? 'disabled' : ''}`} onClick={disabledNext ? undefined : handleNext}>
-                <span styleName="icon"><SwapRightOutlined/></span>
-                <span styleName="label">下一步</span>
-            </div>
-        </>
-    );
+        );
+        if (showLabel) return itemComponent;
+        return (
+            <Tooltip title={label}>
+                {itemComponent}
+            </Tooltip>
+        );
+    });
 });

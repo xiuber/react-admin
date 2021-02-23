@@ -2,16 +2,16 @@ import React from 'react';
 import {
     EyeOutlined,
     FormOutlined,
-    CodeOutlined,
     SaveOutlined,
     DeleteOutlined,
     CloudServerOutlined,
 } from '@ant-design/icons';
-
+import {Tooltip} from 'antd';
+import FontIcon from 'src/pages/drag-page/font-icon';
 import config from 'src/commons/config-hoc';
-import './style.less';
 import {isMac} from '../util';
 import Undo from '../undo';
+import './style.less';
 
 export default config({
     connect: state => {
@@ -27,6 +27,7 @@ export default config({
         selectedNodeId,
         action: {dragPage: dragPageAction},
     } = props;
+    const showLabel = true;
     const tools = [
         {
             key: 'layout',
@@ -47,7 +48,7 @@ export default config({
         'divider',
         {
             key: 'code',
-            icon: <CodeOutlined/>,
+            icon: <FontIcon type="icon-code"/>,
             label: '代码',
             onClick: () => dragPageAction.showCode(true),
         },
@@ -84,7 +85,7 @@ export default config({
                     }
 
                     let {key, icon, label, onClick, disabled} = item;
-                    if (key === 'undo') return <Undo/>;
+                    if (key === 'undo') return <Undo showLabel={showLabel}/>;
 
                     const isActive = key === activeToolKey;
 
@@ -93,12 +94,20 @@ export default config({
                     const styleNames = ['toolItem'];
                     if (isActive) styleNames.push('active');
                     if (disabled) styleNames.push('disabled');
+                    if (showLabel) styleNames.push('showLabel');
 
-                    return (
+                    const itemComponent = (
                         <div key={key} styleName={styleNames.join(' ')} onClick={onClick}>
                             <span styleName="icon">{icon}</span>
-                            <span styleName="label">{label}</span>
+                            {showLabel ? <span styleName="label">{label}</span> : null}
                         </div>
+                    );
+
+                    if (showLabel) return itemComponent;
+                    return (
+                        <Tooltip title={label}>
+                            {itemComponent}
+                        </Tooltip>
                     );
                 })}
             </div>
