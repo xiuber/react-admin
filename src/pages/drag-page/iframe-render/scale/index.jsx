@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
     PlusCircleOutlined,
     MinusCircleOutlined,
@@ -13,46 +13,41 @@ const MIN = 30;
 const MAX = 200;
 
 export default function Index(props) {
-    const {element, onChange} = props;
-
-    const [scale, setScale] = useState(INIT);
+    const {element, value, onChange} = props;
 
     function handlePlus() {
-        if (scale >= MAX) return;
-        setScale(scale + STEP);
+        if (value >= MAX) return;
+        onChange(value + STEP);
     }
 
     function handleMinus() {
-        if (scale <= MIN) return;
+        if (value <= MIN) return;
 
-        setScale(scale - STEP);
+        onChange(value - STEP);
     }
 
     function handleReset() {
-        setScale(INIT);
+        onChange(INIT);
     }
 
     useEffect(() => {
         if (!element) return;
-        let origin = 'left top';
-        if (scale < INIT) origin = 'top';
-        element.style.transformOrigin = origin;
-
-        element.style.transform = `scale(${scale / 100})`;
-        // element.style.zoom = scale / 100;
-        onChange(scale);
-    }, [element, scale]);
+        element.style.transformOrigin = 'left top';
+        element.style.transform = `scale(${value / 100})`;
+        // element.style.zoom = value / 100;
+        onChange(value);
+    }, [element, value]);
 
     return (
         <div styleName="root">
-            <PlusCircleOutlined disabled={scale >= MAX} onClick={handlePlus}/>
-            <MinusCircleOutlined disabled={scale <= MIN} onClick={handleMinus}/>
+            <PlusCircleOutlined disabled={value >= MAX} onClick={handlePlus}/>
+            <MinusCircleOutlined disabled={value <= MIN} onClick={handleMinus}/>
             <RetweetOutlined onClick={handleReset}/>
             <span styleName="inputWrapper">
                 <UnitInput
                     allowClear={false}
-                    value={scale}
-                    onChange={e => setScale(e.target.value)}
+                    value={value}
+                    onChange={e => onChange(e.target.value)}
                 />
                 %
             </span>

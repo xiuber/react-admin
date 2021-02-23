@@ -11,8 +11,8 @@ import DragOver from './drag-over';
 import DragAction from './drag-action';
 import EditableAction from './editable-action';
 import NodePath from './node-path';
-import './style.less';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
+import './style.less';
 
 // 构建iframe内容
 function getIframeSrcDoc() {
@@ -48,11 +48,7 @@ export default config({
             draggingNode: state.dragPage.draggingNode,
             canvasWidth: state.dragPage.canvasWidth,
             canvasHeight: state.dragPage.canvasHeight,
-            rightSideExpended: state.dragPage.rightSideExpended,
-            showSide: state.dragPage.showSide,
-            rightSideWidth: state.dragPage.rightSideWidth,
-            schemaEditorWidth: state.dragPage.schemaEditorWidth,
-            componentTreeWidth: state.dragPage.componentTreeWidth,
+            canvasScale: state.dragPage.canvasScale,
             contentEditable: state.dragPage.contentEditable,
         };
     },
@@ -66,11 +62,7 @@ export default config({
         draggingNode,
         canvasWidth,
         canvasHeight,
-        rightSideExpended,
-        showSide,
-        rightSideWidth,
-        schemaEditorWidth,
-        componentTreeWidth,
+        canvasScale,
         contentEditable,
         action: {dragPage: dragPageAction},
     } = props;
@@ -81,8 +73,6 @@ export default config({
     const iframeRef = useRef(null);
     const iframeRootRef = useRef(null);
     const [scaleElement, setScaleElement] = useState(null);
-    const [scale, setScale] = useState(1);
-    const [containerStyle, setContainerStyle] = useState({});
     const [iframeSrcDoc, setIframeSrcDoc] = useState('<html lang="cn"/>');
     const [state, setState] = useState({});
 
@@ -218,48 +208,12 @@ export default config({
 
     }, [selectedNodeId, iframeRef.current]);
 
-    // 缩放时设置设计页面居中
-    useEffect(() => {
-        if (!containerRef.current) return;
-
-        const rect = containerRef.current.getBoundingClientRect();
-
-        const style = {};
-        const {width, height} = rect;
-
-        const iRect = iframeRef.current.getBoundingClientRect();
-        const {width: iWidth, height: iHeight} = iRect;
-
-        if (iWidth < width) {
-            style.justifyContent = 'center';
-        }
-        if (iHeight < height) {
-            style.alignItems = 'center';
-        }
-
-        setContainerStyle(style);
-        console.log(888);
-
-    }, [
-        // 所有可能影响到中间部分尺寸变化的操作，都要添加！！！
-        rightSideExpended,
-        showSide,
-        rightSideWidth,
-        schemaEditorWidth,
-        componentTreeWidth,
-        canvasWidth,
-        canvasHeight,
-        iframeRef.current,
-        scale,
-    ]);
-
     return (
         <div styleName="root">
             <main>
                 <div
                     styleName="container"
                     ref={containerRef}
-                    style={containerStyle}
                 >
                     <iframe
                         styleName="dndIframe"
@@ -275,7 +229,7 @@ export default config({
                     />
                 </div>
                 <div styleName="scale">
-                    <Scale element={scaleElement} onChange={scale => setScale(scale)}/>
+                    <Scale element={scaleElement} value={canvasScale} onChange={scale => dragPageAction.setCanvasScale(scale)}/>
                 </div>
                 <footer>
                     <NodePath/>

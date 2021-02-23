@@ -62,6 +62,7 @@ const initialState = {
     rightSideExpended: true,
     canvasWidth: '100%', // 画布尺寸，指的是iframe尺寸
     canvasHeight: '100%',
+    canvasScale: 1,
     iframeDocument: null,
 
     ...pageConfigInitialState,
@@ -74,6 +75,7 @@ const syncStorage = {
     nodeSelectType: true,
     canvasWidth: true,
     canvasHeight: true,
+    canvasScale: true,
 
     pageConfig: true,
     pageConfigHistory: true,
@@ -112,6 +114,7 @@ export default {
     setDragOverInfo: dragOverInfo => ({dragOverInfo}),
     setCanvasWidth: canvasWidth => ({canvasWidth}),
     setCanvasHeight: canvasHeight => ({canvasHeight}),
+    setCanvasScale: canvasScale => ({canvasScale}),
     setRightSideExpended: rightSideExpended => ({rightSideExpended}),
     setRightSideWidth: rightSideWidth => ({rightSideWidth}),
     setComponentTreeExpendedKeys: componentTreeExpendedKeys => ({componentTreeExpendedKeys}),
