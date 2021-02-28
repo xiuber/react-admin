@@ -10,7 +10,7 @@ export default config({
             iframeDocument: state.dragPage.iframeDocument,
         };
     },
-})(function ArrowLines(props) {
+})(function SelectedGuide(props) {
     const {selectedNode, iframeDocument} = props;
 
     useEffect(() => {
