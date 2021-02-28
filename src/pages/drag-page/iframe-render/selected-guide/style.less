@@ -1,0 +1,28 @@
+@guide-color: green;
+.position {
+    position: relative;
+}
+
+.root {
+    outline: 1px solid @guide-color !important;
+
+    .tag {
+        position: absolute;
+        width: auto;
+        height: auto;
+        left: 0;
+        top: 0;
+        right: auto;
+        bottom: auto;
+        font-size: 12px;
+        padding: 0 4px;
+        transform-origin: 0 0;
+        transform: scale(.8);
+        opacity: .5;
+        background: @guide-color;
+        color: #fff;
+        word-break: keep-all;
+        z-index: 9999;
+    }
+}
+

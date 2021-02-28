@@ -9,6 +9,7 @@ import {loopNode} from 'src/pages/drag-page/node-util';
 import Scale from './scale';
 import DragOver from './drag-over';
 import DragAction from './drag-action';
+import SelectedGuide from './selected-guide';
 import EditableAction from './editable-action';
 import NodePath from './node-path';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
@@ -30,6 +31,7 @@ function getIframeSrcDoc() {
                     <span>前</span>
                 </div>
                 <div id="drop-guide-bg" style="display: none;"></div>
+                <div id="selected-guide" style="display: none;"></div>
             </body>
         </html>
     `;
@@ -237,6 +239,7 @@ export default config({
                 </footer>
             </main>
             <DragOver/>
+            <SelectedGuide/>
         </div>
     );
 });
