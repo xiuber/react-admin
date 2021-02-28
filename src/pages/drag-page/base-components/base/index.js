@@ -23,6 +23,9 @@ export default [
                             backgroundColor: '#fff',
                         },
                     },
+                    children: [{
+                        componentName: 'DragHolder',
+                    }],
                 },
             },
         ],

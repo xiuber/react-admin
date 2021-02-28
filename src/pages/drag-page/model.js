@@ -62,7 +62,7 @@ const initialState = {
     rightSideExpended: true,
     canvasWidth: '100%', // 画布尺寸，指的是iframe尺寸
     canvasHeight: '100%',
-    canvasScale: 1,
+    canvasScale: 100,
     iframeDocument: null,
 
     ...pageConfigInitialState,
@@ -499,6 +499,7 @@ export default {
             // 删除原先位置的节点
             deleteNodeById(pageConfig, sourceNode.id);
 
+            if (!targetNode?.children?.length) targetNode.children = [];
             targetNode.children.push(sourceNode);
 
             // 清除占位符

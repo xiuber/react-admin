@@ -104,4 +104,16 @@ export default [
             })),
         ],
     },
+    {
+        title: '分割线',
+        subTitle: '分割线 Divider',
+        children: [
+            {
+                title: '分割线',
+                config: {
+                    componentName: 'Divider',
+                },
+            },
+        ],
+    },
 ];

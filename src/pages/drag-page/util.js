@@ -84,7 +84,7 @@ const toggleIsReplace = debounce((draggingNode) => {
  * @returns {{}}
  */
 export function getDraggingNodeInfo({e, draggingNode}) {
-    if (!e) return draggingNode || {};
+    if (!e || !draggingNode) return draggingNode || {};
 
     const isMetaOrCtrl = (e.metaKey || e.ctrlKey);
     const isAltKey = e.altKey;
