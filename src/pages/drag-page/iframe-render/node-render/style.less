@@ -1,7 +1,6 @@
 @guide-color: green;
 
 [data-draggable-element="true"] {
-    //position: relative; // TODO 会不会覆盖元素本身属性？
     outline: 1px dotted #d8d8d8;
 
     &.dragOver {
@@ -19,25 +18,4 @@
     &:hover {
         outline: 1px dotted @guide-color;
     }
-
-    //&[data-draggable-selected="true"] {
-    //    outline: 1px solid @guide-color;
-    //
-    //    &::before {
-    //        content: attr(data-component-display-name);
-    //        font-size: 12px;
-    //        position: absolute;
-    //        left: 0;
-    //        top: 0;
-    //        width: auto;
-    //        padding: 0 4px;
-    //        background: @guide-color;
-    //        color: #fff;
-    //        word-break: keep-all;
-    //        z-index: 999;
-    //        transform-origin: 0 0;
-    //        transform: scale(.8);
-    //        opacity: .5;
-    //    }
-    //}
 }
