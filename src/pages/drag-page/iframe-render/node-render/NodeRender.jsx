@@ -68,6 +68,9 @@ export default function NodeRender(props) {
 
     if (!componentName) return null;
 
+    // 预览模式不显示DragHolder
+    if (isPreview && componentName === 'DragHolder') return null;
+
     const componentConfig = getComponentConfig(componentName);
 
     let {
