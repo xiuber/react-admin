@@ -31,7 +31,6 @@ function getIframeSrcDoc() {
                     <span>前</span>
                 </div>
                 <div id="drop-guide-bg" style="display: none;"></div>
-                <div id="selected-guide" style="display: none;"></div>
             </body>
         </html>
     `;
