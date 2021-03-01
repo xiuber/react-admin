@@ -678,6 +678,9 @@ export function isDropAccept(options) {
     if (isBefore || isAfter || isReplace) targetNode = findParentNodeById(pageConfig, targetComponentId);
     if (!targetNode) return false;
 
+    // 不能允许放到自身
+    if (draggingNode?.id === targetNode?.id) return false;
+
     // 不允许父节点拖入子节点
     if (isChildrenNode(draggingNode?.nodeData, targetNode)) return false;
 
