@@ -219,6 +219,19 @@ function showDropGuideLine(position) {
     if (isCenter) guildTipEle.innerHTML = '内';
 
     Object.entries(guideLine).forEach(([key, value]) => {
+        if (isLeft || isRight) {
+            if (key === 'top') value = value - 1;
+            if (key === 'height') value = value + 2;
+
+            if (isLeft && key === 'left') value = value - 2;
+            if (isRight && key === 'left') value = value + 1;
+        } else {
+            if (key === 'left') value = value - 1;
+            if (key === 'width') value = value + 2;
+
+            if (isTop && key === 'top') value = value - 2;
+            if (isBottom && key === 'top') value = value + 1;
+        }
         guideLineEle.style[key] = `${value}px`;
     });
 }
