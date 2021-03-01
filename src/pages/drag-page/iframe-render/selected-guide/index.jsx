@@ -17,9 +17,8 @@ export default config({
         if (!iframeDocument) return;
 
         // 清除选中指引
-        const oldEle = iframeDocument.querySelector(`.${styles.root}`);
-        if (oldEle) oldEle.classList.remove(styles.root);
-        if (oldEle) oldEle.classList.remove(styles.position);
+        const oldEle = iframeDocument.querySelector(`[data-fix-position-relative]`);
+        if (oldEle) oldEle.removeAttribute('data-fix-position-relative');
 
         const tagEle = iframeDocument.querySelector(`.${styles.tag}`);
         if (tagEle) tagEle.remove();
@@ -36,10 +35,8 @@ export default config({
         // 判断是否有定位，没有添加相对定位，tag定位会用到
         const targetStyle = window.getComputedStyle(target);
         if (targetStyle.position === 'static') {
-            target.classList.add(styles.position);
+            target.setAttribute('data-fix-position-relative', 'true');
         }
-
-        target.classList.add(styles.root);
 
         // 太小就不显示tag
         const rect = target.getBoundingClientRect();

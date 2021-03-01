@@ -13,7 +13,7 @@ const screenType = (field) => [
     {value: 'number', label: '占位格数'},
     {
         value: 'object', label: '详细配置',
-        fields: colFields.map(item => {
+        fields: colFields.filter(item => item.field !== 'flex').map(item => {
 
             return {
                 ...item,
@@ -23,7 +23,7 @@ const screenType = (field) => [
     },
 ];
 
-export function getOnKeyDown(cb, ancestorComponentName='Row') {
+export function getOnKeyDown(cb, ancestorComponentName = 'Row') {
 
     return (e, options) => {
         const {metaKey, ctrlKey, key, target: {value}} = e;
