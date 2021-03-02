@@ -1,6 +1,6 @@
 import {isMac} from 'src/pages/drag-page/util';
 import {findParentNodeByName} from 'src/pages/drag-page/node-util';
-// import {getComponentConfig} from 'src/pages/drag-page/component-config/index';
+import {getComponentConfig} from 'src/pages/drag-page/component-config/index';
 import {colFields, getOnKeyDown} from '../common/Col';
 
 export default {
@@ -31,25 +31,34 @@ export default {
         return !!formNode;
     },
     hooks: {
-        // beforeAddChildren: (options) => {
-        //     const {node, targetNode} = options;
-        //
-        //     if (!node) return;
-        //
-        //     // 如果只存在一个表单元素，则清空 相当于替换元素了
-        //     if (
-        //         node.children?.length === 1
-        //         && getComponentConfig(node.children[0].componentName).isFormElement
-        //     ) {
-        //         node.children.splice(0, 1);
-        //     }
-        //
-        //     if (targetNode?.componentName === 'Switch') {
-        //         if (!node.props) node.props = {};
-        //
-        //         node.props.valuePropName = 'checked';
-        //     }
-        // },
+        beforeAddChildren: (options) => {
+            const {node, targetNode} = options;
+
+            if (!node) return;
+
+            // 如果只存在一个表单元素，则清空 相当于替换元素了
+            if (
+                node.children?.length === 1
+                && getComponentConfig(node.children[0].componentName).isFormElement
+            ) {
+                node.children[0].toDelete = true;
+            }
+
+            if (targetNode?.componentName === 'Switch') {
+                if (!node.props) node.props = {};
+
+                node.props.valuePropName = 'checked';
+            }
+        },
+        afterAddChildren: options => {
+            const {node} = options;
+            if (!node) return;
+            if (!node?.children?.length) return;
+
+            const index = node.children.findIndex(item => item.toDelete);
+
+            node.children.splice(index, 1);
+        },
     },
     componentDisplayName: ({node}) => {
         const {componentName, props = {}} = node;
