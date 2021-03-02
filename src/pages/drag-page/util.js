@@ -779,8 +779,8 @@ export function getDropGuidePosition(options) {
     const scrollX = documentElement.scrollLeft;
     const scrollY = documentElement.scrollTop;
 
-    const x = pageX || clientX + scrollX;
-    const y = pageY || clientY + scrollY;
+    const x = pageX - scrollX || clientX;
+    const y = pageY - scrollY || clientY;
 
     let {
         left: targetX,
