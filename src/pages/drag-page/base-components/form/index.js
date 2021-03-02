@@ -106,9 +106,6 @@ const formChildren = [
 ];
 
 const formProps = {
-    initialValues: {
-        name: '张三',
-    },
     onFinish: 'values => alert(JSON.stringify(values))',
     // onValuesChange: '(changeValues, allValues) => console.log(allValues)',
 };

@@ -1,18 +1,20 @@
-import { v4 as uuid } from 'uuid';
+import {v4 as uuid} from 'uuid';
 import baseComponents from './base-components';
+import baseModule from './base-module';
 
 export async function getStores() {
     return [
-        { value: 'base', label: '基础组件' },
-        { value: 'page', label: '基础页面' },
-        { value: 'model', label: '基础模块' },
-        { value: '1', label: '自定义分类1' },
-        { value: '2', label: '自定义分类2' },
+        {value: 'base', label: '基础组件'},
+        {value: 'module', label: '基础模块'},
+        {value: 'page', label: '基础页面'},
+        {value: '1', label: '自定义分类1'},
+        {value: '2', label: '自定义分类2'},
     ];
 }
 
 export async function getComponents(store) {
     if (store === 'base') return baseComponents;
+    if (store === 'module') return baseModule;
 
     return [
         {
@@ -71,11 +73,11 @@ export async function getComponents(store) {
                             config: {
                                 componentName: 'Select',
                                 props: {
-                                    style: { width: '100%' },
+                                    style: {width: '100%'},
                                     placeholder: '请选择',
                                     options: [
-                                        { value: '1', label: '下拉项1' },
-                                        { value: '2', label: '下拉项2' },
+                                        {value: '1', label: '下拉项1'},
+                                        {value: '2', label: '下拉项2'},
                                     ],
                                 },
                             },

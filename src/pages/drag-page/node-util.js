@@ -214,7 +214,6 @@ export function deleteNodeById(root, id) {
  * @param root
  * @param targetNode
  * @param sourceNode
- * @param keepChildren 是否要保留子节点，如果需要保留，会通过 sourceNode 判断，将可接受的字节点保留
  */
 export function replaceNode(root, sourceNode, targetNode) {
     if (!root || !sourceNode?.id || !targetNode?.id) return;
