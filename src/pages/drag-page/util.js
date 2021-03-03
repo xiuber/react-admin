@@ -524,7 +524,7 @@ export function handleNodeDrop(options) {
         dragPageAction,
     } = options;
 
-    const {
+    let {
         isReplace,
         isWrapper,
         toSetProps,
@@ -541,6 +541,12 @@ export function handleNodeDrop(options) {
         isNewAdd,
         nodeData,
     } = getDraggingNodeInfo({e, draggingNode});
+
+    if (isLeft || isRight) {
+        isCenter = false;
+        isTop = false;
+        isBottom = false;
+    }
 
     const isBefore = isTop || isLeft;
     const isAfter = isBottom || isRight;

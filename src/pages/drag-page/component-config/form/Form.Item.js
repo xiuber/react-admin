@@ -56,8 +56,9 @@ export default {
             if (!node?.children?.length) return;
 
             const index = node.children.findIndex(item => item.toDelete);
-
-            node.children.splice(index, 1);
+            if (index !== -1) {
+                node.children.splice(index, 1);
+            }
         },
     },
     componentDisplayName: ({node}) => {

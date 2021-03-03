@@ -3,6 +3,7 @@ import React from 'react';
 
 export default {
     withHolder: true,
-    renderComponentName: 'div',
+    // renderComponentName: 'div',
+    componentType: 'ra-lib',
     icon: <PicCenterOutlined/>,
 };

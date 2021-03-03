@@ -11,5 +11,4 @@ export Text from './text';
 export RootDragHolder from './root-drag-holder';
 export Notification from './notification';
 export Message from './message';
-export InlineForm from './inline-form';
 

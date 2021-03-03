@@ -2,7 +2,8 @@ import {useEffect} from 'react';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import {debounce} from 'lodash';
 import {v4 as uuid} from 'uuid';
-import {loopNode} from 'src/pages/drag-page/node-util';
+import {isNode, loopNode} from 'src/pages/drag-page/node-util';
+import {getTextFromClipboard} from 'src/pages/drag-page/util';
 
 export default function EditableAction(props) {
     const {
@@ -114,11 +115,31 @@ export default function EditableAction(props) {
                 }
             }
 
+            async function handleKeydown(e) {
+                // const {key, metaKey, ctrlKey} = e;
+                // const mc = metaKey || ctrlKey;
+                // if (mc && key === 'v') {
+                //     e.preventDefault();
+                //     try {
+                //         const text = await getTextFromClipboard();
+                //         const cloneNode = JSON.parse(text);
+                //         console.log(cloneNode);
+                //         // 是节点
+                //         if (isNode(cloneNode)) {
+                //             e.preventDefault();
+                //         }
+                //     } catch (e) {
+                //
+                //     }
+                // }
+            }
+
             const eventMap = {
                 click: handleClick,
                 focus: handleFocus,
                 input: handleInputDebounce,
                 blur: handleBlur,
+                keydown: handleKeydown,
             };
 
             Object.entries(eventMap)

@@ -3,12 +3,17 @@
     position: relative;
 }
 
+.tag {
+    display: none;
+}
+
 [data-draggable-selected=true] {
     outline: 1px solid @guide-color !important;
 
     &[data-before-tag=true]:before,
     &[data-after-tag=true]:before,
     .tag {
+        display: block;
         pointer-events: none;
         content: attr(data-component-display-name);
         letter-spacing: 0;

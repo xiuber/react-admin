@@ -1,6 +1,5 @@
 import {v4 as uuid} from 'uuid';
 import baseComponents from './base-components';
-import baseModule from './base-module';
 
 export async function getStores() {
     return [
@@ -14,7 +13,6 @@ export async function getStores() {
 
 export async function getComponents(store) {
     if (store === 'base') return baseComponents;
-    if (store === 'module') return baseModule;
 
     return [
         {
