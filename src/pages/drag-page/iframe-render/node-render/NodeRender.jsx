@@ -88,7 +88,7 @@ export default function NodeRender(props) {
     if (isRender === false) return null;
     if (render === false) return null;
 
-    const component = getComponent(config);
+    const component = getComponent(config).component;
     componentProps = cloneDeep(componentProps || {});
     if (!componentProps.className) componentProps.className = '';
 
@@ -216,9 +216,9 @@ export default function NodeRender(props) {
                 });
             }
 
-            const Component = getComponent(item);
+            const Component = getComponent(item).component;
             return (
-                <Component {...item.props}>
+                <Component {...dragProps} {...item.props}>
 
                     {item?.children?.map(it => {
                         return (

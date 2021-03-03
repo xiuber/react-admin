@@ -11,6 +11,7 @@ import FontIcon from 'src/pages/drag-page/font-icon';
 import config from 'src/commons/config-hoc';
 import {isMac} from '../util';
 import Undo from '../undo';
+import SourceCode from '../source-code';
 import './style.less';
 
 export default config({
@@ -110,6 +111,7 @@ export default config({
                         </Tooltip>
                     );
                 })}
+                <SourceCode/>
             </div>
             <div styleName="right"/>
         </div>

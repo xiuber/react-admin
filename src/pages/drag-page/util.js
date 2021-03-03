@@ -884,27 +884,36 @@ export function getComponent(options) {
 
     const [name, subName] = componentName.split('.');
 
-    const com = Com => {
-        if (subName) return Com[subName];
+    const com = (Com, packageName) => {
+        if (subName) Com = Com[subName];
 
-        return Com;
+        return {
+            component: Com,
+            packageName,
+            name: subName || name,
+            subName,
+            exportName: name,
+            dependence: {
+                destructuring: true, // 解构方式
+            },
+        };
     };
 
     if (componentType === 'ra-lib') {
         const raCom = raLibComponent[name];
-        if (raCom) return com(raCom);
+        if (raCom) return com(raCom, 'ra-lib');
     }
 
     const Com = components[name];
     if (Com) return com(Com);
 
     const AntdCom = antdComponent[name];
-    if (AntdCom) return com(AntdCom);
+    if (AntdCom) return com(AntdCom, 'antd');
 
     const AntdIcon = antdIcon[name];
-    if (AntdIcon) return com(AntdIcon);
+    if (AntdIcon) return com(AntdIcon, '@ant-design/icons');
 
-    return name;
+    return com(name);
 }
 
 // 复制兼容函数

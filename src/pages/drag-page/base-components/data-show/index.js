@@ -379,7 +379,7 @@ export default [
                 config: {
                     componentName: 'Tabs',
                     props: {
-                        defaultActiveKey: 'user',
+                        defaultActiveKey: '1',
                         animated: {inkBar: true, tabPane: true},
                     },
                     children: [
@@ -393,7 +393,12 @@ export default [
                                 },
                                 children: [
                                     {
-                                        componentName: 'DragHolder',
+                                        componentName: 'div',
+                                        children: [
+                                            {
+                                                componentName: 'DragHolder',
+                                            },
+                                        ],
                                     },
                                 ],
                             };

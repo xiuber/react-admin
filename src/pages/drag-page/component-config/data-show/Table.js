@@ -15,6 +15,14 @@ export default {
             }
         },
         afterRender: fixDragProps,
+        beforeToCode: node => {
+            const {columns} = node.props || {};
+            if (columns?.length) {
+                columns.forEach(col => {
+                    Reflect.deleteProperty(col, 'className');
+                });
+            }
+        },
     },
     fields: [
         {label: '边框', category: '选项', field: 'bordered', type: 'boolean', defaultValue: false, version: '', desc: '是否展示外边框和列边框'},
