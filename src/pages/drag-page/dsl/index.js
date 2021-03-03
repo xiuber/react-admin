@@ -49,6 +49,7 @@ export default function schemaToCode(schema) {
                 if (!Object.keys(others).length) return text;
 
                 componentName = 'span';
+                children = text;
                 props = others;
             }
 
@@ -57,9 +58,14 @@ export default function schemaToCode(schema) {
             let name = names.length === 1 ? names[0] : names[1];
 
             // 子节点
-            let childrenJsx = children?.length ? children.map(item => {
-                return loop(item);
-            }).filter(item => !!item).join('\n') : undefined;
+            let childrenJsx;
+            if (typeof children === 'string') {
+                childrenJsx = children;
+            } else {
+                childrenJsx = children?.length ? children.map(item => {
+                    return loop(item);
+                }).filter(item => !!item).join('\n') : undefined
+            }
 
             const propsStr = parseProps(props, node, loop).join(' ');
 
@@ -131,6 +137,11 @@ export default function schemaToCode(schema) {
         loop(componentProps, (obj, key, value) => {
             const fieldOption = getFieldOption(node, key) || {};
             const {functionType, defaultValue} = fieldOption;
+
+            if (key === 'key') {
+                Reflect.deleteProperty(obj, key);
+                return;
+            }
 
             // 删除默认值
             if (JSON.stringify(defaultValue) === JSON.stringify(value)) {
