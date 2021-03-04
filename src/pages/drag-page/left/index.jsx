@@ -14,8 +14,8 @@ import ComponentStore from '../component-store';
 import SchemaEditor from '../schema-editor';
 import CanvasSetting from '../canvas-setting';
 import {OTHER_HEIGHT} from 'src/pages/drag-page/util';
-import './style.less';
 import DragBar from 'src/pages/drag-page/drag-bar';
+import './style.less';
 
 export default config({
     connect: state => {
@@ -75,17 +75,17 @@ export default config({
             component: <ComponentStore/>,
         },
         {
-            title: '画布设置',
-            key: 'canvasSetting',
-            icon: <SettingOutlined/>,
-            component: <CanvasSetting/>,
-            bottom: true,
-        },
-        {
             title: 'Schema 源码开发',
             key: 'schemaEditor',
             icon: <FontIcon type="icon-code"/>,
             component: <SchemaEditor/>,
+            bottom: true,
+        },
+        {
+            title: '画布设置',
+            key: 'canvasSetting',
+            icon: <SettingOutlined/>,
+            component: <CanvasSetting/>,
             bottom: true,
         },
     ];

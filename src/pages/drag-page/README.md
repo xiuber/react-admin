@@ -14,6 +14,7 @@
 1. [ ] 支持用户上传 vs code 的快捷键配置
 1. [x] 元素拖拽过程中，点击 command 或 ctrl 可以在 wrapper 非 wrapper 模式下切换
 1. [ ] 左侧组件列表比较多，使用虚拟列表或者虚拟Table优化
+1. [ ] Table.Column children 作为 column.render 的返回值，一般操作列用到
 
 
 1. number | object | array

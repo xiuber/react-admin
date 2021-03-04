@@ -2,8 +2,8 @@ import {useEffect} from 'react';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import {debounce} from 'lodash';
 import {v4 as uuid} from 'uuid';
-import {isNode, loopNode} from 'src/pages/drag-page/node-util';
-import {getTextFromClipboard} from 'src/pages/drag-page/util';
+import {/*isNode,*/ loopNode} from 'src/pages/drag-page/node-util';
+// import {getTextFromClipboard} from 'src/pages/drag-page/util';
 
 export default function EditableAction(props) {
     const {
