@@ -78,12 +78,13 @@ export default function schemaToCode(schema) {
     }
 
     function parseWrapper(wrapper, node, loop) {
-        // TODO Message Notification Modal 等处理，content 有肯能是组件
-        const messageIndex = wrapper.findIndex(item => item.componentName === 'Message');
-        if (messageIndex !== -1) {
-            const [messageNode] = wrapper.splice(messageIndex, 1);
+        const deal = (name, method = 'success', wrapperIndex) => {
+            const [messageNode] = wrapper.splice(wrapperIndex, 1);
             const messageProps = messageNode.props;
-            const {type = 'success', ...others} = messageProps;
+            let {type, ...others} = messageProps;
+
+            if (!type) type = method;
+
             const propsArr = parseProps(others, messageNode, loop);
 
             const propsStr = propsArr.map(item => {
@@ -96,8 +97,9 @@ export default function schemaToCode(schema) {
             }).join(',');
 
             if (!node.props) node.props = {};
-            node.props.onClick = `() => message.${type}({${propsStr}})`;
-            const options = {name: 'message'};
+            node.props.onClick = `() => ${name}.${type}({${propsStr}})`;
+
+            const options = {name};
             const objSets = imports.get('antd');
             if (!objSets) {
                 const set = new Set();
@@ -106,7 +108,45 @@ export default function schemaToCode(schema) {
             } else {
                 objSets.add(options);
             }
-        }
+        };
+
+        const componentMap = [
+            {
+                componentName: 'Notification',
+                name: 'notification',
+            },
+            {
+                componentName: 'Message',
+                name: 'message',
+            },
+            {
+                componentName: 'ModalSuccess',
+                name: 'Modal',
+                method: 'success',
+            },
+            {
+                componentName: 'ModalError',
+                name: 'Modal',
+                method: 'error',
+            },
+            {
+                componentName: 'ModalInfo',
+                name: 'Modal',
+                method: 'info',
+            },
+            {
+                componentName: 'ModalWarning',
+                name: 'Modal',
+                method: 'warning',
+            },
+        ];
+        componentMap.forEach(com => {
+            const {componentName, name, method} = com;
+            const wrapperIndex = wrapper.findIndex(item => item.componentName === componentName);
+            if (wrapperIndex !== -1) {
+                deal(name, method, wrapperIndex);
+            }
+        });
     }
 
     function parseProps(props, node, loopNode) {
@@ -168,7 +208,7 @@ export default function schemaToCode(schema) {
                     val = val.replace(/}'/g, '');
                     val = val.replace(/"{/g, '');
                     val = val.replace(/}"/g, '');
-                    val = val.replace(/\\'/g, "'");
+                    val = val.replace(/\\'/g, '\'');
                     val = val.replace(/\\n/g, '');
                     return val;
                 }
