@@ -346,7 +346,53 @@ export default [
                     children: [ // 与 props.columns 对应
                         {componentName: 'Table.Column', props: {title: '姓名', dataIndex: 'name'}},
                         {componentName: 'Table.Column', props: {title: '年龄', dataIndex: 'age'}},
-                        {componentName: 'Table.Column', props: {title: '操作', dataIndex: 'operator'}},
+                        {
+                            componentName: 'Table.Column',
+                            props: {
+                                title: '操作',
+                                dataIndex: 'operator',
+                                render: {
+                                    componentName: 'div',
+                                    children: [
+                                        {
+                                            wrapper: [
+                                                {
+                                                    componentName: 'Popconfirm',
+                                                    props: {
+                                                        title: '您确定删除吗？',
+                                                    },
+                                                },
+                                            ],
+                                            componentName: 'a',
+                                            props: {
+                                                style: {color: 'red'},
+                                            },
+                                            children: [{
+                                                componentName: 'Text',
+                                                props: {
+                                                    text: '删除',
+                                                },
+                                            }],
+                                        },
+                                        {
+                                            componentName: 'Divider',
+                                            props: {
+                                                type: 'vertical',
+                                            },
+                                        },
+                                        {
+                                            componentName: 'a',
+                                            children: [{
+                                                componentName: 'Text',
+                                                props: {
+                                                    text: '详情',
+                                                },
+                                            }],
+                                        },
+                                    ],
+                                },
+                            },
+                        },
                     ],
                 },
             },

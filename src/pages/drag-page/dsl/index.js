@@ -64,7 +64,7 @@ export default function schemaToCode(schema) {
             } else {
                 childrenJsx = children?.length ? children.map(item => {
                     return loop(item);
-                }).filter(item => !!item).join('\n') : undefined
+                }).filter(item => !!item).join('\n') : undefined;
             }
 
             const propsStr = parseProps(props, node, loop).join(' ');
@@ -151,7 +151,7 @@ export default function schemaToCode(schema) {
 
             const val = parsePropsValue(value, loopNode);
 
-            if (functionType) {
+            if (functionType || key === 'render') {
                 obj[key] = `{() => ${val.slice(1, -1)}}`;
             } else {
                 obj[key] = val;
@@ -168,8 +168,11 @@ export default function schemaToCode(schema) {
                     val = val.replace(/}'/g, '');
                     val = val.replace(/"{/g, '');
                     val = val.replace(/}"/g, '');
+                    val = val.replace(/\\'/g, "'");
+                    val = val.replace(/\\n/g, '');
                     return val;
                 }
+
                 if (typeof value === 'string' && !value.startsWith('{')) return `${key}="${value}"`;
                 if (typeof value === 'string' && value.startsWith('{')) return `${key}=${value}`;
                 return `${key}={${value}}`;

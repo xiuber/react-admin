@@ -60,7 +60,7 @@ export default function EditableAction(props) {
                     // 多个，说明设置的是子节点
                     if (!node.props) node.props = {};
                     let props = node.props;
-                    if (elements.length > 1) {
+                    if (elements.length > 1 && node.children?.length) {
                         const childNode = node.children[index];
                         if (!childNode.props) childNode.props = {};
                         props = childNode.props;

@@ -83,7 +83,7 @@ export default function NodeRender(props) {
         // fields,
     } = componentConfig;
 
-    const isRender = hooks.beforeRender && hooks.beforeRender({node: config, dragPageAction, iframeDocument});
+    const isRender = hooks.beforeRender && hooks.beforeRender({node: config, dragPageAction, iframeDocument, NodeRender, renderProps: props});
 
     if (isRender === false) return null;
     if (render === false) return null;

@@ -41,6 +41,7 @@ export default config({
         // 从新打开组件库
         dragPageAction.setActiveSideKey('componentStore');
         dragPageAction.setDraggingNode(null);
+        dragPageAction.setDragOverInfo(null);
         onDragEnd && onDragEnd(e);
     }
 

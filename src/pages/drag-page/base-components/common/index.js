@@ -112,6 +112,9 @@ export default [
                 title: '分割线',
                 config: {
                     componentName: 'Divider',
+                    props: {
+                        type: 'vertical',
+                    },
                 },
             },
         ],

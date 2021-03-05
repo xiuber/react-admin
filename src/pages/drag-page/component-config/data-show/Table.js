@@ -1,3 +1,4 @@
+import React from 'react';
 import {fixDragProps} from 'src/pages/drag-page/util';
 
 export default {
@@ -5,8 +6,8 @@ export default {
     withDragProps: false,
     hooks: {
         beforeRender: options => {
-            const {node} = options;
-            setTableColumns(node);
+            const {node, NodeRender, renderProps} = options;
+            setTableColumns(node, NodeRender, renderProps);
         },
         beforeSchemaEdit: options => {
             const {node} = options;
@@ -17,8 +18,15 @@ export default {
         afterRender: fixDragProps,
         beforeToCode: node => {
             const {columns} = node.props || {};
+            const {children = []} = node;
+
+
             if (columns?.length) {
-                columns.forEach(col => {
+                columns.forEach((col, index) => {
+                    const tableColumn = children[index];
+                    const {props: {render}} = tableColumn;
+                    if (render) col.render = render;
+
                     Reflect.deleteProperty(col, 'className');
                 });
             }
@@ -68,7 +76,7 @@ export default {
 };
 
 
-function setTableColumns(tableNode) {
+function setTableColumns(tableNode, NodeRender, renderProps) {
     if (!tableNode) return;
 
     let {children} = tableNode;
@@ -82,7 +90,11 @@ function setTableColumns(tableNode) {
 
     const loop = (node, columns) => {
         const {id, props, children} = node;
-        const col = {...props, className: `id_${id}`};
+        const {render, ...otherProps} = props;
+        const col = {...otherProps, className: `id_${id}`};
+
+        if (render) col.render = () => <NodeRender {...renderProps} config={render}/>;
+
         columns.push(col);
         if (children?.length) {
             col.children = [];

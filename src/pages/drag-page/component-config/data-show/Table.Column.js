@@ -41,6 +41,7 @@ export default {
         {label: '名称', field: 'title', type: 'string'},
         {label: '字段名', field: 'dataIndex', type: 'string'},
         {label: '宽度', field: 'width', type: 'unit'},
+        {label: '渲染内容', field: 'render', type: 'ReactNode', functionType: true},
         {
             label: '列对齐方式', field: 'align', type: 'radio-group', defaultValue: 'left', version: '',
             options: [
