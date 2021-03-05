@@ -206,7 +206,12 @@ export default function schemaToCode(schema) {
             const val = parsePropsValue(value, loopNode);
 
             if (functionType || key === 'render') {
-                obj[key] = `{() => ${val.slice(1, -1)}}`;
+                let v = val.slice(1, -1);
+                obj[key] = `{() => ${v}}`;
+
+                if (key === 'render' && !v.startsWith('<')) {
+                    Reflect.deleteProperty(obj, key);
+                }
             } else {
                 obj[key] = val;
             }

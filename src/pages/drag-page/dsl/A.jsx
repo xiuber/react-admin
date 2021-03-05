@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import config from 'src/commons/config-hoc';
-import { PageContent, QueryBar, ToolBar } from 'ra-lib';
+import {PageContent, QueryBar, ToolBar} from 'ra-lib';
 import {
     Form,
     Input,
     InputNumber,
-    Select,
-    DatePicker,
     Button,
     Table,
     Divider,
     Popconfirm,
-    Modal,
 } from 'antd';
 
 const Item = Form.Item;
@@ -20,82 +17,168 @@ export default config({
     path: '/route',
 })(function Index(props) {
     const [selectedRowKeys, setSelectedRowKeys] = useState();
-    const [visible1, setVisible1] = useState();
 
-    function handleClick() {
-        Modal.confirm({ title: '温馨提示', content: '您确定吗？' });
-    }
     return (
         <PageContent>
             <QueryBar>
                 <Form
                     layout="inline"
-                    name="formName_ab886acc-1acd-40fe-86d7-270803d1f590"
+                    name="formName_68bfd9cd-18ec-4dd2-baf2-ebc99b897b31"
                     onFinish={(values) => alert(JSON.stringify(values))}
                 >
-                    <Item label="姓名" name="name">
-                        <Input placeholder="请输入姓名" />
+                    <Item label="身份证编号" name="name" labelCol={{flex: '110px'}}>
+                        <Input placeholder="请输入姓名" style={{width: '208px'}}/>
                     </Item>
-                    <Item label="年龄" name="age">
+                    <Item label="身份证名称" name="age" labelCol={{flex: '110px'}}>
                         <InputNumber
-                            style={{ width: '100%' }}
+                            style={{width: '208px'}}
                             placeholder="请输入年龄"
                             min={0}
                         />
                     </Item>
-                    <Item label="工作" name="job">
-                        <Select
-                            style={{ width: '100%' }}
-                            placeholder="请选择工作"
-                            options={[
-                                { value: '1', label: '选项1' },
-                                { value: '2', label: '选项2' },
-                            ]}
+                    <Item label="Mcc" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '208px'}}
+                            placeholder="请输入年龄"
+                            min={0}
                         />
                     </Item>
-                    <Item label="入职日期" name="joinTime">
-                        <DatePicker
-                            style={{ width: '100%' }}
-                            placeholder="请选择入职日期"
+                    <Item label="地域码" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '208px'}}
+                            placeholder="请输入年龄"
+                            min={0}
                         />
                     </Item>
-                    <Item>
-                        <Button type="primary" htmlType="submit">
-                            提交
-                        </Button>
-                        <Button>重置</Button>
+                    <Item label="身份状态" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '100%'}}
+                            placeholder="请输入年龄"
+                            min={0}
+                        />
+                    </Item>
+                    <Item label="停用原因" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '100%'}}
+                            placeholder="请输入年龄"
+                            min={0}
+                        />
+                    </Item>
+                    <Item label="创建日期" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '100%'}}
+                            placeholder="请输入年龄"
+                            min={0}
+                        />
+                    </Item>
+                    <Item label="更新时间" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '100%'}}
+                            placeholder="请输入年龄"
+                            min={0}
+                        />
+                    </Item>
+                    <Item label="身份省" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '100%'}}
+                            placeholder="请输入年龄"
+                            min={0}
+                        />
+                    </Item>
+                    <Item label="身份市" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '100%'}}
+                            placeholder="请输入年龄"
+                            min={0}
+                        />
+                    </Item>
+                    <Item label="黑名单银行" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '100%'}}
+                            placeholder="请输入年龄"
+                            min={0}
+                        />
+                    </Item>
+                    <Item label="关联身份" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '100%'}}
+                            placeholder="请输入年龄"
+                            min={0}
+                        />
+                    </Item>
+                    <Item label="前置身份" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '100%'}}
+                            placeholder="请输入年龄"
+                            min={0}
+                        />
+                    </Item>
+                    <Item label="支持的交易类型" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '100%'}}
+                            placeholder="请输入年龄"
+                            min={0}
+                        />
+                    </Item>
+                    <Item label="身份类型" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '100%'}}
+                            placeholder="请输入年龄"
+                            min={0}
+                        />
+                    </Item>
+                    <Item label="支持金额段" name="age" labelCol={{flex: '110px'}}>
+                        <InputNumber
+                            style={{width: '100%'}}
+                            placeholder="请输入年龄"
+                            min={0}
+                        />
                     </Item>
                 </Form>
-                <ToolBar>
-                    <Button type="primary" onClick={() => setVisible1(true)}>
-                        添加
-                    </Button>
-                    <Button type="primary" danger={true} onClick={handleClick}>
-                        批量删除
-                    </Button>
-                    <Button>导出</Button>
-                </ToolBar>
             </QueryBar>
+            <ToolBar>
+                <Button type="primary">查询</Button>
+                <Button>重置</Button>
+                <Button>批量导出</Button>
+                <Button type="primary">批量导入</Button>
+                <Button>批量启用</Button>
+                <Button type="primary" danger={true}>
+                    批量停用
+                </Button>
+                <Button type="primary" danger={true}>
+                    批量删除
+                </Button>
+            </ToolBar>
             <Table
                 pagination={false}
                 dataSource={[
-                    { name: '张三', age: 25, operator: '修改' },
-                    { name: '李四', age: 26, operator: '修改' },
+                    {name: '张三', age: 25, operator: '修改'},
+                    {name: '李四', age: 26, operator: '修改'},
                 ]}
                 columns={[
-                    { title: '姓名', dataIndex: 'name' },
-                    { title: '年龄', dataIndex: 'age' },
+                    {title: '身份编号', dataIndex: 'name'},
+                    {title: '身份名称', dataIndex: 'age'},
+                    {title: '地域码', dataIndex: 'age'},
+                    {title: 'MCC', dataIndex: 'age'},
+                    {title: '身份状态', dataIndex: 'age'},
+                    {title: '停用原因', dataIndex: 'age'},
+                    {title: '停用原因补充', dataIndex: 'age'},
+                    {title: '创建时间', dataIndex: 'age'},
+                    {title: '更新时间', dataIndex: 'age'},
+                    {title: '更新人', dataIndex: 'age'},
                     {
                         title: '操作',
                         dataIndex: 'operator',
                         render: () => (
                             <div>
-                                <a>
-                                    <span onClick={() => setVisible1(true)}>修改</span>
-                                </a>
-                                <Divider type="vertical" />
+                                <a>查看</a>
+                                <Divider type="vertical"/>
+                                <a>修改</a>
+                                <Divider type="vertical"/>
+                                <a>启用</a>
+                                <Divider type="vertical"/>
                                 <Popconfirm title="您确定删除吗？">
-                                    <a style={{ color: 'red' }}>删除</a>
+                                    <a style={{color: 'red'}}>停用</a>
                                 </Popconfirm>
                             </div>
                         ),
@@ -106,54 +189,6 @@ export default config({
                     onChange: (selectedRowKeys) => setSelectedRowKeys(selectedRowKeys),
                 }}
             />
-            <Modal
-                title="弹框标题"
-                maskClosable={false}
-                bodyStyle={{ padding: 0 }}
-                visible={visible1}
-                onCancel={() => setVisible1(false)}
-            >
-                <div
-                    style={{
-                        paddingTop: 16,
-                        paddingRight: 16,
-                        paddingBottom: 16,
-                        paddingLeft: 16,
-                    }}
-                >
-                    <Form
-                        name="formName_abebbce9-0f4d-4281-9540-53d384ef48ca"
-                        onFinish={(values) => alert(JSON.stringify(values))}
-                    >
-                        <Item label="姓名" name="name" labelCol={{ flex: '70px' }}>
-                            <Input placeholder="请输入姓名" />
-                        </Item>
-                        <Item label="年龄" name="age" labelCol={{ flex: '70px' }}>
-                            <InputNumber
-                                style={{ width: '100%' }}
-                                placeholder="请输入年龄"
-                                min={0}
-                            />
-                        </Item>
-                        <Item label="工作" name="job" labelCol={{ flex: '70px' }}>
-                            <Select
-                                style={{ width: '100%' }}
-                                placeholder="请选择工作"
-                                options={[
-                                    { value: '1', label: '选项1' },
-                                    { value: '2', label: '选项2' },
-                                ]}
-                            />
-                        </Item>
-                        <Item label="入职日期" name="joinTime" labelCol={{ flex: '70px' }}>
-                            <DatePicker
-                                style={{ width: '100%' }}
-                                placeholder="请选择入职日期"
-                            />
-                        </Item>
-                    </Form>
-                </div>
-            </Modal>
         </PageContent>
     );
 });

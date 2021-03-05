@@ -90,6 +90,21 @@ export default function EditableAction(props) {
 
             function handleFocus(e) {
                 ele.style.outline = prevOutline;
+
+                // 获取焦点之后，选中所有文本
+                const iframe = document.getElementById('dnd-iframe');
+                const contentWindow = iframe.contentWindow;
+
+                if (iframeDocument.selection) {
+                    const range = iframeDocument.body.createTextRange();
+                    range.moveToElementText(e.target);
+                    range.select();
+                } else if (contentWindow.getSelection) {
+                    const range = iframeDocument.createRange();
+                    range.selectNodeContents(e.target);
+                    contentWindow.getSelection().removeAllRanges();
+                    contentWindow.getSelection().addRange(range);
+                }
             }
 
             let changed = false;

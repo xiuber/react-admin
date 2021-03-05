@@ -107,19 +107,27 @@ export default config({
         const rootEle = rootRef.current;
 
         if (!rootEle) return;
-        if (!editNode) return;
+        // if (!editNode) return;
+        //
+        // const editorRootEle = document.getElementById(`fieldEditor_${editNode.id}`);
+        // if (!editorRootEle) return;
+        //
+        // rootEle.style.overflow = editVisible ? 'hidden' : 'auto';
 
-        const editorRootEle = document.getElementById(`fieldEditor_${editNode.id}`);
-        if (!editorRootEle) return;
-
-        rootEle.style.overflow = editVisible ? 'hidden' : 'auto';
-
-        scrollElement(rootEle, editorRootEle, true, true);
+        // scrollElement(rootEle, editorRootEle, true, true);
+        rootEle.scrollTop = 0;
 
     }, [editVisible, editNode, rootRef.current]);
 
     const propsNodes = selectedNode?.props ? Object.entries(selectedNode?.props)
         .filter(([, value]) => isNode(value)) : [];
+
+    let TextNode = null;
+
+    // 将Text 节点加入，方便编辑
+    if (selectedNode?.children?.length === 1 && selectedNode.children[0].componentName === 'Text') {
+        TextNode =  selectedNode.children[0];
+    }
 
     return (
         <div style={{height: '100%', position: 'relative'}}>
@@ -133,9 +141,20 @@ export default config({
                 ref={rootRef}
                 style={{height, overflow: 'auto'}}
             >
+                {TextNode ? (
+                    <section id={`fieldEditor_${TextNode?.id}`}>
+                        <FormEditor
+                            tip="文本内容："
+                            node={TextNode}
+                            onEdit={() => handleEdit(TextNode)}
+                            refreshProps={refreshProps}
+                            onChange={(...args) => handleChange(TextNode, ...args)}
+                        />
+                    </section>
+                ): null}
                 <section id={`fieldEditor_${selectedNode?.id}`}>
                     <FormEditor
-                        fitHeight={!selectedNode?.wrapper?.length && !propsNodes?.length}
+                        fitHeight={!selectedNode?.wrapper?.length && !propsNodes?.length && !TextNode}
                         node={selectedNode}
                         onEdit={() => handleEdit(selectedNode)}
                         refreshProps={refreshProps}

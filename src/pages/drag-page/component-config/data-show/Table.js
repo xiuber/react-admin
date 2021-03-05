@@ -1,5 +1,5 @@
 import React from 'react';
-import {fixDragProps} from 'src/pages/drag-page/util';
+import {fixDragProps, getFieldOption} from 'src/pages/drag-page/util';
 
 export default {
     dropAccept: 'Table.Column',
@@ -22,10 +22,24 @@ export default {
 
             if (columns?.length) {
                 columns.forEach((col, index) => {
+                    // 清除默认值
                     const tableColumn = children[index];
+                    Object.entries((tableColumn.props || {}))
+                        .forEach(([key, value]) => {
+                            const fieldOption = getFieldOption(tableColumn, key) || {};
+                            const {defaultValue} = fieldOption;
+
+                            // 删除默认值
+                            if (JSON.stringify(defaultValue) === JSON.stringify(value)) {
+                                Reflect.deleteProperty(col, key);
+                            }
+                        });
+
+                    // 处理render
                     const {props: {render}} = tableColumn;
                     if (render) col.render = render;
 
+                    // 删除 className id_{uuid}
                     Reflect.deleteProperty(col, 'className');
                 });
             }
