@@ -429,15 +429,12 @@ export default [
                     children: [
                         {
                             componentName: 'Button',
-                            children: [
-                                {
+                            props: {
+                                icon: {
                                     componentName: 'UploadOutlined',
-                                    props: {
-                                        style: {
-                                            marginRight: 8,
-                                        },
-                                    },
                                 },
+                            },
+                            children: [
                                 {
                                     componentName: 'Text',
                                     props: {
