@@ -338,14 +338,14 @@ export default [
                     componentName: 'Table',
                     props: {
                         pagination: false,
-                        dataSource: [
-                            {key: '1', name: '张三', age: 25, operator: '修改'},
-                            {key: '2', name: '李四', age: 26, operator: '修改'},
-                        ],
+                        dataSource: Array.from({length: 5}).map((item, index) => {
+                            return {id: '' + index, name: '张三', age: 25};
+                        }),
+                        rowKey: 'id',
                     },
                     children: [ // 与 props.columns 对应
-                        {componentName: 'Table.Column', props: {title: '姓名', dataIndex: 'name'}},
-                        {componentName: 'Table.Column', props: {title: '年龄', dataIndex: 'age'}},
+                        {componentName: 'Table.Column', props: {title: '姓名', dataIndex: 'name', render: {componentName: 'Text', props: {text: '张三'}}}},
+                        {componentName: 'Table.Column', props: {title: '年龄', dataIndex: 'age', render: {componentName: 'Text', props: {text: 22}}}},
                         {
                             componentName: 'Table.Column',
                             props: {

@@ -16,7 +16,7 @@ export default {
             }
         },
         afterRender: fixDragProps,
-        beforeToCode: node => {
+        beforeToCode: ({node}) => {
             const {columns, rowSelection} = node.props || {};
             const {children = []} = node;
 

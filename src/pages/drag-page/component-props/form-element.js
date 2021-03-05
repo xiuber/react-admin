@@ -20,6 +20,7 @@ import MultipleElement from 'src/pages/drag-page/component-props/multiple-elemen
 import ObjectElement from 'src/pages/drag-page/component-props/object-element';
 import ArrayElement from 'src/pages/drag-page/component-props/array-element';
 import ImageElement from 'src/pages/drag-page/component-props/image-element';
+import Rule from 'src/pages/drag-page/component-props/item-rules';
 
 function getPlaceholder(option, props) {
     const {field, placeholder} = option;
@@ -30,6 +31,9 @@ function getPlaceholder(option, props) {
 }
 
 const elementMap = {
+    Rule: () => props => {
+        return <Rule {...props}/>;
+    },
     image: () => props => {
         return <ImageElement allowClear {...props}/>;
     },

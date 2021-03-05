@@ -4,7 +4,7 @@ import {getComponentConfig} from 'src/pages/drag-page/component-config';
 import FormEditor from './form-editor';
 import {useHeight} from 'ra-lib';
 import {Button} from 'antd';
-import {OTHER_HEIGHT, scrollElement} from 'src/pages/drag-page/util';
+import {OTHER_HEIGHT /*, scrollElement*/} from 'src/pages/drag-page/util';
 import {isNode} from 'src/pages/drag-page/node-util';
 import CodeEditor from 'src/pages/drag-page/component-props/code-editor';
 import {debounce} from 'lodash';
@@ -126,7 +126,7 @@ export default config({
 
     // 将Text 节点加入，方便编辑
     if (selectedNode?.children?.length === 1 && selectedNode.children[0].componentName === 'Text') {
-        TextNode =  selectedNode.children[0];
+        TextNode = selectedNode.children[0];
     }
 
     return (
@@ -151,7 +151,7 @@ export default config({
                             onChange={(...args) => handleChange(TextNode, ...args)}
                         />
                     </section>
-                ): null}
+                ) : null}
                 <section id={`fieldEditor_${selectedNode?.id}`}>
                     <FormEditor
                         fitHeight={!selectedNode?.wrapper?.length && !propsNodes?.length && !TextNode}

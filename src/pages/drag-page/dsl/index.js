@@ -168,7 +168,7 @@ export default function schemaToCode(schema) {
 
         const nodeConfig = getComponentConfig(node?.componentName);
         const beforeToCode = nodeConfig?.hooks?.beforeToCode;
-        beforeToCode && beforeToCode(node);
+        beforeToCode && beforeToCode({node, imports});
 
         const componentProps = cloneDeep(props);
         const loop = (obj, cb) => {

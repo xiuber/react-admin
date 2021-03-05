@@ -83,14 +83,15 @@ export default function NodeRender(props) {
         // fields,
     } = componentConfig;
 
-    const isRender = hooks.beforeRender && hooks.beforeRender({node: config, dragPageAction, iframeDocument, NodeRender, renderProps: props});
+    componentProps = cloneDeep(componentProps || {});
+    if (!componentProps.className) componentProps.className = '';
+
+    const isRender = hooks.beforeRender && hooks.beforeRender({node: config, props: componentProps, dragPageAction, iframeDocument, NodeRender, renderProps: props});
 
     if (isRender === false) return null;
     if (render === false) return null;
 
     const component = getComponent(config).component;
-    componentProps = cloneDeep(componentProps || {});
-    if (!componentProps.className) componentProps.className = '';
 
 
     const loop = (obj, cb) => {

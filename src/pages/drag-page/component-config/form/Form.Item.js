@@ -3,6 +3,8 @@ import {findParentNodeByName} from 'src/pages/drag-page/node-util';
 import {getComponentConfig} from 'src/pages/drag-page/component-config/index';
 import {colFields, getOnKeyDown} from '../common/Col';
 
+import {options as ruleOptions} from 'src/pages/drag-page/component-props/item-rules';
+
 export default {
     editableContents: [
         {
@@ -60,6 +62,38 @@ export default {
                 node.children.splice(index, 1);
             }
         },
+        beforeRender: ({props}) => {
+            if (props?.rules?.length) {
+                props.rules = props.rules.map(item => {
+                    const data = ruleOptions.find(it => it.value === item);
+                    return data?.rule;
+                }).filter(item => !!item);
+            }
+        },
+        beforeToCode: ({node, imports}) => {
+            const rules = node?.props?.rules;
+            if (rules?.length) {
+                node.props.rules = `{[${rules.map(item => {
+                    const data = ruleOptions.find(it => it.value === item);
+                    if (data) {
+                        if (data.ruleStr.includes('validationRule')) {
+
+                            const options = {name: 'validationRule'};
+                            const objSets = imports.get('ra-lib');
+                            if (!objSets) {
+                                const set = new Set();
+                                set.add(options);
+                                imports.set('ra-lib', set);
+                            } else {
+                                objSets.add(options);
+                            }
+                        }
+                        return data.ruleStr;
+                    }
+                    return undefined;
+                }).filter(item => !!item).join(',')}]}`;
+            }
+        },
     },
     componentDisplayName: ({node}) => {
         const {componentName, props = {}} = node;
@@ -71,14 +105,14 @@ export default {
     },
 
     fields: [
-        {label: '必填', category: '选项', field: 'required', type: 'boolean', defaultValue: false, version: '', desc: '必填样式设置。如不设置，则会根据校验规则自动生成'},
+        // {label: '必填', category: '选项', field: 'required', type: 'boolean', defaultValue: false, version: '', desc: '必填样式设置。如不设置，则会根据校验规则自动生成'},
         {label: '校验图标', category: '选项', field: 'hasFeedback', type: 'boolean', defaultValue: false, version: '', desc: '配合 validateStatus 属性使用，展示校验状态图标，建议只配合 Input 组件使用'},
         {label: '冒号', category: '选项', field: 'colon', type: 'boolean', defaultValue: true, version: '', desc: '配合 label 属性使用，表示是否显示 label 后面的冒号'},
         {label: '无样式', category: '选项', field: 'noStyle', type: 'boolean', defaultValue: false, version: '', desc: '为 true 时不带样式，作为纯字段控件使用'},
 
         {label: '标签文本', field: 'label', type: 'string', version: '', desc: 'label 标签的文本'},
         {label: '字段名', field: 'name', type: 'string', version: '', desc: '字段名，支持数组'},
-        {label: '校验规则', field: 'rules', type: 'Rule[]', version: '', desc: '校验规则，设置字段的校验逻辑。点击此处查看示例'},
+        {label: '校验规则', field: 'rules', type: 'Rule', version: '', desc: '校验规则，设置字段的校验逻辑。点击此处查看示例'},
 
         {label: '提示信息', field: 'tooltip', type: 'string', version: '4.7.0', desc: '配置提示信息'},
         {
