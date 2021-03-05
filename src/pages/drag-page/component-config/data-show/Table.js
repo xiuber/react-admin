@@ -6,8 +6,7 @@ export default {
     withDragProps: false,
     hooks: {
         beforeRender: options => {
-            const {node, NodeRender, renderProps} = options;
-            setTableColumns(node, NodeRender, renderProps);
+            setTableColumns(options);
         },
         beforeSchemaEdit: options => {
             const {node} = options;
@@ -96,15 +95,14 @@ export default {
 };
 
 
-function setTableColumns(tableNode, NodeRender, renderProps) {
+function setTableColumns({node: tableNode, NodeRender, renderProps, props}) {
     if (!tableNode) return;
 
     let {children} = tableNode;
-    if (!tableNode.props) tableNode.props = {};
-    if (!tableNode.props.columns) tableNode.props.columns = [];
+    if (!props.columns) props.columns = [];
 
     if (!children?.length) {
-        tableNode.props.columns = [];
+        props.columns = [];
         return;
     }
 
@@ -112,7 +110,6 @@ function setTableColumns(tableNode, NodeRender, renderProps) {
         const {id, props, children} = node;
         const {render, ...otherProps} = props;
         const col = {...otherProps, className: `id_${id}`};
-
         if (render) col.render = () => <NodeRender {...renderProps} config={render}/>;
 
         columns.push(col);
@@ -124,6 +121,8 @@ function setTableColumns(tableNode, NodeRender, renderProps) {
     const columns = [];
     children.forEach(node => loop(node, columns));
 
+    props.columns = columns;
+    if (!tableNode.props) tableNode.props = {};
     tableNode.props.columns = columns;
 }
 
