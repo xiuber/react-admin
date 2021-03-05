@@ -38,7 +38,7 @@ const transComponentsMap = (compsMap = {}) => {
 };
 
 module.exports = function(schema, option) {
-    const { _, prettier } = option;
+    const {_, prettier} = option;
     const componentsMap = transComponentsMap(option.componentsMap);
     // imports, the key is the package name, the value is a set includes the component objects
     const imports = new Map();
@@ -60,7 +60,7 @@ module.exports = function(schema, option) {
 
     const isExpression = (value) => {
         return /^\{\{.*\}\}$/.test(value);
-    }
+    };
 
     const toString = (value) => {
         if ({}.toString.call(value) === '[object Function]') {
@@ -76,7 +76,7 @@ module.exports = function(schema, option) {
                 } else {
                     return value;
                 }
-            })
+            });
         }
 
         return String(value);
@@ -85,7 +85,7 @@ module.exports = function(schema, option) {
     // flexDirection -> flex-direction
     const parseCamelToLine = (string) => {
         return string.split(/(?=[A-Z])/).join('-').toLowerCase();
-    }
+    };
 
     /**
      * constrcut the import string
@@ -93,7 +93,7 @@ module.exports = function(schema, option) {
     const importString = () => {
         const importStrings = [];
         const subImports = [];
-        for (const [ packageName, pkgSet ] of imports) {
+        for (const [packageName, pkgSet] of imports) {
             const set1 = new Set(), set2 = new Set();
             for (const pkg of pkgSet) {
                 let exportName = pkg.exportName;
@@ -112,8 +112,8 @@ module.exports = function(schema, option) {
                     set2.add(exportName);
                 }
             }
-            const set1Str = [ ...set1 ].join(',');
-            let set2Str = [ ...set2 ].join(',');
+            const set1Str = [...set1].join(',');
+            let set2Str = [...set2].join(',');
             const dot = set1Str && set2Str ? ',' : '';
             if (set2Str) {
                 set2Str = `{${set2Str}}`;
@@ -121,7 +121,7 @@ module.exports = function(schema, option) {
             importStrings.push(`import ${set1Str} ${dot} ${set2Str} from '${packageName}'`);
         }
         return importStrings.concat(subImports);
-    }
+    };
 
     /**
      * store the components to the 'imports' map which was used
@@ -157,7 +157,7 @@ module.exports = function(schema, option) {
                 less += `.${className} {`;
 
                 for (let key in style[className]) {
-                    less += `${parseCamelToLine(key)}: ${style[className][key]};\n`
+                    less += `${parseCamelToLine(key)}: ${style[className][key]};\n`;
                 }
             }
             if (json.children && json.children.length > 0 && Array.isArray(json.children)) {
@@ -177,10 +177,10 @@ module.exports = function(schema, option) {
     const generateCss = (style, toVW) => {
         let css = '';
         Object.keys(style).map((key) => {
-            css +=`.${key}{${formatStyle(style[key], toVW)}}`
+            css += `.${key}{${formatStyle(style[key], toVW)}}`;
         });
         return css;
-    }
+    };
 
     // box relative style
     const boxStyleList = ['fontSize', 'marginTop', 'marginBottom', 'paddingTop', 'paddingBottom', 'height', 'top', 'bottom', 'width', 'maxWidth', 'left', 'right', 'paddingRight', 'paddingLeft', 'marginLeft', 'marginRight', 'lineHeight', 'borderBottomRightRadius', 'borderBottomLeftRadius', 'borderTopRightRadius', 'borderTopLeftRadius', 'borderRadius'];
@@ -207,7 +207,7 @@ module.exports = function(schema, option) {
             }
         }
         return styleData.join(';');
-    }
+    };
 
 
     // convert to responsive unit, such as vw
@@ -221,7 +221,7 @@ module.exports = function(schema, option) {
         }
 
         return styles;
-    }
+    };
 
     // parse function, return params and content
     const parseFunction = (func) => {
@@ -230,9 +230,9 @@ module.exports = function(schema, option) {
         const content = funcString.slice(funcString.indexOf('{') + 1, funcString.lastIndexOf('}'));
         return {
             params,
-            content
+            content,
         };
-    }
+    };
 
     // parse layer props(static values or expression)
     const parseProps = (value, isReactNode) => {
@@ -256,7 +256,7 @@ module.exports = function(schema, option) {
         } else {
             return JSON.stringify(value);
         }
-    }
+    };
 
     // parse async dataSource
     const parseDataSource = (data) => {
@@ -271,7 +271,7 @@ module.exports = function(schema, option) {
                     importsExt.push(`import {fetch} from 'whatwg-fetch'`);
                 }
                 payload = {
-                    method: method
+                    method: method,
                 };
 
                 break;
@@ -301,27 +301,27 @@ module.exports = function(schema, option) {
     `;
 
         if (data.dataHandler) {
-            const { params, content } = parseFunction(data.dataHandler);
+            const {params, content} = parseFunction(data.dataHandler);
             result += `.then((${params}) => {${content}})
         .catch((e) => {
           console.log('error', e);
         })
-      `
+      `;
         }
 
         result += '}';
 
         return `${name}() ${result}`;
-    }
+    };
 
     // parse condition: whether render the layer
     const parseCondition = (condition, render) => {
         if (typeof condition === 'boolean') {
-            return `${condition} && ${render}`
+            return `${condition} && ${render}`;
         } else if (typeof condition === 'string') {
-            return `${condition.slice(2, -2)} && ${render}`
+            return `${condition.slice(2, -2)} && ${render}`;
         }
-    }
+    };
 
     // parse loop render
     const parseLoop = (loop, loopArg, render) => {
@@ -340,13 +340,13 @@ module.exports = function(schema, option) {
         render = `${render.slice(0, tagEnd)} key={${loopArgIndex}}${render.slice(tagEnd)}`;
 
         // remove `this`
-        const re = new RegExp(`this.${loopArgItem}`, 'g')
+        const re = new RegExp(`this.${loopArgItem}`, 'g');
         render = render.replace(re, loopArgItem);
 
         return `${data}.map((${loopArgItem}, ${loopArgIndex}) => {
       return (${render});
     })`;
-    }
+    };
 
     // generate render xml
     const generateRender = (schema) => {
@@ -364,8 +364,8 @@ module.exports = function(schema, option) {
             if (['className', 'style', 'text', 'src', 'lines'].indexOf(key) === -1) {
                 props += ` ${key}={${parseProps(schema.props[key])}}`;
             }
-        })
-        switch(type) {
+        });
+        switch (type) {
             case 'text':
                 const innerText = parseProps(schema.props.text, true);
                 xml = `<span${classString}${props}>${innerText}</span>`;
@@ -400,17 +400,17 @@ module.exports = function(schema, option) {
         }
 
         if (schema.loop) {
-            xml = parseLoop(schema.loop, schema.loopArgs, xml)
+            xml = parseLoop(schema.loop, schema.loopArgs, xml);
         }
         if (schema.condition) {
             xml = parseCondition(schema.condition, xml);
         }
-        if ((schema.loop || schema.condition )&& !schema.isRoot) {
+        if ((schema.loop || schema.condition) && !schema.isRoot) {
             xml = `{${xml}}`;
         }
 
         return xml;
-    }
+    };
 
     // parse schema
     const transform = (schema) => {
@@ -452,7 +452,7 @@ module.exports = function(schema, option) {
 
                 if (schema.methods) {
                     Object.keys(schema.methods).forEach((name) => {
-                        const { params, content } = parseFunction(schema.methods[name]);
+                        const {params, content} = parseFunction(schema.methods[name]);
                         methods.push(`${name}(${params}) {${content}}`);
                     });
                 }
@@ -460,15 +460,15 @@ module.exports = function(schema, option) {
                 if (schema.dataSource && Array.isArray(schema.dataSource.list)) {
                     schema.dataSource.list.forEach((item) => {
                         if (typeof item.isInit === 'boolean' && item.isInit) {
-                            init.push(`this.${item.id}();`)
+                            init.push(`this.${item.id}();`);
                         } else if (typeof item.isInit === 'string') {
-                            init.push(`if (${parseProps(item.isInit)}) { this.${item.id}(); }`)
+                            init.push(`if (${parseProps(item.isInit)}) { this.${item.id}(); }`);
                         }
                         methods.push(parseDataSource(item));
                     });
 
                     if (schema.dataSource.dataHandler) {
-                        const { params, content } = parseFunction(schema.dataSource.dataHandler);
+                        const {params, content} = parseFunction(schema.dataSource.dataHandler);
                         methods.push(`dataHandler(${params}) {${content}}`);
                         init.push(`this.dataHandler()`);
                     }
@@ -480,7 +480,7 @@ module.exports = function(schema, option) {
                     }
 
                     Object.keys(schema.lifeCycles).forEach((name) => {
-                        const { params, content } = parseFunction(schema.lifeCycles[name]);
+                        const {params, content} = parseFunction(schema.lifeCycles[name]);
 
                         if (name === '_constructor') {
                             lifeCycles.push(`constructor(${params}) { super(); ${content} ${init.join('\n')}}`);
@@ -490,7 +490,7 @@ module.exports = function(schema, option) {
                     });
                 }
 
-                render.push(generateRender(schema))
+                render.push(generateRender(schema));
                 render.push(`);}`);
 
                 classData = classData.concat(states).concat(lifeCycles).concat(methods).concat(render);
@@ -511,7 +511,7 @@ module.exports = function(schema, option) {
         });
     }
 
-    schema.isRoot = true
+    schema.isRoot = true;
 
     // start parse schema
     transform(schema);
@@ -519,7 +519,7 @@ module.exports = function(schema, option) {
     const prettierOpt = {
         parser: 'babel',
         printWidth: 120,
-        singleQuote: true
+        singleQuote: true,
     };
     let importStrings = importString();
     importStrings = importStrings.concat(importsExt);
@@ -542,15 +542,15 @@ module.exports = function(schema, option) {
             },
             {
                 panelName: `style.css`,
-                panelValue: prettier.format(generateCss(style), { parser: 'css' }),
-                panelType: 'css'
+                panelValue: prettier.format(generateCss(style), {parser: 'css'}),
+                panelType: 'css',
             },
             {
                 panelName: `style.responsive.css`,
-                panelValue: prettier.format(`${generateCss(style, true)}`, { parser: 'css' }),
-                panelType: 'css'
-            }
+                panelValue: prettier.format(`${generateCss(style, true)}`, {parser: 'css'}),
+                panelType: 'css',
+            },
         ],
-        noTemplate: true
+        noTemplate: true,
     };
-}
+};

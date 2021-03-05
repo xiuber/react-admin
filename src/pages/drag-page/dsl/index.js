@@ -3,7 +3,7 @@ import {cloneDeep} from 'lodash';
 import prettier from 'prettier/standalone';
 import parserBabel from 'prettier/parser-babel';
 import {isNode, loopNode} from '../node-util';
-import {getComponent, isFunctionString, getFieldOption} from '../util';
+import {getComponent, isFunctionString, getFieldOption, getNextField} from '../util';
 import inflection from 'inflection';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
@@ -13,6 +13,7 @@ export default function schemaToCode(schema) {
     // 导入
     const imports = new Map();
     const states = [];
+    const functions = [];
 
     loopNode(schema, node => {
         generateImport(node?.componentName);
@@ -97,7 +98,15 @@ export default function schemaToCode(schema) {
             }).join(',');
 
             if (!node.props) node.props = {};
-            node.props.onClick = `() => ${name}.${type}({${propsStr}})`;
+
+            const functionName = getNextField(functions.map(item => item.name), 'handleClick');
+            functions.push({
+                name: functionName,
+                params: '',
+                content: `${name}.${type}({${propsStr}})`,
+            });
+
+            node.props.onClick = `{${functionName}}`;
 
             const options = {name};
             const objSets = imports.get('antd');
@@ -118,6 +127,11 @@ export default function schemaToCode(schema) {
             {
                 componentName: 'Message',
                 name: 'message',
+            },
+            {
+                componentName: 'ModalConfirm',
+                name: 'Modal',
+                method: 'confirm',
             },
             {
                 componentName: 'ModalSuccess',
@@ -258,6 +272,8 @@ export default function schemaToCode(schema) {
         // ignore the empty string
         if (!componentName) return;
 
+        if (componentName === 'Table.Column') return '';
+
         let options = getComponent({componentName});
         let {packageName} = options;
 
@@ -327,15 +343,30 @@ export default function schemaToCode(schema) {
 
     const code = `
         import React ${states.length ? ',{useState}' : ''} from 'react';
+        import config from 'src/commons/config-hoc';
         ${importString().join('\n')}
 
-        export default function Index(props) {
-            ${states.map(key => `const [${key}, set${inflection.camelize(key)}] = useState()`).join('\n')}
+        export default config({
+            path: '/route'
+        })(function Index(props) {
+    ${states.map(key => `const [${key}, set${inflection.camelize(key)}] = useState()`).join('\n')}
+
+    ${functions.map(item => {
+        const {name, params, content} = item;
+        return `function ${name}(${params}) {
+         ${content}
+        }`;
+    }).join('\n')}
             return (
             ${jsx}
             );
-        }
+        })
     `;
 
-    return prettier.format(code, {parser: 'babel', plugins: [parserBabel]});
+    return prettier.format(code, {
+        singleQuote: true,
+        // tabWidth: 4,
+        parser: 'babel',
+        plugins: [parserBabel],
+    });
 }

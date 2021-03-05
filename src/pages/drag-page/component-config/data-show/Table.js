@@ -17,9 +17,8 @@ export default {
         },
         afterRender: fixDragProps,
         beforeToCode: node => {
-            const {columns} = node.props || {};
+            const {columns, rowSelection} = node.props || {};
             const {children = []} = node;
-
 
             if (columns?.length) {
                 columns.forEach((col, index) => {
@@ -29,6 +28,13 @@ export default {
 
                     Reflect.deleteProperty(col, 'className');
                 });
+            }
+
+            if (rowSelection === true) {
+                node.props.rowSelection = {
+                    selectedRowKeys: 'state.selectedRowKeys',
+                    onChange: 'selectedRowKeys => state.setSelectedRowKeys(selectedRowKeys)',
+                };
             }
         },
     },

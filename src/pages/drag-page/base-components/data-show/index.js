@@ -355,6 +355,21 @@ export default [
                                     componentName: 'div',
                                     children: [
                                         {
+                                            componentName: 'a',
+                                            children: [{
+                                                componentName: 'Text',
+                                                props: {
+                                                    text: '修改',
+                                                },
+                                            }],
+                                        },
+                                        {
+                                            componentName: 'Divider',
+                                            props: {
+                                                type: 'vertical',
+                                            },
+                                        },
+                                        {
                                             wrapper: [
                                                 {
                                                     componentName: 'Popconfirm',
@@ -371,21 +386,6 @@ export default [
                                                 componentName: 'Text',
                                                 props: {
                                                     text: '删除',
-                                                },
-                                            }],
-                                        },
-                                        {
-                                            componentName: 'Divider',
-                                            props: {
-                                                type: 'vertical',
-                                            },
-                                        },
-                                        {
-                                            componentName: 'a',
-                                            children: [{
-                                                componentName: 'Text',
-                                                props: {
-                                                    text: '详情',
                                                 },
                                             }],
                                         },

@@ -120,7 +120,8 @@ export function getNextField(obj, field) {
     if (!(field in obj)) return field;
 
     const nums = [0];
-    Object.keys(obj).forEach(key => {
+    const keys = Array.isArray(obj) ? obj : Object.keys(obj);
+    keys.forEach(key => {
         const result = RegExp(`${field}(\\d+$)`).exec(key);
         if (result) {
             nums.push(window.parseInt(result[1]));
