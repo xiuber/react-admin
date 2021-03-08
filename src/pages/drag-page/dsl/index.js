@@ -7,7 +7,8 @@ import {getComponent, isFunctionString, getFieldOption, getNextField} from '../u
 import inflection from 'inflection';
 import {getComponentConfig} from 'src/pages/drag-page/component-config';
 
-export default function schemaToCode(schema) {
+export default function schemaToCode(schema, options = {}) {
+    const {classCode} = options;
     schema = cloneDeep(schema);
 
     // 导入
@@ -345,11 +346,28 @@ export default function schemaToCode(schema) {
     }
 
     const jsx = generateJsx();
+    const params = {
+        states,
+        imports: importString(),
+        functions,
+        jsx,
+    };
+    const code = classCode ? getClassCode(params) : getFunctionCode(params);
 
-    const code = `
+    return prettier.format(code, {
+        singleQuote: true,
+        // tabWidth: 4,
+        parser: 'babel',
+        plugins: [parserBabel],
+    });
+}
+
+function getFunctionCode(options) {
+    const {states, imports, functions, jsx} = options;
+    return `
         import React ${states.length ? ',{useState}' : ''} from 'react';
         import config from 'src/commons/config-hoc';
-        ${importString().join('\n')}
+        ${imports.join('\n')}
 
         export default config({
             path: '/route'
@@ -367,11 +385,33 @@ export default function schemaToCode(schema) {
             );
         })
     `;
+}
 
-    return prettier.format(code, {
-        singleQuote: true,
-        // tabWidth: 4,
-        parser: 'babel',
-        plugins: [parserBabel],
-    });
+function getClassCode(options) {
+    const {states, imports, functions, jsx} = options;
+
+    return `
+        import React, {Component} from 'react';
+        import config from 'src/commons/config-hoc';
+        ${imports.join('\n')}
+
+        @config({
+            path: '/route'
+        })
+        export default class Page extends Component {
+
+    ${functions.map(item => {
+        const {name, params, content} = item;
+        return `${name} = (${params}) => {
+         ${content}
+        }`;
+    }).join('\n')}
+        render() {
+            ${states?.length ? `const {${states.join(',')}} = this.state` : ''}
+            return (
+                ${jsx}
+                );
+            }
+        }
+    `;
 }

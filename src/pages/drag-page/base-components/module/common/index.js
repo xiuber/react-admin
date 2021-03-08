@@ -79,4 +79,28 @@ export default [
             },
         ],
     },
+    {
+        title: '图片验证码',
+        subTitle: '图片验证码 ImageCode',
+        children: [
+            {
+                title: '图片验证码',
+                config: {
+                    componentName: 'ImageCode',
+                },
+            },
+        ],
+    },
+    {
+        title: '短信验证码',
+        subTitle: '短信验证码 MessageCode',
+        children: [
+            {
+                title: '短信验证码',
+                config: {
+                    componentName: 'MessageCode',
+                },
+            },
+        ],
+    },
 ];
